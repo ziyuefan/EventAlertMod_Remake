@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>06_TEST_PLAN_RETAIL.md - EventAlertMod Docs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        
+    :root {
+        --base-font-size: 16px;
+        --bg-color: #0f172a;
+        --text-color: #cbd5e1;
+        --heading-color: #f8fafc;
+        --accent-color: #38bdf8;
+        --panel-bg: #1e293b;
+        --border-color: #334155;
+        --code-color: #f1f5f9;
+    }
+
+        
+    html, body {
+        overflow-x: hidden;
+    }
+    body {
+        font-family: 'Outfit', 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-size: var(--base-font-size);
+        line-height: 1.6;
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 80px 20px 40px 20px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+        color: var(--heading-color);
+        margin-top: 1.5em;
+        margin-bottom: 0.5em;
+        font-weight: 600;
+    }
+    
+    h1 {
+        font-size: 2.2rem;
+        border-bottom: 2px solid var(--border-color);
+        padding-bottom: 10px;
+        color: var(--accent-color);
+    }
+    
+    h2 {
+        font-size: 1.7rem;
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 8px;
+        color: var(--heading-color);
+    }
+    
+    h3 {
+        font-size: 1.35rem;
+        color: var(--heading-color);
+    }
+    
+    h4 {
+        font-size: 1.15rem;
+        color: var(--accent-color);
+        background-color: var(--panel-bg);
+        padding: 6px 12px;
+        border-radius: 6px;
+        display: inline-block;
+    }
+    
+    a {
+        color: var(--accent-color);
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+    
+    a:hover {
+        color: var(--accent-color);
+        text-decoration: underline;
+        opacity: 0.8;
+    }
+    
+    ul, ol {
+        padding-left: 24px;
+        margin-bottom: 20px;
+    }
+    
+    li {
+        margin-bottom: 6px;
+    }
+    
+    hr {
+        border: 0;
+        height: 1px;
+        background: var(--border-color);
+        margin: 30px 0;
+    }
+    
+    code {
+        font-family: 'Fira Code', 'Courier New', Courier, monospace;
+        background-color: var(--panel-bg);
+        padding: 2px 6px;
+        border-radius: 4px;
+        color: var(--code-color);
+        font-size: 0.9em;
+    }
+    
+    pre {
+        background-color: var(--panel-bg);
+        padding: 16px;
+        border-radius: 8px;
+        overflow-x: auto;
+        border: 1px solid var(--border-color);
+        margin: 20px 0;
+    }
+    
+    pre code {
+        background-color: transparent;
+        padding: 0;
+        border-radius: 0;
+        color: var(--text-color);
+    }
+    
+    blockquote {
+        border-left: 4px solid var(--accent-color);
+        padding: 10px 20px;
+        margin: 20px 0;
+        background-color: var(--panel-bg);
+        border-radius: 0 8px 8px 0;
+        color: var(--text-color);
+        opacity: 0.85;
+    }
+    
+    img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        margin: 20px 0;
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3);
+    }
+    
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 25px 0;
+        background-color: var(--panel-bg);
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        border: 1px solid var(--border-color);
+    }
+    
+    th, td {
+        padding: 12px 16px;
+        text-align: left;
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+        background-color: var(--bg-color);
+        color: var(--accent-color);
+        font-weight: 600;
+        border-bottom: 2px solid var(--border-color);
+    }
+    
+    tr:last-child td {
+        border-bottom: none;
+    }
+    
+    tr:hover {
+        background-color: var(--panel-bg);
+        opacity: 0.95;
+    }
+    
+    /* Mermaid Graph Center Alignment */
+    .mermaid {
+        display: flex;
+        justify-content: center;
+        background-color: var(--panel-bg);
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        margin: 25px 0;
+    }
+    
+    /* Back Button */
+    .back-btn {
+        display: inline-flex;
+        align-items: center;
+        margin-bottom: 20px;
+        background-color: var(--panel-bg);
+        color: var(--heading-color);
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-size: 0.9em;
+        border: 1px solid var(--border-color);
+        transition: all 0.2s ease;
+    }
+    
+    .back-btn:hover {
+        background-color: var(--border-color);
+        color: var(--accent-color);
+        text-decoration: none;
+    }
+    
+    @media (max-width: 600px) {
+        body {
+            padding: 20px 10px;
+        }
+        h1 {
+            font-size: 1.8rem;
+        }
+    }
+    
+        
+    /* Top Nav Bar Styles */
+    .top-nav-bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 60px;
+        background: rgba(30, 41, 59, 0.9);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border-color);
+        z-index: 10000;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+    
+    .nav-container {
+        max-width: 1000px;
+        height: 100%;
+        margin: 0 auto;
+        padding: 0 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    .nav-logo {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--accent-color);
+        text-decoration: none;
+        letter-spacing: 0.5px;
+        transition: color 0.3s ease;
+    }
+    
+    .nav-logo:hover {
+        color: var(--heading-color);
+        text-decoration: none;
+        opacity: 0.9;
+    }
+    
+    .nav-controls {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+    
+    .nav-control-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .nav-label {
+        font-size: 0.8rem;
+        color: var(--text-color);
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .control-options {
+        display: flex;
+        gap: 4px;
+    }
+    
+    .nav-btn {
+        background: var(--bg-color);
+        border: 1px solid var(--border-color);
+        color: var(--text-color);
+        padding: 4px 10px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.8rem;
+        transition: all 0.2s ease;
+        outline: none;
+    }
+    
+    .nav-btn:hover {
+        border-color: var(--accent-color);
+        color: var(--heading-color);
+    }
+    
+    .nav-btn.active {
+        background: var(--accent-color);
+        color: var(--bg-color);
+        border-color: var(--accent-color);
+        font-weight: 600;
+    }
+    
+    .nav-theme-dots {
+        display: flex;
+        gap: 6px;
+    }
+    
+    .theme-dot {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: transform 0.1s ease, border-color 0.2s ease;
+    }
+    
+    .theme-dot:hover {
+        transform: scale(1.2);
+    }
+    
+    .theme-dot.active {
+        border-color: #ffffff;
+        box-shadow: 0 0 0 2px var(--accent-color);
+    }
+    
+    .dot-blue { background-color: #38bdf8; }
+    .dot-red { background-color: #ef4444; }
+    .dot-green { background-color: #22c55e; }
+    .dot-black { background-color: #000000; border: 1px solid #334155; }
+    .dot-gray { background-color: #71717a; }
+    .dot-white { background-color: #ffffff; border: 1px solid #cbd5e1; }
+    
+    /* Responsive adjustment */
+    @media (max-width: 768px) {
+        .top-nav-bar {
+            height: auto;
+            padding: 10px 0;
+        }
+        .nav-container {
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+        }
+        .nav-controls {
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+    }
+
+        .lang-content {
+            display: none;
+        }
+        .lang-content.active {
+            display: block;
+        }
+        .translation-fallback {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .translation-fallback h3 {
+            color: #ef4444;
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="top-nav-bar">
+        <div class="nav-container">
+            <a href="AGENTS.md.html" class="nav-logo">EventAlertMod Docs</a>
+            <div class="nav-controls">
+                <!-- 語言 -->
+                <div class="nav-control-group">
+                    <span class="nav-label">語言 / Lang:</span>
+                    <div class="control-options">
+                        <button onclick="translatePage('zh-TW')" class="nav-btn lang-btn active" id="lang-zh">繁中</button>
+                        <button onclick="translatePage('en')" class="nav-btn lang-btn" id="lang-en">EN</button>
+                    </div>
+                </div>
+                <!-- 字級 -->
+                <div class="nav-control-group">
+                    <span class="nav-label">字級 / Font:</span>
+                    <div class="control-options">
+                        <button onclick="setFontSize('14px')" class="nav-btn size-btn">小</button>
+                        <button onclick="setFontSize('16px')" class="nav-btn size-btn active">中</button>
+                        <button onclick="setFontSize('18px')" class="nav-btn size-btn">大</button>
+                    </div>
+                </div>
+                <!-- 主題 -->
+                <div class="nav-control-group">
+                    <span class="nav-label">主題 / Theme:</span>
+                    <div class="nav-theme-dots">
+                        <span class="theme-dot dot-blue active" onclick="setTheme('blue')" title="Blue"></span>
+                        <span class="theme-dot dot-red" onclick="setTheme('red')" title="Red"></span>
+                        <span class="theme-dot dot-green" onclick="setTheme('green')" title="Green"></span>
+                        <span class="theme-dot dot-black" onclick="setTheme('black')" title="Black"></span>
+                        <span class="theme-dot dot-gray" onclick="setTheme('gray')" title="Gray"></span>
+                        <span class="theme-dot dot-white" onclick="setTheme('white')" title="White"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="doc-content-zh" class="lang-content active">
+        <a href="AGENTS.md.html" class="back-btn">← 返回 AI 入口指導檔 (AGENTS)</a>
+<h1 id="retail-test-plan">Retail Test Plan</h1>
+<p>No live Retail validation has been performed by this documentation pass.</p>
+<h2 id="static-checks">Static Checks</h2>
+<ul>
+<li>Confirm only the Retail TOC is active for the rewrite.</li>
+<li>Confirm TOC Interface is <code>120007</code> when targeting Retail 12.0.7.</li>
+<li>Confirm no Classic/MOP/Cata/Wrath/TBC source roots are loaded.</li>
+<li>Search for accidental globals.</li>
+<li>Search for <code>C_Timer.After(function</code>.</li>
+<li>Search for per-frame/per-icon <code>SetScript("OnUpdate")</code>.</li>
+<li>Search for large item ID scan loops.</li>
+<li>Search for <code>table.freeze</code> applied to SavedVariables or runtime state.</li>
+<li>Search for legacy <code>UnitAura</code> unpack paths.</li>
+<li>Search for old global <code>GetSpellCooldown</code> unpack assumptions.</li>
+<li>Search for unsafe aura <code>spellID</code> comparison before secret checks.</li>
+<li>Search for Cooldown widget getter readback used as facts.</li>
+<li>Search for combat-time frame creation or layout mutation.</li>
+</ul>
+<h2 id="login-reloadui">Login / ReloadUI</h2>
+<ul>
+<li>Load addon in Retail 12.x.</li>
+<li>Confirm no Lua errors on login.</li>
+<li>Confirm SavedVariables migrate once and remain writable.</li>
+<li>Confirm <code>/reload</code> preserves profile and positions.</li>
+<li>Confirm disabled alerts stay disabled.</li>
+</ul>
+<h2 id="slash-commands">Slash Commands</h2>
+<ul>
+<li><code>/eam opt</code> opens options.</li>
+<li><code>/eam opt</code> called in combat before the frame exists should not create protected-action or taint errors.</li>
+<li><code>/eam help</code> prints command summary.</li>
+<li><code>/eam add &lt;spellID&gt;</code> adds a player aura alert.</li>
+<li><code>/eam add target &lt;spellID&gt;</code> adds a target aura alert.</li>
+<li><code>/eam add cd &lt;spellID&gt;</code> adds a spell cooldown alert.</li>
+<li><code>/eam add item &lt;itemID&gt;</code> adds an item cooldown alert.</li>
+<li><code>/eam remove &lt;spellID&gt;</code> removes a player aura alert.</li>
+<li><code>/eam remove target &lt;spellID&gt;</code> removes a target aura alert.</li>
+<li><code>/eam remove cd &lt;spellID&gt;</code> removes a spell cooldown alert.</li>
+<li><code>/eam remove item &lt;itemID&gt;</code> removes an item cooldown alert.</li>
+<li><code>/eam export</code> prints compact prompt/debug export.</li>
+<li><code>/eam show</code> toggles self aura spellID detection.</li>
+<li><code>/eam showt</code> toggles target aura spellID detection.</li>
+<li><code>/eam showc</code> toggles cast spellID detection.</li>
+<li><code>/eam showa</code> is opt-in and clearly stoppable.</li>
+<li><code>/eam MiniMap</code> toggles minimap option button.</li>
+<li><code>/eam MiniMap reset</code> resets minimap position.</li>
+<li><code>/eam SCDRemoveWhenCooldown</code></li>
+<li><code>/eam SCDNocombatStillKeep</code></li>
+<li><code>/eam SCDGlowWhenUsable</code></li>
+<li><code>/eam IconAppenSpellTip</code></li>
+<li><code>/eam ShowRunesBar</code></li>
+<li>font-size commands for name/timer/stack text.</li>
+<li>new debug export commands produce compact output only on demand.</li>
+</ul>
+<h2 id="options-ui-tests">Options UI Tests</h2>
+<ul>
+<li>Open the options panel out of combat with <code>/eam opt</code>.</li>
+<li>Confirm the numeric ID edit box accepts only numbers.</li>
+<li>Add/remove player aura, target aura, spell cooldown, and item cooldown entries from the panel.</li>
+<li>Confirm each successful button action increments SavedVariables revision and refreshes the matching service.</li>
+<li>Confirm invalid or empty IDs show a short status message without throwing Lua errors.</li>
+<li>Confirm closing and reopening the panel does not recreate widgets repeatedly.</li>
+<li>Open <code>/eam opt</code> in combat before the panel has ever been created and confirm EAM prints a delay message instead of constructing frames.</li>
+<li>Open <code>/eam opt</code> in combat after the panel already exists and confirm show/hide does not taint secure UI paths.</li>
+</ul>
+<h2 id="player-aura-tests">Player Aura Tests</h2>
+<ul>
+<li>Add a player buff by spellID and confirm icon appears.</li>
+<li>Add a player buff by <code>/eam add &lt;spellID&gt;</code>, <code>/reload</code>, and confirm it persists.</li>
+<li>Remove that buff by <code>/eam remove &lt;spellID&gt;</code> and confirm icon hides.</li>
+<li>Add a player debuff by spellID and confirm icon appears.</li>
+<li>Confirm stack count updates.</li>
+<li>Confirm timer text appears only when safe.</li>
+<li>Confirm icon remains stable when duration/expiration is unavailable.</li>
+<li>Confirm player/pet matching behaves as configured.</li>
+<li>Confirm no high-frequency full scan while idle.</li>
+<li>Confirm <code>UNIT_AURA</code> incremental updates process <code>addedAuras</code>, <code>updatedAuraInstanceIDs</code>, and <code>removedAuraInstanceIDs</code>.</li>
+<li>Confirm full update fallback still works when <code>updateInfo</code> is nil or marked full update.</li>
+<li>Confirm full update fallback scans the unit once per relevant filter and does not scan once per configured alert.</li>
+<li>Confirm configured aura alerts absent from a full scan are marked inactive.</li>
+</ul>
+<h2 id="target-aura-tests">Target Aura Tests</h2>
+<ul>
+<li>Add target buff/debuff by spellID.</li>
+<li>Add/remove target aura by <code>/eam add target &lt;spellID&gt;</code> and <code>/eam remove target &lt;spellID&gt;</code>.</li>
+<li>Change targets rapidly.</li>
+<li>Clear target.</li>
+<li>Confirm target clear marks all configured target aura alerts inactive.</li>
+<li>Enter/leave combat with target alerts active.</li>
+<li>Confirm stale target icons are removed or marked inactive.</li>
+<li>Confirm own-debuff filtering works.</li>
+</ul>
+<h2 id="spell-cooldown-tests">Spell Cooldown Tests</h2>
+<ul>
+<li>Add spell cooldown by spellID.</li>
+<li>Cast spell and confirm cooldown icon/timer.</li>
+<li>Confirm charges update for charge-based spells.</li>
+<li>Confirm GCD-only cooldown does not falsely show as real cooldown.</li>
+<li>Confirm usable glow respects <code>C_Spell.IsSpellUsable</code> when safe.</li>
+<li>Confirm no per-spell timer churn.</li>
+</ul>
+<h2 id="item-cooldown-tests">Item Cooldown Tests</h2>
+<ul>
+<li>Add direct itemID cooldown.</li>
+<li>Use equipped item and inventory item if supported.</li>
+<li>Confirm item cooldown event refresh.</li>
+<li>Confirm item-spell cache is not built by default.</li>
+<li>Start optional cache build out of combat.</li>
+<li>Confirm cache pauses in combat and under low FPS.</li>
+</ul>
+<h2 id="combat-tests">Combat Tests</h2>
+<ul>
+<li>Enter combat with active self/target/cooldown alerts.</li>
+<li>Confirm no protected action errors.</li>
+<li>Confirm no taint / blocked action errors are produced by EAM frame updates.</li>
+<li>Confirm unsafe data degrades instead of crashing.</li>
+<li>Confirm first-time icon creation is deferred if the pool is exhausted in combat.</li>
+<li>Confirm deferred layout flushes after <code>PLAYER_REGEN_ENABLED</code>.</li>
+<li>Confirm no heavy cache build starts in combat.</li>
+<li>Confirm out-of-combat refresh runs after combat ends.</li>
+</ul>
+<h2 id="retail-1207-midnight-api-tests">Retail 12.0.7 / Midnight API Tests</h2>
+<ul>
+<li>Confirm <code>C_DurationUtil.CreateDurationTextBinding</code> exists and decide whether it benefits EAM timer labels.</li>
+<li>2026-05-29 PTR note: user confirmed a minimal <code>C_DurationUtil.CreateDurationTextBinding</code> sample displays normally in the 12.0.7 PTR client.</li>
+<li>Confirm <code>C_DurationUtil.CreateManualClock</code> exists and does not require unsafe Lua countdown usage.</li>
+<li>Confirm EAM does not call removed <code>C_DurationUtil.GetCurrentTime</code>.</li>
+<li>Confirm <code>GetEventCPUUsage</code>, <code>GetFunctionCPUUsage</code>, and <code>GetScriptCPUUsage</code> are available only for debug/profiling commands, not runtime hot path.</li>
+<li>Confirm <code>table.freeze</code> / <code>table.isfrozen</code> behavior on static tables and verify no SavedVariables/runtime state is frozen.</li>
+<li>Confirm <code>Cooldown:SetCooldownFromDurationObject()</code> works with EAM display-only timer state.</li>
+<li>Confirm <code>FontString:ClearText()</code> clears text without taint or stale secret text issues.</li>
+<li>Confirm a future EAM <code>DurationTextBinding</code> adapter keeps a binding reference, disables/releases it when an icon is recycled, and falls back safely when the API is unavailable.</li>
+</ul>
+<h2 id="localization-tests">Localization Tests</h2>
+<ul>
+<li>enUS loads.</li>
+<li>zhTW loads and contains Traditional Chinese strings only.</li>
+<li>zhCN/koKR/ruRU legacy strings remain isolated if preserved.</li>
+<li>Missing locale strings fall back safely.</li>
+</ul>
+<h2 id="debug-export-tests">Debug Export Tests</h2>
+<ul>
+<li><code>debug-min</code> output includes environment, facts, derived counts, and warnings.</li>
+<li><code>analysis-full</code> output includes compact per-alert state.</li>
+<li><code>github-issue</code> output excludes huge logs and sensitive local-only clutter.</li>
+<li>Export does not run automatically.</li>
+<li><code>/eam export</code> includes DB revision, aura cache counts, renderer visible/deferred counts, and boundary warning count.</li>
+</ul>
+    </div>
+    <div id="doc-content-en" class="lang-content">
+        <a href="AGENTS.md.html" class="back-btn">← Back to AI Entrance (AGENTS)</a>
+<h1 id="retailtestplan">RetailTestPlan</h1>
+<p>No live Retail validation has been performed by this documentation pass.</p>
+<h2 id="static-checks">Static Checks</h2>
+<ul>
+<li>Confirm only the Retail TOC is active for the rewrite.</li>
+<li>Confirm TOC Interface is <code>120007</code> when targeting Retail 12.0.7.</li>
+<li>Confirm no Classic/MOP/Cata/Wrath/TBC source roots are loaded.</li>
+<li>Search for accidental globals.</li>
+<li>Search for <code>C_Timer.After(function</code>.</li>
+<li>Search for per-frame/per-icon <code>SetScript("OnUpdate")</code>.</li>
+<li>Search for large item ID scan loops.</li>
+<li>Search for <code>table.freeze</code> applied to SavedVariables or runtime state.</li>
+<li>Search for legacy <code>UnitAura</code> unpack paths.</li>
+<li>Search for old global <code>GetSpellCooldown</code> unpack assumptions.</li>
+<li>Search for unsafe aura <code>spellID</code> comparison before secret checks.</li>
+<li>Search for Cooldown widget getter readback used as facts.</li>
+<li>Search for combat-time frame creation or layout mutation.</li>
+</ul>
+<h2 id="loginreloadui">Login/ReloadUI</h2>
+<ul>
+<li>Load addon in Retail 12.x.</li>
+<li>Confirm no Lua errors on login.</li>
+<li>Confirm SavedVariables migrate once and remain writable.</li>
+<li>Confirm <code>/reload</code> preserves profile and positions.</li>
+<li>Confirm disabled alerts stay disabled.</li>
+</ul>
+<h2 id="slash-commands">Slash Commands</h2>
+<ul>
+<li><code>/eam opt</code> opens options.</li>
+<li><code>/eam opt</code> called in combat before the frame exists should not create protected-action or taint errors.</li>
+<li><code>/eam help</code> prints command summary.</li>
+<li><code>/eam add &lt;spellID&gt;</code> adds a player aura alert.</li>
+<li><code>/eam add target &lt;spellID&gt;</code> adds a target aura alert.</li>
+<li><code>/eam add cd &lt;spellID&gt;</code> adds a spell cooldown alert.</li>
+<li><code>/eam add item &lt;itemID&gt;</code> adds an item cooldown alert.</li>
+<li><code>/eam remove &lt;spellID&gt;</code> removes a player aura alert.</li>
+<li><code>/eam remove target &lt;spellID&gt;</code> removes a target aura alert.</li>
+<li><code>/eam remove cd &lt;spellID&gt;</code> removes a spell cooldown alert.</li>
+<li><code>/eam remove item &lt;itemID&gt;</code> removes an item cooldown alert.</li>
+<li><code>/eam export</code> prints compact prompt/debug export.</li>
+<li><code>/eam show</code> toggle self aura spellID detection.</li>
+<li><code>/eam showt</code> toggle target aura spellID detection.</li>
+<li><code>/eam showc</code> toggle cast spellID detection.</li>
+<li><code>/eam showa</code> is opt-in and clearly stoppable.</li>
+<li><code>/eam MiniMap</code> toggle minimap option button.</li>
+<li><code>/eam MiniMap reset</code> resets minimap position.</li>
+<li><code>/eam SCDRemoveWhenCooldown</code></li>
+<li><code>/eam SCDNocombatStillKeep</code></li>
+<li><code>/eam SCDGlowWhenUsable</code></li>
+<li><code>/eam IconAppenSpellTip</code></li>
+<li><code>/eam ShowRunesBar</code></li>
+<li>font-size commands for name/timer/stack text.</li>
+<li>new debug export commands produce compact output only on demand.</li>
+</ul>
+<h2 id="options-ui-tests">Options UI Tests</h2>
+<ul>
+<li>Open the options panel out of combat with <code>/eam opt</code>.</li>
+<li>Confirm the numeric ID edit box accepts only numbers.</li>
+<li>Add/remove player aura, target aura, spell cooldown, and item cooldown entries from the panel.</li>
+<li>Confirm each successful button action increments SavedVariables revision and refreshes the matching service.</li>
+<li>Confirm invalid or empty IDs show a short status message without throwing Lua errors.</li>
+<li>Confirm closing and reopening the panel does not recreate widgets repeatedly.</li>
+<li>Open <code>/eam opt</code> in combat before the panel has ever been created and confirm EAM prints a delay message instead of constructing frames.</li>
+<li>Open <code>/eam opt</code> in combat after the panel already exists and confirm show/hide does not taint secure UI paths.</li>
+</ul>
+<h2 id="player-aura-tests">Player Aura Tests</h2>
+<ul>
+<li>Add a player buff by spellID and confirm icon appears.</li>
+<li>Add a player buff by <code>/eam add &lt;spellID&gt;</code>, <code>/reload</code>, and confirm it persists.</li>
+<li>Remove that buff by <code>/eam remove &lt;spellID&gt;</code> and confirm icon hides.</li>
+<li>Add a player debuff by spellID and confirm icon appears.</li>
+<li>Confirm stack count updates.</li>
+<li>Confirm timer text appears only when safe.</li>
+<li>Confirm icon remains stable when duration/expiration is unavailable.</li>
+<li>Confirm player/pet matching behaves as configured.</li>
+<li>Confirm no high-frequency full scan while idle.</li>
+<li>Confirm <code>UNIT_AURA</code> incremental updates process <code>addedAuras</code>, <code>updatedAuraInstanceIDs</code>, and <code>removedAuraInstanceIDs</code>.</li>
+<li>Confirm full update fallback still works when <code>updateInfo</code> is nil or marked full update.</li>
+<li>Confirm full update fallback scans the unit once per relevant filter and does not scan once per configured alert.</li>
+<li>Confirm configured aura alerts absent from a full scan are marked inactive.</li>
+</ul>
+<h2 id="target-aura-tests">Target Aura Tests</h2>
+<ul>
+<li>Add target buff/debuff by spellID.</li>
+<li>Add/remove target aura by <code>/eam add target &lt;spellID&gt;</code> and <code>/eam remove target &lt;spellID&gt;</code>.</li>
+<li>Change targets rapidly.</li>
+<li>Clear target.</li>
+<li>Confirm target clear marks all configured target aura alerts inactive.</li>
+<li>Enter/leave combat with target alerts active.</li>
+<li>Confirm stale target icons are removed or marked inactive.</li>
+<li>Confirm own-debuff filtering works.</li>
+</ul>
+<h2 id="spell-cooldown-tests">Spell Cooldown Tests</h2>
+<ul>
+<li>Add spell cooldown by spellID.</li>
+<li>Cast spell and confirm cooldown icon/timer.</li>
+<li>Confirm charges update for charge-based spells.</li>
+<li>Confirm GCD-only cooldown does not falsely show as real cooldown.</li>
+<li>Confirm usable glow respects <code>C_Spell.IsSpellUsable</code> when safe.</li>
+<li>Confirm no per-spell timer churn.</li>
+</ul>
+<h2 id="item-cooldown-tests">Item Cooldown Tests</h2>
+<ul>
+<li>Add direct itemID cooldown.</li>
+<li>Use equipped item and inventory item if supported.</li>
+<li>Confirm item cooldown event refresh.</li>
+<li>Confirm item-spell cache is not built by default.</li>
+<li>Start optional cache build out of combat.</li>
+<li>Confirm cache pauses in combat and under low FPS.</li>
+</ul>
+<h2 id="combat-tests">Combat Tests</h2>
+<ul>
+<li>Enter combat with active self/target/cooldown alerts.</li>
+<li>Confirm no protected action errors.</li>
+<li>Confirm no taint / blocked action errors are produced by EAM frame updates.</li>
+<li>Confirm unsafe data degrades instead of crashing.</li>
+<li>Confirm first-time icon creation is deferred if the pool is exhausted in combat.</li>
+<li>Confirm deferred layout flushes after <code>PLAYER_REGEN_ENABLED</code>.</li>
+<li>Confirm no heavy cache build starts in combat.</li>
+<li>Confirm out-of-combat refresh runs after combat ends.</li>
+</ul>
+<h2 id="retail-1207-midnight-api-tests">Retail 12.0.7 / Midnight API Tests</h2>
+<ul>
+<li>Confirm <code>C_DurationUtil.CreateDurationTextBinding</code> exists and decide whether it benefits EAM timer labels.</li>
+<li>2026-05-29 PTR note: user confirmed a minimal <code>C_DurationUtil.CreateDurationTextBinding</code> sample displays normally in the 12.0.7 PTR client.</li>
+<li>Confirm <code>C_DurationUtil.CreateManualClock</code> exists and does not require unsafe Lua countdown usage.</li>
+<li>Confirm EAM does not call removed <code>C_DurationUtil.GetCurrentTime</code>.</li>
+<li>Confirm <code>GetEventCPUUsage</code>, <code>GetFunctionCPUUsage</code>, and <code>GetScriptCPUUsage</code> are available only for debug/profiling commands, not runtime hot path.</li>
+<li>Confirm <code>table.freeze</code> / <code>table.isfrozen</code> behavior on static tables and verify no SavedVariables/runtime state is frozen.</li>
+<li>Confirm <code>Cooldown:SetCooldownFromDurationObject()</code> works with EAM display-only timer state.</li>
+<li>Confirm <code>FontString:ClearText()</code> clears text without taint or stale secret text issues.</li>
+<li>Confirm a future EAM <code>DurationTextBinding</code> adapter keeps a binding reference, disables/releases it when an icon is recycled, and falls back safely when the API is unavailable.</li>
+</ul>
+<h2 id="localization-tests">Localization Tests</h2>
+<ul>
+<li>enUS loads.</li>
+<li>zhTW loads and contains Traditional Chinese strings only.</li>
+<li>zhCN/koKR/ruRU legacy strings remain isolated if preserved.</li>
+<li>Missing locale strings fall back safely.</li>
+</ul>
+<h2 id="debug-export-tests">Debug Export Tests</h2>
+<ul>
+<li><code>debug-min</code> output includes environment, facts, derived counts, and warnings.</li>
+<li><code>analysis-full</code> output includes compact per-alert state.</li>
+<li><code>github-issue</code> output excludes huge logs and sensitive local-only clutter.</li>
+<li>Export does not run automatically.</li>
+<li><code>/eam export</code> includes DB revision, aura cache counts, renderer visible/deferred counts, and boundary warning count.</li>
+</ul>
+    </div>
+    
+    <!-- Mermaid Dynamic Render Script -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            securityLevel: 'loose',
+            themeVariables: {
+                background: '#1e293b',
+                primaryColor: '#0f172a',
+                primaryTextColor: '#f8fafc',
+                lineColor: '#38bdf8'
+            }
+        });
+    </script>
+    
+    <script>
+        function translatePage(lang) {
+            document.querySelectorAll('.lang-content').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            if (lang === 'zh-TW') {
+                const zhContent = document.getElementById('doc-content-zh');
+                if (zhContent) zhContent.classList.add('active');
+                const zhBtn = document.getElementById('lang-zh');
+                if (zhBtn) zhBtn.classList.add('active');
+                const logo = document.querySelector('.nav-logo');
+                if (logo) logo.innerText = 'EventAlertMod 說明文件';
+            } else {
+                const enContent = document.getElementById('doc-content-en');
+                if (enContent) enContent.classList.add('active');
+                const enBtn = document.getElementById('lang-en');
+                if (enBtn) enBtn.classList.add('active');
+                const logo = document.querySelector('.nav-logo');
+                if (logo) logo.innerText = 'EventAlertMod Docs';
+            }
+        }
+
+        function setFontSize(size) {
+            document.documentElement.style.setProperty('--base-font-size', size);
+            document.querySelectorAll('.size-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if ((size === '14px' && btn.innerText === '小') ||
+                    (size === '16px' && btn.innerText === '中') ||
+                    (size === '18px' && btn.innerText === '大')) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        const themes = {
+            blue: {
+                '--bg-color': '#0f172a',
+                '--panel-bg': '#1e293b',
+                '--text-color': '#cbd5e1',
+                '--heading-color': '#f8fafc',
+                '--accent-color': '#38bdf8',
+                '--border-color': '#334155',
+                '--code-color': '#f1f5f9'
+            },
+            red: {
+                '--bg-color': '#1a0f0f',
+                '--panel-bg': '#2d1a1a',
+                '--text-color': '#fca5a5',
+                '--heading-color': '#fee2e2',
+                '--accent-color': '#ef4444',
+                '--border-color': '#451a1a',
+                '--code-color': '#fee2e2'
+            },
+            green: {
+                '--bg-color': '#06140e',
+                '--panel-bg': '#0d281c',
+                '--text-color': '#86efac',
+                '--heading-color': '#dcfce7',
+                '--accent-color': '#22c55e',
+                '--border-color': '#14422b',
+                '--code-color': '#dcfce7'
+            },
+            black: {
+                '--bg-color': '#050505',
+                '--panel-bg': '#121212',
+                '--text-color': '#e5e5e5',
+                '--heading-color': '#ffffff',
+                '--accent-color': '#a3a3a3',
+                '--border-color': '#262626',
+                '--code-color': '#ffffff'
+            },
+            gray: {
+                '--bg-color': '#27272a',
+                '--panel-bg': '#3f3f46',
+                '--text-color': '#e4e4e7',
+                '--heading-color': '#fafafa',
+                '--accent-color': '#cbd5e1',
+                '--border-color': '#52525b',
+                '--code-color': '#fafafa'
+            },
+            white: {
+                '--bg-color': '#f8fafc',
+                '--panel-bg': '#ffffff',
+                '--text-color': '#334155',
+                '--heading-color': '#0f172a',
+                '--accent-color': '#0284c7',
+                '--border-color': '#e2e8f0',
+                '--code-color': '#0f172a'
+            }
+        };
+
+        function setTheme(name) {
+            const theme = themes[name];
+            if (theme) {
+                for (const [key, value] of Object.entries(theme)) {
+                    document.documentElement.style.setProperty(key, value);
+                }
+                // Toggle active class on dots
+                document.querySelectorAll('.theme-dot').forEach(dot => {
+                    dot.classList.remove('active');
+                    if (dot.classList.contains('dot-' + name)) {
+                        dot.classList.add('active');
+                    }
+                });
+            }
+        }
+    </script>
+
+</body>
+</html>

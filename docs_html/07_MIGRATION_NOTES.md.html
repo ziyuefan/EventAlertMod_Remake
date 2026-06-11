@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>07_MIGRATION_NOTES.md - EventAlertMod Docs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        
+    :root {
+        --base-font-size: 16px;
+        --bg-color: #0f172a;
+        --text-color: #cbd5e1;
+        --heading-color: #f8fafc;
+        --accent-color: #38bdf8;
+        --panel-bg: #1e293b;
+        --border-color: #334155;
+        --code-color: #f1f5f9;
+    }
+
+        
+    html, body {
+        overflow-x: hidden;
+    }
+    body {
+        font-family: 'Outfit', 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-size: var(--base-font-size);
+        line-height: 1.6;
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 80px 20px 40px 20px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+        color: var(--heading-color);
+        margin-top: 1.5em;
+        margin-bottom: 0.5em;
+        font-weight: 600;
+    }
+    
+    h1 {
+        font-size: 2.2rem;
+        border-bottom: 2px solid var(--border-color);
+        padding-bottom: 10px;
+        color: var(--accent-color);
+    }
+    
+    h2 {
+        font-size: 1.7rem;
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 8px;
+        color: var(--heading-color);
+    }
+    
+    h3 {
+        font-size: 1.35rem;
+        color: var(--heading-color);
+    }
+    
+    h4 {
+        font-size: 1.15rem;
+        color: var(--accent-color);
+        background-color: var(--panel-bg);
+        padding: 6px 12px;
+        border-radius: 6px;
+        display: inline-block;
+    }
+    
+    a {
+        color: var(--accent-color);
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+    
+    a:hover {
+        color: var(--accent-color);
+        text-decoration: underline;
+        opacity: 0.8;
+    }
+    
+    ul, ol {
+        padding-left: 24px;
+        margin-bottom: 20px;
+    }
+    
+    li {
+        margin-bottom: 6px;
+    }
+    
+    hr {
+        border: 0;
+        height: 1px;
+        background: var(--border-color);
+        margin: 30px 0;
+    }
+    
+    code {
+        font-family: 'Fira Code', 'Courier New', Courier, monospace;
+        background-color: var(--panel-bg);
+        padding: 2px 6px;
+        border-radius: 4px;
+        color: var(--code-color);
+        font-size: 0.9em;
+    }
+    
+    pre {
+        background-color: var(--panel-bg);
+        padding: 16px;
+        border-radius: 8px;
+        overflow-x: auto;
+        border: 1px solid var(--border-color);
+        margin: 20px 0;
+    }
+    
+    pre code {
+        background-color: transparent;
+        padding: 0;
+        border-radius: 0;
+        color: var(--text-color);
+    }
+    
+    blockquote {
+        border-left: 4px solid var(--accent-color);
+        padding: 10px 20px;
+        margin: 20px 0;
+        background-color: var(--panel-bg);
+        border-radius: 0 8px 8px 0;
+        color: var(--text-color);
+        opacity: 0.85;
+    }
+    
+    img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        margin: 20px 0;
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3);
+    }
+    
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 25px 0;
+        background-color: var(--panel-bg);
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        border: 1px solid var(--border-color);
+    }
+    
+    th, td {
+        padding: 12px 16px;
+        text-align: left;
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+        background-color: var(--bg-color);
+        color: var(--accent-color);
+        font-weight: 600;
+        border-bottom: 2px solid var(--border-color);
+    }
+    
+    tr:last-child td {
+        border-bottom: none;
+    }
+    
+    tr:hover {
+        background-color: var(--panel-bg);
+        opacity: 0.95;
+    }
+    
+    /* Mermaid Graph Center Alignment */
+    .mermaid {
+        display: flex;
+        justify-content: center;
+        background-color: var(--panel-bg);
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        margin: 25px 0;
+    }
+    
+    /* Back Button */
+    .back-btn {
+        display: inline-flex;
+        align-items: center;
+        margin-bottom: 20px;
+        background-color: var(--panel-bg);
+        color: var(--heading-color);
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-size: 0.9em;
+        border: 1px solid var(--border-color);
+        transition: all 0.2s ease;
+    }
+    
+    .back-btn:hover {
+        background-color: var(--border-color);
+        color: var(--accent-color);
+        text-decoration: none;
+    }
+    
+    @media (max-width: 600px) {
+        body {
+            padding: 20px 10px;
+        }
+        h1 {
+            font-size: 1.8rem;
+        }
+    }
+    
+        
+    /* Top Nav Bar Styles */
+    .top-nav-bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 60px;
+        background: rgba(30, 41, 59, 0.9);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border-color);
+        z-index: 10000;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+    
+    .nav-container {
+        max-width: 1000px;
+        height: 100%;
+        margin: 0 auto;
+        padding: 0 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    .nav-logo {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--accent-color);
+        text-decoration: none;
+        letter-spacing: 0.5px;
+        transition: color 0.3s ease;
+    }
+    
+    .nav-logo:hover {
+        color: var(--heading-color);
+        text-decoration: none;
+        opacity: 0.9;
+    }
+    
+    .nav-controls {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+    
+    .nav-control-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .nav-label {
+        font-size: 0.8rem;
+        color: var(--text-color);
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .control-options {
+        display: flex;
+        gap: 4px;
+    }
+    
+    .nav-btn {
+        background: var(--bg-color);
+        border: 1px solid var(--border-color);
+        color: var(--text-color);
+        padding: 4px 10px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.8rem;
+        transition: all 0.2s ease;
+        outline: none;
+    }
+    
+    .nav-btn:hover {
+        border-color: var(--accent-color);
+        color: var(--heading-color);
+    }
+    
+    .nav-btn.active {
+        background: var(--accent-color);
+        color: var(--bg-color);
+        border-color: var(--accent-color);
+        font-weight: 600;
+    }
+    
+    .nav-theme-dots {
+        display: flex;
+        gap: 6px;
+    }
+    
+    .theme-dot {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: transform 0.1s ease, border-color 0.2s ease;
+    }
+    
+    .theme-dot:hover {
+        transform: scale(1.2);
+    }
+    
+    .theme-dot.active {
+        border-color: #ffffff;
+        box-shadow: 0 0 0 2px var(--accent-color);
+    }
+    
+    .dot-blue { background-color: #38bdf8; }
+    .dot-red { background-color: #ef4444; }
+    .dot-green { background-color: #22c55e; }
+    .dot-black { background-color: #000000; border: 1px solid #334155; }
+    .dot-gray { background-color: #71717a; }
+    .dot-white { background-color: #ffffff; border: 1px solid #cbd5e1; }
+    
+    /* Responsive adjustment */
+    @media (max-width: 768px) {
+        .top-nav-bar {
+            height: auto;
+            padding: 10px 0;
+        }
+        .nav-container {
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+        }
+        .nav-controls {
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+    }
+
+        .lang-content {
+            display: none;
+        }
+        .lang-content.active {
+            display: block;
+        }
+        .translation-fallback {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .translation-fallback h3 {
+            color: #ef4444;
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="top-nav-bar">
+        <div class="nav-container">
+            <a href="AGENTS.md.html" class="nav-logo">EventAlertMod Docs</a>
+            <div class="nav-controls">
+                <!-- 語言 -->
+                <div class="nav-control-group">
+                    <span class="nav-label">語言 / Lang:</span>
+                    <div class="control-options">
+                        <button onclick="translatePage('zh-TW')" class="nav-btn lang-btn active" id="lang-zh">繁中</button>
+                        <button onclick="translatePage('en')" class="nav-btn lang-btn" id="lang-en">EN</button>
+                    </div>
+                </div>
+                <!-- 字級 -->
+                <div class="nav-control-group">
+                    <span class="nav-label">字級 / Font:</span>
+                    <div class="control-options">
+                        <button onclick="setFontSize('14px')" class="nav-btn size-btn">小</button>
+                        <button onclick="setFontSize('16px')" class="nav-btn size-btn active">中</button>
+                        <button onclick="setFontSize('18px')" class="nav-btn size-btn">大</button>
+                    </div>
+                </div>
+                <!-- 主題 -->
+                <div class="nav-control-group">
+                    <span class="nav-label">主題 / Theme:</span>
+                    <div class="nav-theme-dots">
+                        <span class="theme-dot dot-blue active" onclick="setTheme('blue')" title="Blue"></span>
+                        <span class="theme-dot dot-red" onclick="setTheme('red')" title="Red"></span>
+                        <span class="theme-dot dot-green" onclick="setTheme('green')" title="Green"></span>
+                        <span class="theme-dot dot-black" onclick="setTheme('black')" title="Black"></span>
+                        <span class="theme-dot dot-gray" onclick="setTheme('gray')" title="Gray"></span>
+                        <span class="theme-dot dot-white" onclick="setTheme('white')" title="White"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="doc-content-zh" class="lang-content active">
+        <a href="AGENTS.md.html" class="back-btn">← 返回 AI 入口指導檔 (AGENTS)</a>
+<h1 id="migration-notes">Migration Notes</h1>
+<h2 id="old-behavior-mapping">Old Behavior Mapping</h2>
+<p>Preserve where feasible:</p>
+<ul>
+<li>self buff/debuff alert icons;</li>
+<li>target buff/debuff alert icons;</li>
+<li>spell cooldown alert icons;</li>
+<li>item cooldown alert icons by itemID;</li>
+<li>easy spellID add/remove workflow;</li>
+<li><code>/eam opt</code> settings entry point;</li>
+<li><code>/eam show</code>, <code>/eam showt</code>, <code>/eam showc</code>, <code>/eam showa</code> detection workflows;</li>
+<li>cooldown behavior toggles:</li>
+<li>remove when cooldown completes;</li>
+<li>keep cooldown icons out of combat;</li>
+<li>glow when usable;</li>
+<li>icon display toggles:</li>
+<li>show frame;</li>
+<li>show name;</li>
+<li>show timer;</li>
+<li>show flash/glow;</li>
+<li>tooltip append spell/item ID;</li>
+<li>font size controls for name, timer, and stacks;</li>
+<li>minimap option button semantics;</li>
+<li>localization strings, especially zhTW, enUS, koKR, zhCN where present;</li>
+<li>useful default spell/item tables after Retail validation.</li>
+</ul>
+<h2 id="old-savedvariables-migration">Old SavedVariables Migration</h2>
+<p>Legacy inputs:</p>
+<pre class="codehilite"><code class="language-lua">EA_Config
+EA_Position
+EA_Items
+EA_AltItems
+EA_TarItems
+EA_ScdItems
+EA_GrpItems
+EA_Pos
+</code></pre>
+
+<p>Target migration:</p>
+<pre class="codehilite"><code class="language-js">EventAlertModDB = {
+  schemaVersion: 1,
+  profile: {
+    display: {},
+    behavior: {},
+    alerts: {
+      playerAuras: [],
+      targetAuras: [],
+      spellCooldowns: [],
+      itemCooldowns: [],
+      groupAlerts: []
+    },
+    layout: {}
+  },
+  migration: {
+    fromLegacy: true,
+    sourceKeys: [],
+    warnings: []
+  }
+}
+</code></pre>
+
+<p>The exact target variable name is a rewrite decision. If the old variable names
+remain for compatibility, they still need schema markers and migration status.</p>
+<p>Migration rules:</p>
+<ul>
+<li>never freeze migrated SavedVariables;</li>
+<li>never store runtime state in SavedVariables;</li>
+<li>preserve unknown legacy fields under a migration-safe extension table or
+  warning list;</li>
+<li>validate spellID/itemID numeric fields;</li>
+<li>record removed Classic-only fields as migration warnings;</li>
+<li>do not delete old fields until a backup or migration confidence strategy is
+  defined.</li>
+</ul>
+<h2 id="removed-old-behaviors">Removed Old Behaviors</h2>
+<p>Remove from active Retail architecture:</p>
+<ul>
+<li>Classic, TBC, Wrath, Cata, Mists TOCs and load roots;</li>
+<li><code>G.WOW_VERSION</code> branches for Classic behavior;</li>
+<li>old unpacked return compatibility layers for Classic APIs;</li>
+<li>old hunter pet happiness/focus branches that only exist for Classic-era
+  behavior;</li>
+<li>huge normal-runtime item ID scans;</li>
+<li>timer-per-icon and timer-per-spell refresh chains;</li>
+<li>tooltip scanning as normal fact source;</li>
+<li>external dependency requirement for core operation.</li>
+</ul>
+<h2 id="compatibility-breaks">Compatibility Breaks</h2>
+<p>Expected breaks:</p>
+<ul>
+<li>old Classic TOCs no longer load;</li>
+<li>users relying on legacy Classic-specific resources lose those alerts;</li>
+<li>group-event scripting/configuration may need simplification;</li>
+<li>import/export prototype must be redesigned or removed unless a simple safe
+  path is needed;</li>
+<li><code>Lib_ZYF</code> helpers should be replaced or isolated; do not assume it exists in
+  the new core.</li>
+</ul>
+<h2 id="localization-migration">Localization Migration</h2>
+<p>Existing locale files:</p>
+<ul>
+<li><code>locale/localization.comm.lua</code></li>
+<li><code>locale/localization.en.lua</code></li>
+<li><code>locale/localization.tw.lua</code></li>
+<li><code>locale/localization.cn.lua</code></li>
+<li><code>locale/localization.kr.lua</code></li>
+<li><code>locale/localization.ru.lua</code></li>
+</ul>
+<p>Keep localization isolated. Do not mix strings into logic modules. Do not add
+Simplified Chinese strings to zhTW.</p>
+<h2 id="legacy-source-handling">Legacy Source Handling</h2>
+<p>Current old source roots remain for audit/reference:</p>
+<ul>
+<li><code>Classic/</code></li>
+<li><code>TBC/</code></li>
+<li><code>Wrath/</code></li>
+</ul>
+<p>They should not be loaded by the Retail rewrite. If retained in the repository,
+mark them archived/unsupported.</p>
+    </div>
+    <div id="doc-content-en" class="lang-content">
+        <a href="AGENTS.md.html" class="back-btn">← Back to AI Entrance (AGENTS)</a>
+<h1 id="migrationnotes">MigrationNotes</h1>
+<h2 id="old-behavior-mapping">Old Behavior Mapping</h2>
+<p>Preserve where feasible:</p>
+<ul>
+<li>self buff/debuff alert icons;</li>
+<li>target buff/debuff alert icons;</li>
+<li>spell cooldown alert icons;</li>
+<li>item cooldown alert icons by itemID;</li>
+<li>easy spellID add/remove workflow;</li>
+<li><code>/eam opt</code> settings entry point;</li>
+<li><code>/eam show</code>, <code>/eam showt</code>, <code>/eam showc</code>, <code>/eam showa</code> detection workflows;</li>
+<li>cooldown behavior toggle:</li>
+<li>remove when cooldown completes;</li>
+<li>keep cooldown icons out of combat;</li>
+<li>glow when usable;
+-icon display toggle:</li>
+<li>show frame;</li>
+<li>show name;</li>
+<li>show timer;</li>
+<li>show flash/glow;</li>
+<li>tooltip append spell/item ID;</li>
+<li>font size controls for name, timer, and stacks;</li>
+<li>minimap option button semantics;</li>
+<li>localization strings, especially zhTW, enUS, koKR, zhCN where present;</li>
+<li>useful default spell/item tables after Retail validation.</li>
+</ul>
+<h2 id="old-savedvariables-migration">Old SavedVariables Migration</h2>
+<p>Legacy inputs:</p>
+<pre class="codehilite"><code class="language-lua">EA_Config
+EA_Position
+EA_Items
+EA_AltItems
+EA_TarItems
+EA_ScdItems
+EA_GrpItems
+EA_Pos
+</code></pre>
+
+<p>Target migration:</p>
+<pre class="codehilite"><code class="language-js">EventAlertModDB = {
+  schemaVersion: 1,
+  profile: {
+    display: {},
+    behavior: {},
+    alerts: {
+      playerAuras: [],
+      targetAuras: [],
+      spellCooldowns: [],
+      itemCooldowns: [],
+      groupAlerts: []
+    },
+    layout: {}
+  },
+  migration: {
+    fromLegacy: true,
+    sourceKeys: [],
+    warnings: []
+  }
+}
+</code></pre>
+
+<p>The exact target variable name is a rewrite decision. If the old variable names
+remain for compatibility, they still need schema markers and migration status.</p>
+<p>Migration rules:</p>
+<ul>
+<li>never freeze migrated SavedVariables;</li>
+<li>never store runtime state in SavedVariables;</li>
+<li>preserve unknown legacy fields under a migration-safe extension table or
+  warning list;</li>
+<li>validate spellID/itemID numeric fields;</li>
+<li>record removed Classic-only fields as migration warnings;</li>
+<li>do not delete old fields until a backup or migration confidence strategy is
+  defined.</li>
+</ul>
+<h2 id="removed-old-behaviors">Removed Old Behaviors</h2>
+<p>Remove from active Retail architecture:</p>
+<ul>
+<li>Classic, TBC, Wrath, Cata, Mists TOCs and load roots;</li>
+<li><code>G.WOW_VERSION</code> branches for Classic behavior;</li>
+<li>old unpacked return compatibility layers for Classic APIs;</li>
+<li>old hunter pet happiness/focus branches that only exist for Classic-era
+  behavior;</li>
+<li>huge normal-runtime item ID scans;</li>
+<li>timer-per-icon and timer-per-spell refresh chains;</li>
+<li>tooltip scanning as normal fact source;</li>
+<li>external dependency requirement for core operation.</li>
+</ul>
+<h2 id="compatibility-breaks">Compatibility Breaks</h2>
+<p>Expected breaks:</p>
+<ul>
+<li>old Classic TOCs no longer load;</li>
+<li>users relying on legacy Classic-specific resources lose those alerts;</li>
+<li>group-event scripting/configuration may need simplification;</li>
+<li>import/export prototype must be redesigned or removed unless a simple safe
+  path is needed;</li>
+<li><code>Lib_ZYF</code> helpers should be replaced or isolated; do not assume it exists in
+  the new core.</li>
+</ul>
+<h2 id="localization-migration">Localization Migration</h2>
+<p>Existing locale files:</p>
+<ul>
+<li><code>locale/localization.comm.lua</code></li>
+<li><code>locale/localization.en.lua</code></li>
+<li><code>locale/localization.tw.lua</code></li>
+<li><code>locale/localization.cn.lua</code></li>
+<li><code>locale/localization.kr.lua</code></li>
+<li><code>locale/localization.ru.lua</code>
+Keep localization isolated. Do not mix strings into logic modules. Do not add
+Simplified Chinese strings to zhTW.</li>
+</ul>
+<h2 id="legacy-source-handling">Legacy Source Handling</h2>
+<p>Current old source roots remain for audit/reference:</p>
+<ul>
+<li><code>Classic/</code></li>
+<li><code>TBC/</code></li>
+<li><code>Wrath/</code></li>
+</ul>
+<p>They should not be loaded by the Retail rewrite. If retained in the repository,
+mark them archived/unsupported.</p>
+    </div>
+    
+    <!-- Mermaid Dynamic Render Script -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            securityLevel: 'loose',
+            themeVariables: {
+                background: '#1e293b',
+                primaryColor: '#0f172a',
+                primaryTextColor: '#f8fafc',
+                lineColor: '#38bdf8'
+            }
+        });
+    </script>
+    
+    <script>
+        function translatePage(lang) {
+            document.querySelectorAll('.lang-content').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            if (lang === 'zh-TW') {
+                const zhContent = document.getElementById('doc-content-zh');
+                if (zhContent) zhContent.classList.add('active');
+                const zhBtn = document.getElementById('lang-zh');
+                if (zhBtn) zhBtn.classList.add('active');
+                const logo = document.querySelector('.nav-logo');
+                if (logo) logo.innerText = 'EventAlertMod 說明文件';
+            } else {
+                const enContent = document.getElementById('doc-content-en');
+                if (enContent) enContent.classList.add('active');
+                const enBtn = document.getElementById('lang-en');
+                if (enBtn) enBtn.classList.add('active');
+                const logo = document.querySelector('.nav-logo');
+                if (logo) logo.innerText = 'EventAlertMod Docs';
+            }
+        }
+
+        function setFontSize(size) {
+            document.documentElement.style.setProperty('--base-font-size', size);
+            document.querySelectorAll('.size-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if ((size === '14px' && btn.innerText === '小') ||
+                    (size === '16px' && btn.innerText === '中') ||
+                    (size === '18px' && btn.innerText === '大')) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        const themes = {
+            blue: {
+                '--bg-color': '#0f172a',
+                '--panel-bg': '#1e293b',
+                '--text-color': '#cbd5e1',
+                '--heading-color': '#f8fafc',
+                '--accent-color': '#38bdf8',
+                '--border-color': '#334155',
+                '--code-color': '#f1f5f9'
+            },
+            red: {
+                '--bg-color': '#1a0f0f',
+                '--panel-bg': '#2d1a1a',
+                '--text-color': '#fca5a5',
+                '--heading-color': '#fee2e2',
+                '--accent-color': '#ef4444',
+                '--border-color': '#451a1a',
+                '--code-color': '#fee2e2'
+            },
+            green: {
+                '--bg-color': '#06140e',
+                '--panel-bg': '#0d281c',
+                '--text-color': '#86efac',
+                '--heading-color': '#dcfce7',
+                '--accent-color': '#22c55e',
+                '--border-color': '#14422b',
+                '--code-color': '#dcfce7'
+            },
+            black: {
+                '--bg-color': '#050505',
+                '--panel-bg': '#121212',
+                '--text-color': '#e5e5e5',
+                '--heading-color': '#ffffff',
+                '--accent-color': '#a3a3a3',
+                '--border-color': '#262626',
+                '--code-color': '#ffffff'
+            },
+            gray: {
+                '--bg-color': '#27272a',
+                '--panel-bg': '#3f3f46',
+                '--text-color': '#e4e4e7',
+                '--heading-color': '#fafafa',
+                '--accent-color': '#cbd5e1',
+                '--border-color': '#52525b',
+                '--code-color': '#fafafa'
+            },
+            white: {
+                '--bg-color': '#f8fafc',
+                '--panel-bg': '#ffffff',
+                '--text-color': '#334155',
+                '--heading-color': '#0f172a',
+                '--accent-color': '#0284c7',
+                '--border-color': '#e2e8f0',
+                '--code-color': '#0f172a'
+            }
+        };
+
+        function setTheme(name) {
+            const theme = themes[name];
+            if (theme) {
+                for (const [key, value] of Object.entries(theme)) {
+                    document.documentElement.style.setProperty(key, value);
+                }
+                // Toggle active class on dots
+                document.querySelectorAll('.theme-dot').forEach(dot => {
+                    dot.classList.remove('active');
+                    if (dot.classList.contains('dot-' + name)) {
+                        dot.classList.add('active');
+                    }
+                });
+            }
+        }
+    </script>
+
+</body>
+</html>

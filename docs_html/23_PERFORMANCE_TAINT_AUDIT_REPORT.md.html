@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>23_PERFORMANCE_TAINT_AUDIT_REPORT.md - EventAlertMod Docs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        
+    :root {
+        --base-font-size: 16px;
+        --bg-color: #0f172a;
+        --text-color: #cbd5e1;
+        --heading-color: #f8fafc;
+        --accent-color: #38bdf8;
+        --panel-bg: #1e293b;
+        --border-color: #334155;
+        --code-color: #f1f5f9;
+    }
+
+        
+    html, body {
+        overflow-x: hidden;
+    }
+    body {
+        font-family: 'Outfit', 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-size: var(--base-font-size);
+        line-height: 1.6;
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 80px 20px 40px 20px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+        color: var(--heading-color);
+        margin-top: 1.5em;
+        margin-bottom: 0.5em;
+        font-weight: 600;
+    }
+    
+    h1 {
+        font-size: 2.2rem;
+        border-bottom: 2px solid var(--border-color);
+        padding-bottom: 10px;
+        color: var(--accent-color);
+    }
+    
+    h2 {
+        font-size: 1.7rem;
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 8px;
+        color: var(--heading-color);
+    }
+    
+    h3 {
+        font-size: 1.35rem;
+        color: var(--heading-color);
+    }
+    
+    h4 {
+        font-size: 1.15rem;
+        color: var(--accent-color);
+        background-color: var(--panel-bg);
+        padding: 6px 12px;
+        border-radius: 6px;
+        display: inline-block;
+    }
+    
+    a {
+        color: var(--accent-color);
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+    
+    a:hover {
+        color: var(--accent-color);
+        text-decoration: underline;
+        opacity: 0.8;
+    }
+    
+    ul, ol {
+        padding-left: 24px;
+        margin-bottom: 20px;
+    }
+    
+    li {
+        margin-bottom: 6px;
+    }
+    
+    hr {
+        border: 0;
+        height: 1px;
+        background: var(--border-color);
+        margin: 30px 0;
+    }
+    
+    code {
+        font-family: 'Fira Code', 'Courier New', Courier, monospace;
+        background-color: var(--panel-bg);
+        padding: 2px 6px;
+        border-radius: 4px;
+        color: var(--code-color);
+        font-size: 0.9em;
+    }
+    
+    pre {
+        background-color: var(--panel-bg);
+        padding: 16px;
+        border-radius: 8px;
+        overflow-x: auto;
+        border: 1px solid var(--border-color);
+        margin: 20px 0;
+    }
+    
+    pre code {
+        background-color: transparent;
+        padding: 0;
+        border-radius: 0;
+        color: var(--text-color);
+    }
+    
+    blockquote {
+        border-left: 4px solid var(--accent-color);
+        padding: 10px 20px;
+        margin: 20px 0;
+        background-color: var(--panel-bg);
+        border-radius: 0 8px 8px 0;
+        color: var(--text-color);
+        opacity: 0.85;
+    }
+    
+    img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        margin: 20px 0;
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3);
+    }
+    
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 25px 0;
+        background-color: var(--panel-bg);
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        border: 1px solid var(--border-color);
+    }
+    
+    th, td {
+        padding: 12px 16px;
+        text-align: left;
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+        background-color: var(--bg-color);
+        color: var(--accent-color);
+        font-weight: 600;
+        border-bottom: 2px solid var(--border-color);
+    }
+    
+    tr:last-child td {
+        border-bottom: none;
+    }
+    
+    tr:hover {
+        background-color: var(--panel-bg);
+        opacity: 0.95;
+    }
+    
+    /* Mermaid Graph Center Alignment */
+    .mermaid {
+        display: flex;
+        justify-content: center;
+        background-color: var(--panel-bg);
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        margin: 25px 0;
+    }
+    
+    /* Back Button */
+    .back-btn {
+        display: inline-flex;
+        align-items: center;
+        margin-bottom: 20px;
+        background-color: var(--panel-bg);
+        color: var(--heading-color);
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-size: 0.9em;
+        border: 1px solid var(--border-color);
+        transition: all 0.2s ease;
+    }
+    
+    .back-btn:hover {
+        background-color: var(--border-color);
+        color: var(--accent-color);
+        text-decoration: none;
+    }
+    
+    @media (max-width: 600px) {
+        body {
+            padding: 20px 10px;
+        }
+        h1 {
+            font-size: 1.8rem;
+        }
+    }
+    
+        
+    /* Top Nav Bar Styles */
+    .top-nav-bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 60px;
+        background: rgba(30, 41, 59, 0.9);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border-color);
+        z-index: 10000;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+    
+    .nav-container {
+        max-width: 1000px;
+        height: 100%;
+        margin: 0 auto;
+        padding: 0 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    .nav-logo {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--accent-color);
+        text-decoration: none;
+        letter-spacing: 0.5px;
+        transition: color 0.3s ease;
+    }
+    
+    .nav-logo:hover {
+        color: var(--heading-color);
+        text-decoration: none;
+        opacity: 0.9;
+    }
+    
+    .nav-controls {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+    
+    .nav-control-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .nav-label {
+        font-size: 0.8rem;
+        color: var(--text-color);
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .control-options {
+        display: flex;
+        gap: 4px;
+    }
+    
+    .nav-btn {
+        background: var(--bg-color);
+        border: 1px solid var(--border-color);
+        color: var(--text-color);
+        padding: 4px 10px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.8rem;
+        transition: all 0.2s ease;
+        outline: none;
+    }
+    
+    .nav-btn:hover {
+        border-color: var(--accent-color);
+        color: var(--heading-color);
+    }
+    
+    .nav-btn.active {
+        background: var(--accent-color);
+        color: var(--bg-color);
+        border-color: var(--accent-color);
+        font-weight: 600;
+    }
+    
+    .nav-theme-dots {
+        display: flex;
+        gap: 6px;
+    }
+    
+    .theme-dot {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: transform 0.1s ease, border-color 0.2s ease;
+    }
+    
+    .theme-dot:hover {
+        transform: scale(1.2);
+    }
+    
+    .theme-dot.active {
+        border-color: #ffffff;
+        box-shadow: 0 0 0 2px var(--accent-color);
+    }
+    
+    .dot-blue { background-color: #38bdf8; }
+    .dot-red { background-color: #ef4444; }
+    .dot-green { background-color: #22c55e; }
+    .dot-black { background-color: #000000; border: 1px solid #334155; }
+    .dot-gray { background-color: #71717a; }
+    .dot-white { background-color: #ffffff; border: 1px solid #cbd5e1; }
+    
+    /* Responsive adjustment */
+    @media (max-width: 768px) {
+        .top-nav-bar {
+            height: auto;
+            padding: 10px 0;
+        }
+        .nav-container {
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+        }
+        .nav-controls {
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+    }
+
+        .lang-content {
+            display: none;
+        }
+        .lang-content.active {
+            display: block;
+        }
+        .translation-fallback {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .translation-fallback h3 {
+            color: #ef4444;
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="top-nav-bar">
+        <div class="nav-container">
+            <a href="AGENTS.md.html" class="nav-logo">EventAlertMod Docs</a>
+            <div class="nav-controls">
+                <!-- 語言 -->
+                <div class="nav-control-group">
+                    <span class="nav-label">語言 / Lang:</span>
+                    <div class="control-options">
+                        <button onclick="translatePage('zh-TW')" class="nav-btn lang-btn active" id="lang-zh">繁中</button>
+                        <button onclick="translatePage('en')" class="nav-btn lang-btn" id="lang-en">EN</button>
+                    </div>
+                </div>
+                <!-- 字級 -->
+                <div class="nav-control-group">
+                    <span class="nav-label">字級 / Font:</span>
+                    <div class="control-options">
+                        <button onclick="setFontSize('14px')" class="nav-btn size-btn">小</button>
+                        <button onclick="setFontSize('16px')" class="nav-btn size-btn active">中</button>
+                        <button onclick="setFontSize('18px')" class="nav-btn size-btn">大</button>
+                    </div>
+                </div>
+                <!-- 主題 -->
+                <div class="nav-control-group">
+                    <span class="nav-label">主題 / Theme:</span>
+                    <div class="nav-theme-dots">
+                        <span class="theme-dot dot-blue active" onclick="setTheme('blue')" title="Blue"></span>
+                        <span class="theme-dot dot-red" onclick="setTheme('red')" title="Red"></span>
+                        <span class="theme-dot dot-green" onclick="setTheme('green')" title="Green"></span>
+                        <span class="theme-dot dot-black" onclick="setTheme('black')" title="Black"></span>
+                        <span class="theme-dot dot-gray" onclick="setTheme('gray')" title="Gray"></span>
+                        <span class="theme-dot dot-white" onclick="setTheme('white')" title="White"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="doc-content-zh" class="lang-content active">
+        <a href="AGENTS.md.html" class="back-btn">← 返回 AI 入口指導檔 (AGENTS)</a>
+<h1 id="performance-taint-control-onupdate-layout">Performance &amp; Taint Control 審查報告：統一 OnUpdate 計時器與 Layout 偏移陣列</h1>
+<blockquote>
+<p>[!NOTE]
+本文件由 EAM Performance &amp; Taint Control Expert 撰寫，旨在評估 EventAlertMod 重構版中統一計時器（legacyTimer）的運作開銷、LAYOUT_OFFSETS 靜態偏移陣列的算術性能，並識別戰鬥中潛在的隱性 Taint 洩漏與 GC 垃圾分配問題。</p>
+</blockquote>
+<hr />
+<h2 id="1-onupdate-legacytimer">1. 統一 OnUpdate 計時器（legacyTimer）運作開銷審查</h2>
+<p><code>UI/Renderer.lua</code> 中的 <code>legacyTimer</code> 負責在不使用原生 Duration Binding 時，提供備用的秒數倒數顯示（尤其在 $timeLeft &lt; 3.05$ 秒時提供小數點後一位倒數）。其運作機制為使用一個唯一的匿名偵聽 Frame 監聽 <code>OnUpdate</code>，遍歷 <code>activeLegacyTimers</code> 與 <code>activeDurationObjects</code> 以更新圖示的 <code>timerText</code>。</p>
+<h3 id="11">1.1 性能優勢</h3>
+<ul>
+<li><strong>單一 Frame 集中驅動</strong>：避免了每個圖示或每個法術各自綁定 <code>OnUpdate</code> 的高開銷設計。當沒有 active 任務時，會調用 <code>legacyTimerFrame:SetScript("OnUpdate", nil)</code> 解除綁定，保持 CPU 零占用。</li>
+<li><strong>孤兒 Frame 隔離</strong>：<code>legacyTimerFrame</code> 為匿名無 Parent 的 Frame（<code>CreateFrame("Frame")</code>），完全與 <code>UIParent</code> 核心鏈解耦，消除了事件派發過程中的 Taint 傳播風險。</li>
+</ul>
+<h3 id="12-gc">1.2 運作開銷與 GC 瓶頸分析</h3>
+<p>在高頻戰鬥環境（例如 60-120 FPS，擁有多個活動監控圖示）下，目前的實作存在顯著的 GC 與 CPU 開銷：
+1.  <strong>頻繁的字串格式化 (GC Heap 垃圾主要來源)</strong>：
+    *   在 <code>onLegacyTimerUpdate</code> 中，每幀對所有 active icon 執行：
+        <code>lua
+        if timeLeft &lt; 3.05 then
+            text = string.format("%.1f", timeLeft)
+        else
+            text = string.format("%d", math.ceil(timeLeft))
+        end</code>
+    *   在 Lua VM 中，<code>string.format</code> 會產生全新的字串對象。在 60 FPS 下，若有 5 個圖示同時倒數，一秒將配置 $60 \times 5 = 300$ 個字串。這會直接加速 GC 觸發，造成幀率抖動（Micro-stutter）。
+2.  <strong><code>pairs</code> 雜湊表迭代開銷</strong>：
+    *   使用 <code>pairs(activeLegacyTimers)</code> 來遍歷活動計時器。在 LuaJIT 中，若遍歷雜湊表（Hash Part），JIT 編譯器可能無法有效進行 Trace Compiler 編譯，且迭代過程中對 table 進行 <code>activeLegacyTimers[icon] = nil</code> 的刪除操作，容易引起內部 Hash 結構重整與 GC 開銷。
+3.  <strong><code>pcall</code> 所致的 JIT Trace Abort</strong>：
+    *   在 <code>activeDurationObjects</code> 迭代中，調用了 <code>safeCheckIsZero(durationObj)</code>，其內部包含 <code>pcall(durationObj.IsZero, durationObj)</code>。
+    *   在 LuaJIT 中，<code>pcall</code> 會直接導致當前的 Trace 編譯失敗（Trace Abort），使得 OnUpdate 的核心執行路徑只能退回到低效的 interpreter 模式執行，大幅增加了每幀的 CPU 算術與調用開銷。</p>
+<hr />
+<h2 id="2-7-alert-frame-layout-layout_offsets">2. 7 大 Alert Frame Layout 靜態連續偏移陣列（LAYOUT_OFFSETS）審查</h2>
+<p>EAM 定義了 7 大獨立告警框架，並在排版時利用 <code>EAM.Constants.LAYOUT_OFFSETS</code> 做為位移向量：</p>
+<pre class="codehilite"><code class="language-lua">LAYOUT_OFFSETS = freeze({
+    freeze({ 1, 0 }),  -- 1 = RIGHT (向右成長)
+    freeze({ -1, 0 }), -- 2 = LEFT (向左成長)
+    freeze({ 0, 1 }),  -- 3 = UP (向上成長)
+    freeze({ 0, -1 })  -- 4 = DOWN (向下成長)
+})
+</code></pre>
+
+<h3 id="21-cpu">2.1 CPU 算術開銷評估</h3>
+<p>在 <code>layout(frameName)</code> 執行時，其定位計算為：</p>
+<pre class="codehilite"><code class="language-lua">local offset = EAM.Constants.LAYOUT_OFFSETS[dirIdx]
+local dx, dy = offset[1], offset[2]
+...
+local dist = (layoutIndex - 1) * (size + spacing)
+local offsetX = dx * dist
+local offsetY = dy * dist
+</code></pre>
+
+<ul>
+<li><strong>算術性能極佳</strong>：相較於舊版 EventAlert 的多重 <code>if-else</code> 或 <code>switch</code> 分支判斷（如 <code>if dir == 1 then x = ... else ...</code>），以連續數字索引陣列配合乘法運算，完全消除了 CPU 分支預測錯誤（Branch Misprediction）的可能。</li>
+<li><strong>唯讀凍結保障</strong>：使用了 <code>table.freeze</code> 確保該常數陣列在執行期不可被篡改，兼顧安全與效能。</li>
+<li><strong>查表開銷評估</strong>：雖然每次定位都需要從 <code>LAYOUT_OFFSETS</code> 讀取內部 table 元素，但在實際運作中，<code>layout</code> 僅在圖示增減或設定變更時被觸發（由 <code>BeginBatch/EndBatch</code> 節流，並非高頻熱路徑），因此其產生的微小查表開銷在整體 AddOn 中微不足道，屬於極佳的設計決策。</li>
+</ul>
+<hr />
+<h2 id="3-taint-gc-heap">3. 戰鬥中隱性 Taint 洩漏與 GC heap 垃圾分配評估</h2>
+<p>經深入代碼走讀，我們發現了以下在戰鬥中高頻事件與渲染下，可能導致隱性 Taint 洩漏或 GC heap 垃圾分配的關鍵問題：</p>
+<h3 id="31-taint-combat-lockdown">3.1 隱性 Taint 洩漏與戰鬥鎖定 (Combat Lockdown) 隱患</h3>
+<ol>
+<li><strong>戰鬥中動態 <code>CreateFrame</code> (高風險點)</strong>：<ul>
+<li>雖然 <code>ensureParent</code> 具備 <code>InCombatLockdown</code> 守衛，但在 <code>Renderer.render</code> 中，如果 <code>IconPool</code> 的可用緩衝圖示用盡（例如在戰鬥中同時觸發多個天賦/冷卻/法術，使得 active 數量大於 prewarm 的 16 個），會觸發 <code>IconPool.acquire()</code> -&gt; <code>createIcon()</code>：
+    <code>lua
+    local function createIcon()
+        local button = api.CreateFrame("Frame", name, UIParent)
+        ...
+        local cooldown = api.CreateFrame("Cooldown", nil, button, "CooldownFrameTemplate")</code></li>
+<li><strong>風險</strong>：在戰鬥鎖定期間呼叫 <code>CreateFrame("Frame", name, UIParent)</code> 且載入了官方的 <code>CooldownFrameTemplate</code>，可能會污染暴雪內部的 Secure Template Chain，並高機率觸發 "Action blocked by an addon" 錯誤。</li>
+</ul>
+</li>
+<li><strong>影子載體 (Shadow Host) 寄生模式的潛在 Taint 傳播 (極高風險點)</strong>：<ul>
+<li>雖然目前 <code>useCDM</code> 被強制設為 <code>false</code>，但若啟用此模式，代碼會將 EAM 的 icon 寄生在官方原生 <code>CooldownViewer</code> 或 ActionButton 下：
+    <code>lua
+    icon:SetParent(hostIcon)
+    icon:ClearAllPoints()
+    icon:SetAllPoints(hostIcon)</code></li>
+<li><strong>風險</strong>：官方的 <code>CooldownViewer</code> 與 ActionButton 屬於高度受保護的 Secure / Protected Frame。非安全的 EAM 圖示在戰鬥中呼叫 <code>SetParent</code> 附加到 Secure Frame 上，當暴雪 UI 試圖重新排版或操作該 Secure Frame 時，會因為其子系包含 Unsecure Frame 而導致整條執行鏈被標記為 Taint，進而引發戰鬥中 Action Button 被阻擋、無法點擊的致命錯誤。</li>
+</ul>
+</li>
+</ol>
+<h3 id="32-gc-heap">3.2 隱性 GC Heap 垃圾分配隱患</h3>
+<ol>
+<li><strong>熱路徑中的匿名閉包 <code>pcall</code></strong>：<ul>
+<li>在 <code>Renderer.render</code> 中：
+    <code>lua
+    pcall(function()
+        icon:SetFrameStrata("MEDIUM")
+        icon:SetFrameLevel(hostIcon:GetFrameLevel() + 10)
+    end)</code></li>
+<li>每次渲染更新（如堆疊數、冷卻更新）時，都會在熱路徑中動態分配這兩個匿名 closure 函數，並調用 <code>pcall</code>。這不僅會阻礙 LuaJIT VM 的 Trace Compilation，還會產生持續的 GC 垃圾堆積。</li>
+<li><em>註：<code>icon.overlay</code> 與 <code>icon.cooldown</code> 皆為 EAM 內部建立的 Frame，其方法是 100% 確定存在的，根本不需要使用 <code>pcall</code> 進行防護。</em></li>
+</ul>
+</li>
+</ol>
+<hr />
+<h2 id="4">4. 具體重構與優化建議</h2>
+<p>為了消除上述隱患並達成 EAM 重寫版的極致性能與零 Taint 要求，建議實施以下優化重構：</p>
+<h3 id="41-pairs">4.1 消除字串分配與 <code>pairs</code> 迭代：引進「時間字串快取」與「雙向鏈結串列」</h3>
+<ul>
+<li><strong>時間字串快取 (Time Text Cache)</strong>：
+    預先生成 $0.0$ 到 $3.0$ 秒（間隔 0.1 秒，共 30 個）以及 $3$ 到 $3600$ 秒的整數字串表。在 OnUpdate 中，通過數值計算直接索引此快取表，將格式化開銷降為零。</li>
+<li><strong>平坦雙向鏈結/數值索引陣列</strong>：
+    將 <code>activeLegacyTimers</code> 改為使用數值索引的平坦陣列，藉此使用 <code>for i = 1, count</code> 進行數字循環迭代，消除 <code>pairs</code> 在高頻路徑下的 iterator 分配與雜湊查表開銷。</li>
+</ul>
+<h3 id="42-pcall">4.2 移除熱路徑 <code>pcall</code> 與匿名閉包</h3>
+<ul>
+<li>移除 <code>Renderer.render</code> 中對自建框架的 <code>pcall(function() ... end)</code> 包裝，改為直接賦值或使用預先定義好的靜態輔助函數，避免高頻分配。</li>
+</ul>
+<h3 id="43-createframe-setparent">4.3 強制執行戰鬥中 <code>CreateFrame</code> 與 <code>SetParent</code> 延遲</h3>
+<ul>
+<li>在 <code>IconPool.acquire()</code> 中加入 <code>InCombatLockdown</code> 檢測。若在戰鬥中且無可用 icon，應降級或將其加入延遲渲染佇列（<code>deferRender</code>），嚴禁在戰鬥鎖定期間呼叫 <code>api.CreateFrame</code>。</li>
+<li>徹底廢除或嚴格限制影子載體（Shadow Host）寄生模式在戰鬥中的 <code>SetParent</code> 行為，避免任何與 Secure Frame 的直接 parent 連結。</li>
+</ul>
+<hr />
+<h2 id="raci">RACI 權責分工與審查結論</h2>
+<p>本審查報告依據 <a href="file:///d:/EventAlertMod/Docs/21_RACI_EXPERTS_MATRIX.md.html">Docs/21_RACI_EXPERTS_MATRIX.md</a> 規範，由 <strong>Performance &amp; Taint Control Expert</strong> 負責（Responsible），為 <strong>Main Agent</strong> 提供核心技術決策諮詢。</p>
+<ul>
+<li><strong>建議決策</strong>：在下一個重構週期中，應立即針對 <code>UI/Renderer.lua</code> 與 <code>UI/IconPool.lua</code> 進行局部重構，落實「時間字串快取」、「無 pcall 直接調用」以及「戰鬥中 CreateFrame 延遲守衛」，以確保 AddOn 運作時的極致低 GC 與絕對安全。</li>
+</ul>
+    </div>
+    <div id="doc-content-en" class="lang-content">
+        <a href="AGENTS.md.html" class="back-btn">← Back to AI Entrance (AGENTS)</a>
+<h1 id="performance-taint-control-review-report-unifying-onupdate-timer-and-layout-offset-array">Performance &amp; Taint Control Review Report: Unifying OnUpdate Timer and Layout Offset Array</h1>
+<blockquote>
+<p>[!NOTE]
+This document is written by EAM Performance &amp; Taint Control Expert to evaluate the operational overhead of the legacy timer (legacyTimer) in the refactored version of EventAlertMod, the arithmetic performance of the LAYOUT_OFFSETS static offset array, and to identify potential hidden Taint leaks and GC garbage allocation issues in combat.</p>
+</blockquote>
+<hr />
+<h2 id="1-unified-onupdate-timer-legacytimer-operation-overhead-review">1. Unified OnUpdate timer (legacyTimer) operation overhead review</h2>
+<p><code>legacyTimer</code> in <code>UI/Renderer.lua</code> is responsible for providing an alternative countdown display of seconds when the native Duration Binding is not used (especially providing one decimal place countdown when $timeLeft &lt; 3.05$ seconds). Its operating mechanism is to use a unique anonymous listening Frame to listen to <code>OnUpdate</code>, and traverse <code>activeLegacyTimers</code> and <code>activeDurationObjects</code> to update the <code>timerText</code> shown in the diagram.</p>
+<h3 id="11-performance-advantages">1.1 Performance advantages</h3>
+<ul>
+<li><strong>Single Frame centralized driver</strong>: avoids the high overhead design of binding <code>OnUpdate</code> to each icon or each spell. When there is no active task, <code>legacyTimerFrame:SetScript("OnUpdate", nil)</code> will be called to unbind and maintain zero CPU usage.</li>
+<li><strong>Orphan Frame Isolation</strong>: <code>legacyTimerFrame</code> is an anonymous Parentless Frame (<code>CreateFrame("Frame")</code>), completely decoupled from the <code>UIParent</code> core chain, eliminating the risk of Taint propagation in the event dispatch process.</li>
+</ul>
+<h3 id="12-operational-overhead-and-gc-bottleneck-analysis">1.2 Operational overhead and GC bottleneck analysis</h3>
+<p>In high-frequency combat environments (e.g. 60-120 FPS, with multiple active monitor graphs), the current implementation has significant GC and CPU overhead:
+1. <strong>Frequent string formatting (main source of GC Heap garbage)</strong>:
+    * In <code>onLegacyTimerUpdate</code>, execute for all active icons every frame:
+        <code>lua
+        if timeLeft &lt; 3.05 then
+            text = string.format("%.1f", timeLeft)
+        else
+            text = string.format("%d", math.ceil(timeLeft))
+        end</code>
+* In Lua VM, <code>string.format</code> will generate a brand new string object. At 60 FPS, if there are 5 icons counting down at the same time, $60 \times 5 = 300$ strings will be configured in one second. This will directly accelerate GC triggering and cause frame rate jitter (Micro-stutter).
+2. <strong><code>pairs</code> hash table iteration overhead</strong>:
+* Use <code>pairs(activeLegacyTimers)</code> to iterate over active timers. In LuaJIT, if the hash table (Hash Part) is traversed, the JIT compiler may not be able to effectively perform Trace Compiler compilation, and the deletion operation of <code>activeLegacyTimers[icon] = nil</code> on the table during the iteration process may easily cause internal Hash structure reorganization and GC overhead.
+3. <strong><code>pcall</code> caused JIT Trace Abort</strong>:
+    * In the <code>activeDurationObjects</code> iteration, <code>safeCheckIsZero(durationObj)</code> is called, which contains <code>pcall(durationObj.IsZero, durationObj)</code> inside.
+* In LuaJIT, <code>pcall</code> will directly cause the current Trace compilation to fail (Trace Abort), so that the core execution path of OnUpdate can only fall back to the inefficient interpreter mode execution, which greatly increases the CPU arithmetic and calling overhead of each frame.</p>
+<hr />
+<h2 id="2-7-big-alert-frame-layout-static-continuous-offset-arrays-layout_offsets-review">2. 7 Big Alert Frame Layout Static Continuous Offset Arrays (LAYOUT_OFFSETS) Review</h2>
+<p>EAM defines 7 independent alarm frames and uses <code>EAM.Constants.LAYOUT_OFFSETS</code> as the displacement vector during typesetting:</p>
+<pre class="codehilite"><code class="language-lua">LAYOUT_OFFSETS = freeze({
+    freeze({ 1, 0 }),  -- 1 = RIGHT (向右成長)
+    freeze({ -1, 0 }), -- 2 = LEFT (向左成長)
+    freeze({ 0, 1 }),  -- 3 = UP (向上成長)
+    freeze({ 0, -1 })  -- 4 = DOWN (向下成長)
+})
+</code></pre>
+
+<h3 id="21-cpu-arithmetic-overhead-evaluation">2.1 CPU arithmetic overhead evaluation</h3>
+<p>When <code>layout(frameName)</code> is executed, its positioning is calculated as:</p>
+<pre class="codehilite"><code class="language-lua">local offset = EAM.Constants.LAYOUT_OFFSETS[dirIdx]
+local dx, dy = offset[1], offset[2]
+...
+local dist = (layoutIndex - 1) * (size + spacing)
+local offsetX = dx * dist
+local offsetY = dy * dist
+</code></pre>
+
+<ul>
+<li><strong>Excellent arithmetic performance</strong>: Compared with the multiple <code>if-else</code> or <code>switch</code> branch judgments of the old version of EventAlert (such as <code>if dir == 1 then x = ... else ...</code>), the use of continuous digital index arrays with multiplication operations completely eliminates the possibility of CPU branch misprediction (Branch Misprediction).</li>
+<li><strong>Read-only freeze guarantee</strong>: <code>table.freeze</code> is used to ensure that the constant array cannot be tampered with during execution, taking into account both security and performance.</li>
+<li><strong>Table lookup cost evaluation</strong>: Although each positioning requires reading internal table elements from <code>LAYOUT_OFFSETS</code>, in actual operation, <code>layout</code> is only triggered when icons are added or removed or settings are changed (throttled by <code>BeginBatch/EndBatch</code>, not a high-frequency hot path), so the tiny table lookup overhead it generates is negligible in the overall AddOn, and is an excellent design decision.</li>
+</ul>
+<hr />
+<h2 id="3-implicit-taint-leaks-and-gc-heap-garbage-allocation-evaluation-in-combat">3. Implicit Taint leaks and GC heap garbage allocation evaluation in combat</h2>
+<p>After in-depth code reading, we discovered the following key issues that may lead to hidden Taint leaks or GC heap garbage allocation under high-frequency events and rendering in combat:</p>
+<h3 id="31-hidden-taint-leakage-and-combat-lockdown-hazards">3.1 Hidden Taint Leakage and Combat Lockdown Hazards</h3>
+<ol>
+<li><strong>Dynamic <code>CreateFrame</code> during battle (high risk point)</strong>:</li>
+<li>Although <code>ensureParent</code> has the <code>InCombatLockdown</code> guard, in <code>Renderer.render</code>, if the available buffer icons of <code>IconPool</code> are exhausted (for example, multiple talents/cooldowns/spells are triggered at the same time in combat, making the active number greater than the 16 in prewarm), <code>IconPool.acquire()</code> -&gt; <code>createIcon()</code> will be triggered:
+        <code>lua
+        local function createIcon()
+            local button = api.CreateFrame("Frame", name, UIParent)
+            ...
+            local cooldown = api.CreateFrame("Cooldown", nil, button, "CooldownFrameTemplate")</code></li>
+<li><strong>Risk</strong>: Calling <code>CreateFrame("Frame", name, UIParent)</code> during combat lock and loading the official <code>CooldownFrameTemplate</code> may pollute Blizzard's internal Secure Template Chain and trigger an "Action blocked by an addon" error with a high probability.</li>
+<li><strong>Potential Taint propagation of Shadow Host parasitic mode (extremely high risk point)</strong>:</li>
+<li>Although <code>useCDM</code> is currently forced to <code>false</code>, if this mode is enabled, the code will parasitize the EAM icon under the official native <code>CooldownViewer</code> or ActionButton:
+        <code>lua
+        icon:SetParent(hostIcon)
+        icon:ClearAllPoints()
+        icon:SetAllPoints(hostIcon)</code></li>
+<li><strong>Risk</strong>: The official <code>CooldownViewer</code> and ActionButton belong to the highly protected Secure / Protected Frame. The unsafe EAM icon calls <code>SetParent</code> and is attached to the Secure Frame during combat. When Blizzard UI attempts to rearrange or operate the Secure Frame, the entire execution chain will be marked as Taint because its subsystem contains Unsecure Frame, which will cause a fatal error in which the Action Button is blocked and cannot be clicked during combat.</li>
+</ol>
+<h3 id="32-hidden-gc-heap-garbage-allocation-hazards">3.2 Hidden GC Heap garbage allocation hazards</h3>
+<ol>
+<li><strong>Anonymous closure <code>pcall</code></strong> in hot path:<ul>
+<li>In <code>Renderer.render</code>:
+    <code>lua
+    pcall(function()
+        icon:SetFrameStrata("MEDIUM")
+        icon:SetFrameLevel(hostIcon:GetFrameLevel() + 10)
+    end)</code></li>
+</ul>
+</li>
+<li>Each time the rendering is updated (such as stack count, cooling update), these two anonymous closure functions are dynamically allocated in the hot path and <code>pcall</code> is called. Not only does this hinder Trace Compilation of the LuaJIT VM, but it also creates ongoing GC garbage accumulation.<ul>
+<li>*Note: <code>icon.overlay</code> and <code>icon.cooldown</code> are both Frames created internally by EAM. Their methods are 100% certain to exist and there is no need to use <code>pcall</code> for protection. *</li>
+</ul>
+</li>
+</ol>
+<hr />
+<h2 id="4-specific-reconstruction-and-optimization-suggestions">4. Specific reconstruction and optimization suggestions</h2>
+<p>In order to eliminate the above hidden dangers and achieve the ultimate performance and zero Taint requirements of the EAM rewritten version, it is recommended to implement the following optimization and reconstruction:</p>
+<h3 id="41-eliminate-string-allocation-and-pairs-iteration-introduce-time-string-cache-and-bidirectional-chained-list">4.1 Eliminate string allocation and <code>pairs</code> iteration: introduce "time string cache" and "bidirectional chained list"</h3>
+<ul>
+<li><strong>Time Text Cache</strong>:
+Pre-generate a list of integer strings from $0.0$ to $3.0$ seconds (0.1 second intervals, 30 in total) and $3$ to $3600$ seconds. In OnUpdate, this cache table is indexed directly through numerical calculations, reducing the formatting overhead to zero.</li>
+<li><strong>Flat bidirectional link/numeric index array</strong>:
+Change <code>activeLegacyTimers</code> to use a numerically indexed flat array, thereby using <code>for i = 1, count</code> for numeric loop iteration, eliminating the iterator allocation and hash table lookup overhead of <code>pairs</code> in high-frequency paths.</li>
+</ul>
+<h3 id="42-remove-hot-path-pcall-and-anonymous-closure">4.2 Remove hot path <code>pcall</code> and anonymous closure</h3>
+<ul>
+<li>Remove the <code>pcall(function() ... end)</code> wrapper for self-built frameworks in <code>Renderer.render</code> and replace it with direct assignment or use predefined static auxiliary functions to avoid high-frequency allocation.</li>
+</ul>
+<h3 id="43-force-createframe-and-setparent-delays-in-execution-combat">4.3 Force <code>CreateFrame</code> and <code>SetParent</code> delays in execution combat</h3>
+<ul>
+<li>Add <code>InCombatLockdown</code> detection to <code>IconPool.acquire()</code>. If you are in combat and there is no available icon, you should downgrade it or add it to the deferred rendering queue (<code>deferRender</code>). Calling <code>api.CreateFrame</code> during combat lock is strictly prohibited.</li>
+<li>Completely abolish or strictly limit the <code>SetParent</code> behavior of Shadow Host parasitic mode in combat to avoid any direct parent connection with Secure Frame.</li>
+</ul>
+<hr />
+<h2 id="raci-division-of-rights-and-responsibilities-and-review-conclusions">RACI Division of Rights and Responsibilities and Review Conclusions</h2>
+<p>This review report is based on <a href="file:///d:/EventAlertMod/Docs/21_RACI_EXPERTS_MATRIX.md.html">Docs/21_RACI_EXPERTS_MATRIX.md</a> specifications and is responsible for (Responsible) <strong>Performance &amp; Taint Control Expert</strong>, which provides core technical decision-making consultation for <strong>Main Agent</strong>.
+* <strong>Recommended Decision</strong>: In the next refactoring cycle, <code>UI/Renderer.lua</code> and <code>UI/IconPool.lua</code> should be partially refactored immediately, and "time string cache", "direct call without pcall" and "CreateFrame delay guard in combat" should be implemented to ensure extremely low GC and absolute safety during AddOn operation.</p>
+    </div>
+    
+    <!-- Mermaid Dynamic Render Script -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            securityLevel: 'loose',
+            themeVariables: {
+                background: '#1e293b',
+                primaryColor: '#0f172a',
+                primaryTextColor: '#f8fafc',
+                lineColor: '#38bdf8'
+            }
+        });
+    </script>
+    
+    <script>
+        function translatePage(lang) {
+            document.querySelectorAll('.lang-content').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            if (lang === 'zh-TW') {
+                const zhContent = document.getElementById('doc-content-zh');
+                if (zhContent) zhContent.classList.add('active');
+                const zhBtn = document.getElementById('lang-zh');
+                if (zhBtn) zhBtn.classList.add('active');
+                const logo = document.querySelector('.nav-logo');
+                if (logo) logo.innerText = 'EventAlertMod 說明文件';
+            } else {
+                const enContent = document.getElementById('doc-content-en');
+                if (enContent) enContent.classList.add('active');
+                const enBtn = document.getElementById('lang-en');
+                if (enBtn) enBtn.classList.add('active');
+                const logo = document.querySelector('.nav-logo');
+                if (logo) logo.innerText = 'EventAlertMod Docs';
+            }
+        }
+
+        function setFontSize(size) {
+            document.documentElement.style.setProperty('--base-font-size', size);
+            document.querySelectorAll('.size-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if ((size === '14px' && btn.innerText === '小') ||
+                    (size === '16px' && btn.innerText === '中') ||
+                    (size === '18px' && btn.innerText === '大')) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        const themes = {
+            blue: {
+                '--bg-color': '#0f172a',
+                '--panel-bg': '#1e293b',
+                '--text-color': '#cbd5e1',
+                '--heading-color': '#f8fafc',
+                '--accent-color': '#38bdf8',
+                '--border-color': '#334155',
+                '--code-color': '#f1f5f9'
+            },
+            red: {
+                '--bg-color': '#1a0f0f',
+                '--panel-bg': '#2d1a1a',
+                '--text-color': '#fca5a5',
+                '--heading-color': '#fee2e2',
+                '--accent-color': '#ef4444',
+                '--border-color': '#451a1a',
+                '--code-color': '#fee2e2'
+            },
+            green: {
+                '--bg-color': '#06140e',
+                '--panel-bg': '#0d281c',
+                '--text-color': '#86efac',
+                '--heading-color': '#dcfce7',
+                '--accent-color': '#22c55e',
+                '--border-color': '#14422b',
+                '--code-color': '#dcfce7'
+            },
+            black: {
+                '--bg-color': '#050505',
+                '--panel-bg': '#121212',
+                '--text-color': '#e5e5e5',
+                '--heading-color': '#ffffff',
+                '--accent-color': '#a3a3a3',
+                '--border-color': '#262626',
+                '--code-color': '#ffffff'
+            },
+            gray: {
+                '--bg-color': '#27272a',
+                '--panel-bg': '#3f3f46',
+                '--text-color': '#e4e4e7',
+                '--heading-color': '#fafafa',
+                '--accent-color': '#cbd5e1',
+                '--border-color': '#52525b',
+                '--code-color': '#fafafa'
+            },
+            white: {
+                '--bg-color': '#f8fafc',
+                '--panel-bg': '#ffffff',
+                '--text-color': '#334155',
+                '--heading-color': '#0f172a',
+                '--accent-color': '#0284c7',
+                '--border-color': '#e2e8f0',
+                '--code-color': '#0f172a'
+            }
+        };
+
+        function setTheme(name) {
+            const theme = themes[name];
+            if (theme) {
+                for (const [key, value] of Object.entries(theme)) {
+                    document.documentElement.style.setProperty(key, value);
+                }
+                // Toggle active class on dots
+                document.querySelectorAll('.theme-dot').forEach(dot => {
+                    dot.classList.remove('active');
+                    if (dot.classList.contains('dot-' + name)) {
+                        dot.classList.add('active');
+                    }
+                });
+            }
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>22_QC_ROOT_CAUSE_ANALYSIS_GUIDE.md - EventAlertMod Docs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        
+    :root {
+        --base-font-size: 16px;
+        --bg-color: #0f172a;
+        --text-color: #cbd5e1;
+        --heading-color: #f8fafc;
+        --accent-color: #38bdf8;
+        --panel-bg: #1e293b;
+        --border-color: #334155;
+        --code-color: #f1f5f9;
+    }
+
+        
+    html, body {
+        overflow-x: hidden;
+    }
+    body {
+        font-family: 'Outfit', 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-size: var(--base-font-size);
+        line-height: 1.6;
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 80px 20px 40px 20px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+        color: var(--heading-color);
+        margin-top: 1.5em;
+        margin-bottom: 0.5em;
+        font-weight: 600;
+    }
+    
+    h1 {
+        font-size: 2.2rem;
+        border-bottom: 2px solid var(--border-color);
+        padding-bottom: 10px;
+        color: var(--accent-color);
+    }
+    
+    h2 {
+        font-size: 1.7rem;
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 8px;
+        color: var(--heading-color);
+    }
+    
+    h3 {
+        font-size: 1.35rem;
+        color: var(--heading-color);
+    }
+    
+    h4 {
+        font-size: 1.15rem;
+        color: var(--accent-color);
+        background-color: var(--panel-bg);
+        padding: 6px 12px;
+        border-radius: 6px;
+        display: inline-block;
+    }
+    
+    a {
+        color: var(--accent-color);
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+    
+    a:hover {
+        color: var(--accent-color);
+        text-decoration: underline;
+        opacity: 0.8;
+    }
+    
+    ul, ol {
+        padding-left: 24px;
+        margin-bottom: 20px;
+    }
+    
+    li {
+        margin-bottom: 6px;
+    }
+    
+    hr {
+        border: 0;
+        height: 1px;
+        background: var(--border-color);
+        margin: 30px 0;
+    }
+    
+    code {
+        font-family: 'Fira Code', 'Courier New', Courier, monospace;
+        background-color: var(--panel-bg);
+        padding: 2px 6px;
+        border-radius: 4px;
+        color: var(--code-color);
+        font-size: 0.9em;
+    }
+    
+    pre {
+        background-color: var(--panel-bg);
+        padding: 16px;
+        border-radius: 8px;
+        overflow-x: auto;
+        border: 1px solid var(--border-color);
+        margin: 20px 0;
+    }
+    
+    pre code {
+        background-color: transparent;
+        padding: 0;
+        border-radius: 0;
+        color: var(--text-color);
+    }
+    
+    blockquote {
+        border-left: 4px solid var(--accent-color);
+        padding: 10px 20px;
+        margin: 20px 0;
+        background-color: var(--panel-bg);
+        border-radius: 0 8px 8px 0;
+        color: var(--text-color);
+        opacity: 0.85;
+    }
+    
+    img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        margin: 20px 0;
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3);
+    }
+    
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 25px 0;
+        background-color: var(--panel-bg);
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        border: 1px solid var(--border-color);
+    }
+    
+    th, td {
+        padding: 12px 16px;
+        text-align: left;
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+        background-color: var(--bg-color);
+        color: var(--accent-color);
+        font-weight: 600;
+        border-bottom: 2px solid var(--border-color);
+    }
+    
+    tr:last-child td {
+        border-bottom: none;
+    }
+    
+    tr:hover {
+        background-color: var(--panel-bg);
+        opacity: 0.95;
+    }
+    
+    /* Mermaid Graph Center Alignment */
+    .mermaid {
+        display: flex;
+        justify-content: center;
+        background-color: var(--panel-bg);
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        margin: 25px 0;
+    }
+    
+    /* Back Button */
+    .back-btn {
+        display: inline-flex;
+        align-items: center;
+        margin-bottom: 20px;
+        background-color: var(--panel-bg);
+        color: var(--heading-color);
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-size: 0.9em;
+        border: 1px solid var(--border-color);
+        transition: all 0.2s ease;
+    }
+    
+    .back-btn:hover {
+        background-color: var(--border-color);
+        color: var(--accent-color);
+        text-decoration: none;
+    }
+    
+    @media (max-width: 600px) {
+        body {
+            padding: 20px 10px;
+        }
+        h1 {
+            font-size: 1.8rem;
+        }
+    }
+    
+        
+    /* Top Nav Bar Styles */
+    .top-nav-bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 60px;
+        background: rgba(30, 41, 59, 0.9);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border-color);
+        z-index: 10000;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+    
+    .nav-container {
+        max-width: 1000px;
+        height: 100%;
+        margin: 0 auto;
+        padding: 0 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    .nav-logo {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--accent-color);
+        text-decoration: none;
+        letter-spacing: 0.5px;
+        transition: color 0.3s ease;
+    }
+    
+    .nav-logo:hover {
+        color: var(--heading-color);
+        text-decoration: none;
+        opacity: 0.9;
+    }
+    
+    .nav-controls {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+    
+    .nav-control-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .nav-label {
+        font-size: 0.8rem;
+        color: var(--text-color);
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .control-options {
+        display: flex;
+        gap: 4px;
+    }
+    
+    .nav-btn {
+        background: var(--bg-color);
+        border: 1px solid var(--border-color);
+        color: var(--text-color);
+        padding: 4px 10px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.8rem;
+        transition: all 0.2s ease;
+        outline: none;
+    }
+    
+    .nav-btn:hover {
+        border-color: var(--accent-color);
+        color: var(--heading-color);
+    }
+    
+    .nav-btn.active {
+        background: var(--accent-color);
+        color: var(--bg-color);
+        border-color: var(--accent-color);
+        font-weight: 600;
+    }
+    
+    .nav-theme-dots {
+        display: flex;
+        gap: 6px;
+    }
+    
+    .theme-dot {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: transform 0.1s ease, border-color 0.2s ease;
+    }
+    
+    .theme-dot:hover {
+        transform: scale(1.2);
+    }
+    
+    .theme-dot.active {
+        border-color: #ffffff;
+        box-shadow: 0 0 0 2px var(--accent-color);
+    }
+    
+    .dot-blue { background-color: #38bdf8; }
+    .dot-red { background-color: #ef4444; }
+    .dot-green { background-color: #22c55e; }
+    .dot-black { background-color: #000000; border: 1px solid #334155; }
+    .dot-gray { background-color: #71717a; }
+    .dot-white { background-color: #ffffff; border: 1px solid #cbd5e1; }
+    
+    /* Responsive adjustment */
+    @media (max-width: 768px) {
+        .top-nav-bar {
+            height: auto;
+            padding: 10px 0;
+        }
+        .nav-container {
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+        }
+        .nav-controls {
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+    }
+
+        .lang-content {
+            display: none;
+        }
+        .lang-content.active {
+            display: block;
+        }
+        .translation-fallback {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .translation-fallback h3 {
+            color: #ef4444;
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="top-nav-bar">
+        <div class="nav-container">
+            <a href="AGENTS.md.html" class="nav-logo">EventAlertMod Docs</a>
+            <div class="nav-controls">
+                <!-- 語言 -->
+                <div class="nav-control-group">
+                    <span class="nav-label">語言 / Lang:</span>
+                    <div class="control-options">
+                        <button onclick="translatePage('zh-TW')" class="nav-btn lang-btn active" id="lang-zh">繁中</button>
+                        <button onclick="translatePage('en')" class="nav-btn lang-btn" id="lang-en">EN</button>
+                    </div>
+                </div>
+                <!-- 字級 -->
+                <div class="nav-control-group">
+                    <span class="nav-label">字級 / Font:</span>
+                    <div class="control-options">
+                        <button onclick="setFontSize('14px')" class="nav-btn size-btn">小</button>
+                        <button onclick="setFontSize('16px')" class="nav-btn size-btn active">中</button>
+                        <button onclick="setFontSize('18px')" class="nav-btn size-btn">大</button>
+                    </div>
+                </div>
+                <!-- 主題 -->
+                <div class="nav-control-group">
+                    <span class="nav-label">主題 / Theme:</span>
+                    <div class="nav-theme-dots">
+                        <span class="theme-dot dot-blue active" onclick="setTheme('blue')" title="Blue"></span>
+                        <span class="theme-dot dot-red" onclick="setTheme('red')" title="Red"></span>
+                        <span class="theme-dot dot-green" onclick="setTheme('green')" title="Green"></span>
+                        <span class="theme-dot dot-black" onclick="setTheme('black')" title="Black"></span>
+                        <span class="theme-dot dot-gray" onclick="setTheme('gray')" title="Gray"></span>
+                        <span class="theme-dot dot-white" onclick="setTheme('white')" title="White"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="doc-content-zh" class="lang-content active">
+        <a href="AGENTS.md.html" class="back-btn">← 返回 AI 入口指導檔 (AGENTS)</a>
+<h1 id="eventalertmod-qc-root-cause-analysis-guide">EventAlertMod 品質管制與要因分析指引 (QC &amp; Root Cause Analysis Guide)</h1>
+<p>少年欸！為確保 EAM 在重構與日後開發中的程式碼品質，避免在同一個 Bug 上反覆栽跟頭，本文件正式將企業管理學的品質管制（TQM）、新 QC 七大手法、5 Whys（WHY-WHY 分析）、魚骨圖要因分析、對策矩陣評估與甘特圖時程相依精神，全面導入 EAM 的開發與 Bug 診斷流程中。</p>
+<p>後續所有 subagent 進行問題排查、方案設計（Implementation Plan）與 PR 審查，均須遵循此 QC 指引。</p>
+<hr />
+<h2 id="1-5-whys-why-why">1. 5 Whys (WHY-WHY 要因分析) 實施規範</h2>
+<p>當 EAM 出現任何 Bug、Taint 阻斷或 Lua 報錯時，主代理與 subagent 不得直接嘗試修改程式碼，必須先在 <code>Docs/15_DEVELOPMENT_ISSUE_LOG.md</code> 紀錄中進行 <strong>5 Whys 分析</strong>，連續追問 5 次「為什麼」，直到找出根本原因（Root Cause）。</p>
+<h3 id="iszero">範例：戰鬥中 IsZero() 布林判定崩潰分析</h3>
+<ul>
+<li><strong>Why 1 (一問)</strong>：為什麼 OnUpdate 執行時插件崩潰並阻斷 UI？<ul>
+<li><em>答</em>：因為在 <code>Renderer.lua:97</code> 對 <code>durationObj:IsZero()</code> 的傳回值進行了直接布林判斷（<code>if durationObj:IsZero() then</code>）。</li>
+</ul>
+</li>
+<li><strong>Why 2 (二問)</strong>：為什麼 <code>IsZero()</code> 會引發崩潰？<ul>
+<li><em>答</em>：因為該 <code>DurationObject</code> 代表的光環在戰鬥中受到 Secrecy 限制，其 <code>IsZero()</code> 方法返回的是一個受保護的 <code>Secret Boolean</code>。</li>
+</ul>
+</li>
+<li><strong>Why 3 (三問)</strong>：為什麼受保護的 <code>Secret Boolean</code> 不能做布林判斷？<ul>
+<li><em>答</em>：因為魔獸世界 12.x 引擎為了防止 AddOn 藉由 API 判定來輔助戰鬥決策，嚴禁在 Lua 中對 Secret Boolean 執行布林跳轉指令（Boolean Test）。</li>
+</ul>
+</li>
+<li><strong>Why 4 (四問)</strong>：為什麼我們非得要在 OnUpdate 中呼叫 <code>IsZero()</code>？<ul>
+<li><em>答</em>：因為戰鬥中 <code>UNIT_AURA</code> 事件會被官方節流，且 Secret 狀態下我們無法取得剩餘時間以預排 Scheduler，必須在 Renderer 輪詢該 Predicate 以便在光環消失時主動回收 Icon。</li>
+</ul>
+</li>
+<li><strong>Why 5 (五問/根本原因)</strong>：為什麼之前沒有防護？<ul>
+<li><em>答</em>：因為 Renderer 缺乏對 Secret Value 的前置檢測與安全包裹，且不知道 <code>IsZero()</code> 的傳回值也會是 Secret。</li>
+</ul>
+</li>
+<li><strong>根本對策</strong>：引入 <code>safeCheckIsZero</code>，利用 <code>Util.isSecretValue</code> 過濾返回值，若為 Secret 則絕不對其進行 Boolean Test。</li>
+</ul>
+<hr />
+<h2 id="2-ishikawa-diagram">2. 魚骨圖 (Ishikawa Diagram) 要因分析模板</h2>
+<p>在遭遇複雜系統性問題時（例如「一個 ICON 都沒出現」或「高頻戰鬥中 UI 嚴重卡頓」），須使用魚骨圖從以下五個維度進行分析：</p>
+<pre class="codehilite"><code class="language-text">  【人 (Agent)】                   【機 (Client/WoW API)】         【料 (SavedVariables/Data)】
+  - 載入順序快取 nil 漏配           - 12.x Secrecy 加密與限制       - 舊 SavedVariables 資料遷移失效
+  - 靜態變數被提早快取             - 事件節流與 CLEU 事件停用       - 預設 Alerts 表為空 (WTF遺失)
+          \                             \                               \
+           \                             \                               \
+            --------------------------------------------------------------------&gt; [ 系統異常/Bug ]
+           /                             /                               /
+          /                             /                               /
+  - 戰鬥中 layout 頻繁重排         - 戰鬥中 InCombatLockdown 限制
+  - 輪詢 pcall 產生 Heap 垃圾       - 脫戰後 defer 釋放機制
+  【法 (Algorithm/邏輯)】          【環 (Environment/戰鬥狀態)】
+</code></pre>
+
+<ul>
+<li><strong>人 (Agent / Developer)</strong>：AI 代理的代碼載入順序、快取邏輯、靜態變數使用不當。</li>
+<li><strong>機 (Client / WoW API)</strong>：魔獸客戶端 API 的行為變更、加密限制、事件節流。</li>
+<li><strong>料 (SavedVariables / Data)</strong>：資料庫 Schema、Defaults 設定檔、本地化字串。</li>
+<li><strong>法 (Algorithm / 邏輯流程)</strong>：演算法開銷、迴圈設計、事件訂閱、GC 垃圾產生率。</li>
+<li><strong>環 (Environment / 遊戲狀態)</strong>：戰鬥中/非戰鬥中、低 FPS、大數量 Buff 特殊情境。</li>
+</ul>
+<hr />
+<h2 id="3-countermeasure-matrix">3. 對策擬定與評估矩陣 (Countermeasure Matrix)</h2>
+<p>在 <code>implementation_plan.md</code> 中設計複雜方案時，必須提出至少 <strong>兩個候選對策</strong>，並以矩陣圖形式進行量化打分評估（1~5 分，5 分為最優），最終選取綜合得分最高者。</p>
+<h3 id="secret">範例：解決戰鬥中 Secret 倒數問題的對策評估</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">對策方案</th>
+<th style="text-align: center;">效果 (Effectiveness)</th>
+<th style="text-align: center;">可行性 (Feasibility)</th>
+<th style="text-align: center;">效能開銷 (Low GC/CPU)</th>
+<th style="text-align: center;">安全風險 (Low Taint/Secret)</th>
+<th style="text-align: center;">綜合得分</th>
+<th style="text-align: center;">決策</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>對策 A：強行利用 Tooltip Scraping 在每幀 OnUpdate 爬取時間</strong></td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">1 (頻繁字串 GC)</td>
+<td style="text-align: center;">2 (極易 tainted)</td>
+<td style="text-align: center;"><strong>9</strong></td>
+<td style="text-align: center;">淘汰</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>對策 B：使用 Shadow Host 寄生吸附官方 CooldownViewer</strong></td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">5 (100% 避讓佈局)</td>
+<td style="text-align: center;">4 (安全隔離)</td>
+<td style="text-align: center;"><strong>17</strong></td>
+<td style="text-align: center;"><strong>採納 (備用)</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>對策 C：AuraService 說明解析 + Renderer 雙軌 IsZero 判定回收</strong></td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">4 (僅在倒數時輪詢)</td>
+<td style="text-align: center;">5 (利用 safeCheck 阻斷)</td>
+<td style="text-align: center;"><strong>19</strong></td>
+<td style="text-align: center;"><strong>首選採納</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="4-gantt-spirit">4. 甘特圖排程與相依性精神 (Gantt Spirit)</h2>
+<p>在 <code>task.md</code> 中，必須體現甘特圖的<strong>相依性（Dependencies）</strong>與<strong>關鍵路徑（Critical Path）</strong>，以防止並行開發的 subagent 發生「因前置代碼未就緒而空轉」或「高耦合代碼衝突」。</p>
+<h3 id="_1">排程原則：</h3>
+<ol>
+<li><strong>Dependency Guard (相依性守衛)</strong>：在 <code>task.md</code> 中明確標註前置依賴。例如：<ul>
+<li><code>[ ] 任務 C (AuraService 重構) [依賴：任務 A (EventRouter 改版)]</code></li>
+</ul>
+</li>
+<li><strong>Critical Path First (關鍵路徑優先)</strong>：將決定架構穩定性（如 Core, SavedVariables）的任務排在最前，分配最昂貴的資源與 A 級審查專家。</li>
+<li><strong>Milestone Gate (里程碑關卡)</strong>：每個階段結束時，必須設定 Milestone 進行品質查核（如：<code>luac -p</code> 檢查，<code>/eam doctor</code> 診斷通過），否則不得進入下一階段。</li>
+</ol>
+<hr />
+<h2 id="5-qc-eam">5. 新 QC 七大手法在 EAM 的落地</h2>
+<ol>
+<li><strong>關係圖法 (Relations Diagram)</strong>：<ul>
+<li><em>應用</em>：理清 EAM 內部事件（如 <code>EAM_AURA_STATE_CHANGED</code>）與原生 WoW 事件（如 <code>UNIT_AURA</code>）之間的因果傳播網絡，防止事件風暴與無限遞迴。</li>
+</ul>
+</li>
+<li><strong>系統圖法 (Systematic Diagram)</strong>：<ul>
+<li><em>應用</em>：將宏大的重構目標（如 "12.1.0 零分配"）層層分解為子模組變更（AuraService 池化、CooldownService 池化、AlertManager 回收、Renderer 多型渲染）。</li>
+</ul>
+</li>
+<li><strong>矩陣圖法 (Matrix Diagram)</strong>：<ul>
+<li><em>應用</em>：即本案已落地的 <strong><a href="file:///d:/EventAlertMod/Docs/21_RACI_EXPERTS_MATRIX.md.html">Docs/21_RACI_EXPERTS_MATRIX.md</a></strong>，用來理清專家與開發任務的責任對照。</li>
+</ul>
+</li>
+<li><strong>PDPC 法 (Process Decision Program Chart / 過程決定計劃圖)</strong>：<ul>
+<li><em>應用</em>：在代碼編寫前，預測所有可能的異常路徑（如：官方 API 返回 nil、資料未快取、戰鬥中 restricted 限制），並在程式碼中預先布置 <code>pcall</code> 故障隔離、<code>safeCheckIsZero</code> 與 <code>Util.isSecretValue</code> 等 fallback 備援對策。</li>
+</ul>
+</li>
+<li><strong>箭條圖法 (Arrow Diagram)</strong>：<ul>
+<li><em>應用</em>：理清 subagent 的並行工作順序，避免多個代理同時寫入同一個檔案，確保版本分支的平滑合併。</li>
+</ul>
+</li>
+</ol>
+    </div>
+    <div id="doc-content-en" class="lang-content">
+        <a href="AGENTS.md.html" class="back-btn">← Back to AI Entrance (AGENTS)</a>
+<h1 id="eventalertmod-quality-control-root-cause-analysis-guide-qc-root-cause-analysis-guide">EventAlertMod Quality Control &amp; Root Cause Analysis Guide (QC &amp; Root Cause Analysis Guide)</h1>
+<p>Boy! In order to ensure the code quality of EAM during reconstruction and future development, and to avoid repeated failures on the same bug, this document officially introduces the spirit of enterprise management quality control (TQM), the seven new QC techniques, 5 Whys (WHY-WHY analysis), fishbone diagram factor analysis, strategy matrix evaluation, and Gantt chart schedule dependence into the EAM development and bug diagnosis process.
+All subsequent subagents must follow this QC guideline when conducting problem troubleshooting, implementation plan (Implementation Plan), and PR review.</p>
+<hr />
+<h2 id="1-5-whys-why-why-factor-analysis-implementation-specifications">1. 5 Whys (WHY-WHY factor analysis) implementation specifications</h2>
+<p>When any bug, Taint blocking or Lua error occurs in EAM, the main agent and subagent are not allowed to directly try to modify the program code. They must first perform a <strong>5 Whys analysis</strong> in the <code>Docs/15_DEVELOPMENT_ISSUE_LOG.md</code> record and ask "why" five times in a row until the root cause (Root Cause) is found.</p>
+<h3 id="example-analysis-of-iszero-blinn-determination-collapse-in-combat">Example: Analysis of IsZero() Blinn Determination Collapse in Combat</h3>
+<ul>
+<li><strong>Why 1 (one question)</strong>: Why does the plug-in crash and block the UI when OnUpdate is executed?<ul>
+<li><em>Answer</em>: Because in <code>Renderer.lua:97</code> a direct Boolean judgment is made on the return value of <code>durationObj:IsZero()</code> (<code>if durationObj:IsZero() then</code>).</li>
+</ul>
+</li>
+<li><strong>Why 2 (second question)</strong>: Why does <code>IsZero()</code> cause a crash?</li>
+<li><em>Answer</em>: Because the aura represented by this <code>DurationObject</code> is restricted by Secrecy in combat, its <code>IsZero()</code> method returns a protected <code>Secret Boolean</code>.</li>
+<li><strong>Why 3 (three questions)</strong>: Why can’t the protected <code>Secret Boolean</code> make Boolean judgment?<ul>
+<li><em>Answer</em>: Because the World of Warcraft 12.x engine prevents AddOn from assisting combat decisions through API determination, it is strictly prohibited to execute Boolean jump instructions (Boolean Test) on Secret Boolean in Lua.</li>
+</ul>
+</li>
+<li><strong>Why 4 (Four Questions)</strong>: Why do we have to call <code>IsZero()</code> in OnUpdate?<ul>
+<li><em>Answer</em>: Because the <code>UNIT_AURA</code> event in battle will be officially throttled, and we cannot obtain the remaining time to pre-schedule the Scheduler in the Secret state, the Predicate must be polled in the Renderer to actively recycle the Icon when the aura disappears.</li>
+</ul>
+</li>
+<li><strong>Why 5 (Five questions/root reasons)</strong>: Why was there no protection before?</li>
+<li><em>Answer</em>: Because Renderer lacks pre-detection and security packaging for Secret Value, and does not know that the return value of <code>IsZero()</code> will also be Secret.</li>
+<li><strong>Basic Countermeasure</strong>: Introduce <code>safeCheckIsZero</code>, use <code>Util.isSecretValue</code> to filter the return value, and never perform Boolean Test on it if it is Secret.</li>
+</ul>
+<hr />
+<h2 id="2-fishbone-diagram-ishikawa-diagram-factor-analysis-template">2. Fishbone Diagram (Ishikawa Diagram) factor analysis template</h2>
+<p>When encountering complex systemic problems (such as "not a single ICON appears" or "the UI is severely stuck during high-frequency battles"), a fishbone diagram must be used to analyze from the following five dimensions:</p>
+<pre class="codehilite"><code class="language-text">  【人 (Agent)】                   【機 (Client/WoW API)】         【料 (SavedVariables/Data)】
+  - 載入順序快取 nil 漏配           - 12.x Secrecy 加密與限制       - 舊 SavedVariables 資料遷移失效
+  - 靜態變數被提早快取             - 事件節流與 CLEU 事件停用       - 預設 Alerts 表為空 (WTF遺失)
+          \                             \                               \
+           \                             \                               \
+            --------------------------------------------------------------------&gt; [ 系統異常/Bug ]
+           /                             /                               /
+          /                             /                               /
+  - 戰鬥中 layout 頻繁重排         - 戰鬥中 InCombatLockdown 限制
+  - 輪詢 pcall 產生 Heap 垃圾       - 脫戰後 defer 釋放機制
+  【法 (Algorithm/邏輯)】          【環 (Environment/戰鬥狀態)】
+</code></pre>
+
+<ul>
+<li><strong>People (Agent/Developer)</strong>: The code loading sequence, cache logic, and static variables of the AI ​​agent are improperly used.</li>
+<li><strong>Machine (Client / WoW API)</strong>: Behavior changes, encryption restrictions, event throttling for the World of Warcraft client API.</li>
+<li><strong>Material (SavedVariables / Data)</strong>: Database Schema, Defaults configuration file, localization string.</li>
+<li><strong>Method (Algorithm / Logic Flow)</strong>: Algorithm overhead, loop design, event subscription, GC garbage generation rate.</li>
+<li><strong>Ring (Environment/Game State)</strong>: special situation in combat/non-combat, low FPS, large number of Buffs.</li>
+</ul>
+<hr />
+<h2 id="3-countermeasure-matrix">3. Countermeasure Matrix</h2>
+<p>When designing a complex solution in <code>implementation_plan.md</code>, at least <strong>two candidate countermeasures</strong> must be proposed and quantitatively evaluated in the form of a matrix chart (1~5 points, 5 being the best), and the one with the highest comprehensive score is finally selected.</p>
+<h3 id="example-evaluation-of-countermeasures-to-solve-the-secret-countdown-problem-in-combat">Example: Evaluation of Countermeasures to Solve the Secret Countdown Problem in Combat</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Countermeasures</th>
+<th style="text-align: center;">Effectiveness</th>
+<th style="text-align: center;">Feasibility</th>
+<th style="text-align: center;">Performance overhead (Low GC/CPU)</th>
+<th style="text-align: center;">Security risk (Low Taint/Secret)</th>
+<th style="text-align: center;">Comprehensive score</th>
+<th style="text-align: center;">Decision</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Countermeasure A: Forcibly use Tooltip Scraping to crawl the OnUpdate time of each frame</strong></td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">1 (frequent string GC)</td>
+<td style="text-align: center;">2 (extremely easy to tainted)</td>
+<td style="text-align: center;"><strong>9</strong></td>
+<td style="text-align: center;">Elimination</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Countermeasure B: Use Shadow Host parasitic adsorption official CooldownViewer</strong></td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">5 (100% avoidance layout)</td>
+<td style="text-align: center;">4 (safety isolation)</td>
+<td style="text-align: center;"><strong>17</strong></td>
+<td style="text-align: center;"><strong>Adopted (standby)</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Countermeasure C: AuraService description analysis + Renderer dual-track IsZero judgment recycling</strong></td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">4 (only polling during countdown)</td>
+<td style="text-align: center;">5 (use safeCheck to block)</td>
+<td style="text-align: center;"><strong>19</strong></td>
+<td style="text-align: center;"><strong>Preferred adoption</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="4-gantt-chart-scheduling-and-dependency-spirit-gantt-spirit">4. Gantt Chart Scheduling and Dependency Spirit (Gantt Spirit)</h2>
+<p>In <code>task.md</code>, the <strong>Dependencies</strong> and <strong>Critical Path</strong> of the Gantt chart must be reflected to prevent parallel development of subagents from "idling due to unready pre-code" or "highly coupled code conflicts".</p>
+<h3 id="scheduling-principles">Scheduling principles:</h3>
+<ol>
+<li><strong>Dependency Guard</strong>: Clearly mark pre-dependencies in <code>task.md</code>. For example:<ul>
+<li><code>[ ] Task C (AuraService reconstruction) [Depends on: Task A (EventRouter revision)]</code></li>
+</ul>
+</li>
+<li><strong>Critical Path First</strong>: Prioritize tasks that determine the stability of the architecture (such as Core, SavedVariables), and allocate the most expensive resources and A-level review experts.</li>
+<li><strong>Milestone Gate (milestone level)</strong>: At the end of each stage, Milestone must be set for quality inspection (such as: <code>luac -p</code> inspection, <code>/eam doctor</code> diagnosis passed), otherwise it will not enter the next stage.</li>
+</ol>
+<hr />
+<h2 id="5-implementation-of-the-seven-new-qc-techniques-in-eam">5. Implementation of the seven new QC techniques in EAM</h2>
+<ol>
+<li><strong>Relations Diagram</strong>:<ul>
+<li><em>Application</em>: Clarify the causal propagation network between EAM internal events (such as <code>EAM_AURA_STATE_CHANGED</code>) and native WoW events (such as <code>UNIT_AURA</code>) to prevent event storms and infinite recursion.</li>
+</ul>
+</li>
+<li><strong>Systematic Diagram</strong>:<ul>
+<li><em>Application</em>: Break down ambitious refactoring goals (such as "12.1.0 zero allocation") into sub-module changes (AuraService pooling, CooldownService pooling, AlertManager recycling, Renderer multi-type rendering).</li>
+</ul>
+</li>
+<li><strong>Matrix Diagram</strong>:<ul>
+<li><em>Application</em>: The <strong><a href="file:///d:/EventAlertMod/Docs/21_RACI_EXPERTS_MATRIX.md.html">Docs/21_RACI_EXPERTS_MATRIX.md</a></strong> that has been implemented in this case is used to clarify the responsibilities of experts and development tasks.</li>
+</ul>
+</li>
+<li><strong>PDPC method (Process Decision Program Chart / Process Decision Plan Chart)</strong>:</li>
+<li><em>Application</em>: Before writing code, predict all possible exception paths (such as official API returning nil, data not cached, restricted restrictions in combat), and pre-arrange <code>pcall</code> fault isolation, <code>safeCheckIsZero</code> and <code>Util.isSecretValue</code> and other fallback backup countermeasures in the code.</li>
+<li><strong>Arrow Diagram</strong>:</li>
+<li><em>Application</em>: Clarify the parallel work sequence of subagent, avoid multiple agents writing the same file at the same time, and ensure smooth merging of version branches.</li>
+</ol>
+    </div>
+    
+    <!-- Mermaid Dynamic Render Script -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            securityLevel: 'loose',
+            themeVariables: {
+                background: '#1e293b',
+                primaryColor: '#0f172a',
+                primaryTextColor: '#f8fafc',
+                lineColor: '#38bdf8'
+            }
+        });
+    </script>
+    
+    <script>
+        function translatePage(lang) {
+            document.querySelectorAll('.lang-content').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            if (lang === 'zh-TW') {
+                const zhContent = document.getElementById('doc-content-zh');
+                if (zhContent) zhContent.classList.add('active');
+                const zhBtn = document.getElementById('lang-zh');
+                if (zhBtn) zhBtn.classList.add('active');
+                const logo = document.querySelector('.nav-logo');
+                if (logo) logo.innerText = 'EventAlertMod 說明文件';
+            } else {
+                const enContent = document.getElementById('doc-content-en');
+                if (enContent) enContent.classList.add('active');
+                const enBtn = document.getElementById('lang-en');
+                if (enBtn) enBtn.classList.add('active');
+                const logo = document.querySelector('.nav-logo');
+                if (logo) logo.innerText = 'EventAlertMod Docs';
+            }
+        }
+
+        function setFontSize(size) {
+            document.documentElement.style.setProperty('--base-font-size', size);
+            document.querySelectorAll('.size-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if ((size === '14px' && btn.innerText === '小') ||
+                    (size === '16px' && btn.innerText === '中') ||
+                    (size === '18px' && btn.innerText === '大')) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        const themes = {
+            blue: {
+                '--bg-color': '#0f172a',
+                '--panel-bg': '#1e293b',
+                '--text-color': '#cbd5e1',
+                '--heading-color': '#f8fafc',
+                '--accent-color': '#38bdf8',
+                '--border-color': '#334155',
+                '--code-color': '#f1f5f9'
+            },
+            red: {
+                '--bg-color': '#1a0f0f',
+                '--panel-bg': '#2d1a1a',
+                '--text-color': '#fca5a5',
+                '--heading-color': '#fee2e2',
+                '--accent-color': '#ef4444',
+                '--border-color': '#451a1a',
+                '--code-color': '#fee2e2'
+            },
+            green: {
+                '--bg-color': '#06140e',
+                '--panel-bg': '#0d281c',
+                '--text-color': '#86efac',
+                '--heading-color': '#dcfce7',
+                '--accent-color': '#22c55e',
+                '--border-color': '#14422b',
+                '--code-color': '#dcfce7'
+            },
+            black: {
+                '--bg-color': '#050505',
+                '--panel-bg': '#121212',
+                '--text-color': '#e5e5e5',
+                '--heading-color': '#ffffff',
+                '--accent-color': '#a3a3a3',
+                '--border-color': '#262626',
+                '--code-color': '#ffffff'
+            },
+            gray: {
+                '--bg-color': '#27272a',
+                '--panel-bg': '#3f3f46',
+                '--text-color': '#e4e4e7',
+                '--heading-color': '#fafafa',
+                '--accent-color': '#cbd5e1',
+                '--border-color': '#52525b',
+                '--code-color': '#fafafa'
+            },
+            white: {
+                '--bg-color': '#f8fafc',
+                '--panel-bg': '#ffffff',
+                '--text-color': '#334155',
+                '--heading-color': '#0f172a',
+                '--accent-color': '#0284c7',
+                '--border-color': '#e2e8f0',
+                '--code-color': '#0f172a'
+            }
+        };
+
+        function setTheme(name) {
+            const theme = themes[name];
+            if (theme) {
+                for (const [key, value] of Object.entries(theme)) {
+                    document.documentElement.style.setProperty(key, value);
+                }
+                // Toggle active class on dots
+                document.querySelectorAll('.theme-dot').forEach(dot => {
+                    dot.classList.remove('active');
+                    if (dot.classList.contains('dot-' + name)) {
+                        dot.classList.add('active');
+                    }
+                });
+            }
+        }
+    </script>
+
+</body>
+</html>

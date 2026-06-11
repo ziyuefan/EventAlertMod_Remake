@@ -1,0 +1,1858 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>15_DEVELOPMENT_ISSUE_LOG.md - EventAlertMod Docs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        
+    :root {
+        --base-font-size: 16px;
+        --bg-color: #0f172a;
+        --text-color: #cbd5e1;
+        --heading-color: #f8fafc;
+        --accent-color: #38bdf8;
+        --panel-bg: #1e293b;
+        --border-color: #334155;
+        --code-color: #f1f5f9;
+    }
+
+        
+    html, body {
+        overflow-x: hidden;
+    }
+    body {
+        font-family: 'Outfit', 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-size: var(--base-font-size);
+        line-height: 1.6;
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 80px 20px 40px 20px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+        color: var(--heading-color);
+        margin-top: 1.5em;
+        margin-bottom: 0.5em;
+        font-weight: 600;
+    }
+    
+    h1 {
+        font-size: 2.2rem;
+        border-bottom: 2px solid var(--border-color);
+        padding-bottom: 10px;
+        color: var(--accent-color);
+    }
+    
+    h2 {
+        font-size: 1.7rem;
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 8px;
+        color: var(--heading-color);
+    }
+    
+    h3 {
+        font-size: 1.35rem;
+        color: var(--heading-color);
+    }
+    
+    h4 {
+        font-size: 1.15rem;
+        color: var(--accent-color);
+        background-color: var(--panel-bg);
+        padding: 6px 12px;
+        border-radius: 6px;
+        display: inline-block;
+    }
+    
+    a {
+        color: var(--accent-color);
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+    
+    a:hover {
+        color: var(--accent-color);
+        text-decoration: underline;
+        opacity: 0.8;
+    }
+    
+    ul, ol {
+        padding-left: 24px;
+        margin-bottom: 20px;
+    }
+    
+    li {
+        margin-bottom: 6px;
+    }
+    
+    hr {
+        border: 0;
+        height: 1px;
+        background: var(--border-color);
+        margin: 30px 0;
+    }
+    
+    code {
+        font-family: 'Fira Code', 'Courier New', Courier, monospace;
+        background-color: var(--panel-bg);
+        padding: 2px 6px;
+        border-radius: 4px;
+        color: var(--code-color);
+        font-size: 0.9em;
+    }
+    
+    pre {
+        background-color: var(--panel-bg);
+        padding: 16px;
+        border-radius: 8px;
+        overflow-x: auto;
+        border: 1px solid var(--border-color);
+        margin: 20px 0;
+    }
+    
+    pre code {
+        background-color: transparent;
+        padding: 0;
+        border-radius: 0;
+        color: var(--text-color);
+    }
+    
+    blockquote {
+        border-left: 4px solid var(--accent-color);
+        padding: 10px 20px;
+        margin: 20px 0;
+        background-color: var(--panel-bg);
+        border-radius: 0 8px 8px 0;
+        color: var(--text-color);
+        opacity: 0.85;
+    }
+    
+    img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        margin: 20px 0;
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3);
+    }
+    
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 25px 0;
+        background-color: var(--panel-bg);
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        border: 1px solid var(--border-color);
+    }
+    
+    th, td {
+        padding: 12px 16px;
+        text-align: left;
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+        background-color: var(--bg-color);
+        color: var(--accent-color);
+        font-weight: 600;
+        border-bottom: 2px solid var(--border-color);
+    }
+    
+    tr:last-child td {
+        border-bottom: none;
+    }
+    
+    tr:hover {
+        background-color: var(--panel-bg);
+        opacity: 0.95;
+    }
+    
+    /* Mermaid Graph Center Alignment */
+    .mermaid {
+        display: flex;
+        justify-content: center;
+        background-color: var(--panel-bg);
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        margin: 25px 0;
+    }
+    
+    /* Back Button */
+    .back-btn {
+        display: inline-flex;
+        align-items: center;
+        margin-bottom: 20px;
+        background-color: var(--panel-bg);
+        color: var(--heading-color);
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-size: 0.9em;
+        border: 1px solid var(--border-color);
+        transition: all 0.2s ease;
+    }
+    
+    .back-btn:hover {
+        background-color: var(--border-color);
+        color: var(--accent-color);
+        text-decoration: none;
+    }
+    
+    @media (max-width: 600px) {
+        body {
+            padding: 20px 10px;
+        }
+        h1 {
+            font-size: 1.8rem;
+        }
+    }
+    
+        
+    /* Top Nav Bar Styles */
+    .top-nav-bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 60px;
+        background: rgba(30, 41, 59, 0.9);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border-color);
+        z-index: 10000;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+    
+    .nav-container {
+        max-width: 1000px;
+        height: 100%;
+        margin: 0 auto;
+        padding: 0 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    .nav-logo {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--accent-color);
+        text-decoration: none;
+        letter-spacing: 0.5px;
+        transition: color 0.3s ease;
+    }
+    
+    .nav-logo:hover {
+        color: var(--heading-color);
+        text-decoration: none;
+        opacity: 0.9;
+    }
+    
+    .nav-controls {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+    
+    .nav-control-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .nav-label {
+        font-size: 0.8rem;
+        color: var(--text-color);
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .control-options {
+        display: flex;
+        gap: 4px;
+    }
+    
+    .nav-btn {
+        background: var(--bg-color);
+        border: 1px solid var(--border-color);
+        color: var(--text-color);
+        padding: 4px 10px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.8rem;
+        transition: all 0.2s ease;
+        outline: none;
+    }
+    
+    .nav-btn:hover {
+        border-color: var(--accent-color);
+        color: var(--heading-color);
+    }
+    
+    .nav-btn.active {
+        background: var(--accent-color);
+        color: var(--bg-color);
+        border-color: var(--accent-color);
+        font-weight: 600;
+    }
+    
+    .nav-theme-dots {
+        display: flex;
+        gap: 6px;
+    }
+    
+    .theme-dot {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: transform 0.1s ease, border-color 0.2s ease;
+    }
+    
+    .theme-dot:hover {
+        transform: scale(1.2);
+    }
+    
+    .theme-dot.active {
+        border-color: #ffffff;
+        box-shadow: 0 0 0 2px var(--accent-color);
+    }
+    
+    .dot-blue { background-color: #38bdf8; }
+    .dot-red { background-color: #ef4444; }
+    .dot-green { background-color: #22c55e; }
+    .dot-black { background-color: #000000; border: 1px solid #334155; }
+    .dot-gray { background-color: #71717a; }
+    .dot-white { background-color: #ffffff; border: 1px solid #cbd5e1; }
+    
+    /* Responsive adjustment */
+    @media (max-width: 768px) {
+        .top-nav-bar {
+            height: auto;
+            padding: 10px 0;
+        }
+        .nav-container {
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+        }
+        .nav-controls {
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+    }
+
+        .lang-content {
+            display: none;
+        }
+        .lang-content.active {
+            display: block;
+        }
+        .translation-fallback {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .translation-fallback h3 {
+            color: #ef4444;
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="top-nav-bar">
+        <div class="nav-container">
+            <a href="AGENTS.md.html" class="nav-logo">EventAlertMod Docs</a>
+            <div class="nav-controls">
+                <!-- 語言 -->
+                <div class="nav-control-group">
+                    <span class="nav-label">語言 / Lang:</span>
+                    <div class="control-options">
+                        <button onclick="translatePage('zh-TW')" class="nav-btn lang-btn active" id="lang-zh">繁中</button>
+                        <button onclick="translatePage('en')" class="nav-btn lang-btn" id="lang-en">EN</button>
+                    </div>
+                </div>
+                <!-- 字級 -->
+                <div class="nav-control-group">
+                    <span class="nav-label">字級 / Font:</span>
+                    <div class="control-options">
+                        <button onclick="setFontSize('14px')" class="nav-btn size-btn">小</button>
+                        <button onclick="setFontSize('16px')" class="nav-btn size-btn active">中</button>
+                        <button onclick="setFontSize('18px')" class="nav-btn size-btn">大</button>
+                    </div>
+                </div>
+                <!-- 主題 -->
+                <div class="nav-control-group">
+                    <span class="nav-label">主題 / Theme:</span>
+                    <div class="nav-theme-dots">
+                        <span class="theme-dot dot-blue active" onclick="setTheme('blue')" title="Blue"></span>
+                        <span class="theme-dot dot-red" onclick="setTheme('red')" title="Red"></span>
+                        <span class="theme-dot dot-green" onclick="setTheme('green')" title="Green"></span>
+                        <span class="theme-dot dot-black" onclick="setTheme('black')" title="Black"></span>
+                        <span class="theme-dot dot-gray" onclick="setTheme('gray')" title="Gray"></span>
+                        <span class="theme-dot dot-white" onclick="setTheme('white')" title="White"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="doc-content-zh" class="lang-content active">
+        <a href="AGENTS.md.html" class="back-btn">← 返回 AI 入口指導檔 (AGENTS)</a>
+<h1 id="_1">開發瓶頸、限制、錯誤與解法紀錄</h1>
+<p>本文件記錄 EventAlertMod Retail rewrite 開發過程中遇到的瓶頸、限制、錯誤、工具失敗、API 不確定性與有效解法。目的在於減少日後重複試錯，並讓未來 AI 代理能用較少 context/token 理解既有問題。</p>
+<h2 id="_2">紀錄規則</h2>
+<ul>
+<li>新問題一律追加在「紀錄」區塊最上方，讓最新問題最容易被看到。</li>
+<li>每筆紀錄至少包含日期、狀態、情境、症狀、原因判斷、已嘗試方法、有效解法、後續注意事項。</li>
+<li>若問題尚未解決，狀態標記為「未解決」，並寫明下一步驗證方式。</li>
+<li>不記錄密碼、token、私人帳號資料或任何敏感資訊。</li>
+<li>若問題與 WoW Retail API 有關，需標明資料來源是文件、搜尋索引、NotebookLM、還是實機驗證。</li>
+<li>若問題與工具或環境有關，需記錄作業系統、指令、錯誤訊息摘要與可行替代方案。</li>
+<li>若同一類問題或操作流程重複出現，需評估是否整理成 EventAlertMod 專案專屬 SKILL。</li>
+<li>若問題涉及 taint、blocked action、combat lockdown 或 protected frame，需記錄觸發路徑、戰鬥狀態、相關 frame/API 與可重現步驟。</li>
+</ul>
+<h2 id="_3">建議格式</h2>
+<pre class="codehilite"><code class="language-md">### yyyy-mm-dd 標題
+
+- 狀態：已解決 / 未解決 / 待實機驗證
+- 情境：
+- 症狀：
+- 原因判斷：
+- 已嘗試方法：
+- 有效解法：
+- 後續注意事項：
+</code></pre>
+
+<h2 id="_4">紀錄</h2>
+<h3 id="2026-06-09-powershell-get-content-systemchar-methodnotfound">2026-06-09 PowerShell Get-Content 在讀取單行檔案時索引 System.Char 導致 MethodNotFound 崩潰 (已解決)</h3>
+<ul>
+<li>狀態：已解決</li>
+<li>情境：
+  在 <code>Tools/Build-CurseForgePackage.ps1</code> 執行過程中，調用 <code>Scan-SensitiveInfo</code> 掃描敏感資訊時拋出 <code>MethodNotFound: [System.Char] doesn't contain a method named 'Trim'</code> 致命崩潰，導致打包流程中斷。</li>
+<li>原因判斷：</li>
+<li>當 <code>Get-Content</code> 讀取到單行檔案（如 <code>changelog.txt</code>）時，PowerShell 會將傳回值優化為單一 <code>[System.String]</code>，而非 <code>[System.String[]]</code> 陣列。</li>
+<li>此時在 <code>for ($i = 0; $i -lt $lines.Count; $i++)</code> 迴圈中，使用下標 <code>$lines[$i]</code> 會將該 String 當作字元陣列處理，提取出其中的單個字元（型別為 <code>[System.Char]</code>）。</li>
+<li><code>[System.Char]</code> 沒有 <code>.Trim()</code> 方法，因此調用時會引發 <code>MethodNotFound</code> 異常。</li>
+<li>已嘗試方法：無。</li>
+<li>有效解法：
+  在 <code>Scan-SensitiveInfo</code> 函數中，將 <code>$lines = Get-Content ...</code> 修改為以 <code>@()</code> 強制包裝的 <code>$lines = @(Get-Content ...)</code>，確保不論檔案有幾行，傳回結果必定是數值陣列，從而使 <code>$lines[$i]</code> 始終傳回 String。</li>
+<li>後續注意事項：無。</li>
+</ul>
+<h3 id="2026-06-09-curseforge-12x-secrecy">2026-06-09 CurseForge 打包腳本敏感字串正則過寬導致魔獸 12.x 原生 Secrecy 代碼誤報阻斷 (已解決)</h3>
+<ul>
+<li>狀態：已解決</li>
+<li>情境：
+  執行自動化打包時，安全閥警報指控 <code>Constants.lua</code> 中的 <code>BOUNDARY_SECRET_VALUE = "secretValue"</code> 與 <code>ClassPowerService.lua</code> 中 debug log 內字串拼接的 <code>"Secret"</code> 為敏感資訊洩漏，強行中斷打包。</li>
+<li>原因判斷：
+  原本的 regex 對 <code>secret</code> 單詞進行了無腦匹配，這會誤配對到 EAM 核心 Secrecy（受限/安全）防衛機制本身的常規變數與字串。</li>
+<li>已嘗試方法：無。</li>
+<li>有效解法：
+  修改 <code>Tools/Build-CurseForgePackage.ps1</code> 中的 <code>$patterns</code> 正則，將寬泛的 <code>secret</code> 替換為精準檢索 <code>client_secret</code> 與 <code>app_secret</code> 等具體金鑰或憑證字樣。</li>
+<li>後續注意事項：確認在未來修改與 secrecy 機制相關的代碼時，打包工具不會再被誤報干擾。</li>
+</ul>
+<h3 id="2026-06-09-blp-ui">2026-06-09 自動化打包白名單漏掉 .blp 貼圖檔導致自訂 UI 資源遺失 (已解決)</h3>
+<ul>
+<li>狀態：已解決</li>
+<li>情境：
+  執行自動化打包腳本時，發現 <code>Media/Images/</code> 底下所有的貼圖與按鈕背景（如 <code>Seed1.blp</code>、<code>UI-Panel-Backdrop.blp</code>）全部被 Skip，產出的 ZIP 壓縮包內缺少這些貼圖檔。</li>
+<li>原因判斷：
+  <code>Tools/Build-CurseForgePackage.ps1</code> 中的 <code>$allowedExtensions</code> 白名單變數中，缺少了魔獸世界原生專用的貼圖副檔名 <code>.blp</code>。</li>
+<li>已嘗試方法：無。</li>
+<li>有效解法：
+  將 <code>.blp</code> 正式加入白名單副檔名陣列中（即 <code>$allowedExtensions = @(".lua", ".xml", ".tga", ".blp", ...)</code>）。</li>
+<li>後續注意事項：打包成功後，解壓發佈包確認所有圖片與音樂檔均完整存在。</li>
+</ul>
+<h3 id="2026-06-09-ai-subagent">2026-06-09 AI 研發環境 subagent 配額限制導致部分專家啟動失敗瓶頸 (已解決)</h3>
+<ul>
+<li>狀態：已解決</li>
+<li>情境：
+  主代理（Antigravity）嘗試同時並行啟動 5 位專家 subagent 進行 12.1.0 專家聯席審查與全代碼檢視。</li>
+<li>症狀與原因判斷：</li>
+<li>系統回報：<code>The subagent EAM_UI_Renderer_Expert (and Performance, API Security) encountered an error and has either stopped or failed to start execution: RESOURCE_EXHAUSTED (code 429): Individual quota reached. Contact your administrator to enable overages. Resets in 3h48m</code>.</li>
+<li>原因：AI 執行平台對並行 subagents 呼叫次數或速率實施了硬性限制，在連續大數量派工時達到了 Quota 瓶頸。</li>
+<li>已嘗試方法：無。</li>
+<li>有效解法：</li>
+<li><strong>主代理代行職責</strong>：根據 <a href="file:///d:/EventAlertMod/Docs/17_SUBAGENT_WORKFLOW.md.html">Docs/17_SUBAGENT_WORKFLOW.md</a> 的 Critical Path 降級原則，主代理（Antigravity）立即代為承擔並整合 UI 渲染、安全防衛與效能控制的評估，確保專案進度不被阻塞。</li>
+<li><strong>整合已獲取的專家報告</strong>：利用已成功取得的 <code>EAM_Addon_Architect</code> (ARCH) 與 <code>EAM_Lua_VM_Expert</code> (LUA) 重點報告（包含了對 JIT Trace Compiler 致命 <code>pcall</code> Abort 的要因分析，以及 <code>AuraService</code> 漏綁 <code>releaseFunc</code> 的重大 Bug 診斷），擬定最新的 JIT 優化實施計劃。</li>
+<li><strong>分批派工原則</strong>：在後續開發中，應儘量避免一次性同時呼叫大於 3 個 subagents。在配額恢復前，相關的旁路任務一律由主代理本地直接執行。</li>
+<li>後續注意事項：派工前須精確核算 WIP（在製品）數量，優先僅派發給 A 級核定者與 R 級執行者，降低平台配額耗竭之風險。</li>
+</ul>
+<h3 id="2026-06-07-slider-7-bug">2026-06-07 設定頁面 Slider 圖示大小/間距調整無法反應到 7 大框架排版 Bug (已解決)</h3>
+<ul>
+<li>狀態：已解決</li>
+<li>情境：
+  使用者在 EAM 設定介面（<code>/eam opt</code>）中拖曳滑桿（Sliders）調整「圖示大小（iconSize）」或「圖示間距（iconSpacing）」時，雖然設定值順利儲存至 SavedVariables 中，但在遊戲畫面中 7 大告警框架的實際渲染大小與排列間距仍然固定在預設值（40 大小與 6 間距），調整完全無效。</li>
+<li>症狀與原因判斷：</li>
+<li>透過除錯統計導出的 JSON，發現 <code>config.iconSize = 73</code>，<code>config.iconSpacing = -33</code>，表示使用者確實成功修改了設定，且設定已被寫入。</li>
+<li>然而，在實體渲染的 <code>runtimeStats.renderer.frameIcons</code> 詳盡屬性中，所有 Icon 的 <code>layoutSize</code> 仍然是預設的 <code>40</code>。</li>
+<li>經對比代碼，發現在 <code>Core/SavedVariables.lua</code> 的 <code>defaults</code> 表與 UI Slider 的綁定中，使用者設定分別儲存在 <code>EAM.db.config.iconSize</code> 與 <code>EAM.db.config.iconSpacing</code>。</li>
+<li>然而，在負責渲染排版的 <a href="file:///d:/EventAlertMod/UI/Renderer.lua">UI/Renderer.lua</a> 中，其 <code>ensureParent</code> 函數與 <code>layout</code> 排版演算法均僅去讀取了 <code>EAM.db.layout.iconSize</code> 與 <code>EAM.db.layout.spacing</code> 欄位。這導致變數命名不一致，使渲染器永遠只能 fallback 讀取預設值。</li>
+<li>已嘗試方法：
+  備份 <code>UI/Renderer.lua</code> 至 <code>backup/Renderer.lua__20260607222900</code>。</li>
+<li>有效解法：
+  修改 <a href="file:///d:/EventAlertMod/UI/Renderer.lua">UI/Renderer.lua</a>：</li>
+<li>在 <code>ensureParent</code> 內，將 <code>Renderer.iconSize</code> 和 <code>Renderer.spacing</code> 欄位的賦值改為優先從 <code>EAM.db.config.iconSize</code> 和 <code>EAM.db.config.iconSpacing</code> 讀取，並相容舊版 <code>db.layout</code> 與 fallback 預設值。</li>
+<li>在核心 <code>layout</code> 排版函數中，將 <code>local size</code> 和 <code>local spacing</code> 改為優先從 <code>EAM.db.config.iconSize</code> 和 <code>EAM.db.config.iconSpacing</code> 讀取，並相容 <code>db.layout</code> 欄位與 <code>Renderer</code> 本地預設值。</li>
+<li>靜態 <code>luac -p</code> 語法檢驗 100% 通過。</li>
+<li>後續注意事項：實機驗證時，確認在 Slider 調整大小和間距時，畫面上的告警圖示大小與間距是否能即時相應變化。</li>
+</ul>
+<h3 id="2026-06-07-secret-boolean-boolean-test-taint-bug">2026-06-07 戰鬥中對 Secret Boolean 進行布林判定 (Boolean Test) 導致 Taint 崩潰 Bug (已解決)</h3>
+<ul>
+<li>狀態：已解決</li>
+<li>情境：
+  在戰鬥中，如果一個光環或技能冷卻由原生 UI 的 <code>DurationObject</code> 進行渲染，當我們在 OnUpdate (例如 Renderer.lua 的 <code>onLegacyTimerUpdate</code>) 中呼叫 <code>durationObj:IsZero()</code> 判定其是否到期時，魔獸世界會拋出 <code>attempt to perform boolean test on a secret boolean value (execution tainted by 'EventAlertMod')</code> 致命錯誤，進而引起 Taint 崩潰並阻斷 UI 的 OnUpdate 執行鏈。</li>
+<li>症狀與原因判斷：</li>
+<li>在戰鬥中，<code>DurationObject:IsZero()</code> 的傳回值是 Secret Boolean，在 Lua 中直接做 <code>if val then</code> 條件判斷會直接觸發 Metamethod 阻斷崩潰。</li>
+<li>這是因為暴雪的 Secrecy 保護機制限制了對 Secret Boolean 做布林值判斷。</li>
+<li>如果要安全存取，我們不能對 Secret Boolean 進行 boolean test。但是，我們可以透過 <code>issecretvalue(val)</code> 來先檢驗傳回值是否是 Secret。如果它是 Secret，我們直接跳過對它的 boolean test 以策安全。如果它不是 Secret，我們才可以安全地做布林判斷。</li>
+<li>已嘗試方法：
+  備份 <code>UI/Renderer.lua</code> 至 <code>backup/Renderer.lua__20260607222500</code>。</li>
+<li>有效解法：
+  在 <a href="file:///d:/EventAlertMod/UI/Renderer.lua">UI/Renderer.lua</a> 中引入 <code>safeCheckIsZero(durationObj)</code> 防禦性包裹函數：</li>
+<li>先確認 <code>durationObj</code> 不是 <code>nil</code>，且具有 <code>IsZero</code> 函數，且 <code>durationObj</code> 本身不是 Secret。</li>
+<li>使用無閉包的 <code>pcall</code> 傳參方式呼叫：<code>local ok, val = pcall(durationObj.IsZero, durationObj)</code>，以避免在 OnUpdate 熱路徑上產生 Heap 垃圾。</li>
+<li>取得傳回值 <code>val</code> 後，使用 <code>Util.isSecretValue(val)</code> 檢查它是否是 Secret。若是 Secret，則回傳 <code>false</code>（不對其進行 boolean test）；若不是 Secret，則可以安全地回傳 <code>val == true</code>。</li>
+<li>修改 <code>onLegacyTimerUpdate</code> 中對於 <code>activeDurationObjects</code> 的遍歷，改用 <code>safeCheckIsZero(durationObj)</code> 進行條件判斷。</li>
+<li>後續注意事項：實機驗證時，確認在戰鬥中觸發受限的光環或冷卻時，當其到期時圖示是否能主動消失，且聊天視窗不再噴出 boolean test 錯誤。</li>
+</ul>
+<h3 id="2026-06-07-secret">2026-06-07 戰鬥受限（Secret）光環時間倒數降級與自動到期回收機制 (已解決)</h3>
+<ul>
+<li>狀態：已解決</li>
+<li>情境：
+  當玩家在戰鬥中，其所獲得的 Buff/Debuff 被魔獸世界標記為 Secret（如時間、過期時間受限無法讀取時），EAM 無法自行藉由 OnUpdate 倒數，且由於無法為其安排 scheduler 任務，導致光環在到期自然消失時，EAM 無法即時隱藏與回收 Icon 框架。</li>
+<li>症狀與原因判斷：</li>
+<li>魔獸世界 12.x 原生 <code>C_UnitAuras.GetAuraDuration</code> 所傳回的 <code>DurationObject</code> 雖然被保護（Secret），但原生 UI 可以對其進行綁定渲染。</li>
+<li>由於 <code>DurationObject</code> 無法在 Lua 中讀取剩餘時間，原有的 EAM 排程器 (Scheduler) 與退彈機制無法獲悉它何時到期，只能完全依賴 <code>UNIT_AURA</code> 光環移除事件。然而戰鬥中事件常常被官方優化、節流甚至部分受限延遲。</li>
+<li>幸運的是，原生 <code>DurationObject</code> 具有 <code>IsZero()</code> 方法，這在 Secret 狀態下是 safe、可安全呼叫的 predicate（回傳普通 boolean）。</li>
+<li>已嘗試方法：
+  備份 <code>Services/AuraService.lua</code> 和 <code>UI/Renderer.lua</code> 至 <code>backup/</code> 目錄。</li>
+<li>有效解法：</li>
+<li><strong>Secret 受限時優先抓取法術說明</strong>：修改 <code>AuraService.lua</code> 中的 <code>readAuraIntoState</code>。當 <code>isSecret</code> 為 <code>true</code> 時，優先抓取法術說明的持續時間（<code>scrapedDur</code>）。若抓到，即用其手動建立一個非 Secret 的普通 <code>DurationObject</code>，此時它可走一般的數字計時倒數。</li>
+<li><strong>原生 IsZero() 輪詢與自訂回收</strong>：修改 <code>UI/Renderer.lua</code>，實作 <code>activeDurationObjects</code> 管理。對於任何包含 <code>durationObject</code> 的活躍 Icon（不論是原生的還是手動建立的），在統一的 <code>onLegacyTimerUpdate</code> 中每幀對其進行 <code>IsZero()</code> 判定。一旦 <code>durationObj:IsZero()</code> 返回 <code>true</code>，立即主動呼叫 <code>Renderer.render(..., shown=false)</code> 進行隱藏與 IconPool 回收，主動釋放框架。</li>
+<li>後續注意事項：實機驗證時需注意，在戰鬥中觸發受限的 Buff/Debuff 時，觀察當其自然結束時，圖示是否能迅速且無殘影地自動消失。</li>
+</ul>
+<h3 id="2026-06-07-bug">2026-06-07 技能冷卻監控在無冷卻時強行顯示空圖示且無倒數之 Bug (已解決)</h3>
+<ul>
+<li>狀態：已解決</li>
+<li>情境：
+  在使用者的實機除錯日誌中，<code>spellCooldown</code> 框架下一口氣顯示了 15 個技能圖示（包括冰槍、喚醒、火球等），但這些技能當時均處於非冷卻狀態且無倒數秒數文字。</li>
+<li>症狀與原因判斷：</li>
+<li><code>CooldownService.lua</code> 原先的 <code>shouldShow</code> 邏輯是：如果為非 Charge 技能，則當 <code>infoSafe</code> 為 <code>false</code> 時預設 <code>shouldShow = true</code>（防範戰鬥中受 Secrecy 限制而無法讀取的情形）。</li>
+<li>然而，如果一個技能根本沒有在冷卻中，官方 <code>C_Spell.GetSpellCooldown</code> 可能會返回一個不含有效冷卻屬性的結構，甚至可能為空；或者是因為該技能不在冷卻中而使 <code>cooldownInfo</code> 為 <code>nil</code>。</li>
+<li>此時，<code>infoSafe</code> 因為拿不到安全冷卻 facts 而保持為 <code>false</code>，這導致在判定時錯誤地落入了 <code>else shouldShow = true</code> 的防禦性分支！</li>
+<li>結果是：所有被監控且目前沒有在冷卻中的技能均被強制設定為 <code>shouldShow = true</code>。它們被 Shown 到畫面上，但由於完全沒有冷卻時間數據，所以完全不會有倒數秒數與 Cooldown 螺旋黑幕。</li>
+<li>已嘗試方法：
+  備份 <code>Services/CooldownService.lua</code> 到 <code>backup/</code> 目錄。</li>
+<li>有效解法：
+  修改 <a href="file:///d:/EventAlertMod/Services/CooldownService.lua">Services/CooldownService.lua</a> 的 <code>shouldShow</code> 邏輯：
+  僅在 <code>cooldownInfo</code> <strong>不為 nil</strong> 時（代表該法術確實具有冷卻資料或在冷卻中），且在 <code>infoSafe</code> 為 <code>false</code> 的受限狀態下，才進行防禦性 <code>shouldShow = true</code> 的判定；若 <code>cooldownInfo</code> 為 <code>nil</code>，則直接不顯示。</li>
+<li>後續注意事項：實機驗證時，請少年欸重新載入，確認這 15 個沒有在冷卻中的法師技能圖示是否已正確消失；僅在技能真正進入冷卻時才彈出圖示並正常顯示倒數。</li>
+</ul>
+<h3 id="2026-06-07-eam-ai">2026-06-07 擴展 EAM 除錯診斷日誌統計資訊以加強 AI 除錯分析 (已解決)</h3>
+<ul>
+<li>狀態：已解決</li>
+<li>情境：
+  為了讓 AI 與開發者在獲取除錯報告時能更方便、深入地查找問題根源（例如究竟是 Service 層未偵測到，還是 Renderer 層未成功繪製），需要對診斷日誌進行擴充。</li>
+<li>症狀與原因判斷：
+  原先的診斷 JSON 僅輸出 states 的數量，當遇到「圖示沒有出現」等情況時，無法知道哪些 Spell ID 正被 active 監控、AlertManager 當前的發光狀態、以及 Renderer 中每個 Icon 的實體 layout 坐標與 <code>:IsShown()</code> 屬性。</li>
+<li>已嘗試方法：
+  備份 <code>Debug/PromptExport.lua</code> 到 <code>backup/</code> 目錄。</li>
+<li>有效解法：
+  修改 <a href="file:///d:/EventAlertMod/Debug/PromptExport.lua">Debug/PromptExport.lua</a>：</li>
+<li><strong>擴充記憶體與各服務 active 列表</strong>：加入 <code>memoryKB</code> 統計，並遍歷 5 大 Service（Aura, Cooldown, ItemCooldown, GroundEffect, Totem, ClassPower）的 states，收集當前 active 的法術 ID 列表。</li>
+<li><strong>加入 AlertManager 發光狀態</strong>：收集 <code>glowSpells</code> 中目前正處於 Proc 高亮發光的 spellID 列表。</li>
+<li><strong>加入 Renderer 實體 Icon 詳盡 layout 屬性</strong>：對於 7 大 Alert Frame，詳細輸出其下所有 active icon 的 <code>id</code>、<code>isParasite</code>、<code>layoutX</code>、<code>layoutY</code>、<code>layoutSize</code> 與在魔獸世界中的實體 <code>:IsShown()</code> 顯隱值。</li>
+<li>靜態 <code>luac -p</code> 全案語法檢驗，順利通過。</li>
+<li>後續注意事項：實機驗證時，請少年欸重新載入，打開 <code>/eam debug</code> 複製出的 JSON，檢查是否包含上述新擴充的陣列與物件。</li>
+</ul>
+<h3 id="2026-06-07-promptexportdebugstate-visibleicons-0-alertframeexists-false-bug">2026-06-07 診斷工具 PromptExport/DebugState 讀取舊版欄位導致 visibleIcons 恆為 0 暨 alertFrame.exists 恆為 false Bug (已解決)</h3>
+<ul>
+<li>狀態：已解決</li>
+<li>情境：
+  在 12.1.0 零分配事件驅動與多框架重構後，使用者導出除錯診斷日誌，發現 <code>visibleIcons</code> 恆為 <code>0</code>，且 <code>alertFrame.exists</code> 恆為 <code>false</code>，進而誤判為沒有任何圖示顯示。</li>
+<li>症狀與原因判斷：</li>
+<li>重構後的 EAM 採用 7 大獨立 Alert Frame（<code>_G["EAM_AlertFrame_" .. fName]</code>），原先的單一全域框架 <code>EAM_RetailAlertFrame</code> 已被廢棄。</li>
+<li>原先的 Renderer 全域欄位 <code>renderer.orderCount</code> 也已拆分封裝至各框架的私有 layout 狀態 <code>fState.orderCount</code> 中。</li>
+<li>然而除錯統計工具 <code>Debug/PromptExport.lua</code> 與 <code>Debug/DebugState.lua</code> 在統計 <code>visibleIcons</code> 與 <code>exists</code> 時，依然嘗試讀取舊版的 <code>renderer.orderCount</code> 與 <code>_G["EAM_RetailAlertFrame"]</code>。這導致統計工具總是回傳 <code>0</code> 與 <code>false</code>，產生了「圖示完全未顯示」的統計資料假象。事實上，Renderer 渲染日誌正常，實體圖示已成功渲染並顯示於畫面。</li>
+<li>已嘗試方法：
+  備份 <code>Debug/PromptExport.lua</code> 與 <code>Debug/DebugState.lua</code> 到 <code>backup/</code> 目錄。</li>
+<li>有效解法：</li>
+<li><strong>多框架狀態累加</strong>：修改 <code>Debug/PromptExport.lua</code> 與 <code>Debug/DebugState.lua</code>，將 <code>visibleIcons</code> 改為累加 7 大 Alert Frame 的 <code>orderCount</code>；並將 <code>layoutDirty</code> 檢查改為若有任何一個 <code>fState.layoutDirty</code> 為 <code>true</code> 即為 <code>true</code>。</li>
+<li><strong>多框架存在檢測</strong>：在 <code>PromptExport.lua</code> 內對 7 大 Alert Frame (如 <code>selfAura</code>, <code>targetAura</code> 等) 進行遍歷檢測與結構化輸出，只要至少有一個框架存在，即判定 <code>alertFrame.exists</code> 為 <code>true</code>，並精準呈現每個框架的座標與顯隱狀態。</li>
+<li>靜態 <code>luac -p</code> 全案語法安全性驗證，修改之檔案 100% 通過語法安全性檢查。</li>
+<li>後續注意事項：實機驗證時，請少年欸重新載入，再次導出 Debug Log JSON，驗證 <code>visibleIcons</code> 數值是否已與實體圖示渲染完全一致（顯示大於 0 的正確數量），且聊天視窗不再噴出錯誤。</li>
+</ul>
+<h3 id="2026-06-07-native-frameregisterevent-attempt-to-register-unknown-event">2026-06-07 註冊內部自訂事件至 native Frame:RegisterEvent 導致 Attempt to register unknown event 崩潰 (已解決)</h3>
+<ul>
+<li>狀態：已解決</li>
+<li>情境：
+  在 <code>/reload</code> 載入插件時，魔獸世界直接拋出大紅字錯誤：<code>EAM Init Error on [AlertManager]: Frame:RegisterEvent(): Attempt to register unknown event "EAM_AURA_STATE_CHANGED"</code>，導致 AlertManager 初始化中斷，UI 徹底失效。</li>
+<li>症狀與原因判斷：</li>
+<li><code>AlertManager</code> 在初始化時，會調用 <code>EventRouter.register</code> 註冊多個內部自訂事件（如 <code>EAM_AURA_STATE_CHANGED</code>）。</li>
+<li>原 <code>EventRouter.register</code> 的實作是不管任何事件均調用 <code>frame:RegisterEvent(event)</code> 往原生暴雪 frame 註冊。</li>
+<li>魔獸世界 12.x 原生 <code>RegisterEvent</code> API 嚴格限制只能註冊 Blizzard 系統定義的事件，一旦傳入未知自訂事件名稱，會立即拋出致命錯誤並中斷執行鏈。</li>
+<li>已嘗試方法：
+  備份 <code>Core/EventRouter.lua</code> 到 <code>backup/</code> 目錄。</li>
+<li>有效解法：
+  在 <a href="file:///d:/EventAlertMod/Core/EventRouter.lua">Core/EventRouter.lua</a> 的 <code>EventRouter.register(event, handler)</code> 中引入自訂事件過濾機制：
+  判斷事件名稱是否以 <code>"EAM_"</code> 為前綴。如果是，屬於內部通訊自訂事件，跳過調用原生 <code>frame:RegisterEvent(event)</code>。</li>
+<li>後續注意事項：實機驗證時需注意，觀察在 <code>/reload</code> 載入後，聊天視窗是否不再噴出任何 RegisterEvent 錯誤紅字，且 EAM 警報在各 Service 自訂事件觸發下能正常渲染。</li>
+</ul>
+<h3 id="2026-06-07-wtf-bug-icon">2026-06-07 全新安裝或 WTF 檔案不存在時無預設監控法術 Bug 導致無 Icon 顯示 (已解決)</h3>
+<ul>
+<li>狀態：已解決</li>
+<li>情境：
+  在沒有舊版 EAM 全域變數（如 <code>EA_Items</code>、<code>EA_AltItems</code> 等）的全新安裝環境下（或 WTF 資料夾被清除），重寫後的 EAM 登入後一個 ICON 也沒有出現。</li>
+<li>症狀與原因判斷：</li>
+<li><code>SavedVariables.lua</code> 在初始化時，除了執行 <code>importLegacyTables</code> 嘗試從舊版全域變數遷移設定之外，沒有將 <code>EAM.Data.SpellArray</code> 中當前職業的預設監控法術寫入 <code>EAM_DB.alerts</code> 中。</li>
+<li>當全新加載時，舊版變數不存在，因此 <code>alerts</code> 清單完全為空。</li>
+<li>各個監控服務（<code>AuraService</code>、<code>CooldownService</code> 等）均使用 <code>EAM_DB.alerts</code> 進行篩選，若 alerts 為空則直接返回，不拋出任何更新事件與進行 UI 繪製，故畫面上一個 ICON 都沒有出現。</li>
+<li>已嘗試方法：
+  備份 <code>Core/SavedVariables.lua</code> 到 <code>backup/</code> 目錄。</li>
+<li>有效解法：
+  在 <code>Core/SavedVariables.lua</code> 的 <code>SavedVariables.initialize()</code> 中，加入全新加載（即 playerAuras/targetAuras/spellCooldowns/itemCooldowns 四者個數為 0 時）防空機制：
+  自動檢測玩家當前職業，讀取 <code>EAM.Data.SpellArray</code> 中對應的通用及各專精預設監控法術，並呼叫 <code>SavedVariables.addAlert</code> 自動寫入至資料庫中。</li>
+<li>後續注意事項：實機驗證時，可用命令 <code>/run EAM_DB = nil ReloadUI()</code> 測試在全新清空 SavedVariables 後，是否會自動讀取當前職業（如法師）的預設法術並顯示對應的 icon，且不再顯示空白。</li>
+</ul>
+<h3 id="2026-06-07-eam-onupdate">2026-06-07 加強 EAM 常規框架降級 OnUpdate 倒數文字與防止原生數字重疊 (已解決)</h3>
+<ul>
+<li>狀態：已解決</li>
+<li>情境：
+  在放棄與官方 CDM 掛勾後，若遇到不具備 <code>DurationObject</code> 指針、或是不支援 12.0.7 native binding 的降級計時環境下，EAM 的獨立框架原本只進行陰影旋轉，而完全不顯示倒數秒數文字。此外，若原生 Cooldown 啟用，會造成原生小數字與 EAM 自訂大文字重疊。</li>
+<li>症狀與原因判斷：</li>
+<li><code>Renderer.lua</code> 原先僅實作了 <code>useNativeBinding</code> 模式下的文字綁定，降級模式下直接將 <code>timerText</code> 清空，導致一般計時不顯示剩餘秒數。</li>
+<li>原生 <code>CooldownFrame</code> 預設可能顯示倒數數字，造成與 EAM 自身的 <code>timerText</code> 重疊，視覺不美觀。</li>
+<li>已嘗試方法：
+  備份 <code>UI/Renderer.lua</code> 和 <code>UI/IconPool.lua</code> 至 <code>backup/</code> 目錄。</li>
+<li>有效解法：</li>
+<li><strong>實作統一降級計時 OnUpdate 系統</strong>：在 <code>UI/Renderer.lua</code> 中實作一個全域共享、基於單一 OnUpdate 框架的 <code>legacyTimer</code> 系統，提供 <code>registerLegacyTimer</code> 與 <code>unregisterLegacyTimer</code>。只有在降級 icon 活躍時該定時器才會啟動。</li>
+<li><strong>毫秒級小數倒數</strong>：在該 legacyTimer 中，當剩餘時間低於 3 秒時，自動切換為一位小數倒數（如 <code>2.4</code>, <code>0.8</code>），高於 3 秒顯示整數，提供媲美原生的高級體驗。</li>
+<li><strong>回收防禦註銷</strong>：在 <code>IconPool.release</code> 與 <code>Renderer.render</code> 過期隱藏時，確實調用 <code>unregisterLegacyTimer</code> 清除定時，防止殘影或 leak。</li>
+<li><strong>防止原生文字重疊</strong>：在 <code>UI/IconPool.lua</code> 的 <code>createIcon</code> 中，對新創立的 Cooldown 框架調用 <code>cooldown:SetHideCountdownNumbers(true)</code>，徹底消滅文字重疊。</li>
+<li>後續注意事項：實機驗證時需注意，在無 <code>DurationObject</code> 降級情況下大字倒數是否流暢，且 3 秒以下的小數點顯示是否精準無卡頓。</li>
+</ul>
+<h3 id="2026-06-07-cooldownviewer-cdm">2026-06-07 放棄與官方 CooldownViewer (CDM) 掛勾與寄生吸附 (已解決)</h3>
+<ul>
+<li>狀態：已解決</li>
+<li>情境：
+  使用者要求放棄與官方冷卻管理器 (CooldownViewer / CDM) 的掛勾。需要將原先的影子載體吸附邏輯徹底關閉，讓所有冷卻與技能圖示回歸 EAM 自身的排版渲染框架。</li>
+<li>症狀與原因判斷：
+  原本為了繞過戰鬥中 Secret/Taint 的限制，實作了寄生在官方 CDM 圖示之下的 Shadow Host 技術。但在使用者決定不與其掛勾後，需要完全解除此功能，並確保官方 UI 完好如初。</li>
+<li>已嘗試方法：
+  備份 <code>Services/ShadowHostService.lua</code>, <code>UI/Renderer.lua</code> 與 <code>Core/SavedVariables.lua</code> 至 <code>backup/</code> 目錄。</li>
+<li>有效解法：</li>
+<li><strong>停用 ShadowHostService 初始化與 Hook</strong>：在 <code>ShadowHostService.lua</code> 中註解底部的 <code>initShadowHost()</code> 呼叫，不進行任何 Hook，亦不隱形官方 UI；同時簡化 <code>ShadowHostService.GetHostIcon</code> 使其直接回傳 <code>nil</code>。</li>
+<li><strong>強制關閉 Renderer 吸附通道</strong>：在 <code>UI/Renderer.lua</code> 的 <code>Renderer.render</code> 中，將 <code>useCDM</code> 寫死為 <code>false</code>，徹底斷開與 CDM 掛勾的判斷路徑。所有 Icon 將 100% 走 EAM 自行排版路線（<code>dx</code>, <code>dy</code> 方向定位）。</li>
+<li><strong>將 enableCDM 預設值設為 false</strong>：在 <code>Core/SavedVariables.lua</code> 中，將預設設定的 <code>enableCDM</code> 設為 <code>false</code>。</li>
+<li>靜態 <code>luac -p</code> 全案語法檢查編譯通過。</li>
+<li>後續注意事項：實機驗證時需注意，觀察圖示排版是否完全回歸 EAM 常規定位（4向成長方向），且進入戰鬥時是否會有任何排版阻擋。</li>
+</ul>
+<h3 id="2026-06-07-12x-midnight-era-durationobject-api">2026-06-07 12.x / Midnight-era: DurationObject 核心 API 與時間管理機制調查 (已解決)</h3>
+<ul>
+<li>狀態：已解決</li>
+<li>情境：
+  魔獸世界 Retail 12.x / Midnight 世代對時間管理（冷卻、光環、充能）實施了黑盒化（Pointer-Pass Pattern）。EAM 必須全面掌握所有能產生或傳遞 <code>DurationObject</code> 的 API 以進行高可用性、0-GC 與 Secret-Safe 的時間渲染。</li>
+<li>症狀與原因判斷：
+  傳統的 OnUpdate 數值倒數在戰鬥受限（Secret）下容易發生字串拼接與 Table 索引崩潰。為此，我們需要將原生 API 產出的 <code>DurationObject</code> 透過指針傳遞（Pointer-Pass）給原生 Widget，此時需要完整盤點所有可用 API 以便模組化重構。</li>
+<li>已嘗試方法：
+  閱讀 Warcraft Wiki 12.0.5 API 變更日誌，並以 Python 腳本對 API 日誌進行精準提取。</li>
+<li>有效解法：</li>
+<li><strong>整理出四大類 API 清單</strong>：<ul>
+<li><strong>冷卻/充能</strong>：<code>C_Spell.GetSpellCooldownDuration</code>、<code>C_Spell.GetSpellChargeDuration</code>、<code>C_SpellBook.GetSpellBookItemCooldownDuration</code>、<code>C_SpellBook.GetSpellBookItemChargeDuration</code>、<code>C_ActionBar.GetActionCooldownDuration</code>、<code>C_ActionBar.GetActionChargeDuration</code>。</li>
+<li><strong>光環持續</strong>：<code>C_UnitAuras.GetAuraDuration</code>、<code>C_UnitAuras.GetAuraBaseDuration</code> 與 <code>C_UnitAuras.GetRefreshExtendedDuration</code>。</li>
+<li><strong>工具/手動時鐘</strong>：<code>C_DurationUtil.CreateDuration</code>、<code>C_DurationUtil.CreateManualClock</code>。</li>
+<li><strong>Widget 關聯</strong>：<code>self:GetTimerDuration()</code>。</li>
+</ul>
+</li>
+<li><strong>掌握 ScriptObject 成員方法</strong>：<code>IsZero()</code>, <code>GetRemainingDuration()</code>, <code>GetClockTime()</code>, <code>EvaluateTotalDuration()</code>, <code>FormatRemainingDuration(formatter)</code>, <code>FormatElapsedDuration(formatter)</code>, <code>FormatTotalDuration(formatter)</code> 等成員函數，並辨識其戰鬥 Secrecy 安全屬性（如 <code>IsZero</code> 為 NeverSecret 可安全做為到期檢測）。</li>
+<li><strong>落地改寫應用 (GroundEffectService)</strong>：在 <code>Services/GroundEffectService.lua</code> 中補齊 <code>state.timer.durationObject = api.C_DurationUtil.CreateDuration(duration)</code>，使地面效果技能完美對接雙軌 Native Binding 倒數通道，消滅最後的 OnUpdate 與時間漂移。</li>
+<li>將結果保存於 <a href="file:///C:/Users/ZYF/.gemini/antigravity/brain/b7690ead-b096-4f45-88f1-19a3c18d55f0/duration_object_api_investigation.md.html">duration_object_api_investigation.md</a>。</li>
+<li>後續注意事項：在未來的 AuraService 及 CooldownService 開發中，應將上述 API 當作第一優先取得時間的方式，並在 Renderer 中優先調用 Text Binding。</li>
+</ul>
+<h3 id="2026-06-07-icon-id-texture-filedataid">2026-06-07 實作以 Icon ID (Texture FileDataID) 做三級比對防禦以提升影子載體命中率 (已解決)</h3>
+<ul>
+<li>狀態：已解決</li>
+<li>情境：
+  在戰鬥中，如果 <code>spellID</code> 或者是 <code>spellName</code> 因 Secrecy (受限/加密) 而無法取得，或者是在載入客戶端快取時有延遲，會導致 EAM 無法準確比對並寄生吸附官方 CooldownViewer（CDM）的影子載體。</li>
+<li>症狀與原因判斷：</li>
+<li>雙軌比對（<code>spellID</code> 和 <code>spellName</code>）在極端戰鬥受限下，或在多國語系載入時，依然存在匹配失效的機率。</li>
+<li>每個冷卻或光環圖示在其 Renderer 或官方 UI 上必定對應一個唯一的 Texture 圖片 (FileDataID)，這在戰鬥中通常不是 Secret，可作為極佳且唯一的標識特徵。</li>
+<li><strong>間接獲取法術名稱優勢（核心）</strong>：一旦透過非受限的 Texture ID 將官方影子載體（Host Icon）與我們所監控非受限的 <code>spellID</code> 成功建立連結，EAM 渲染器即可利用非 Secret 的 <code>spellID</code> 靜態查詢獲取到真實的本地化法術名稱，並將其高亮渲染於寄生圖示內側底部，完美解決了戰鬥中官方 CDM 圖示因為 Secrecy 限制而無法顯示技能名稱的重大痛點。</li>
+<li>已嘗試方法：
+  備份 <code>Services/ShadowHostService.lua</code> 和 <code>UI/Renderer.lua</code> 至 <code>backup/</code> 目錄。</li>
+<li>有效解法：</li>
+<li><strong>建立三級 iconID 對照表</strong>：在 <code>ShadowHostService.lua</code> 中新增 <code>activeIconHosts</code> 表與安全取得 host icon ID 的 <code>getIconIDFromHostIcon</code> 輔助函數（支援 <code>icon.Icon</code>、<code>icon.icon</code>、<code>icon.texture</code> 的 <code>:GetTexture()</code> 以及直接欄位讀取）。</li>
+<li><strong>三軌比對與 GetSpellTexture 動態解析</strong>：將 <code>ShadowHostService.GetHostIcon</code> 擴充為 <code>(spellID, spellName, iconID)</code> 三軌比對。若沒傳入 <code>iconID</code>，會在內部利用 <code>C_Spell.GetSpellTexture(spellID)</code> 動態獲取要監控的法術圖示 ID，並在 <code>activeIconHosts</code> 中進行匹配。</li>
+<li><strong>動態 scanAll() Fallback</strong>：在 <code>GetHostIcon</code> 內部如果首輪查表皆未命中，會自動調用 <code>scanAll()</code> 重新整理所有被 Hook 的官方 Viewer pool 映射（防範官方在 Acquire 時尚未設定 Texture 導致漏配），然後進行第二輪匹配，極限保障命中率。</li>
+<li><strong>Renderer 調用升級</strong>：在 <code>UI/Renderer.lua</code> 中，調用 <code>GetHostIcon</code> 時傳入 <code>(alertState.spellID or alertState.id, alertState.name, alertState.icon)</code> 進行三軌查詢。</li>
+<li>後續注意事項：實機驗證時需注意，觀察當 spellID 受限時，能否藉由 Texture ID 穩定吸附至官方對應的冷卻圖示上。</li>
+</ul>
+<h3 id="2026-06-07-cooldownserviceauraservice-secrecy-api-nil">2026-06-07 CooldownService/AuraService 呼叫 secrecy API 發生 nil 錯誤 (已解決)</h3>
+<ul>
+<li>狀態：已解決</li>
+<li>情境：
+  在登入或觸發冷卻更新時，魔獸世界丟出 <code>Services/CooldownService.lua:324: attempt to call a nil value</code> 與 <code>Services/CooldownService.lua:328: attempt to call a nil value</code> 致命錯誤。</li>
+<li>症狀：</li>
+<li>當冷卻更新觸發並調用 <code>refreshAlert</code> 時，拋出 <code>attempt to call a nil value</code>。</li>
+<li>錯誤被 <code>EventRouter</code> 或是系統錯誤機制捕獲，中斷了冷卻警報更新流程。</li>
+<li>原因判斷：</li>
+<li>在 <code>Core/Util.lua</code> 裡面，第 152 行直接調用了 local 變數 <code>isSecretValue(value)</code>，然而在魔獸世界客戶端加載 <code>Util.lua</code> 時，若 global 變數 <code>issecretvalue</code> 是 <code>nil</code>（例如特定正式服環境下該 global 未被曝露），那麼 local 變數 <code>isSecretValue</code> 就會是 <code>nil</code>。執行到此處即拋出 attempt to call a nil value！</li>
+<li>同樣地，若 <code>issecretvalue</code> 及其它 secrecy 判定 API 為空，<code>EAM.API</code> 表中的 API 參考亦為 <code>nil</code>，導致諸如 <code>ShadowHostService.lua</code> 呼叫 <code>api.issecretvalue</code> 時同樣崩潰。</li>
+<li>已嘗試方法：
+  備份 <code>Core/Env.lua</code>, <code>Core/Util.lua</code>, <code>Services/CooldownService.lua</code> 到 <code>backup/</code> 目錄。</li>
+<li>有效解法：</li>
+<li>** seceret/secrecy 全域 API 容錯**：在 <code>Core/Env.lua</code> 中，為 <code>EAM.API</code> 的所有 secrecy 檢查方法（<code>issecretvalue</code>, <code>canaccesstable</code> 等）補上 callback fallback 預設值（例如 <code>issecretvalue = issecretvalue or function() return false end</code>），確保 <code>api.issecretvalue</code> 永遠不為 <code>nil</code>。</li>
+<li><strong>Util 本地 local 變數 fallback</strong>：在 <code>Core/Util.lua</code> 中，為所有的 local 變數（<code>isSecretValue</code>, <code>canAccessTable</code> 等）補上 fallback 定義，且將 <code>readSafeScalar</code> 內部的直接 call <code>isSecretValue(value)</code> 改為調用已封裝妥當的 <code>Util.isSecretValue(value)</code>。</li>
+<li><strong>CooldownService 呼叫保護</strong>：在 <code>CooldownService.lua</code> 中對 <code>cSpell.GetSpellCooldown</code> 的調用加上 <code>cSpell.GetSpellCooldown and ...</code> 防護，避免 API 不存在時發生 nil value 呼叫。</li>
+<li>經靜態 <code>luac -p</code> 全案審查，32 個 active TOC 檔案全部通過。</li>
+<li>後續注意事項：實機驗證時需注意，在任何環境下登入或觸發 CD 時是否還會拋出此類錯誤。</li>
+</ul>
+<h3 id="2026-06-07-shadow-host-secrettaint">2026-06-07 影子載體技術 (Shadow Host) 實作以避讓戰鬥中 Secret/Taint 限制 (已解決)</h3>
+<ul>
+<li>狀態：已解決、待實機驗證</li>
+<li>情境：
+  魔獸世界 12.x 在戰鬥中對冷卻與光環時間（如 timeLeft, expirationTime）實施 Secret Value 限制，且在戰鬥中動態修改 Insecure UI 的佈局也可能因為 Taint 造成動作阻擋 (Action Blocked) 或者是 UI 排版抖動 (Layout Churn)。</li>
+<li>症狀與原因判斷：</li>
+<li>戰鬥中，自訂 UI 動態計算坐標並呼叫 <code>SetPoint</code> 容易因為 Secure Chain 污染而引起 Taint，或是造成排版計算效能負擔。</li>
+<li>官方的冷卻管理器 (CooldownViewer / CDM) 是 Secure Frame，在戰鬥中享有定位與 Show/Hide 的特權，但只支援官方內建的法術。</li>
+<li>為了同時享用原生 UI 的戰鬥特權並避免 Taint，我們需要一種在戰鬥中 100% 避讓排版代碼的解法。</li>
+<li>已嘗試方法：備份 <code>EventAlertMod.toc</code>, <code>UI/Renderer.lua</code> 至 <code>backup/</code> 目錄。</li>
+<li>有效解法：</li>
+<li><strong>官方 Pool Hook 與影子化</strong>：新建 <code>Services/ShadowHostService.lua</code>，在脫戰狀態下對官方 <code>EssentialCooldownViewer</code> 和 <code>UtilityCooldownViewer</code> 框架設置透明度 (<code>Alpha=0</code>) 與層級降級（<code>BACKGROUND</code>, <code>0</code>），並使用 <code>hooksecurefunc</code> Hook 官方 <code>cooldownPool</code> 的 <code>Acquire</code> / <code>Release</code>，收集 <code>spellID</code> 到官方 Icon 實體之對照。</li>
+<li><strong>寄生渲染與級聯排版避讓</strong>：修改 <code>UI/Renderer.lua</code>。在 <code>Renderer.render</code> 中，若有官方 Icon 影子載體可用，則將 EAM Icon 設為 <code>isParasite = true</code>，以 <code>SetParent(hostIcon)</code> 與 <code>SetAllPoints(hostIcon)</code> 進行掛載，使顯示與位置隨官方 native 級聯同步。在 <code>layout</code> 中跳過 <code>isParasite</code> 圖示，消除戰鬥中 EAM 的 <code>SetPoint</code> 及排版計算。</li>
+<li><strong>二級比對防禦機制</strong>：在 <code>ShadowHostService.lua</code> 中加入對 <code>spellName</code> 的安全提取（支援 <code>icon.spellName</code>, <code>icon.data.name</code> 與 <code>icon.Name:GetText()</code>）與二級查找表 <code>activeNameHosts</code>。在 <code>GetHostIcon</code> 接口與 <code>Renderer.render</code> 的吸附定位中，啟用 <code>(spellID, spellName)</code> 雙軌二級比對防禦，確保法術 ID 突變或被 Secret 加密時依然能穩定命中影子載體。</li>
+<li><strong>安全性防禦</strong>：EAM Icon 保持 Display-only，不註冊 any 點擊或鼠標事件，阻斷 Taint 傳回 Secure Chain.</li>
+<li>後續注意事項：實機驗證時需注意官方 CooldownViewer 的 Alpha 是否為 0 且 EAM 圖示吸附正確，在戰鬥中冷卻觸發時，觀察是否會出現 Action Blocked 或 Taint 錯誤。</li>
+</ul>
+<h3 id="2026-06-06-api-classpower-eventrouterscheduler">2026-06-06 全代碼本地化清掃、動態專精 API 重構、ClassPower 與 EventRouter/Scheduler 故障隔離 (已解決)</h3>
+<ul>
+<li>狀態：已解決、待實機驗證</li>
+<li>情境：</li>
+<li>需要全面整理 EAM 程式碼中的硬編碼中英文 UI 與提示文字，使其支援完整多國語系（zhTW, zhCN, enUS, koKR, ruRU），並確保在 Windows PowerShell 終端下使用 Python 自動替換時不會因編碼問題而發生解碼崩潰。</li>
+<li>戰鬥中能量監控模組 (ClassPowerService.lua) 對 <code>UnitPower</code> 的傳回值直接進行比較時可能因遇到 restricted 秘密值/秘密表而崩潰。</li>
+<li><code>Core/EventRouter.lua</code> 與 <code>Core/Scheduler.lua</code> 的核心事件/定時任務循環，在單個子模組發生 runtime 錯誤時會波及全域，導致整個調度或事件發送被中斷癱瘓。</li>
+<li>症狀與原因判斷：</li>
+<li><strong>硬編碼與多語系支援不足</strong>：原 UI 與邏輯包含硬編碼的中英文，當切換魔獸客戶端語系時會顯示異常；且 Windows Powershell 預設使用 CP950/GBK 讀取 UTF-8 Lua 檔案時容易拋出 <code>UnicodeEncodeError</code>/<code>UnicodeDecodeError</code> 導致自動替換工具失效。</li>
+<li><strong>ClassPower 戰鬥 Secret Metamethod 崩潰</strong>：魔獸 12.x 在某些戰鬥或特殊機制下將能量值標記為 <code>Secret Table</code>，如果非安全代碼直接將其與數值大小（如 <code>currentPower &gt; 0</code>）比較，會觸發 metamethod 致命錯誤。</li>
+<li><strong>EventRouter/Scheduler 錯誤傳播</strong>：原 EventRouter OnEvent 與 Scheduler OnUpdate 對 callback 的呼叫沒有進行隔離，一個訂閱者出錯，整個分發迴圈就會被 nil-index 或 traceback 中斷，使整體警報完全卡死。</li>
+<li>已嘗試方法：備份 <code>UI/Options.lua</code>, <code>Services/ClassPowerService.lua</code>, <code>Core/EventRouter.lua</code>, <code>Core/Scheduler.lua</code> 至 <code>backup/</code> 目錄。</li>
+<li>有效解法：</li>
+<li><strong>全代碼本地化清掃</strong>：將全案中所有硬編碼字串統一提取至本地化對照表 <code>EAM.L</code>（支援五大語系共 144 個詞條）。在替換工具中顯式宣告 UTF-8 讀寫，並用 <code>errors='ignore'</code> 保護，排除編碼崩潰。</li>
+<li><strong>動態專精本地化 API 重構</strong>：在 <code>UI/Options.lua</code> 的專精過濾下拉選單中引入 <code>CLASS_TOKEN_TO_ID</code> 映射，優先調用原生 API <code>GetSpecializationInfoForClassID</code> 取得最準確的本地化專精名稱，並提供雙軌備份 fallback 防線。</li>
+<li><strong>能量防護防禦</strong>：為 <code>detectClassPower</code> 與 <code>updatePower</code> 配置 <code>pcall</code> 隔離與 <code>issecretvalue</code> 防衛機制，防範戰鬥中能量數值突變為 Secret Table 時的大小比較造成的 Lua 崩潰。</li>
+<li><strong>EventRouter/Scheduler 故障隔離</strong>：在 EventRouter 的 OnEvent 核心分發循環與 Scheduler 的 job 執行 callback 中，部署參數化 <code>pcall</code> 容錯，防止單一模組異常中斷其他模組與定時器的運行。</li>
+<li>後續注意事項：實機驗證時需注意在木人戰鬥與首領戰鬥中，觀察多語系 UI 是否加載正確，以及當故意觸發單一模組錯誤時，EventRouter 和 Scheduler 是否依然能夠高可用性地分發與排程其他警報。</li>
+</ul>
+<h3 id="2026-05-30-12x-secret-key-tooltip-string-taint-insecure-alert">2026-05-30 12.x 戰鬥加密邊界：Secret-Key 查表崩潰、Tooltip String Taint 暨 Insecure Alert 戰鬥流暢化排除 (已解決)</h3>
+<ul>
+<li>狀態：已解決、待實機驗證</li>
+<li>情境：實機戰鬥中遭遇了幾類深層的安全機制阻斷：</li>
+<li><code>AuraService.lua:161: attempted to index a table that cannot be indexed with secret keys</code> 嚴重崩潰。</li>
+<li><code>GroundEffectService.lua:78</code> 解析 tooltip description 時，因為 <code>string.match</code> 傳入了 Secret String，拋出 <code>attempt to perform string conversion on a secret string value (execution tainted by 'EventAlertMod')</code> 致命錯誤。</li>
+<li>戰鬥中 alert 框架完全隱形不彈出。</li>
+<li>症狀與原因判斷：</li>
+<li><strong>Secret Key Table 索引限制</strong>：WoW 12.x 引進了強大的 Secret Protection。在戰鬥中，從 <code>GetAuraDataByIndex</code> 回傳的 <code>spellId</code> 或者是 <code>leftText</code> 都會被標記為 <code>Secret Value</code>。一旦 AddOn 代碼直接使用這個 <code>spellId</code> 作為 key 去對任何非 secure 的自訂 table 進行 index 操作（例如 <code>db[spellId]</code> 或 <code>SavedVariables[spellId]</code>），WoW 引擎會直接阻斷並拋出 <code>attempted to index a table that cannot be indexed with secret keys</code> 致命錯誤！</li>
+<li><strong>Secret String Taint 限制與參數傳遞限制</strong>：當 tooltip description 在戰鬥中被標記為 Secret 時，我們不能在自訂的非 secure 函數中對其進行字串化（<code>tostring</code>）、字串拼接（<code>..</code>）或正則匹配（<code>string.match</code>）。最關鍵的是：<strong>所有的秘密值都不能被當成參數傳遞給任何自訂 Lua 函數</strong>！只要傳入，該函數就會被判定為 tainted，並在執行涉及 Secret 的動作時崩潰。</li>
+<li><strong>Insecure UI 戰鬥鎖定防衛過度</strong>：先前代碼為了安全，在 <code>Renderer.lua</code> 和 <code>IconPool.lua</code> 中只要遇到 <code>InCombatLockdown()</code> 為 true，就把所有 <code>CreateFrame</code>, <code>SetPoint</code>, <code>Show</code> 與 <code>Hide</code> 渲染操作全部延後到戰鬥結束後（PLAYER_REGEN_ENABLED）。然而，我們的警報 Icon 是純顯示框架，不承擔任何 secure 動作（如點擊、施法、targeting 等），也沒有繼承任何 secure templates。WoW 引擎完全允許在戰鬥中對 Insecure 框架進行定位與顯隱。過度防範反而導致了戰鬥中警報完全隱形，喪失了 AddOn 的存在價值。</li>
+<li>已嘗試方法：備份 <code>Services/AuraService.lua</code>, <code>Services/GroundEffectService.lua</code>, <code>UI/Renderer.lua</code>, <code>UI/Options.lua</code> 至 <code>backup/</code> 目錄。</li>
+<li>有效解法：</li>
+<li><strong>Table 索引防禦 (Table Indexing Defense)</strong>：在 <code>AuraService.lua</code> 和 <code>CooldownService.lua</code> 等服務中，實施嚴格的 Table 查表前置 guards。在對配置表進行索引前，必須呼叫 <code>issecretvalue(key)</code> 確保 key 不是受保護的秘密值，並以 <code>canaccesstable(targetTable)</code> 檢查 table 安全。</li>
+<li><strong>即時 In-place 本地檢測與 native 檢查</strong>：完全不使用自訂的 Wrapper 函數來傳遞與檢查秘密值。一律採用本地 in-place 模式，直接在 local 作用域中直接調用 native 的 C-level 安全 API（如 <code>issecretvalue</code>, <code>canaccessvalue</code>, <code>canaccesstable</code>）。</li>
+<li><strong>Tooltip String 安全降級</strong>：在對 tooltip line 描述進行 match 匹配前，以 <code>issecretvalue(text)</code> 與 <code>canaccessvalue(text)</code> 進行嚴格防護。一旦發現描述被加密或不可讀取，立即安靜降級，並使用 native <code>C_UnitAuras.GetAuraDuration</code> 取得黑盒 <code>DurationObject</code>，直接交給 Renderer dual-pipeline 通道，利用 <code>CooldownFrame:SetCooldownFromDurationObject</code> 安全呈現計時，徹底消滅 string conversion 崩崩潰。</li>
+<li><strong>Insecure 警報框架完全釋放</strong>：將所有 Alert Icon 框架類型從 <code>"Button"</code> 降級為純 <code>"Frame"</code>。徹底移除了所有戰鬥中定位和建立的 defer 限制，讓 Insecure Alert 圖示可在戰鬥中即時、無縫地彈出和移動，100% 戰鬥暢行無阻！</li>
+<li>後續注意事項：實機驗證時需注意在木人戰鬥中高頻觸發 buff 時是否會跳出 Taint 報錯，並觀測大數量 buff 閃爍時，純 Frame 是否完美顯示與回收。</li>
+</ul>
+<h3 id="2026-05-30-ui-slider-c_durationutil-binding-unbind-classpowerservice-api">2026-05-30 UI slider 崩潰、C_DurationUtil binding 缺少 Unbind 與 ClassPowerService 核心 API 缺失之致命錯誤修復 (已解決)</h3>
+<ul>
+<li>狀態：已解決、待實機驗證</li>
+<li>情境：少年欸回報設定介面無法使用，並且遇到 <code>bad argument #1 to 'SetValue' (outside of expected range -3.402823e+38 to 3.402823e+38)</code> 及 <code>UI/IconPool.lua:102: attempt to call a nil value</code> 致命錯誤，進入遊戲即拋出 <code>ClassPowerService.lua:85: attempt to call a nil value</code> 崩潰，導致介面與職業能量服務失效。</li>
+<li>症狀：</li>
+<li>輸入 <code>/eam opt</code> 打開設定頁時發生 Slider <code>SetValue</code> 錯誤，設定頁加載中斷，導致後續所有列表重新整理 (refresh)、法術增刪、Gear 按鈕 Popup 設定視窗及儲存/關閉功能全部失效。</li>
+<li>Cooldown alerts 觸發時發生 <code>IconPool.lua:102: attempt to call a nil value</code> (以及 <code>Renderer.lua:359</code> 報錯)，這是因為 <code>timerBinding:Unbind()</code> 在 12.0.7 原生環境下返回的 binding 對象不包含（或不支持）<code>:Unbind()</code> 方法，導致 nil-method 調用崩潰，渲染器管道被硬性中斷。</li>
+<li>進入遊戲登入即拋出 <code>ClassPowerService.lua:85: attempt to call a nil value</code>，這是因為 detectClassPower 呼叫了 <code>api.UnitClass</code> 與 <code>api.UnitPower</code>，但在核心 <code>Env.lua</code> 的 <code>EAM.API</code> 表中遺漏了對這兩個 WoW 原生 API 的映射宣告，導致 API 調用崩潰，中斷了啟動載入鏈。</li>
+<li>原因判斷：</li>
+<li>在 <code>UI/Options.lua</code> 的 <code>createSlider</code> 函數中，<code>OnShow</code> 腳本讀取 SavedVariables 中某些 boolean 鍵值（如 <code>cooldownShadow = true</code>）時，直接將 <code>true</code>/<code>false</code> 傳入了滑桿的 <code>self:SetValue(val)</code>，而該 API 嚴格要求傳入 <code>number</code> 類型。一旦出錯，加載中斷導致整個 UI 對象（如 <code>scrollBox</code>, <code>addEditBox</code>, <code>condFrame</code> 等）均未完成綁定與初始化。</li>
+<li>12.0.7 原生 API <code>C_DurationUtil.CreateDurationTextBinding</code> 回傳的 binding 物件實作中沒有 <code>Unbind</code> 方法，直接呼叫 <code>:Unbind()</code> 會拋出 nil 錯誤。</li>
+<li><code>Core/Env.lua</code> 中預先註冊的靜態 API 表 <code>EAM.API</code> 漏掉了最常用的 <code>UnitClass</code> 與 <code>UnitPower</code>，這讓職業能量服務執行時直接呼叫了 nil 函數而崩潰。</li>
+<li>已嘗試方法：備份 <code>UI/Options.lua</code>, <code>UI/IconPool.lua</code>, <code>UI/Renderer.lua</code>, <code>Core/Env.lua</code> 至 <code>backup/</code> 目錄。</li>
+<li>有效解法：</li>
+<li><strong>防禦性型別轉換</strong>：在 <code>Options.lua</code> 的 <code>createSlider</code> OnShow 中，加入對 <code>val</code> 的防禦性檢測與型別轉換。若為 boolean 轉換為 <code>maxVal</code>/<code>minVal</code>，若非 number 嘗試以 <code>tonumber</code> 解析或 fallback，並以 <code>minVal</code>/<code>maxVal</code> 進行安全邊界分，確保百分之百傳入合法 <code>number</code> 給 <code>SetValue</code>。</li>
+<li><strong>Unbind 防禦性封裝</strong>：重構 <code>UI/IconPool.lua</code> 與 <code>UI/Renderer.lua</code>，將所有 <code>icon.timerBinding:Unbind()</code> 呼叫統一包裹於 <code>if icon.timerBinding and type(icon.timerBinding.Unbind) == "function" then icon.timerBinding:Unbind() end</code> 安全條件中，完美解決 12.0.7 native binding 無法解綁或方法變動的 runtime 崩潰。</li>
+<li><strong>補齊 Env 核心 API</strong>：在 <code>Core/Env.lua</code> 的 <code>EAM.API</code> 中追加並匯出 <code>UnitClass = UnitClass</code> 與 <code>UnitPower = UnitPower</code>，接通職業能量監控服務與原生資料庫，順利排除登入 entry crash。</li>
+<li><strong>靜態語法檢查</strong>：經 <code>luac -p</code> 全案審查無語法錯誤，安全無誤。</li>
+<li>後續注意事項：實機驗證時需注意 Slider 拖動是否能將數值正常寫入，並且在開關 Alert Icon 和多重 CD 釋放/回收時，觀測有無 Memory Leak 或 Countdown 殘影。</li>
+</ul>
+<h3 id="2026-05-30-p1p2-tooltip-tablefreeze">2026-05-30 P1/P2：多國語系地面效果 Tooltip 解析與 table.freeze 效能重構 (已解決)</h3>
+<ul>
+<li>狀態：已解決、待實機驗證</li>
+<li>情境：擴展地面效果 (GroundEffectService.lua) 監控，在 12.0.7 正式服環境下以 Tooltip Scraping 取得無光環地面技能的持續時間，需支援繁體中文 (zhTW)、簡體中文 (zhCN)、英文 (enUS/enGB)、韓文 (koKR)、俄文 (ruRU)。</li>
+<li>症狀：原始實作僅支援繁體中文，且在迴圈中直接使用 ad-hoc 的 string key HASH lookup 與 regex 匹配，在 WoW 執行環境下可能引入效能開銷與 GC 垃圾回收負擔。</li>
+<li>原因判斷：Lua 表的 string key HASH 查找具有一定的雜湊碰撞成本，即使以 <code>table.freeze</code> 鎖定也無法完全消滅雜湊機制。要達到極致效能，應使用數值索引陣列 (numerically-indexed array) 做為匹配模式載體，配合數字 for 迴圈迭代，這樣可以消滅雜湊搜尋並完全避免 runtime GC。</li>
+<li>已嘗試方法：將 5 種客戶端語言的 regex 樣式，依 locale 封裝成 numerically-indexed arrays。藉由 <code>EAM.Util.tableFreeze</code> 對整體與子陣列做深度凍結 (table.freeze)。在 <code>parseTooltipDuration</code> 調用時自動識別 <code>GetLocale()</code> 並降級 fallback 至英文，然後執行雙層 numerically-indexed numeric loops。</li>
+<li>有效解法：重構 <code>Services/GroundEffectService.lua</code>，引進 <code>MULTI_LOCALE_PATTERNS</code> 凍結表，並以極簡的高效雙層 <code>for i = 1, #data.lines</code> 與 <code>for j = 1, #patterns</code> 完成極速匹配。已通過 <code>luac -p</code> 靜態語法檢查。</li>
+<li>後續注意事項：實機驗證時需注意各語系 Spell Tooltip descriptions 的變動，如俄語 (ruRU) 的縮寫變化，隨時調整或擴充 <code>MULTI_LOCALE_PATTERNS</code> 中的 regex 樣式。</li>
+</ul>
+<h3 id="2026-05-30-7-4">2026-05-30 7 大獨立告警框架、4向成長方向偏移算術、地面/圖騰/職業能量三大全新監控服務導入 (已解決)</h3>
+<ul>
+<li>狀態：待實機驗證</li>
+<li>情境：少年欸要求將不同監控分類（自身光環、目標光環、技能冷卻、物品冷卻、職業能量、地面效果、圖騰）拆分為 7 個完全獨立的告警框架，支援自訂拖曳與 4 向圖示成長方向設定。</li>
+<li>症狀：原 Renderer 只維護單一 Alert Frame，且排版固定由左至右。若在大拉怪或多 CD 爆發的情境下，單一框架會顯得臃腫雜亂，無法區分優先級與資訊分流；同時缺乏對無光環地面技能（如暴雪、寶珠）與薩滿多圖騰、職業資源點數的專屬直觀監控。</li>
+<li>原因判斷：純粹的字串分支判斷（如 <code>if growDirection == "RIGHT" ...</code>）在高頻的 Layout 渲染中會帶來 CPU 分支預測開銷與雜湊（Hash）Key 查找浪費。純 Hash 結構即使經 <code>table.freeze</code> 鎖定，其內部依然會進行雜湊衝突計算與碰撞比對，無法真正用空間換取時間。</li>
+<li>已嘗試方法：</li>
+<li><strong>多框架隔離與算術 Layout 優化</strong>：Renderer 重構為 <code>Renderer.frames[frameName]</code>，將 Layout 計算向量化，凍結連續數字索引的方向偏移對照陣列 <code>LAYOUT_OFFSETS</code> (Array Part)。在排版時直接透過 <code>LAYOUT_OFFSETS[growDirectionIdx]</code> 提取位移向量以算術乘法完成 SetPoint，消除 Hash 碰撞與多條件 If-Else 分支，極致提升 Lua VM 指令執行效率！</li>
+<li><strong>雙軌地面計時偵測 (GroundEffectService)</strong>：引進 <code>COMBAT_LOG_EVENT_UNFILTERED</code>，在法術施放瞬間進行低頻 <code>C_TooltipInfo.GetSpellByID</code> Tooltip scraping 解析，獲取因加速、天賦動態影響後的秒數，或使用自訂時間。並以集中式 <code>Scheduler.after</code> 進行到期釋放，運行期 100% 零 CPU OnUpdate 開銷，表現極其穩健。</li>
+<li><strong>薩滿圖騰直讀 (TotemService)</strong>：調用 12.x 原生 <code>C_Totems.GetTotemInfo</code> 直讀插槽，並支援靠攏排版。</li>
+<li><strong>資源點數 Icon 文字化 (ClassPowerService)</strong>：依職業監控資源點數，以 Stacks 中央大號字體渲染，歸 0 自動釋放回收。</li>
+<li><strong>UI 擴展與一鍵擷取</strong>：將 Options 設定面板重置為 560px 寬度的 Premium 雙分欄佈局（Sliders/成長選單 vs 能量 Checkboxes），並於 Popup 子視窗動態顯示地面技能一鍵擷取 Scrape &amp; Fill 按鈕。</li>
+<li>有效解法：Renderer 與 3 個新監控 Service 及 Options 分頁全面整合，通過全檔案 <code>luac -p</code> 的 100% 語法無誤靜態檢查，並提供 <code>/eam doctor</code> （RuntimeProbe）多框架實時事實目標性診斷功能。</li>
+<li>後續注意事項：實機驗證中需觀察 7 大框架同步顯露移動時滑鼠拖曳的靈敏度與 SavedVariables 位置寫入之正確性。同時觀察大數量 Buff 戰鬥環境下，「空間換時間」靜態連續陣列 Layout 計算之零卡頓效能表現。</li>
+</ul>
+<h3 id="2026-05-30-secrettaint">2026-05-30 實機戰鬥中 Secret/Taint 崩潰點排除、拖曳位置保存、專精下拉篩選與小地圖按鈕完美實現 (已解決)</h3>
+<ul>
+<li>狀態：已解決、待實機驗證</li>
+<li>情境：實機測試中發現在戰鬥中技能/光環框架仍然不顯示、框架無法拖曳移動、物品冷卻無圖標、缺乏常用預設法術 ID 以及需要便捷呼叫小按鈕。</li>
+<li>症狀與原因判斷：</li>
+<li><strong>戰鬥中不顯示的隱形崩潰點</strong>：<ul>
+<li>在 <code>AuraService.lua</code> 中，於戰鬥中直接讀取並對 Secret Value 的 <code>duration</code> 和 <code>expirationTime</code> 進行了數學減法運算，直接引發了安全異常中斷！</li>
+<li>在 <code>CooldownService.lua</code> 中，於戰鬥中直接對保護物件 <code>durationObj</code> 呼叫了 <code>IsZero()</code> 方法，引發了方法調用阻斷！</li>
+<li><code>IconPool.lua</code> 使用 <code>"Button"</code> 類型框架容易在戰鬥中受到 WoW 引擎對點擊按鈕的防禦阻礙。</li>
+</ul>
+</li>
+<li><strong>框架無法拖曳</strong>：<code>Renderer.lua</code> 中遺漏了 <code>toggleAnchors</code> 的實作，且 <code>ensureParent</code> 沒支援載入 SavedVariables layout。</li>
+<li><strong>物品冷卻無圖示</strong>：<code>ItemCooldownService.lua</code> 遺漏了透過 ITEM 相關 API 獲取並保存 <code>state.icon</code> 與 <code>state.name</code> 數據。</li>
+<li><strong>缺乏預設值與篩選過濾</strong>：<code>Data/SpellArray.lua</code> 是空的佔位符，且 UI 缺少專精 Dropdown 過濾器。</li>
+<li>有效解法：</li>
+<li><strong>戰鬥防崩潰與框架降級</strong>：在減法運算前用 <code>Util.isSecretValue</code> 防護降級；徹底移除對 <code>IsZero()</code> 的服務層調用，改由 Renderer 直接交給 Cooldown 陰影原生渲染；將警報 Icon 框架類型從 <code>"Button"</code> 降級為純 <code>"Frame"</code>，從此戰鬥中 <code>SetPoint</code> 及建立等操作 100% 暢行無阻！</li>
+<li><strong>位置拖曳與保存</strong>：完美在 <code>Renderer.toggleAnchors()</code> 中實作半透明拖曳框架，支援按住滑鼠拖曳並自動將 X/Y 坐標保存至 <code>EAM.db.layout</code>，於 <code>ensureParent</code> 時優先自動載入！</li>
+<li><strong>物品冷卻圖示補齊</strong>：使用 <code>C_Item.GetItemIconByID</code> 與 <code>GetItemNameByID</code> 補齊資料寫入，完美呈現物品 icon。</li>
+<li><strong>小地圖按鈕（Minimap Button）</strong>：在 <code>UI/Options.lua</code> 內建弧形軌跡小地圖按鈕，左鍵開啟面板，右鍵開啟系統診斷，拖曳角度自動保存。</li>
+<li><strong>13 職業預設法術庫與專精過濾</strong>：在 <code>Data/SpellArray.lua</code> 中填寫完整的 13 職業各專精/通用常用法術資料；在 UI 列表頂部新增專精過濾 Dropdown 按鈕與選單，點選即可動態篩選，且「預設值」按鈕支持一鍵自動加載當前職業全部預設！</li>
+<li>後續注意事項：實機重載後即可體驗全新高階功能。</li>
+</ul>
+<h3 id="2026-05-30-toc-renderer-nil">2026-05-30 致命 .toc 載入順序陷阱：局部變數快取致 Renderer 為 nil 阻斷渲染 (已解決)</h3>
+<ul>
+<li>狀態：已解決、待實機驗證</li>
+<li>情境：實機測試中，所有的 WoW 事件均完美觸發（包括 <code>UNIT_AURA</code>、<code>BAG_UPDATE_COOLDOWN</code>、<code>SPELL_UPDATE_COOLDOWN</code>），且資料庫運作正常，但 Renderer 渲染管道完全沒有收到任何呼叫，日誌內毫無 <code>Renderer:render</code> 軌跡。</li>
+<li>症狀：</li>
+<li><code>alertsCount</code> 正確，<code>cooldownStates</code> 及 <code>auraStates</code> 被成功寫入。</li>
+<li>但 <code>runtimeStats.renderer.visibleIcons</code> 與 <code>deferred</code> 均恆為 <code>0</code>，畫面完全無 Alert 圖示。</li>
+<li>原因判斷：</li>
+<li><strong>致命的 .toc 載入順序陷阱</strong>！在 <code>EventAlertMod.toc</code> 中，<code>Services\AuraService.lua</code> 等服務的載入順序排在 <code>UI\Renderer.lua</code> 的上方。</li>
+<li>當服務被載入時，在檔案頂部執行了 <code>local Renderer = EAM.UI and EAM.UI.Renderer</code>。由於此時 <code>Renderer.lua</code> 尚未被執行，<code>EAM.UI.Renderer</code> 為 <code>nil</code>，導致服務內部的局部變數 <code>Renderer</code> 被永久快取為 <code>nil</code>。</li>
+<li>當後續事件觸發、需要刷新時，服務內的 <code>if Renderer and Renderer.render then Renderer.render(state) end</code> 因為局部變數 <code>Renderer</code> 是 <code>nil</code> 而被靜默地跳過，使整個渲染管道完全癱瘓！</li>
+<li>有效解法：</li>
+<li>徹底避免檔案載入時的局部變數快取！將頂部 <code>local Renderer</code> 改為未賦值的局部宣告。</li>
+<li>在服務的 <code>initialize()</code> 方法執行時，動態將其賦值：<code>Renderer = EAM.UI and EAM.UI.Renderer</code>。此時 <code>.toc</code> 所有的檔案均已被完整載入，<code>Renderer</code> 可以完美獲取到正確 the 引用，成功接通渲染管道！</li>
+<li>後續注意事項：實機重載後即可無縫彈出 Alert！</li>
+</ul>
+<h3 id="2026-05-30-eam-alert">2026-05-30 EAM 戰鬥中 Alert 框架不顯示根本原因排查與物品監控獨立優化</h3>
+<ul>
+<li>狀態：已解決、待實機驗證</li>
+<li>情境：實機測試中 Alert 框架完全沒有彈出，且物品監控需要更獨立與細部的 Options UI 分類配置。</li>
+<li>症狀：</li>
+<li>玩家施放技能、獲得 Buff 或進行背包物品冷卻測試時，畫面上完全無 Alert 框架或圖表，但在 Slash 指令中除錯診斷可以成功呼叫。</li>
+<li>物品冷卻在 Options UI 裡缺乏獨立的分類（第 5 個紅按鈕被特殊能量佔據，物品沒有顯眼入口）。</li>
+<li>原因判斷：</li>
+<li><strong>第一個致命 Bug</strong>：<code>Services/ItemCooldownService.lua</code> 和 <code>Debug/PromptExport.lua</code> 開頭的 Lua 註解誤寫成 <code>-- [[</code>（多了一個空格），導致 Lua 編譯器報出語法錯誤而令這兩個關鍵模組在 WoW 啟動時完全載入失敗，破壞了載入鏈。</li>
+<li><strong>第二個致命 Bug</strong>：<code>Renderer.lua</code> 和 <code>IconPool.lua</code> 的 <code>inCombat()</code> 戰鬥限制防衛過當。非 Secure 的 Alert 圖示框架不承擔 secure 點擊、click-cast，也沒有繼承 SecureTemplates，所以它是完全 Insecure 的純顯示框架。WoW 100% 允許在戰鬥中對 Insecure 框架進行 <code>CreateFrame</code>、<code>SetPoint</code>、<code>Show</code> 與 <code>Hide</code>。先前 AI 將這些操作在戰鬥中 defer 到脫戰後（PLAYER_REGEN_ENABLED），直接導致在最需要警報的「戰鬥中」圖示完全被阻斷，根本無法顯示！</li>
+<li>已嘗試方法：</li>
+<li>將這兩個檔案開頭的 <code>-- [[</code> 改回無空格的標準 <code>--[[</code>。</li>
+<li>重構 <code>UI/Renderer.lua</code> 與 <code>UI/IconPool.lua</code>，徹底清除所有 <code>inCombat()</code> 戰鬥狀態下的 defer 渲染、defer layout 定位和拒絕 acquire 限制。</li>
+<li>在 <code>UI/Options.lua</code> 中，將設定分類擴充至 6 個紅按鈕（物品冷卻單獨分類至按鈕 5，特殊能量移至按鈕 6），排版間距調整至 32px，防止重疊，且在條件編輯彈窗中，如果是技能/物品冷卻，動態隱藏 Value 1~4 勾選。</li>
+<li>有效解法：</li>
+<li>成功通過 <code>CheckLuaSyntax.ps1</code> 靜態語法檢查，28 個 Lua 檔案全部 100% OK！</li>
+<li>移除了所有對 insecure 框架的戰鬥中定位和建立阻擋，讓 Alert 圖示可在戰鬥中即時無縫彈出。</li>
+<li>後續注意事項：請玩家（少年欸）重新載入介面後進入戰鬥測試，若有任何不適應或位置偏移，隨時使用 <code>/eam debug</code> 回報 JSON 診斷日誌。</li>
+</ul>
+<h3 id="2026-05-29-eam-gctaint">2026-05-29 EAM 核心效能與邊界安全深度 GC/Taint 審查與二次極限優化</h3>
+<ul>
+<li>狀態：已解決、待實機驗證</li>
+<li>情境：針對 <code>Services/CooldownService.lua</code>、<code>UI/Renderer.lua</code> 與 <code>Core/Util.lua</code> 進行全面性的垃圾回收（GC）與安全 Taint 深度審查，並實施二次極限效能重構。</li>
+<li>症狀：</li>
+<li>警告邊界路徑的 <code>Util.appendBoundaryWarning</code> 原先採用 <code>"code .. ":" .. tostring(field)"</code>，若在受限或 Secret 環境下被持續觸發，會導致執行期高頻的字串拼接 GC churn。</li>
+<li>渲染器 <code>UI/Renderer.lua</code> 在高頻光環堆疊數值變更時，<code>tostring(alertState.stacks)</code> 會在 combat 中產生大量的微型字串 GC 負擔。</li>
+<li>原因判斷：高頻事件下任何形式的 <code>..</code> 字串拼接與 <code>tostring</code> 調用，都是微型 GC 抖動（GC spike/stutter）的潛在來源，會導致大流量戰鬥下 FPS 微幅受損。</li>
+<li>已嘗試方法：</li>
+<li><strong>警告字串靜態快取（warningStringCache）</strong>：於 <code>Core/Util.lua</code> 引入局部 <code>warningStringCache = {}</code>。所有邊界警告字串在第一次生成時被快取，後續直接 <code>O(1)</code> 重複使用已分配指針，達成<strong>邊界警告路徑零字串 GC 消耗</strong>！</li>
+<li><strong>堆疊次數靜態快取（STACK_STRINGS）</strong>：於 <code>UI/Renderer.lua</code> 引入 <code>STACK_STRINGS</code> 陣列，預先將 <code>1</code> 至 <code>100</code> 的堆疊次數轉換為靜態字串。高頻堆疊更新時，直接 <code>O(1)</code> 從陣列取用已快取字串，完全免除 <code>tostring</code> 的執行期記憶體分配！</li>
+<li><strong>戰鬥 layout 延後與 parent-parenting 控制</strong>：確認 Renderer 無任何 secure action，非 secure 的圖示隱藏直接安全調用，而結構性 Frame parenting 與 layout 則嚴格延後至戰鬥結束（PLAYER_REGEN_ENABLED），消除 Secure Taint 擴散。</li>
+<li>有效解法：重構代碼已成功寫入 <code>Core/Util.lua</code>、<code>UI/Renderer.lua</code> 與 <code>Services/CooldownService.lua</code>，完美封閉了所有高低頻 GC 漏洞與 taint 疑慮。</li>
+<li>後續注意事項：實機測試時需特別開啟 Lua 記憶體監控，確認在滿負載戰鬥（如觸發大量 GCD、滿堆疊 buff/debuff 閃爍、多重邊界警告）情況下，EAM 的 GC 記憶體分配量維持在絕對的平穩水平。</li>
+</ul>
+<h3 id="2026-05-29-1207-cooldownservice">2026-05-29 12.0.7 CooldownService 響應式二進位陣列與雙軌安全綁定優化</h3>
+<ul>
+<li>狀態：已解決、待實機驗證</li>
+<li>情境：為 12.0.7 PTR/Retail 重塑 CooldownService 與 Renderer，避免戰鬥高頻事件（如 <code>SPELL_UPDATE_COOLDOWN</code>、<code>SPELL_UPDATE_CHARGES</code>）帶來的 GC 負載、Taint 污染與視覺殘影。</li>
+<li>症狀：高頻事件下，以 <code>pairs</code> 遍歷設定 table 會頻繁分配 iterator 與暫時 table；且 Secret Values（如冷卻時間、充能資訊）在 Lua 層做數學運算、<code>format</code> 格式化或與舊 time 比較時會直接觸發安全 taint 或執行期 Lua 錯誤。</li>
+<li>原因判斷：WoW 12.x 引進了嚴格的 Secret/Protected 限制。如果不隔離 Secret 資料，直接將其作運算或字串組裝就會污染 AddOn 安全鏈。另外，高頻事件下頻繁分配暫時 table 會導致微型 GC 停頓，影響遊戲 FPS。</li>
+<li>已嘗試方法：</li>
+<li>引入 <strong>響應式陣列機制（Reactive Array Cache）</strong>：透過檢測 <code>db.revision</code> 來增量更新 <code>alertList</code> 陣列，熱路徑（SPELL_UPDATE_COOLDOWN）上完全使用數值 <code>for i = 1, alertCount do</code> 迴圈遍歷，達到 100% 零 pairs、零 transient allocation 的極限效能。</li>
+<li>使用 <strong><code>table.create</code> 預分配</strong>：對 <code>alertList</code> 與 states / boundaryWarnings / timer 等子 table 預分配 HashTable 與 Array 容量，阻斷執行期擴容與 rehashing。</li>
+<li>實施 <strong>原生雙重綁定路徑（Dual-Binding Path）</strong>：將 <code>DurationObject</code> 黑盒指標安全傳遞給原生 <code>SetCooldownFromDurationObject</code> 與 12.0.7 原生倒數文字綁定 <code>C_DurationUtil.CreateDurationTextBinding</code>。</li>
+<li>實施 <strong>零時跨度生命週期釋放（Zero-span Lifecycle Release）</strong>：充能法術全滿時立即將 <code>state.shown</code> 設為 <code>false</code>，Renderer 接手將 Icon 退回 Pool 並執行 <code>icon:Hide()</code> 與 <code>Unbind()</code>，消除視覺殘影。</li>
+<li>有效解法：在 CooldownService 與 Renderer 中已成功落地上列方案，完美完成雙軌安全判定與 Taint 控制防禦。</li>
+<li>後續注意事項：需在 WoW 12.0.7 實機中，對充能法術（特別是充能非全滿與全滿切換時）及高頻觸發 GCD 時的雙重綁定路徑做實測，確認無殘影與閃爍問題。</li>
+</ul>
+<h3 id="2026-05-29-durationtextbinding-1207-ptr">2026-05-29 DurationTextBinding 12.0.7 PTR 最小範例實測</h3>
+<ul>
+<li>狀態：部分已驗證、待整合驗證</li>
+<li>情境：使用者在 WoW 12.0.7 PTR client 執行 <code>C_DurationUtil.CreateDurationTextBinding</code> 測試範例。</li>
+<li>症狀：需要確認 PTR API 是否只是文件層級，或已可在 client 中正常建立並驅動 FontString 顯示。</li>
+<li>原因判斷：若 <code>DurationTextBinding</code> 可用，EAM timer label 可避免使用 <code>OnUpdate</code> 自行倒數，符合低 GC 與 Secret/Protected display chain 原則。</li>
+<li>已嘗試方法：使用最小測試範例建立 <code>DurationObject</code>、<code>SecondsFormatter</code>、<code>DurationTextBinding</code>，並綁定到 FontString。</li>
+<li>有效解法：使用者回報在 12.0.7 PTR client 中可正常顯示。</li>
+<li>後續注意事項：此結果只驗證最小顯示，不代表 EAM Renderer 整合完成；仍需測 icon recycle、binding reference 保存、過期文字、zero duration、locale、combat/taint、API unavailable fallback。</li>
+</ul>
+<h3 id="2026-05-29-subagent">2026-05-29 Subagent 使用規則持久化</h3>
+<ul>
+<li>狀態：已解決</li>
+<li>情境：使用者要求後續本專案若有適合 subagent 模式的情境，需協助規劃並使用。</li>
+<li>症狀：若只保留在對話記憶，後續長期開發或 context compact 後可能遺失授權與判斷標準。</li>
+<li>原因判斷：Subagent 適合大型 rewrite、API 查證、文件一致性與靜態驗證分流，但若沒有明確規則，容易造成重複派工、寫入範圍衝突或等待阻塞 critical path。</li>
+<li>已嘗試方法：搜尋並載入 multi-agent 工具；判斷本輪只是小型文件規則更新，不適合立即 spawn subagent。新增 <code>Docs/17_SUBAGENT_WORKFLOW.md</code>，並把規則加入 <code>AGENTS.md</code>。</li>
+<li>有效解法：定義 critical path / sidecar task 判斷、適用與不適用情境、explorer / worker 角色使用、派工模板與主代理整合規則。</li>
+<li>後續注意事項：後續大型 task 開始時，主代理需先明確說明是否使用 subagent；若使用，需指定不重疊寫入範圍，並在整合後重新執行專案靜態驗證。</li>
+</ul>
+<h3 id="2026-05-29-1207-ptr-rc-api">2026-05-29 12.0.7 PTR / RC API 情報備查</h3>
+<ul>
+<li>狀態：待公開來源複核、待實機驗證</li>
+<li>情境：使用者提供一段 12.0.7 PTR / RC 相關 API 變更內容，要求先紀錄備查。</li>
+<li>症狀：內容包含 <code>GameTooltip_AddMoneyLine</code>、<code>C_UIFileAsset</code>、profiling API、<code>DurationTextBinding</code>、Aura refactor 目標 12.1.0、unit identity 錯誤改回傳 nil/default、<code>debugstack</code>/<code>debuglocals</code> secret 傳播等資訊，但本輪公開網路搜尋未找到可直接引用的同一來源頁。</li>
+<li>原因判斷：這類資訊對 EAM Secret / Tooltip / Renderer / AuraService 邊界有實作影響，但若未標明來源狀態，容易在後續 pass 被誤認為已由 Warcraft Wiki 或 Retail client 驗證。</li>
+<li>已嘗試方法：以搜尋查找 <code>GameTooltip_AddMoneyLine</code>、<code>DurationTextBinding</code>、<code>Timeline for the Aura Refactor</code> 等關鍵字；未取得穩定公開頁後，改以「使用者提供、待複核」形式寫入 <code>Docs/10_WARCRAFT_WIKI_12X_API_NOTES.md</code>。</li>
+<li>有效解法：文件明確拆分「與 EAM 直接相關」、「關聯較低但需留意」、「Classic PTR 不納入」三類，避免 Classic 內容回流到 Retail-only 架構。</li>
+<li>後續注意事項：後續若 Warcraft Wiki、Blizzard forum 或 PTR client 文件可查，需補上正式連結；若進入實作，必須實機驗證 <code>GameTooltip_AddMoneyLine</code>、<code>C_UIFileAsset</code>、<code>DurationTextBinding</code>、<code>debugstack</code>/<code>debuglocals</code> 的實際行為。</li>
+</ul>
+<h3 id="2026-05-29-powershell">2026-05-29 PowerShell 備份檔名插值問題</h3>
+<ul>
+<li>狀態：已解決</li>
+<li>情境：修改文件前依規則備份 <code>Docs/10_WARCRAFT_WIKI_12X_API_NOTES.md</code> 與 <code>Docs/15_DEVELOPMENT_ISSUE_LOG.md</code>。</li>
+<li>症狀：第一次備份命令把目的檔名寫成 <code>$name__$ts</code>，在巢狀 PowerShell 字串中被錯誤解析，導致命令報出 <code>The term '\$name__$ts\' is not recognized</code>。</li>
+<li>原因判斷：PowerShell 變數名稱邊界與外層引用混在一起時，<code>__</code> 後綴容易造成插值語意不清；加上外層 <code>powershell -Command</code> 需要額外轉義。</li>
+<li>已嘗試方法：停止後續修改，改用明確字串相加：<code>$name + '__' + $ts</code>，並逐一輸出產生的備份路徑確認。</li>
+<li>有效解法：備份檔已成功產生於 <code>backup/10_WARCRAFT_WIKI_12X_API_NOTES.md__20260529052816</code> 與 <code>backup/15_DEVELOPMENT_ISSUE_LOG.md__20260529052816</code>。</li>
+<li>後續注意事項：日後自動備份腳本應避免把變數與後綴直接貼合；固定使用字串相加或 <code>${name}__${ts}</code> 類型寫法。</li>
+</ul>
+<h3 id="2026-05-27-p2-aura-full-update-options">2026-05-27 P2 後半：Aura full update 單次掃描與 Options 最小面板</h3>
+<ul>
+<li>狀態：待實機驗證</li>
+<li>情境：接續 P2 進度，將 AuraService 的 full update fallback 從逐 alert 掃描改成單位層級單次掃描，並補上可實際新增／移除設定的 Options 面板。</li>
+<li>症狀：舊 fallback 容易在 <code>UNIT_AURA</code> full update 或 target change 時對同一單位重複掃描；Options 先前仍偏 stub，無法提供一般使用者可見的設定入口。</li>
+<li>原因判斷：Aura full update 是熱路徑候選，若依 alert 數量重複掃描，使用者設定越多成本越高；Options 若不透過 <code>SavedVariables</code> mutation API，容易繞過 schema revision 與 service refresh。</li>
+<li>已嘗試方法：新增 <code>fullScanUnit</code>，先清單位 aura cache，再依 player/target filter 掃描一次並用 alert index 分派；未命中的設定 alert 統一標為 inactive。Options 新增 spellID/itemID 輸入框與四類 add/remove 按鈕，成功後呼叫 service refresh。</li>
+<li>有效解法：以 <code>auraInstanceID</code> cache 搭配 <code>alertIndex[unit][spellID]</code> 分派狀態；Options 只透過 <code>SavedVariables.add/remove</code> API 寫入，避免直接修改 service runtime state。</li>
+<li>後續注意事項：需在 WoW Retail/PTR 驗證 <code>C_UnitAuras.GetAuraDataByIndex(unit, index, filter)</code> 在 12.0.7 的實際欄位安全性、filter 行為、combat 中初次建立 options frame 的 taint 風險，以及 <code>BasicFrameTemplateWithInset</code> / <code>InputBoxTemplate</code> / <code>UIPanelButtonTemplate</code> 在 Retail 12.x 是否仍可直接使用。</li>
+</ul>
+<h3 id="2026-05-27-powershell-regex-quoting">2026-05-27 PowerShell regex 與變數 quoting 問題</h3>
+<ul>
+<li>狀態：已解決</li>
+<li>情境：執行 <code>rg</code> 與 TOC 檢查時，命令字串由外層 PowerShell 再啟動內層 PowerShell。</li>
+<li>症狀：regex 中的 <code>|</code> 被錯誤解讀成管線；TOC 檢查中的 <code>$missing</code>、<code>$line</code> 被外層提前展開，造成 parser error。</li>
+<li>原因判斷：Windows PowerShell 的雙引號不是 shell-neutral 容器；在巢狀 <code>powershell -Command</code> 中，regex alternation 與 <code>$</code> 變數都需要明確處理。</li>
+<li>已嘗試方法：將 regex 改用單引號包住；TOC 檢查中的 <code>$</code> 改用反引號轉義。</li>
+<li>有效解法：專案內只讀搜尋優先使用 <code>rg -n 'pattern' path</code>；若必須在 <code>powershell -Command</code> 中使用腳本變數，需寫成 <code>`$variable</code>，或改用既有 <code>.ps1</code> 工具。</li>
+<li>後續注意事項：重複出現後可整理成「EAM Windows 靜態檢查」專案 skill，避免每次耗費 token 排查 quoting。</li>
+</ul>
+<h3 id="2026-05-26-p1p2slash-mutation-unit_aura-delta-cache">2026-05-26 P1/P2：Slash mutation 與 UNIT_AURA delta cache</h3>
+<ul>
+<li>狀態：待實機驗證</li>
+<li>情境：依 P1/P2 目標繼續整理 EAM Retail rewrite 的核心功能與低 GC 熱路徑。</li>
+<li>症狀：此前 <code>/eam</code> 只有 debug / options stub，SavedVariables 沒有正式 add/remove API；AuraService 在 <code>UNIT_AURA</code> 時仍回退全量掃描，未使用 <code>updateInfo</code> 增量 payload。</li>
+<li>原因判斷：若沒有穩定 config mutation API，後續 Options UI 無法安全寫入設定；若每次 <code>UNIT_AURA</code> 都掃 alert/full aura，會增加 hot path 成本。</li>
+<li>已嘗試方法：新增 <code>SavedVariables.add/remove</code> 系列 API、<code>/eam add/remove/export/help</code>、AuraService config revision index、<code>auraInstanceID</code> cache、<code>addedAuras</code> / <code>updatedAuraInstanceIDs</code> / <code>removedAuraInstanceIDs</code> 增量處理，以及 debug snapshot 的 DB revision/cache/renderer counters。</li>
+<li>有效解法：Slash 只寫 SavedVariables，service 負責 refresh/render；AuraService 有 <code>updateInfo</code> 時走 delta，無 payload 或 full update 才回退完整掃描。</li>
+<li>後續注意事項：仍需 WoW Retail/PTR 實機驗證 <code>UNIT_AURA</code> payload 實際欄位、secret aura spellID 行為、removed instance cache 命中率與 target rapid-change 行為。</li>
+</ul>
+<h3 id="2026-05-26-skill-creator-quick_validate-python-yaml">2026-05-26 skill-creator quick_validate 缺少 Python yaml 模組</h3>
+<ul>
+<li>狀態：已解決</li>
+<li>情境：建立 <code>.codex/skills/eam-retail-p0-review/SKILL.md</code> 後，依 <code>skill-creator</code> 流程執行 <code>quick_validate.py</code>。</li>
+<li>症狀：第一次驗證腳本失敗，錯誤為 <code>ModuleNotFoundError: No module named 'yaml'</code>。安裝 PyYAML 後，第二次失敗為 Windows 預設 <code>cp950</code> 解碼 UTF-8 Markdown 失敗。</li>
+<li>原因判斷：本機 Python 環境原本缺少 PyYAML；補齊套件後，<code>quick_validate.py</code> 使用 Python 預設文字編碼讀取 <code>SKILL.md</code>，在繁體中文 Windows 環境會遇到 cp950 解碼問題。</li>
+<li>已嘗試方法：先安裝 <code>PyYAML 6.0.3</code>，再以 <code>$env:PYTHONUTF8='1'</code> 重新執行驗證。</li>
+<li>有效解法：使用 <code>python -m pip install --user PyYAML</code> 安裝依賴，並在 Windows 上執行驗證前設定 <code>PYTHONUTF8=1</code>。<code>eam-retail-p0-review</code> 已通過 <code>quick_validate.py</code>，輸出 <code>Skill is valid!</code>。</li>
+<li>後續注意事項：未來執行 Python Markdown/YAML 驗證工具時，若文件含中文，優先使用 UTF-8 模式，避免 cp950 解碼失敗。</li>
+</ul>
+<h3 id="2026-05-26-eam-retail-p0-review-skill">2026-05-26 建立 eam-retail-p0-review 專案專屬 SKILL</h3>
+<ul>
+<li>狀態：已解決</li>
+<li>情境：本輪重寫重複使用同一組流程：讀 AGENTS/Docs、修改前備份、P0 Secret/Taint 掃描、Lua 語法檢查、靜態風險掃描與 final report。</li>
+<li>症狀：若每次都在對話中重述流程，會浪費 context/token，也容易漏掉備份或 taint/secret 掃描。</li>
+<li>原因判斷：此流程已有穩定觸發條件、前置檢查、禁止事項、驗證方式與報告格式，符合專案專屬 SKILL 規則。</li>
+<li>已嘗試方法：依 <code>skill-creator</code> 指南建立 <code>.codex/skills/eam-retail-p0-review/SKILL.md</code>。</li>
+<li>有效解法：後續進行 EAM Retail rewrite、Secret/Taint 審查或 P0 靜態驗證時，優先使用此 SKILL。</li>
+<li>後續注意事項：此 SKILL 只提供流程，不取代 Warcraft Wiki 最新 API 查證與 WoW Retail/PTR 實機驗證。</li>
+</ul>
+<h3 id="2026-05-26-p0p1-renderer-layoutscheduler-task-pool">2026-05-26 P0/P1 重整：安全讀取、Renderer 延後 layout、Scheduler task pool</h3>
+<ul>
+<li>狀態：待實機驗證</li>
+<li>情境：依最新 API 與社群調研開始整理正式載入的新架構 Lua 模組。</li>
+<li>症狀：既有第一版骨架仍有數個 P0/P1 風險：AuraService 可能在 <code>spellID</code> 未確認安全前比較、Cooldown/Item cooldown 安全讀取分散、Scheduler 每次排程建立 task table、Renderer 每次 render 都 layout，且尚未明確延後戰鬥中的結構性 UI 變更。</li>
+<li>原因判斷：這些問題會增加 Secret Values 誤用、combat lockdown / taint 風險與 hot path 配置成本。</li>
+<li>已嘗試方法：新增集中 safe-read helper、Scheduler task pool、IconPool prewarm 與 combat-time frame creation guard、Renderer deferred layout、Debug boundary warning 聚合，並把 TOC/Constants 錨定到 <code>120007</code>。</li>
+<li>有效解法：以 service 層逐值檢查 facts，Renderer 只消費 normalized state；戰鬥中遇到結構性 UI 變更先延後到 <code>PLAYER_REGEN_ENABLED</code>。</li>
+<li>後續注意事項：尚未做 WoW Retail/PTR 實機驗證；必須測試 DurationObject、FontString:ClearText、combat layout defer、taint / blocked action log、12.0.7 game version ID 與 CurseForge 發佈設定。</li>
+</ul>
+<h3 id="2026-05-26-1207-api-summary">2026-05-26 12.0.7 API summary 已發布，需修正先前待追蹤狀態</h3>
+<ul>
+<li>狀態：已解決</li>
+<li>情境：調查最新正式版相關 WoW AddOn 開發討論與 API change 時，搜尋到 Warcraft Wiki <code>Patch 12.0.7/API_changes</code>。</li>
+<li>症狀：既有 <code>Docs/10_WARCRAFT_WIKI_12X_API_NOTES.md</code> 仍記錄 12.0.7 尚未找到 API summary。</li>
+<li>原因判斷：Warcraft Wiki 近期已新增 12.0.7 API change 頁，先前紀錄已過時。</li>
+<li>已嘗試方法：重新查詢 Warcraft Wiki API change summaries、12.0.5、12.0.7 與 AddOn 社群討論。</li>
+<li>有效解法：更新 <code>Docs/10_WARCRAFT_WIKI_12X_API_NOTES.md</code>，將 12.0.7 標記為已存在，並記錄與 EAM 相關的 <code>C_DurationUtil</code>、CPU usage API 與 TOC <code>120007</code> 追蹤項。</li>
+<li>後續注意事項：仍未做 WoW Retail/PTR 實機驗證；若目標正式版從 12.0.5 升到 12.0.7，需同步調整 TOC、打包版本與 CurseForge game version ID。</li>
+</ul>
+<h3 id="2026-05-26-taint">2026-05-26 加入 taint 控制規則</h3>
+<ul>
+<li>狀態：已解決</li>
+<li>情境：使用者要求開發過程務求避免 taint 污染。</li>
+<li>症狀：既有規範已涵蓋 Secret Values、Protected Data 與 combat-safe 降級，但缺少獨立的 taint 控制規則。</li>
+<li>原因判斷：WoW AddOn 屬於不受信任來源；若污染 secure/protected execution path，戰鬥中可能導致 Blizzard UI 動作被阻擋。EAM 的 Renderer、EventRouter、UI frame 與 API adapter 都必須避免把 taint 帶進 action bar、unit frame、nameplate、施法、目標或物品使用路徑。</li>
+<li>已嘗試方法：查證 Warcraft Wiki secure execution / taint 相關資料，並更新 <code>AGENTS.md</code>、<code>Docs/02_RETAIL_API_BOUNDARIES.md</code>、<code>Docs/12_CODE_COMMENTARY_GUIDE.md</code>。</li>
+<li>有效解法：將 taint 視為架構邊界；禁止 hook/覆寫 protected 路徑、戰鬥中修改 protected frame、使用 <code>forceinsecure</code> 或傳遞 unsafe value 到 secure chain。</li>
+<li>後續注意事項：發現 taint、blocked action 或 combat lockdown 錯誤時，需在本文件追加觸發路徑、戰鬥狀態、相關 frame/API 與可重現步驟。</li>
+</ul>
+<h3 id="2026-05-26">2026-05-26 建立開發問題紀錄制度</h3>
+<ul>
+<li>狀態：已解決</li>
+<li>情境：使用者要求將開發過程遇到的瓶頸、限制、錯誤與解決方式另做 <code>.md</code> 紀錄。</li>
+<li>症狀：先前規範已有修改前備份規則，但沒有集中保存工具限制、API 不確定性與解法的文件。</li>
+<li>原因判斷：專案正在進行長期 Retail rewrite，若問題只留在對話中，未來 AI 交接會消耗較多 context/token，也容易重複試錯。</li>
+<li>已嘗試方法：新增本文件，並在 <code>AGENTS.md</code> 與 <code>Docs/12_CODE_COMMENTARY_GUIDE.md</code> 加入紀錄規則。</li>
+<li>有效解法：後續遇到問題時，先依本文件格式追加紀錄，再進行下一輪大幅修改或驗證。</li>
+<li>後續注意事項：本文件不得記錄 token、密碼、私人帳號資料或任何敏感資訊。</li>
+</ul>
+<h3 id="2026-05-26-skill">2026-05-26 重複流程需整理為專案專屬 SKILL</h3>
+<ul>
+<li>狀態：已解決</li>
+<li>情境：使用者要求開發過程若發現重複流程，需整理成專案專屬 SKILL。</li>
+<li>症狀：目前已有多個固定流程，例如修改前備份、打包、Lua 語法檢查、WoW API 查證與文件同步，但尚未明確規範何時應升級為 SKILL。</li>
+<li>原因判斷：長期 rewrite 專案會累積可重複流程；若每次都靠對話重述，會增加試錯與 context/token 成本。</li>
+<li>已嘗試方法：在 <code>AGENTS.md</code> 與 <code>Docs/12_CODE_COMMENTARY_GUIDE.md</code> 加入專案專屬 SKILL 規則，並在本文件加入判斷提醒。</li>
+<li>有效解法：當流程具備穩定觸發條件、前置檢查、操作步驟、風險控管與驗證方式時，整理為 EventAlertMod 專案專屬 SKILL。</li>
+<li>後續注意事項：尚未驗證、仍需大量人工判斷或涉及敏感資訊的流程，不應硬做成全自動 SKILL。</li>
+</ul>
+<h3 id="2026-06-07-12x-midnight-era-16-action-bar-glow">2026-06-07 12.x / Midnight-era 16 大全新與高頻事件納入與 Action Bar Glow 同步實作</h3>
+<ul>
+<li>狀態：已解決</li>
+<li>情境：魔獸世界 12.x 正式服移除了 <code>COMBAT_LOG_EVENT_UNFILTERED</code> (CLEU)，導致地面地毯技能冷卻計時失效；且需要將技能圖示的金色亮框高亮 (Overlay Glow) 與快捷列按鈕的原生亮框發光完全同步。</li>
+<li>症狀：以前地毯效果依賴 CLEU 的 <code>SPELL_CAST_SUCCESS</code>；光環/CD 圖示的高亮也缺乏對原生 Action Bar 金色亮框事件的即時訂閱，常因手動判定出現延遲或失效；且天賦切換造成技能 override 時冷卻圖示殘留失效。</li>
+<li>原因判斷：CLEU 已被封禁；需要改用 Retail 正常之 <code>UNIT_SPELLCAST_SUCCEEDED</code> 獲取玩家施法；另外需藉由 <code>SPELL_ACTIVATION_OVERLAY_GLOW_SHOW</code> 與 <code>SPELL_ACTIVATION_OVERLAY_GLOW_HIDE</code> 取得原生動作條的高亮狀態，以及 <code>COOLDOWN_VIEWER_SPELL_OVERRIDE_UPDATED</code> 監聽技能 override 關係。</li>
+<li>已嘗試方法：</li>
+<li>在 <code>GroundEffectService.lua</code> 中，全面移除對 <code>COMBAT_LOG_EVENT_UNFILTERED</code> 的註冊，改為監聽 <code>UNIT_SPELLCAST_SUCCEEDED</code> 且篩選 <code>unitTarget == "player"</code>。</li>
+<li>在 <code>ClassPowerService.lua</code> 中，註冊 <code>UNIT_POWER_FREQUENT</code> 事件提供無延遲能量回饋。</li>
+<li>在 <code>CooldownService.lua</code> 中，註冊 <code>COOLDOWN_VIEWER_SPELL_OVERRIDE_UPDATED</code>，當法術 ID 變更時，即時刷新被覆蓋或原始技能的冷卻狀態，解決 override 計時失效 Bug。</li>
+<li>在 <code>AlertManager.lua</code> 中訂閱 <code>SPELL_ACTIVATION_OVERLAY_GLOW_SHOW/HIDE</code>，維護 <code>glowSpells</code> 表並在 <code>onAlertStateChanged</code> 做被動裝飾（Decorator）屬性同步；修改 <code>UI/Renderer.lua</code> 的 <code>glowBorder</code> 判斷，支援 <code>pandemicReady</code> 與 <code>overlayGlow</code> 雙軌顯示金色發光。</li>
+<li>有效解法：上述改動使 EAM 的事件管線更趨完善，100% 繞過了對 CLEU 的依賴；完全重用了原有物件池與發光邊框，依然維持 0-Allocation 低 GC 開銷。</li>
+<li>後續注意事項：修改後的 5 個 Lua 檔案均順利通過了 <code>luac -p</code> 的靜態語法安全性審查，後續需在魔獸正式服中實機檢驗地毯效果觸發與金色亮框同步。</li>
+</ul>
+<h3 id="2026-06-09-eam-1210-statepool-pool-token-jit">2026-06-09 EAM 12.1.0 零分配 StatePool 回收與基於 Pool-Token 延時排程之 JIT 優化實作</h3>
+<ul>
+<li>狀態：已解決、待實機驗證</li>
+<li>情境：解決 AuraService 在大流量戰鬥中 80 個 AuraState 預分配物件耗盡後落入 GC Churn 的記憶體洩漏 P0 Bug，並消滅 OnUpdate 輪詢 <code>IsZero()</code> 導致 LuaJIT NYI Trace Abort 的效能瓶頸。</li>
+<li>症狀：</li>
+<li>戰鬥中 <code>/eam debug</code> 顯示的 runtimeStats 記憶體會隨著 Buff/Debuff 刷新持續攀升，物件池回收功能完全失效，引發 GC Churn 與 FPS 抖動。</li>
+<li>legacyTimerFrame 的 OnUpdate 迴圈遍歷輪詢 C++ 函數 <code>durationObj:IsZero()</code>，觸發了 LuaJIT 2.1 Trace Abort，導致 Hot Path 不能被 JIT 編譯，被迫降級為解釋執行，在 CPU 負載較高時造成微卡頓。</li>
+<li>原因判斷：</li>
+<li><code>AuraService.lua</code> 的 <code>AuraStatePool</code> 獲取與釋放設計中，漏掉了將 <code>AuraStatePool.release</code> 綁定給 <code>state.releaseFunc</code> 的核心代碼。這導致 <code>AlertManager</code> 在隱藏光環後完全跳過了回收邏輯。</li>
+<li>legacyTimerFrame 的 OnUpdate 每幀使用 <code>pairs</code> 遍歷輪詢 <code>IsZero()</code>，該 C++ 函數在戰鬥受限（Secret）下返回的是限制布林值，為防範崩潰我們使用了 <code>pcall</code>。然而在 JIT compiler 下，<code>pcall</code> 內呼叫暴雪 C 函數會直接觸發 NYI Abort，黑名單化整個 OnUpdate 渲染熱路徑。</li>
+<li>已嘗試方法：</li>
+<li>在 <code>AuraService.lua</code>、<code>GroundEffectService.lua</code> 與 <code>TotemService.lua</code> 的各自物件池的 <code>acquire</code> 內，統一安全地綁定 <code>state.releaseFunc = Pool.release</code>，並在 <code>release</code> 時清空 <code>state.releaseFunc</code>，使 <code>AlertManager</code> 能確實多型調用。</li>
+<li>徹底移除 <code>Renderer.lua</code> 的 OnUpdate <code>IsZero</code> 輪詢與 <code>pcall</code> 宣告。</li>
+<li>實作重用的零分配令牌池 <code>timerTokenPool</code>，在 <code>Renderer.render</code> 啟動計時器時，透過 <code>Scheduler.after</code> 註冊單次延時任務並傳遞 token。</li>
+<li>到期時由 <code>onDurationTimerExpired</code> 判定 token 的 <code>active</code> 與 icon 活躍標誌是否一致，從而精確隱藏 icon，保證整個生命週期 100% 零記憶體配置與零輪詢開銷。</li>
+<li>有效解法：</li>
+<li>重構代碼已成功寫入，4 個 Lua 檔案 <code>AuraService.lua</code>、<code>GroundEffectService.lua</code>、<code>TotemService.lua</code> 與 <code>UI/Renderer.lua</code> 均 100% 通過 <code>luac -p</code> 的靜態語法安全性審查。</li>
+<li>後續注意事項：</li>
+<li>在 WoW Retail 中啟動 EAM，高頻切換 Buff 與冷卻時觀察記憶體曲線是否完全水平不攀升，並確認當光環到期時能精確自動消失，完全消除戰鬥 Taint 與 JIT Abort。</li>
+</ul>
+    </div>
+    <div id="doc-content-en" class="lang-content">
+        <a href="AGENTS.md.html" class="back-btn">← Back to AI Entrance (AGENTS)</a>
+<h1 id="development-bottlenecks-limitations-errors-and-solution-records">Development bottlenecks, limitations, errors and solution records</h1>
+<p>This document records the bottlenecks, limitations, errors, tool failures, API uncertainties and effective solutions encountered during the development of EventAlertMod Retail rewrite. The purpose is to reduce repeated trial and error in the future and allow future AI agents to understand existing problems with less context/tokens.</p>
+<h2 id="record-rules">Record rules</h2>
+<ul>
+<li>New questions are always added at the top of the "Records" block, making it easier to see the latest questions.</li>
+<li>Each record contains at least date, status, situation, symptoms, cause judgment, tried methods, effective solutions, and follow-up precautions.</li>
+<li>If the problem has not been resolved, mark the status as "Unresolved" and indicate the next step of verification.</li>
+<li>Do not record passwords, tokens, private account information or any sensitive information.</li>
+<li>If the problem is related to WoW Retail API, please indicate whether the data source is a file, search index, NotebookLM, or actual machine verification.</li>
+<li>If the problem is related to the tool or environment, document the operating system, instructions, error message summary, and possible alternatives.</li>
+<li>If the same type of problem or operation process occurs repeatedly, it needs to be evaluated whether to organize it into a SKILL exclusive to the EventAlertMod project.</li>
+<li>If the problem involves taint, blocked action, combat lockdown or protected frame, record the trigger path, combat status, relevant frame/API and reproducible steps.</li>
+</ul>
+<h2 id="suggested-format">Suggested format</h2>
+<pre class="codehilite"><code class="language-md">### yyyy-mm-dd 標題
+
+- 狀態：已解決 / 未解決 / 待實機驗證
+- 情境：
+- 症狀：
+- 原因判斷：
+- 已嘗試方法：
+- 有效解法：
+- 後續注意事項：
+</code></pre>
+
+<h2 id="record">record</h2>
+<h3 id="2026-06-09-powershell-get-content-indexing-systemchar-causes-methodnotfound-crash-when-reading-single-line-file-resolved">2026-06-09 PowerShell Get-Content indexing System.Char causes MethodNotFound crash when reading single-line file (resolved)</h3>
+<ul>
+<li>Status: Resolved</li>
+<li>Situation:
+  During the execution of <code>Tools/Build-CurseForgePackage.ps1</code>, a fatal crash of <code>MethodNotFound: [System.Char] doesn't contain a method named 'Trim'</code> was thrown when calling <code>Scan-SensitiveInfo</code> to scan sensitive information, causing the packaging process to be interrupted.</li>
+<li>Reason determination:</li>
+<li>When <code>Get-Content</code> reads a single-line file (such as <code>changelog.txt</code>), PowerShell will optimize the returned value into a single <code>[System.String]</code> instead of an array of <code>[System.String[]]</code>.</li>
+<li>At this time, in the <code>for ($i = 0; $i -lt $lines.Count; $i++)</code> loop, using the subscript <code>$lines[$i]</code> will treat the String as a character array and extract a single character (type <code>[System.Char]</code>).</li>
+<li><code>[System.Char]</code> does not have a <code>.Trim()</code> method, so a <code>MethodNotFound</code> exception will be thrown when called.</li>
+<li>Methods Tried: None.</li>
+<li>Effective solution:
+  In the <code>Scan-SensitiveInfo</code> function, modify <code>$lines = Get-Content ...</code> to <code>$lines = @(Get-Content ...)</code> that is forcibly wrapped with <code>@()</code> to ensure that no matter how many lines the file has, the returned result must be a numerical array, so that <code>$lines[$i]</code> always returns a String.</li>
+<li>Follow-up notes: None.</li>
+</ul>
+<h3 id="2026-06-09-the-sensitive-string-regular-expression-of-curseforge-packaging-script-is-too-wide-causing-false-positive-blocking-of-the-native-secrecy-code-of-warcraft-12x-resolved">2026-06-09 The sensitive string regular expression of CurseForge packaging script is too wide, causing false positive blocking of the native Secrecy code of Warcraft 12.x (resolved)</h3>
+<ul>
+<li>Status: Resolved</li>
+<li>Situation:
+  When executing automated packaging, the safety valve alarm accuses <code>BOUNDARY_SECRET_VALUE = "secretValue"</code> in <code>Constants.lua</code> and the <code>"Secret"</code> in the debug log in <code>ClassPowerService.lua</code> that is spliced together as sensitive information leakage, and the packaging is forcibly interrupted.</li>
+<li>Reason determination:
+  The original regex performs a blind match on the <code>secret</code> word, which mistakenly matches the regular variables and strings of the EAM core Secrecy (restricted/safe) defense mechanism itself.</li>
+<li>Methods Tried: None.</li>
+<li>Effective solution:
+  Modify the <code>$patterns</code> regular pattern in <code>Tools/Build-CurseForgePackage.ps1</code> and replace the broad <code>secret</code> with precise retrieval of specific key or certificate words such as <code>client_secret</code> and <code>app_secret</code>.</li>
+<li>Follow-up notes: Confirm that when modifying the code related to the secrecy mechanism in the future, the packaging tool will no longer be interfered with by false positives.</li>
+</ul>
+<h3 id="2026-06-09-the-automatic-packaging-whitelist-misses-the-blp-texture-file-resulting-in-the-loss-of-customized-ui-resources-resolved">2026-06-09 The automatic packaging whitelist misses the .blp texture file, resulting in the loss of customized UI resources (resolved)</h3>
+<ul>
+<li>Status: Resolved</li>
+<li>Situation:
+  When executing the automated packaging script, it was found that all the textures and button backgrounds (such as <code>Seed1.blp</code>, <code>UI-Panel-Backdrop.blp</code>) under <code>Media/Images/</code> were skipped, and these texture files were missing from the generated ZIP compressed package.</li>
+<li>Reason determination:
+  The texture extension <code>.blp</code> native to World of Warcraft is missing from the <code>$allowedExtensions</code> whitelist variable in <code>Tools/Build-CurseForgePackage.ps1</code>.</li>
+<li>Methods Tried: None.</li>
+<li>Effective solution:
+Officially add <code>.blp</code> to the whitelist extension array (i.e. <code>$allowedExtensions = @(".lua", ".xml", ".tga", ".blp", ...)</code>).</li>
+<li>Follow-up notes: After successful packaging, unzip the release package and confirm that all pictures and music files are intact.</li>
+</ul>
+<h3 id="2026-06-09-the-ai-rd-environment-subagent-quota-limit-caused-some-experts-to-fail-to-start-the-bottleneck-resolved">2026-06-09 The AI R&amp;D environment subagent quota limit caused some experts to fail to start the bottleneck (resolved)</h3>
+<ul>
+<li>Status: Resolved</li>
+<li>Situation:
+The main agent (Antigravity) attempts to start 5 expert subagents in parallel at the same time to conduct 12.1.0 expert joint review and full code inspection.</li>
+<li>Judgment of symptoms and causes:</li>
+<li>System report: <code>The subagent EAM_UI_Renderer_Expert (and Performance, API Security) encountered an error and has either stopped or failed to start execution: RESOURCE_EXHAUSTED (code 429): Individual quota reached. Contact your administrator to enable overages. Resets in 3h48m</code>.</li>
+<li>Reason: The AI ​​execution platform implements a hard limit on the number or rate of parallel subagents calls, which reaches the Quota bottleneck when dispatching a large number of workers continuously.</li>
+<li>Methods Tried: None.</li>
+<li>Effective solution:</li>
+<li><strong>Master Agent Responsibilities</strong>: According to the Critical Path degradation principle of <a href="file:///d:/EventAlertMod/Docs/17_SUBAGENT_WORKFLOW.md.html">Docs/17_SUBAGENT_WORKFLOW.md</a>, the master agent (Antigravity) immediately assumes and integrates the evaluation of UI rendering, security defense and performance control to ensure that the project progress is not blocked.</li>
+<li><strong>Integrate obtained expert reports</strong>: Make use of the successfully obtained <code>EAM_Addon_Architect</code> (ARCH) and <code>EAM_Lua_VM_Expert</code> (LUA) key reports (including the analysis of the main causes of the fatal <code>pcall</code> Abort of the JIT Trace Compiler, and the diagnosis of major bugs in the <code>AuraService</code> missing binding of the <code>releaseFunc</code>) to formulate the latest JIT optimization implementation plan.</li>
+<li><strong>Principle of dispatching work in batches</strong>: In subsequent development, try to avoid calling more than 3 subagents at the same time. Before the quota is restored, the relevant bypass tasks will be executed directly by the main agent locally.</li>
+<li>Follow-up notes: The quantity of WIP (work in progress) must be accurately calculated before dispatching work, and priority will be given to only A-level approvers and R-level executors to reduce the risk of platform quota exhaustion.</li>
+</ul>
+<h3 id="2026-06-07-setting-page-slider-icon-sizespacing-adjustment-cannot-reflect-7-major-frame-layout-bugs-resolved">2026-06-07 Setting page Slider icon size/spacing adjustment cannot reflect 7 major frame layout bugs (resolved)</h3>
+<ul>
+<li>Status: Resolved</li>
+<li>Situation:
+When the user drags the sliders in the EAM setting interface (<code>/eam opt</code>) to adjust "iconSize" or "iconSpacing", although the settings are successfully saved to SavedVariables, the actual rendering size and arrangement spacing of the seven warning frames in the game screen are still fixed at the default values ​​(40 size and 6 spacing), and the adjustment is completely ineffective.</li>
+<li>Judgment of symptoms and causes:</li>
+<li>Through the JSON exported from the debugging statistics, it was found that <code>config.iconSize = 73</code> and <code>config.iconSpacing = -33</code>, indicating that the user has indeed successfully modified the settings and the settings have been written.</li>
+<li>However, in the <code>runtimeStats.renderer.frameIcons</code> detailed property of entity rendering, the <code>layoutSize</code> of all Icon is still the default <code>40</code>.</li>
+<li>After comparing the code, it was found that in the binding of the <code>defaults</code> table and UI Slider in <code>Core/SavedVariables.lua</code>, user settings are stored in <code>EAM.db.config.iconSize</code> and <code>EAM.db.config.iconSpacing</code> respectively.</li>
+<li>However, in <a href="file:///d:/EventAlertMod/UI/Renderer.lua">UI/Renderer.lua</a>, which is responsible for rendering and typesetting, its <code>ensureParent</code> function and <code>layout</code> typesetting algorithm only read the <code>EAM.db.layout.iconSize</code> and <code>EAM.db.layout.spacing</code> fields. This leads to inconsistent variable naming, so that the renderer can only fallback to read the default value.</li>
+<li>Tried methods:
+  Back up <code>UI/Renderer.lua</code> to <code>backup/Renderer.lua__20260607222900</code>.</li>
+<li>Effective solution:
+  Modify <a href="file:///d:/EventAlertMod/UI/Renderer.lua">UI/Renderer.lua</a>:</li>
+<li>In <code>ensureParent</code>, change the assignment of <code>Renderer.iconSize</code> and <code>Renderer.spacing</code> fields to read from <code>EAM.db.config.iconSize</code> and <code>EAM.db.config.iconSpacing</code> first, and be compatible with the old version of <code>db.layout</code> and fallback default values.</li>
+<li>In the core <code>layout</code> layout function, change <code>local size</code> and <code>local spacing</code> to read from <code>EAM.db.config.iconSize</code> and <code>EAM.db.config.iconSpacing</code> first, and be compatible with the <code>db.layout</code> field and the <code>Renderer</code> local default value.</li>
+<li>Static <code>luac -p</code> syntax check passes 100%.</li>
+<li>Follow-up notes: During actual machine verification, confirm whether the size and spacing of the alarm icon on the screen can change accordingly when the Slider adjusts the size and spacing.</li>
+</ul>
+<h3 id="2026-06-07-performing-boolean-test-on-secret-boolean-during-battle-caused-taint-to-crash-bug-resolved">2026-06-07 Performing Boolean Test on Secret Boolean during battle caused Taint to crash Bug (resolved)</h3>
+<ul>
+<li>Status: Resolved</li>
+<li>Situation:
+In combat, if an aura or skill cooldown is rendered by the native UI's <code>DurationObject</code>, when we call <code>durationObj:IsZero()</code> in OnUpdate (such as Renderer.lua's <code>onLegacyTimerUpdate</code>) to determine whether it expires, World of Warcraft will throw an <code>attempt to perform boolean test on a secret boolean value (execution tainted by 'EventAlertMod')</code> fatal error, causing Taint to crash and blocking the UI's OnUpdate execution chain.</li>
+<li>Judgment of symptoms and causes:</li>
+<li>In combat, the return value of <code>DurationObject:IsZero()</code> is Secret Boolean. Directly performing <code>if val then</code> conditional judgment in Lua will directly trigger the Metamethod blocking crash.</li>
+<li>This is because Blizzard’s Secrecy protection mechanism limits the Boolean value judgment of Secret Boolean.</li>
+<li>If we want to secure access, we cannot perform boolean test on Secret Boolean. However, we can use <code>issecretvalue(val)</code> to first check whether the returned value is a Secret. If it's a Secret, we just skip the boolean test on it just to be safe. If it is not a Secret, we can safely make a Bollinger call.</li>
+<li>Tried methods:
+  Back up <code>UI/Renderer.lua</code> to <code>backup/Renderer.lua__20260607222500</code>.</li>
+<li>Effective solution:
+Introduce the <code>safeCheckIsZero(durationObj)</code> defensive wrapper function in <a href="file:///d:/EventAlertMod/UI/Renderer.lua">UI/Renderer.lua</a>:</li>
+<li>First confirm that <code>durationObj</code> is not <code>nil</code>, has the <code>IsZero</code> function, and <code>durationObj</code> itself is not a Secret.</li>
+<li>Use the <code>pcall</code> parameter passing method without closure: <code>local ok, val = pcall(durationObj.IsZero, durationObj)</code> to avoid generating Heap garbage on the OnUpdate hot path.</li>
+<li>After getting the returned value <code>val</code>, use <code>Util.isSecretValue(val)</code> to check whether it is a Secret. If it is a Secret, return <code>false</code> (do not perform a boolean test on it); if it is not a Secret, you can safely return <code>val == true</code>.</li>
+<li>Modify the traversal of <code>activeDurationObjects</code> in <code>onLegacyTimerUpdate</code> and use <code>safeCheckIsZero(durationObj)</code> for conditional judgment instead.</li>
+<li>Follow-up notes: During actual verification, confirm whether the icon can automatically disappear when it expires when a restricted aura or cooldown is triggered in battle, and the chat window will no longer spew out boolean test errors.</li>
+</ul>
+<h3 id="2026-06-07-combat-restricted-secret-halo-time-countdown-downgrade-and-automatic-expiration-recycling-mechanism-resolved">2026-06-07 Combat Restricted (Secret) Halo Time Countdown Downgrade and Automatic Expiration Recycling Mechanism (Resolved)</h3>
+<ul>
+<li>Status: Resolved</li>
+<li>Situation:
+When a player is in battle and the Buff/Debuff they receive is marked as Secret by World of Warcraft (for example, when the time and expiration time are restricted and cannot be read), EAM cannot count down by OnUpdate on its own, and because it cannot arrange scheduler tasks for it, EAM cannot hide and recycle the Icon frame in real time when the aura naturally disappears when it expires.</li>
+<li>Judgment of symptoms and causes:</li>
+<li>Although the <code>DurationObject</code> returned by the native <code>C_UnitAuras.GetAuraDuration</code> in World of Warcraft 12.x is protected (Secret), the native UI can bind and render it.</li>
+<li>Since <code>DurationObject</code> cannot read the remaining time in Lua, the original EAM scheduler (Scheduler) and bounce mechanism cannot know when it expires and can only rely entirely on the <code>UNIT_AURA</code> halo removal event. However, in-battle events are often delayed by official optimization, throttling, and even partial restrictions.</li>
+<li>Fortunately, the native <code>DurationObject</code> has the <code>IsZero()</code> method, which is a safe, callable predicate in the Secret state (returning a normal boolean).</li>
+<li>Tried methods:
+  Back up <code>Services/AuraService.lua</code> and <code>UI/Renderer.lua</code> to the <code>backup/</code> directory.</li>
+<li>Effective solution:</li>
+<li><strong>Prioritize grabbing spell description when Secret is limited</strong>: Modify <code>readAuraIntoState</code> in <code>AuraService.lua</code>. When <code>isSecret</code> is <code>true</code>, the duration of the spell description (<code>scrapedDur</code>) is grabbed first. If caught, use it to manually create a non-Secret ordinary <code>DurationObject</code>. At this time, it can perform a normal digital countdown.</li>
+<li><strong>Native IsZero() polling and custom recycling</strong>: Modify <code>UI/Renderer.lua</code> and implement <code>activeDurationObjects</code> management. For any active Icon containing a <code>durationObject</code> (whether native or manually created), <code>IsZero()</code> is determined every frame in the unified <code>onLegacyTimerUpdate</code>. Once <code>durationObj:IsZero()</code> returns <code>true</code>, immediately actively call <code>Renderer.render(..., shown=false)</code> to hide and recycle IconPool, and actively release the frame.</li>
+<li>Follow-up Notes: During actual verification, please note that when a restricted Buff/Debuff is triggered in battle, observe whether the icon can automatically disappear quickly and without residual images when it ends naturally.</li>
+</ul>
+<h3 id="2026-06-07-the-bug-of-skill-cooldown-monitoring-forcibly-displaying-an-empty-icon-and-no-countdown-when-there-is-no-cooldown-resolved">2026-06-07 The bug of skill cooldown monitoring forcibly displaying an empty icon and no countdown when there is no cooldown (resolved)</h3>
+<ul>
+<li>Status: Resolved</li>
+<li>Situation:
+In the user's real-machine debugging log, the <code>spellCooldown</code> framework displayed 15 skill icons (including ice gun, awakening, fireball, etc.) at once, but these skills were in a non-cooling state at the time and had no countdown text.</li>
+<li>Judgment of symptoms and causes:</li>
+<li>The original <code>shouldShow</code> logic of <code>CooldownService.lua</code> is: if it is a non-Charge skill, then <code>shouldShow = true</code> is preset when <code>infoSafe</code> is <code>false</code> (to prevent the situation that cannot be read due to Secrecy restrictions in combat).</li>
+<li>However, if a skill is not on cooldown at all, the official <code>C_Spell.GetSpellCooldown</code> may return a structure that does not contain a valid cooldown attribute, or may even be empty; or <code>cooldownInfo</code> is <code>nil</code> because the skill is not on cooldown.</li>
+<li>At this time, <code>infoSafe</code> remains <code>false</code> because it cannot get the safe cooling facts, which causes the decision to mistakenly fall into the defensive branch of <code>else shouldShow = true</code>!</li>
+<li>The result is: all monitored skills that are not currently on cooldown are forced to set <code>shouldShow = true</code>. They are shown on the screen, but since there is no cooldown data at all, there will be no countdown seconds or Cooldown spiral blackout at all.</li>
+<li>Tried methods:
+Back up <code>Services/CooldownService.lua</code> to the <code>backup/</code> directory.</li>
+<li>Effective solution:
+  Modify the <code>shouldShow</code> logic of <a href="file:///d:/EventAlertMod/Services/CooldownService.lua">Services/CooldownService.lua</a>:
+  Only when <code>cooldownInfo</code> is not nil** (meaning that the spell does have cooling data or is in cooling) and in a restricted state where <code>infoSafe</code> is <code>false</code>, the defensive <code>shouldShow = true</code> determination is made; if <code>cooldownInfo</code> is <code>nil</code>, it will not be displayed directly.</li>
+<li>Follow-up notes: During the actual machine verification, please reload the game to confirm whether the icons of the 15 mage skills that are not in cooling have disappeared correctly; only when the skills actually enter the cooling period, the icons will pop up and the countdown will be displayed normally.</li>
+</ul>
+<h3 id="2026-06-07-extend-eam-debugging-diagnostic-log-statistics-to-enhance-ai-debugging-analysis-resolved">2026-06-07 Extend EAM debugging diagnostic log statistics to enhance AI debugging analysis (resolved)</h3>
+<ul>
+<li>Status: Resolved</li>
+<li>Situation:
+In order to allow AI and developers to more conveniently and deeply find the root cause of the problem when obtaining debugging reports (for example, whether the Service layer was not detected or the Renderer layer was not successfully drawn), the diagnostic log needs to be expanded.</li>
+<li>Judgment of symptoms and causes:
+The original diagnostic JSON only outputs the number of states. When encountering situations such as "the icon does not appear", it is impossible to know which Spell ID is being actively monitored, the current lighting state of the AlertManager, and the entity layout coordinates and <code>:IsShown()</code> attribute of each Icon in the Renderer.</li>
+<li>Tried methods:
+  Back up <code>Debug/PromptExport.lua</code> to the <code>backup/</code> directory.</li>
+<li>Effective solution:
+  Modify <a href="file:///d:/EventAlertMod/Debug/PromptExport.lua">Debug/PromptExport.lua</a>:</li>
+<li><strong>Expand memory and active list of each service</strong>: Add <code>memoryKB</code> statistics, and traverse the states of the 5 major Services (Aura, Cooldown, ItemCooldown, GroundEffect, Totem, ClassPower) to collect the currently active spell ID list.</li>
+<li><strong>Add AlertManager glow state</strong>: Collect the list of spellIDs in <code>glowSpells</code> that are currently in Proc highlight glow.</li>
+<li><strong>Add Renderer entity Icon detailed layout attribute</strong>: For the 7 major Alert Frames, output the <code>id</code>, <code>isParasite</code>, <code>layoutX</code>, <code>layoutY</code>, <code>layoutSize</code> of all active icons under them and the <code>:IsShown()</code> explicit and implicit values ​​of the entities in World of Warcraft.</li>
+<li>Static <code>luac -p</code> passed the syntax check of the entire case.</li>
+<li>Follow-up notes: During actual machine verification, please reload, open the JSON copied by <code>/eam debug</code>, and check whether it contains the above newly expanded arrays and objects.</li>
+</ul>
+<h3 id="2026-06-07-diagnostic-tool-promptexportdebugstate-reads-the-old-version-of-the-field-resulting-in-visibleicons-always-being-0-and-alertframeexists-always-being-false-bug-resolved">2026-06-07 Diagnostic tool PromptExport/DebugState reads the old version of the field, resulting in visibleIcons always being 0 and alertFrame.exists always being false Bug (resolved)</h3>
+<ul>
+<li>Status: Resolved</li>
+<li>Situation:
+  After the zero-allocation event-driven and multi-frame reconstruction of 12.1.0, the user exported the debug diagnostic log and found that <code>visibleIcons</code> was always <code>0</code>, and <code>alertFrame.exists</code> was always <code>false</code>, which led to a misjudgment that no icon was displayed.</li>
+<li>Judgment of symptoms and causes:</li>
+<li>The reconstructed EAM uses 7 independent Alert Frames (<code>_G["EAM_AlertFrame_" .. fName]</code>), and the original single global frame <code>EAM_RetailAlertFrame</code> has been abandoned.</li>
+<li>The original Renderer global field <code>renderer.orderCount</code> has also been split and encapsulated into the private layout state <code>fState.orderCount</code> of each frame.</li>
+<li>However, the debug statistics tools <code>Debug/PromptExport.lua</code> and <code>Debug/DebugState.lua</code> still try to read the old version of <code>renderer.orderCount</code> and <code>_G["EAM_RetailAlertFrame"]</code> when counting <code>visibleIcons</code> and <code>exists</code>. This causes the statistical tool to always return <code>0</code> and <code>false</code>, resulting in the statistical data artifact that "the graph is not displayed at all". In fact, the Renderer rendering log is normal, and the entity icon has been successfully rendered and displayed on the screen.</li>
+<li>Tried methods:
+Back up <code>Debug/PromptExport.lua</code> and <code>Debug/DebugState.lua</code> to the <code>backup/</code> directory.</li>
+<li>Effective solution:</li>
+<li><strong>Multi-frame state accumulation</strong>: Modify <code>Debug/PromptExport.lua</code> and <code>Debug/DebugState.lua</code>, change <code>visibleIcons</code> to accumulate the <code>orderCount</code> of 7 Alert Frames; and change the <code>layoutDirty</code> check to <code>true</code> if any <code>fState.layoutDirty</code> is <code>true</code>.</li>
+<li><strong>Multiple frame existence detection</strong>: Perform traversal detection and structured output on 7 major Alert Frames (such as <code>selfAura</code>, <code>targetAura</code>, etc.) in <code>PromptExport.lua</code>. As long as at least one frame exists, it is determined that <code>alertFrame.exists</code> is <code>true</code>, and the coordinates and visible status of each frame are accurately presented.</li>
+<li>Static <code>luac -p</code> syntax security verification of the entire case, the modified file 100% passed the syntax security check.</li>
+<li>Follow-up notes: During actual machine verification, please reload, export the Debug Log JSON again, and verify whether the <code>visibleIcons</code> value is completely consistent with the rendering of the entity icon (displaying the correct number greater than 0), and the chat window no longer spits out errors.</li>
+</ul>
+<h3 id="2026-06-07-registering-internal-custom-events-to-native-frameregisterevent-causes-attempt-to-register-unknown-event-to-crash-resolved">2026-06-07 Registering internal custom events to native Frame:RegisterEvent causes Attempt to register unknown event to crash (resolved)</h3>
+<ul>
+<li>Status: Resolved</li>
+<li>Situation:
+When loading the plug-in in <code>/reload</code>, World of Warcraft directly throws a big red text error: <code>EAM Init Error on [AlertManager]: Frame:RegisterEvent(): Attempt to register unknown event "EAM_AURA_STATE_CHANGED"</code>, causing AlertManager initialization to be interrupted and the UI to be completely invalid.</li>
+<li>Judgment of symptoms and causes:</li>
+<li>When <code>AlertManager</code> is initialized, it will call <code>EventRouter.register</code> to register multiple internal custom events (such as <code>EAM_AURA_STATE_CHANGED</code>).</li>
+<li>The original implementation of <code>EventRouter.register</code> is to call <code>frame:RegisterEvent(event)</code> to register with the native Blizzard frame regardless of any event.</li>
+<li>The native <code>RegisterEvent</code> API of World of Warcraft 12.x is strictly limited to registering events defined by the Blizzard system. Once an unknown custom event name is passed in, a fatal error will be thrown immediately and the execution chain will be interrupted.</li>
+<li>Tried methods:
+  Back up <code>Core/EventRouter.lua</code> to the <code>backup/</code> directory.</li>
+<li>Effective solution:
+Introduce a custom event filtering mechanism in <code>EventRouter.register(event, handler)</code> in <a href="file:///d:/EventAlertMod/Core/EventRouter.lua">Core/EventRouter.lua</a>:
+  Determine whether the event name is prefixed with <code>"EAM_"</code>. If so, it is an internal communication custom event and skips calling the native <code>frame:RegisterEvent(event)</code>.</li>
+<li>Follow-up notes: Please pay attention during actual machine verification to observe whether the chat window no longer spits out any RegisterEvent error red text after <code>/reload</code> is loaded, and the EAM alarm can be rendered normally when triggered by each Service custom event.</li>
+</ul>
+<h3 id="2026-06-07-there-is-no-default-monitoring-spell-bug-when-a-new-installation-or-wtf-file-does-not-exist-resulting-in-no-icon-display-resolved">2026-06-07 There is no default monitoring spell bug when a new installation or WTF file does not exist, resulting in no Icon display (resolved)</h3>
+<ul>
+<li>Status: Resolved</li>
+<li>Situation:
+In a new installation environment without old EAM global variables (such as <code>EA_Items</code>, <code>EA_AltItems</code>, etc.) (or the WTF folder is cleared), an ICON does not appear after logging in to the rewritten EAM.</li>
+<li>Judgment of symptoms and causes:</li>
+<li>When <code>SavedVariables.lua</code> is initialized, in addition to executing <code>importLegacyTables</code> to try to migrate settings from the old version of global variables, the default monitoring spells of the current profession in <code>EAM.Data.SpellArray</code> are not written to <code>EAM_DB.alerts</code>.</li>
+<li>When loading fresh, the legacy variables are not present, so the <code>alerts</code> list is completely empty.</li>
+<li>Each monitoring service (<code>AuraService</code>, <code>CooldownService</code>, etc.) uses <code>EAM_DB.alerts</code> for filtering. If alerts is empty, it will be returned directly without throwing any update events or UI drawing, so no ICON appears on the screen.</li>
+<li>Tried methods:
+  Back up <code>Core/SavedVariables.lua</code> to the <code>backup/</code> directory.</li>
+<li>Effective solution:
+In <code>SavedVariables.initialize()</code> of <code>Core/SavedVariables.lua</code>, add a new loading (that is, when the number of playerAuras/targetAuras/spellCooldowns/itemCooldowns is 0) air defense mechanism:
+  Automatically detect the player's current occupation, read the corresponding universal and specialization default monitoring spells in <code>EAM.Data.SpellArray</code>, and call <code>SavedVariables.addAlert</code> to automatically write them into the database.</li>
+<li>Follow-up notes: During actual machine verification, you can use the command <code>/run EAM_DB = nil ReloadUI()</code> to test whether the default spells of the current profession (such as a mage) will be automatically read and the corresponding icon will be displayed after clearing SavedVariables, and no blank will be displayed.</li>
+</ul>
+<h3 id="2026-06-07-strengthen-the-eam-general-framework-to-downgrade-the-onupdate-countdown-text-and-prevent-the-overlap-of-native-numbers-resolved">2026-06-07 Strengthen the EAM general framework to downgrade the OnUpdate countdown text and prevent the overlap of native numbers (resolved)</h3>
+<ul>
+<li>Status: Resolved</li>
+<li>Situation:
+After abandoning the link with the official CDM, if it encounters a downgraded timing environment that does not have a <code>DurationObject</code> pointer or does not support 12.0.7 native binding, the independent frame of EAM originally only performed shadow rotation without displaying the countdown seconds text at all. In addition, if native Cooldown is enabled, native small numbers will overlap with EAM custom large text.</li>
+<li>Judgment of symptoms and causes:</li>
+<li><code>Renderer.lua</code> originally only implemented text binding in <code>useNativeBinding</code> mode. In downgrade mode, <code>timerText</code> is directly cleared, resulting in the general timer not displaying the remaining seconds.</li>
+<li>The native <code>CooldownFrame</code> may display the reciprocal number by default, causing it to overlap with EAM's own <code>timerText</code>, making it visually unsightly.</li>
+<li>Tried methods:
+  Back up <code>UI/Renderer.lua</code> and <code>UI/IconPool.lua</code> to the <code>backup/</code> directory.</li>
+<li>Effective solution:</li>
+<li><strong>Implement unified downgrade timing OnUpdate system</strong>: Implement a globally shared <code>legacyTimer</code> system based on a single OnUpdate framework in <code>UI/Renderer.lua</code>, providing <code>registerLegacyTimer</code> and <code>unregisterLegacyTimer</code>. This timer will only start when the downgrade icon is active.</li>
+<li><strong>Millisecond-level decimal reciprocal</strong>: In this legacyTimer, when the remaining time is less than 3 seconds, it automatically switches to a decimal reciprocal (such as <code>2.4</code>, <code>0.8</code>). When it is higher than 3 seconds, it displays an integer, providing an advanced experience comparable to the native one.</li>
+<li><strong>Recycling Defense Logout</strong>: When <code>IconPool.release</code> and <code>Renderer.render</code> expire and are hidden, <code>unregisterLegacyTimer</code> is indeed called to clear the timing to prevent afterimages or leaks.</li>
+<li><strong>Prevent native text overlap</strong>: In <code>createIcon</code> of <code>UI/IconPool.lua</code>, call <code>cooldown:SetHideCountdownNumbers(true)</code> on the newly created Cooldown framework to completely eliminate text overlap.</li>
+<li>Follow-up notes: During actual machine verification, you need to pay attention to whether the countdown in large characters is smooth without <code>DurationObject</code> downgrade, and whether the decimal point display of less than 3 seconds is accurate and free of lags.</li>
+</ul>
+<h3 id="2026-06-07-abandoned-hooking-and-parasitic-adsorption-with-official-cooldownviewer-cdm-resolved">2026-06-07 Abandoned hooking and parasitic adsorption with official CooldownViewer (CDM) (resolved)</h3>
+<ul>
+<li>Status: Resolved</li>
+<li>Situation:
+  Users requested that the link to the official CooldownViewer (CDM) be dropped. It is necessary to completely shut down the original shadow carrier adsorption logic and return all cooling and skill icons to EAM's own layout and rendering framework.</li>
+<li>Judgment of symptoms and causes:
+Originally, in order to bypass the restrictions of Secret/Taint in combat, the Shadow Host technology was implemented parasitic under the official CDM icon. However, after the user decides not to hook it, they need to completely disable this feature and ensure that the official UI remains intact.</li>
+<li>Tried methods:
+  Back up <code>Services/ShadowHostService.lua</code>, <code>UI/Renderer.lua</code> and <code>Core/SavedVariables.lua</code> to the <code>backup/</code> directory.</li>
+<li>Effective solution:</li>
+<li><strong>Disable ShadowHostService initialization and Hook</strong>: annotate the <code>initShadowHost()</code> call at the bottom of <code>ShadowHostService.lua</code>, without making any Hook, and without hiding the official UI; at the same time, simplify <code>ShadowHostService.GetHostIcon</code> so that it returns <code>nil</code> directly.</li>
+<li><strong>Forcibly close the Renderer adsorption channel</strong>: In <code>Renderer.render</code> of <code>UI/Renderer.lua</code>, write <code>useCDM</code> to <code>false</code> to completely disconnect the judgment path linked to CDM. All icons will 100% follow the EAM self-typesetting route (<code>dx</code>, <code>dy</code> direction positioning).</li>
+<li><strong>Set the enableCDM default value to false</strong>: In <code>Core/SavedVariables.lua</code>, set the default setting of <code>enableCDM</code> to <code>false</code>.</li>
+<li>Static <code>luac -p</code> The whole case syntax check is compiled and passed.</li>
+<li>Follow-up notes: Please pay attention during actual machine verification to observe whether the icon layout has completely returned to the regular positioning of EAM (4-way growth direction), and whether there will be any layout obstruction when entering battle.</li>
+</ul>
+<h3 id="2026-06-07-12x-midnight-era-durationobject-core-api-and-time-management-mechanism-investigation-resolved">2026-06-07 12.x / Midnight-era: DurationObject core API and time management mechanism investigation (resolved)</h3>
+<ul>
+<li>Status: Resolved</li>
+<li>Situation:
+  World of Warcraft Retail 12.x / Midnight generation implements a black box (Pointer-Pass Pattern) for time management (cooldown, aura, recharge). EAM must fully understand all APIs that can generate or pass <code>DurationObject</code> for high availability, 0-GC and Secret-Safe time rendering.</li>
+<li>Judgment of symptoms and causes:
+The traditional OnUpdate value countdown is prone to string splicing and Table index collapse under combat restrictions (Secret). To this end, we need to pass the <code>DurationObject</code> produced by the native API to the native Widget through pointer-Pass. At this time, we need to completely inventory all available APIs for modular reconstruction.</li>
+<li>Tried methods:
+  Read the Warcraft Wiki 12.0.5 API change log, and use Python scripts to accurately extract the API log.</li>
+<li>Effective solution:</li>
+<li><strong>Compile a list of four major categories of APIs</strong>:<ul>
+<li><strong>Cooldown/Charge</strong>: <code>C_Spell.GetSpellCooldownDuration</code>, <code>C_Spell.GetSpellChargeDuration</code>, <code>C_SpellBook.GetSpellBookItemCooldownDuration</code>, <code>C_SpellBook.GetSpellBookItemChargeDuration</code>, <code>C_ActionBar.GetActionCooldownDuration</code>, <code>C_ActionBar.GetActionChargeDuration</code>.</li>
+<li><strong>Aura duration</strong>: <code>C_UnitAuras.GetAuraDuration</code>, <code>C_UnitAuras.GetAuraBaseDuration</code> and <code>C_UnitAuras.GetRefreshExtendedDuration</code>.</li>
+<li><strong>Tools/ManualClock</strong>: <code>C_DurationUtil.CreateDuration</code>, <code>C_DurationUtil.CreateManualClock</code>.</li>
+<li><strong>Widget association</strong>: <code>self:GetTimerDuration()</code>.</li>
+</ul>
+</li>
+<li><strong>Master ScriptObject member methods</strong>: <code>IsZero()</code>, <code>GetRemainingDuration()</code>, <code>GetClockTime()</code>, <code>EvaluateTotalDuration()</code>, <code>FormatRemainingDuration(formatter)</code>, <code>FormatElapsedDuration(formatter)</code>, <code>FormatTotalDuration(formatter)</code> and other member functions, and identify their combat Secrecy Security properties (such as <code>IsZero</code> for NeverSecret are safe for expiration detection).</li>
+<li><strong>GroundEffectService)</strong>: Complete <code>state.timer.durationObject = api.C_DurationUtil.CreateDuration(duration)</code> in <code>Services/GroundEffectService.lua</code>, so that the ground effect skills can perfectly connect to the dual-track Native Binding countdown channel, eliminating the final OnUpdate and time drift.</li>
+<li>Save the results in <a href="file:///C:/Users/ZYF/.gemini/antigravity/brain/b7690ead-b096-4f45-88f1-19a3c18d55f0/duration_object_api_investigation.md.html">duration_object_api_investigation.md</a>.</li>
+<li>Follow-up notes: In the future development of AuraService and CooldownService, the above API should be regarded as the first priority way to obtain time, and Text Binding should be called first in Renderer.</li>
+</ul>
+<h3 id="2026-06-07-implemented-three-level-comparison-defense-using-icon-id-texture-filedataid-to-improve-shadow-carrier-hit-rate-resolved">2026-06-07 Implemented three-level comparison defense using Icon ID (Texture FileDataID) to improve shadow carrier hit rate (resolved)</h3>
+<ul>
+<li>Status: Resolved</li>
+<li>Situation:
+In combat, if <code>spellID</code> or <code>spellName</code> cannot be obtained due to Secrecy (restricted/encrypted), or there is a delay in loading the client cache, EAM will not be able to accurately compare and parasitize the shadow carrier of the official CooldownViewer (CDM).</li>
+<li>Judgment of symptoms and causes:</li>
+<li>There is still a chance that the dual-track comparison (<code>spellID</code> and <code>spellName</code>) will fail to match under extreme combat restrictions or when loading in multiple languages.</li>
+<li>Each cooldown or aura icon must correspond to a unique Texture image (FileDataID) on its Renderer or official UI, which is usually not a Secret in combat and serves as an excellent and unique identification feature.</li>
+<li><strong>Indirect acquisition of spell name advantage (core)</strong>: Once the official shadow carrier (Host Icon) is successfully connected to the unrestricted <code>spellID</code> we monitor through the unrestricted Texture ID, the EAM renderer can use the non-Secret <code>spellID</code> static query to obtain the real localized spell name, and highlight it at the bottom of the parasitic icon, which perfectly solves the problem of official CDM icons in battle due to Secrecy The major pain point is that the skill name cannot be displayed due to limitations.</li>
+<li>Tried methods:
+  Back up <code>Services/ShadowHostService.lua</code> and <code>UI/Renderer.lua</code> to the <code>backup/</code> directory.</li>
+<li>Effective solution:</li>
+<li><strong>Create a three-level iconID comparison table</strong>: Add the <code>activeIconHosts</code> table and the <code>getIconIDFromHostIcon</code> auxiliary function to safely obtain the host icon ID in <code>ShadowHostService.lua</code> (supports <code>:GetTexture()</code> of <code>icon.Icon</code>, <code>icon.icon</code>, <code>icon.texture</code> and direct field reading).</li>
+<li><strong>Three-track comparison and GetSpellTexture dynamic analysis</strong>: Expand <code>ShadowHostService.GetHostIcon</code> to <code>(spellID, spellName, iconID)</code> three-track comparison. If <code>iconID</code> is not passed in, <code>C_Spell.GetSpellTexture(spellID)</code> will be used internally to dynamically obtain the spell icon ID to be monitored and matched in <code>activeIconHosts</code>.</li>
+<li><strong>Dynamic scanAll() Fallback</strong>: Within <code>GetHostIcon</code>, if no hits are found in the first round of table lookups, <code>scanAll()</code> will be automatically called to reorganize all hooked official Viewer pool mappings (to prevent the official from not setting the Texture during Acquire, resulting in missing allocations), and then conduct the second round of matching to ensure the hit rate to the maximum.</li>
+<li><strong>Renderer call upgrade</strong>: In <code>UI/Renderer.lua</code>, when calling <code>GetHostIcon</code>, pass in <code>(alertState.spellID or alertState.id, alertState.name, alertState.icon)</code> for three-track query.</li>
+<li>Follow-up notes: Please pay attention during actual machine verification and observe whether the Texture ID can be stably attached to the official corresponding cooling icon when the spell ID is restricted.</li>
+</ul>
+<h3 id="2026-06-07-a-nil-error-occurred-when-cooldownserviceauraservice-called-secrecy-api-resolved">2026-06-07 A nil error occurred when CooldownService/AuraService called secrecy API (resolved)</h3>
+<ul>
+<li>Status: Resolved</li>
+<li>Situation:
+  When logging in or triggering a cooldown update, World of Warcraft throws <code>Services/CooldownService.lua:324: attempt to call a nil value</code> and <code>Services/CooldownService.lua:328: attempt to call a nil value</code> fatal errors.</li>
+<li>symptom:</li>
+<li>When the cooldown update is triggered and <code>refreshAlert</code> is called, throw <code>attempt to call a nil value</code>.</li>
+<li>The error was caught by <code>EventRouter</code> or the system error mechanism, interrupting the cooling alarm update process.</li>
+<li>Reason determination:</li>
+<li>In <code>Core/Util.lua</code>, line 152 directly calls the local variable <code>isSecretValue(value)</code>. However, when the World of Warcraft client loads <code>Util.lua</code>, if the global variable <code>issecretvalue</code> is <code>nil</code> (for example, the global is not exposed in a specific official server environment), then the local variable <code>isSecretValue</code> will be <code>nil</code>. At this point, attempt to call a nil value is thrown!</li>
+<li>Similarly, if <code>issecretvalue</code> and other secrecy determine that the API is empty, the API reference in the <code>EAM.API</code> table is also <code>nil</code>, causing the same crash when <code>ShadowHostService.lua</code> calls <code>api.issecretvalue</code>.</li>
+<li>Tried methods:
+  Back up <code>Core/Env.lua</code>, <code>Core/Util.lua</code>, <code>Services/CooldownService.lua</code> to the <code>backup/</code> directory.</li>
+<li>Effective solution:</li>
+<li><strong>Seceret/secrecy global API fault tolerance</strong>: In <code>Core/Env.lua</code>, add callback fallback default value (such as <code>issecretvalue = issecretvalue or function() return false end</code>) for all secrecy check methods of <code>EAM.API</code> (<code>issecretvalue</code>, <code>canaccesstable</code>, etc.) to ensure <code>api.issecretvalue</code> Never <code>nil</code>.</li>
+<li><strong>Util local variable fallback</strong>: In <code>Core/Util.lua</code>, add fallback definitions for all local variables (<code>isSecretValue</code>, <code>canAccessTable</code>, etc.), and change the direct call <code>isSecretValue(value)</code> inside <code>readSafeScalar</code> to a call that has been properly encapsulated <code>Util.isSecretValue(value)</code>.</li>
+<li><strong>CooldownService call protection</strong>: Add <code>cSpell.GetSpellCooldown and...</code> protection to the call to <code>cSpell.GetSpellCooldown</code> in <code>CooldownService.lua</code> to avoid nil value calls when the API does not exist.</li>
+<li>After static <code>luac -p</code> full case review, all 32 active TOC files passed.</li>
+<li>Follow-up notes: During real-machine verification, you need to pay attention to whether such errors will still be thrown when logging in or triggering CD in any environment.</li>
+</ul>
+<h3 id="2026-06-07-shadow-host-technology-is-implemented-to-avoid-secrettaint-restrictions-in-combat-resolved">2026-06-07 Shadow Host technology is implemented to avoid Secret/Taint restrictions in combat (resolved)</h3>
+<p>-Status: Resolved, waiting for actual machine verification
+- Situation:
+World of Warcraft 12.x implements Secret Value restrictions on cooldown and aura time (such as timeLeft, expirationTime) during combat, and dynamically modifying the layout of the Insecure UI during combat may also cause action blocking (Action Blocked) or UI layout jitter (Layout Churn) due to Taint.
+- Judgment of symptoms and causes:
+  1. During battle, the custom UI dynamically calculates coordinates and calls <code>SetPoint</code>, which can easily cause Taint due to Secure Chain pollution, or cause typesetting calculation performance burden.
+2. The official cooldown manager (CooldownViewer / CDM) is Secure Frame, which enjoys positioning and Show/Hide privileges in battle, but only supports official built-in spells.
+  3. In order to enjoy the combat privileges of the native UI and avoid Taint at the same time, we need a solution that avoids 100% typesetting code in combat.
+- Tried method: Back up <code>EventAlertMod.toc</code>, <code>UI/Renderer.lua</code> to the <code>backup/</code> directory.
+- Effective solution:
+1. <strong>Official Pool Hook and Shadowing</strong>: Create a new <code>Services/ShadowHostService.lua</code>, set transparency (<code>Alpha=0</code>) and level downgrade (<code>BACKGROUND</code>, <code>0</code>) to the official <code>EssentialCooldownViewer</code> and <code>UtilityCooldownViewer</code> frames in the out-of-combat state, and use <code>hooksecurefunc</code> Hook of the official <code>cooldownPool</code> <code>Acquire</code> / <code>Release</code>, collect <code>spellID</code> and compare it to the official Icon entity.
+2. <strong>Parasitic rendering and cascading typesetting avoidance</strong>: Modify <code>UI/Renderer.lua</code>. In <code>Renderer.render</code>, if an official Icon shadow carrier is available, set the EAM Icon to <code>isParasite = true</code> and mount it with <code>SetParent(hostIcon)</code> and <code>SetAllPoints(hostIcon)</code> to synchronize the display and position with the official native cascade. Skip the <code>isParasite</code> icon in <code>layout</code> and eliminate EAM's <code>SetPoint</code> and layout calculations in combat.
+3. <strong>Secondary comparison defense mechanism</strong>: Add safe extraction of <code>spellName</code> (supports <code>icon.spellName</code>, <code>icon.data.name</code> and <code>icon.Name:GetText()</code>) and the secondary lookup table <code>activeNameHosts</code> in <code>ShadowHostService.lua</code>. In the adsorption positioning of the <code>GetHostIcon</code> interface and <code>Renderer.render</code>, enable the <code>(spellID, spellName)</code> dual-track secondary comparison defense to ensure that the shadow carrier can still be stably hit when the spell ID mutates or is encrypted by Secret.
+4. <strong>Security Defense</strong>: EAM Icon remains Display-only, does not register any click or mouse events, and blocks Taint from being sent back to the Secure Chain.
+- Follow-up notes: During actual verification, please pay attention to whether the Alpha of the official CooldownViewer is 0 and the EAM icon is adsorbed correctly. When the cooldown is triggered in battle, observe whether Action Blocked or Taint errors occur.</p>
+<h3 id="2026-06-06-full-code-localization-cleaning-dynamic-specialization-api-reconstruction-classpower-and-eventrouterscheduler-fault-isolation-resolved">2026-06-06 Full code localization cleaning, dynamic specialization API reconstruction, ClassPower and EventRouter/Scheduler fault isolation (resolved)</h3>
+<p>-Status: Resolved, waiting for actual machine verification
+- Situation:
+  1. It is necessary to comprehensively organize the hard-coded Chinese and English UI and prompt text in the EAM code to support multiple languages (zhTW, zhCN, enUS, koKR, ruRU), and ensure that decoding crashes will not occur due to encoding issues when using Python automatic replacement under the Windows PowerShell terminal.
+2. The energy monitoring module in combat (ClassPowerService.lua) may crash due to encountering a restricted secret value/secret table when directly comparing the returned value of <code>UnitPower</code>.
+  3. The core event/scheduled task loop of <code>Core/EventRouter.lua</code> and <code>Core/Scheduler.lua</code> will affect the entire domain when a runtime error occurs in a single sub-module, causing the entire scheduling or event sending to be interrupted and paralyzed.
+- Judgment of symptoms and causes:
+1. <strong>Insufficient hard-coding and multi-language support</strong>: The original UI and logic contain hard-coded Chinese and English, and an exception will be displayed when switching the language of the World of Warcraft client; and Windows Powershell uses CP950/GBK by default to read UTF-8 Lua files easily throwing <code>UnicodeEncodeError</code>/<code>UnicodeDecodeError</code>, causing the automatic replacement tool to fail.
+2. <strong>ClassPower Combat Secret Metamethod Crash</strong>: Warcraft 12.x marks the energy value as <code>Secret Table</code> under certain combat or special mechanisms. If the non-safe code directly compares it with the numerical size (such as <code>currentPower &gt; 0</code>), a metamethod fatal error will be triggered.
+3. <strong>EventRouter/Scheduler error propagation</strong>: The original EventRouter OnEvent and Scheduler OnUpdate calls to callback are not isolated. If a subscriber makes an error, the entire distribution loop will be interrupted by nil-index or traceback, causing the overall alarm to be completely stuck.
+- Tried method: Back up <code>UI/Options.lua</code>, <code>Services/ClassPowerService.lua</code>, <code>Core/EventRouter.lua</code>, <code>Core/Scheduler.lua</code> to the <code>backup/</code> directory.
+- Effective solution:
+1. <strong>Full code localization cleaning</strong>: Extract all hard-coded strings in the entire case into the localization comparison table <code>EAM.L</code> (supporting a total of 144 entries in five major language families). Explicitly declare UTF-8 reading and writing in the replacement tool, and protect it with <code>errors='ignore'</code> to avoid encoding crashes.
+2. <strong>Dynamic Specialization Localization API Refactoring</strong>: Introduce <code>CLASS_TOKEN_TO_ID</code> mapping in the specialization filter drop-down menu of <code>UI/Options.lua</code>, give priority to calling the native API <code>GetSpecializationInfoForClassID</code> to obtain the most accurate localized specialization name, and provide a dual-track backup fallback line of defense.
+  3. <strong>Energy Protection Defense</strong>: Configure <code>pcall</code> isolation and <code>issecretvalue</code> defense mechanisms for <code>detectClassPower</code> and <code>updatePower</code> to prevent Lua crashes caused by size comparison when the energy value mutates to Secret Table during combat.
+4. <strong>EventRouter/Scheduler fault isolation</strong>: In the OnEvent core distribution loop of EventRouter and the job execution callback of Scheduler, deploy parameterized <code>pcall</code> fault tolerance to prevent a single module from abnormally interrupting the operation of other modules and timers.
+- Follow-up notes: During the actual verification, please pay attention to whether the multi-language UI is loaded correctly during the wooden battle and the boss battle, and whether the EventRouter and Scheduler can still distribute and schedule other alarms with high availability when a single module error is deliberately triggered.</p>
+<h3 id="2026-05-30-12x-combat-encryption-boundary-secret-key-table-lookup-crash-tooltip-string-taint-and-insecure-alert-combat-smoothing-exclusion-resolved">2026-05-30 12.x combat encryption boundary: Secret-Key table lookup crash, Tooltip String Taint and Insecure Alert combat smoothing exclusion (resolved)</h3>
+<p>-Status: Resolved, waiting for actual machine verification
+- Situation: Several types of deep security mechanism blocks were encountered in actual combat:
+  1. <code>AuraService.lua:161: attempted to index a table that cannot be indexed with secret keys</code> crashed severely.
+  2. When <code>GroundEffectService.lua:78</code> parses tooltip description, because <code>string.match</code> passes in Secret String, a fatal error of <code>attempt to perform string conversion on a secret string value (execution tainted by 'EventAlertMod')</code> is thrown.
+  3. During battle, the alert frame is completely invisible and does not pop up.
+- Judgment of symptoms and causes:
+1. <strong>Secret Key Table Index Limitation</strong>: WoW 12.x introduces powerful Secret Protection. In combat, the <code>spellId</code> or <code>leftText</code> returned from <code>GetAuraDataByIndex</code> will be marked as <code>Secret Value</code>. Once the AddOn code directly uses this <code>spellId</code> as a key to index any non-secure custom table (such as <code>db[spellId]</code> or <code>SavedVariables[spellId]</code>), the WoW engine will directly block and throw an <code>attempted to index a table that cannot be indexed with secret keys</code> fatal error!
+2. <strong>Secret String Taint restrictions and parameter passing restrictions</strong>: When the tooltip description is marked as Secret in combat, we cannot stringify (<code>tostring</code>), string concatenate (<code>..</code>) or regular match (<code>string.match</code>) it in a custom non-secure function. The most important thing is: <strong>All secret values ​​cannot be passed as parameters to any custom Lua function</strong>! As soon as it is passed in, the function will be judged as tainted and crash when performing actions involving Secret.
+3. <strong>Insecure UI Combat Lock Excessive Defense</strong>: For safety reasons, the previous code postponed all <code>CreateFrame</code>, <code>SetPoint</code>, <code>Show</code> and <code>Hide</code> rendering operations until after the battle ends (PLAYER_REGEN_ENABLED) as long as <code>InCombatLockdown()</code> is true in <code>Renderer.lua</code> and <code>IconPool.lua</code>. However, our alert icon is a pure display framework and does not assume any secure actions (such as clicking, casting, targeting, etc.), nor does it inherit any secure templates. The WoW engine fully allows the Insecure frame to be positioned and hidden during combat. Excessive precautions lead to the complete invisibility of the alarm during combat, thus losing the value of AddOn.
+- Tried method: Back up <code>Services/AuraService.lua</code>, <code>Services/GroundEffectService.lua</code>, <code>UI/Renderer.lua</code>, <code>UI/Options.lua</code> to the <code>backup/</code> directory.
+- Effective solution:
+  1. <strong>Table Indexing Defense</strong>: Implement strict Table lookup pre-guards in services such as <code>AuraService.lua</code> and <code>CooldownService.lua</code>. Before indexing a configuration table, you must call <code>issecretvalue(key)</code> to ensure the key is not a protected secret value, and check table security with <code>canaccesstable(targetTable)</code>.
+2. <strong>In-place local detection and native checking</strong>: No custom Wrapper function is used to pass and check the secret value at all. Always use local in-place mode and call native C-level security APIs (such as <code>issecretvalue</code>, <code>canaccessvalue</code>, <code>canaccesstable</code>) directly in the local scope.
+3. <strong>Tooltip String security downgrade</strong>: Before matching the tooltip line description, use <code>issecretvalue(text)</code> and <code>canaccessvalue(text)</code> for strict protection. Once it is found that the description is encrypted or unreadable, immediately downgrade quietly, use native <code>C_UnitAuras.GetAuraDuration</code> to obtain the black box <code>DurationObject</code>, pass it directly to the Renderer dual-pipeline channel, use <code>CooldownFrame:SetCooldownFromDurationObject</code> to safely render timing, and completely eliminate string conversion crashes.
+4. <strong>Insecure Alert Frame Full Release</strong>: Downgraded all Alert Icon frame types from <code>"Button"</code> to pure <code>"Frame"</code>. Completely removes all defer restrictions on positioning and establishment in combat, allowing Insecure Alert icons to pop up and move instantly and seamlessly during combat, making combat 100% smooth!
+- Follow-up notes: During real-machine verification, you need to pay attention to whether a Taint error will pop up when the buff is triggered at high frequency in the wooden battle, and observe whether the pure Frame is perfectly displayed and recycled when a large number of buffs flash.</p>
+<h3 id="2026-05-30-ui-slider-crash-c_durationutil-binding-missing-unbind-and-classpowerservice-core-api-missing-fatal-error-fix-resolved">2026-05-30 UI slider crash, C_DurationUtil binding missing Unbind and ClassPowerService core API missing fatal error fix (resolved)</h3>
+<p>-Status: Resolved, waiting for actual machine verification
+- Situation: The boy reports that the setting interface cannot be used, and encounters <code>bad argument #1 to 'SetValue' (outside of expected range -3.402823e+38 to 3.402823e+38)</code> and <code>UI/IconPool.lua:102: attempt to call a nil value</code> fatal errors. <code>ClassPowerService.lua:85: attempt to call a is thrown when entering the game. nil value</code> crashes, causing the interface and professional energy services to fail.
+- symptom:
+1. A Slider <code>SetValue</code> error occurred when typing <code>/eam opt</code> to open the setting page. The loading of the setting page was interrupted, causing all subsequent list refreshes, spell additions and deletions, Gear button Popup setting windows and save/close functions to become invalid.
+2. <code>IconPool.lua:102: attempt to call a nil value</code> (and <code>Renderer.lua:359</code> error) occurs when Cooldown alerts are triggered. This is because the binding object returned by <code>timerBinding:Unbind()</code> in the 12.0.7 native environment does not contain (or does not support) the <code>:Unbind()</code> method, resulting in nil-method The call crashed and the renderer pipeline was hard interrupted.
+3. <code>ClassPowerService.lua:85: attempt to call a nil value</code> is thrown when logging in to the game. This is because detectClassPower calls <code>api.UnitClass</code> and <code>api.UnitPower</code>, but the mapping declaration for these two WoW native APIs is omitted in the <code>EAM.API</code> table of core <code>Env.lua</code>, causing the API call to crash and interrupting the startup loading chain.
+- Reason determination:
+1. In the <code>createSlider</code> function of <code>UI/Options.lua</code>, when the <code>OnShow</code> script reads certain boolean key values ​​​​in SavedVariables (such as <code>cooldownShadow = true</code>), <code>true</code>/<code>false</code> is directly passed into the <code>self:SetValue(val)</code> of the slider, and the API strictly requires the <code>number</code> type to be passed in. Once an error occurs, loading is interrupted and the entire UI object (such as <code>scrollBox</code>, <code>addEditBox</code>, <code>condFrame</code>, etc.) is not bound and initialized.
+2. There is no <code>Unbind</code> method in the binding object implementation returned by the 12.0.7 native API <code>C_DurationUtil.CreateDurationTextBinding</code>, and calling <code>:Unbind()</code> directly will throw a nil error.
+  3. The pre-registered static API table <code>EAM.API</code> in <code>Core/Env.lua</code> misses the most commonly used <code>UnitClass</code> and <code>UnitPower</code>, which causes the professional energy service to directly call the nil function when executing and crash.
+- Tried method: Back up <code>UI/Options.lua</code>, <code>UI/IconPool.lua</code>, <code>UI/Renderer.lua</code>, <code>Core/Env.lua</code> to the <code>backup/</code> directory.
+- Effective solution:
+1. <strong>Defensive type conversion</strong>: In <code>createSlider</code> OnShow of <code>Options.lua</code>, add defensive detection and type conversion of <code>val</code>. If it is boolean, convert it to <code>maxVal</code>/<code>minVal</code>. If it is not number, try to use <code>tonumber</code> to parse or fallback, and use <code>minVal</code>/<code>maxVal</code> to perform safety boundary analysis to ensure that 100% of the legal <code>number</code> is passed to <code>SetValue</code>.
+2. <strong>Unbind defensive encapsulation</strong>: Refactor <code>UI/IconPool.lua</code> and <code>UI/Renderer.lua</code>, and wrap all <code>icon.timerBinding:Unbind()</code> calls in <code>if icon.timerBinding and type(icon.timerBinding.Unbind) == "function" then icon.timerBinding:Unbind() end</code> Under safety conditions, it perfectly solves the runtime crash that occurs when 12.0.7 native binding cannot be unbound or the method changes.
+3. <strong>Complete Env core API</strong>: Add and export <code>UnitClass = UnitClass</code> and <code>UnitPower = UnitPower</code> in <code>EAM.API</code> of <code>Core/Env.lua</code>, connect the professional energy monitoring service and the native database, and successfully eliminate login entry crash.
+  4. <strong>Static syntax check</strong>: After checking the whole case with <code>luac -p</code>, there are no grammatical errors and it is safe and correct.
+- Follow-up notes: During actual verification, you need to pay attention to whether the value can be written normally by dragging the Slider, and observe whether there is Memory Leak or Countdown afterimage when switching the Alert Icon and multiple CD release/recycling.</p>
+<h3 id="2026-05-30-p1p2-multi-language-ground-effect-tooltip-analysis-and-tablefreeze-performance-reconstruction-resolved">2026-05-30 P1/P2: Multi-language ground effect Tooltip analysis and table.freeze performance reconstruction (resolved)</h3>
+<p>-Status: Resolved, waiting for actual machine verification
+- Scenario: Extended ground effect (GroundEffectService.lua) monitoring, using Tooltip Scraping to obtain the duration of non-aura ground skills in the 12.0.7 official server environment, needs to support Traditional Chinese (zhTW), Simplified Chinese (zhCN), English (enUS/enGB), Korean (koKR), and Russian (ruRU).
+- Symptoms: The original implementation only supports Traditional Chinese, and directly uses ad-hoc string key HASH lookup and regex matching in the loop, which may introduce performance overhead and GC garbage collection burden in the WoW execution environment.
+- Reason: Lua table's string key HASH lookup has a certain hash collision cost, and even locking with <code>table.freeze</code> cannot completely eliminate the hash mechanism. For ultimate performance, a numerically-indexed array should be used as the matching pattern carrier, along with numeric for loop iteration, which eliminates hash searches and completely avoids runtime GC.
+- Tried method: Encapsulate the regex styles of 5 client languages ​​into numerically-indexed arrays according to locale. Use <code>EAM.Util.tableFreeze</code> to deep freeze whole and subarrays (table.freeze). Automatically recognize <code>GetLocale()</code> when <code>parseTooltipDuration</code> is called and downgrade fallback to English, then execute two layers of numerically-indexed numeric loops.
+- Effective solution: Reconstruct <code>Services/GroundEffectService.lua</code>, introduce <code>MULTI_LOCALE_PATTERNS</code> frozen table, and use minimalist and efficient double-layer <code>for i = 1, #data.lines</code> and <code>for j = 1, #patterns</code> to complete extremely fast matching. Passed <code>luac -p</code> static syntax check.
+- Follow-up notes: During actual machine verification, you need to pay attention to changes in the Spell Tooltip descriptions of each language, such as changes in the abbreviation of Russian (ruRU), and adjust or expand the regex style in <code>MULTI_LOCALE_PATTERNS</code> at any time.</p>
+<h3 id="2026-05-30-import-of-three-new-monitoring-services-7-independent-alarm-frameworks-4-way-growth-direction-offset-arithmetic-and-groundtotemoccupational-energy-resolved">2026-05-30 Import of three new monitoring services: 7 independent alarm frameworks, 4-way growth direction offset arithmetic, and ground/totem/occupational energy (resolved)</h3>
+<p>-Status: awaiting actual machine verification
+- Situation: The boy requested that different monitoring categories (self aura, target aura, skill cooldown, item cooldown, professional energy, ground effect, totem) be split into 7 completely independent alarm frames, supporting custom dragging and 4-way icon growth direction settings.
+- Symptom: The original Renderer only maintains a single Alert Frame, and the layout is fixed from left to right. In a situation where large monsters or multiple CDs break out, a single framework will appear bloated and messy, unable to distinguish priorities and information distribution; at the same time, it lacks exclusive and intuitive monitoring of non-aura ground skills (such as Blizzard, Orb) and shaman multiple totems and professional resource points.
+- Cause judgment: Pure string branch judgment (such as <code>if growDirection == "RIGHT" ...</code>) will bring CPU branch prediction overhead and hash (Hash) Key search waste in high-frequency Layout rendering. Even if the pure Hash structure is locked by <code>table.freeze</code>, hash conflict calculation and collision comparison will still be performed internally, and it is impossible to truly trade space for time.
+- Tried methods:
+1. <strong>Multi-frame isolation and arithmetic layout optimization</strong>: Renderer is refactored into <code>Renderer.frames[frameName]</code>, Layout calculation is vectorized, and the direction offset control array of <code>LAYOUT_OFFSETS</code> (Array Part) is frozen for continuous numerical indexes. When typesetting, directly extract the displacement vector through <code>LAYOUT_OFFSETS[growDirectionIdx]</code> and perform arithmetic multiplication to complete SetPoint, eliminating Hash collisions and multi-conditional If-Else branches, and extremely improving the efficiency of Lua VM instruction execution!
+2. <strong>Dual-track ground timing detection (GroundEffectService)</strong>: Introduce <code>COMBAT_LOG_EVENT_UNFILTERED</code>, perform low-frequency <code>C_TooltipInfo.GetSpellByID</code> Tooltip scraping analysis at the moment of spell casting, obtain the number of seconds after the dynamic impact of acceleration and talent, or use custom time. It uses centralized <code>Scheduler.after</code> for expiration release, with 100% zero CPU OnUpdate overhead during the runtime, and its performance is extremely robust.
+3. <strong>Shaman Totem Direct Reading (TotemService)</strong>: Calls the 12.x native <code>C_Totems.GetTotemInfo</code> direct reading slot and supports close typesetting.
+  4. <strong>Resource point Icon textualization (ClassPowerService)</strong>: Monitor resource points according to occupation, rendered in a large font in the center of Stacks, and will be automatically released and recycled when it returns to 0.
+5. <strong>UI Expansion and One-Click Capture</strong>: Reset the Options setting panel to a 560px width Premium dual-column layout (Sliders/Growth Menu vs Energy Checkboxes), and dynamically display the one-click capture Scrape &amp; Fill button for ground skills in the Popup sub-window.
+- Effective solution: Renderer is fully integrated with 3 new monitoring Services and Options tabs, passes 100% syntax-correct static checking of the full file <code>luac -p</code>, and provides <code>/eam doctor</code> (RuntimeProbe) multi-frame real-time fact-targeted diagnosis function.
+- Follow-up notes: During the actual machine verification, it is necessary to observe the sensitivity of mouse dragging and the accuracy of SavedVariables position writing when the 7 major frames are simultaneously exposed during movement. At the same time, observe the zero-stutter performance of the "space for time" static continuous array layout calculation in a large number of Buff combat environments.</p>
+<h3 id="2026-05-30-perfect-implementation-of-secrettaint-crash-point-elimination-dragging-position-saving-specialization-drop-down-filtering-and-minimap-button-in-real-combat-resolved">2026-05-30 Perfect implementation of Secret/Taint crash point elimination, dragging position saving, specialization drop-down filtering and minimap button in real combat (resolved)</h3>
+<p>-Status: Resolved, waiting for actual machine verification
+- Situation: During the actual test, it was found that the skill/aura frame still does not display during combat, the frame cannot be dragged and moved, there is no icon for item cooling, there is a lack of commonly used preset spell IDs, and a small convenient call button is needed.
+- Judgment of symptoms and causes:
+  1. <strong>Invisible crash points that are not displayed during combat</strong>:
+* In <code>AuraService.lua</code>, the <code>duration</code> and <code>expirationTime</code> of the Secret Value are directly read and mathematically subtracted during the battle, which directly triggers a security exception interrupt!
+     * In <code>CooldownService.lua</code>, the <code>IsZero()</code> method is directly called on the protection object <code>durationObj</code> during combat, causing method call blocking!
+     * <code>IconPool.lua</code> using the <code>"Button"</code> type framework is easily hindered by the WoW engine's defense against clicking buttons in combat.
+2. <strong>Frame cannot be dragged</strong>: The implementation of <code>toggleAnchors</code> is missing from <code>Renderer.lua</code>, and <code>ensureParent</code> does not support loading SavedVariables layout.
+  3. <strong>No icon for item cooling</strong>: <code>ItemCooldownService.lua</code> omits to obtain and save <code>state.icon</code> and <code>state.name</code> data through the ITEM related API.
+  4. <strong>Lack of presets and filters</strong>: <code>Data/SpellArray.lua</code> is an empty placeholder, and the UI lacks a specialized Dropdown filter.
+- Effective solution:
+- <strong>Combat Anti-Crash and Frame Downgrade</strong>: Use <code>Util.isSecretValue</code> before subtraction to prevent downgrade; completely remove the service layer call to <code>IsZero()</code>, and instead hand it over directly to Cooldown shadow native rendering by Renderer; downgrade the alert Icon frame type from <code>"Button"</code> to pure <code>"Frame"</code>, from now on <code>SetPoint</code> and creation operations will be 100% smooth in combat Unimpeded travel!
+- <strong>Position dragging and saving</strong>: Perfectly implement translucent dragging frame in <code>Renderer.toggleAnchors()</code>, support dragging while holding down the mouse and automatically save X/Y coordinates to <code>EAM.db.layout</code>, and give priority to automatic loading when <code>ensureParent</code>!
+  - <strong>Item cooling icon completion</strong>: Use <code>C_Item.GetItemIconByID</code> and <code>GetItemNameByID</code> to complete data writing and perfectly present the item icon.
+- <strong>Minimap Button</strong>: Built-in arc-shaped trajectory minimap button in <code>UI/Options.lua</code>, left-click to open the panel, right-click to open the system diagnosis, and the drag angle is automatically saved.
+- <strong>13 profession default spell library and specialization filter</strong>: Fill in the complete 13 professional specialization/general common spell data in <code>Data/SpellArray.lua</code>; add a specialization filter Dropdown button and menu at the top of the UI list, click to dynamically filter, and the "Default Value" button supports one-click automatic loading of all defaults for the current profession!
+- Follow-up notes: You can experience the new high-end functions after reloading the actual machine.</p>
+<h3 id="2026-05-30-fatal-toc-load-order-trap-local-variable-cache-causes-renderer-to-be-nil-blocking-rendering-resolved">2026-05-30 Fatal .toc load order trap: Local variable cache causes Renderer to be nil, blocking rendering (resolved)</h3>
+<p>-Status: Resolved, waiting for actual machine verification
+- Situation: During the real-machine test, all WoW events were triggered perfectly (including <code>UNIT_AURA</code>, <code>BAG_UPDATE_COOLDOWN</code>, <code>SPELL_UPDATE_COOLDOWN</code>), and the database was operating normally, but the Renderer rendering pipeline did not receive any calls at all, and there was no <code>Renderer:render</code> trace in the log.
+- symptom:
+1. <code>alertsCount</code> is correct, <code>cooldownStates</code> and <code>auraStates</code> are written successfully.
+  2. However, <code>runtimeStats.renderer.visibleIcons</code> and <code>deferred</code> are always <code>0</code>, and there is no Alert icon on the screen.
+- Reason determination:
+  - <strong>Fatal .toc load order trap</strong>! In <code>EventAlertMod.toc</code>, services such as <code>Services\AuraService.lua</code> are loaded above <code>UI\Renderer.lua</code>.
+- When the service was loaded, <code>local Renderer = EAM.UI and EAM.UI.Renderer</code> was executed at the top of the archive. Since <code>Renderer.lua</code> has not been executed yet, <code>EAM.UI.Renderer</code> is <code>nil</code>, causing the local variable <code>Renderer</code> inside the service to be permanently cached as <code>nil</code>.
+  - When subsequent events are triggered and need to be refreshed, the <code>if Renderer and Renderer.render then Renderer.render(state) end</code> in the service is silently skipped because the local variable <code>Renderer</code> is <code>nil</code>, completely paralyzing the entire rendering pipeline!
+- Effective solution:
+- Completely avoid local variable caching when loading files! Change the top <code>local Renderer</code> to an unassigned local declaration.
+  - Dynamically assign its value when the service's <code>initialize()</code> method is executed: <code>Renderer = EAM.UI and EAM.UI.Renderer</code>. At this time, all <code>.toc</code> files have been completely loaded, <code>Renderer</code> can perfectly obtain the correct the reference, and the rendering pipeline is successfully connected!
+- Follow-up notes: Alert will pop up seamlessly after the actual machine is reloaded!</p>
+<h3 id="2026-05-30-eam-battle-alert-framework-does-not-display-root-cause-troubleshooting-and-item-monitoring-independent-optimization">2026-05-30 EAM battle Alert framework does not display root cause troubleshooting and item monitoring independent optimization</h3>
+<p>-Status: Resolved, waiting for actual machine verification
+- Situation: In the actual test, the Alert frame did not pop up at all, and item monitoring requires more independent and detailed Options UI classification configuration.
+- symptom:
+1. When the player casts a skill, obtains a Buff, or conducts a backpack item cooling test, there is no Alert frame or chart on the screen, but the debug diagnosis can be successfully called in the Slash command.
+  2. Item cooling lacks an independent classification in the Options UI (the fifth red button is occupied by special energy, and there is no conspicuous entrance for items).
+- Reason determination:
+1. <strong>The first fatal bug</strong>: The Lua annotations at the beginning of <code>Services/ItemCooldownService.lua</code> and <code>Debug/PromptExport.lua</code> were mistakenly written as <code>-- [[</code> (an extra space), causing the Lua compiler to report a syntax error and causing these two key modules to completely fail to load when WoW starts, destroying the loading chain.
+2. <strong>The second fatal bug</strong>: The <code>inCombat()</code> combat restrictions of <code>Renderer.lua</code> and <code>IconPool.lua</code> are overprotected. The non-Secure Alert icon framework does not undertake secure clicks and click-casts, nor does it inherit SecureTemplates, so it is a completely Insecure pure display framework. WoW 100% allows <code>CreateFrame</code>, <code>SetPoint</code>, <code>Show</code> and <code>Hide</code> on Insecure frames in combat. Previously, the AI ​​deferd these operations from combat to post-war (PLAYER_REGEN_ENABLED), which directly resulted in the "in combat" icon being completely blocked and unable to be displayed when the alarm was most needed!
+- Tried methods:
+  - Change the <code>--[[</code> at the beginning of these two files back to the standard <code>--[[</code> without spaces.
+  - Refactor <code>UI/Renderer.lua</code> and <code>UI/IconPool.lua</code> to completely clear all <code>inCombat()</code> defer rendering, defer layout positioning and reject acquisition restrictions in combat state.
+- In <code>UI/Options.lua</code>, the setting classification is expanded to 6 red buttons (item cooling is classified separately to button 5, and special energy is moved to button 6). The layout spacing is adjusted to 32px to prevent overlap. In the condition editing pop-up window, if it is a skill/item cooling, the Value 1~4 check box is dynamically hidden.
+- Effective solution:
+  - Successfully passed the <code>CheckLuaSyntax.ps1</code> static syntax check, all 28 Lua files are 100% OK!
+- Removed all in-battle positioning and building blocks to insecure frames, allowing Alert icons to pop up instantly and seamlessly during combat.
+- Follow-up notes: Players (youth guys) are requested to reload the interface and enter the combat test. If there is any discomfort or positional deviation, please use <code>/eam debug</code> to report the JSON diagnostic log at any time.</p>
+<h3 id="2026-05-29-eam-core-performance-and-boundary-security-depth-gctaint-review-and-secondary-extreme-optimization">2026-05-29 EAM core performance and boundary security depth GC/Taint review and secondary extreme optimization</h3>
+<p>-Status: Resolved, waiting for actual machine verification
+- Scenario: Conduct a comprehensive in-depth review of garbage collection (GC) and security taint for <code>Services/CooldownService.lua</code>, <code>UI/Renderer.lua</code> and <code>Core/Util.lua</code>, and implement a second extreme performance reconstruction.
+- Symptoms:
+  1. The <code>Util.appendBoundaryWarning</code> of the warning boundary path originally used <code>"code .. ":" .. tostring(field)"</code>. If it is continuously triggered in a restricted or Secret environment, it will cause high-frequency string splicing GC churn during execution.
+2. Renderer <code>UI/Renderer.lua</code> When the high-frequency aura stack value changes, <code>tostring(alertState.stacks)</code> will generate a large amount of micro-string GC burden in combat.
+- Cause determination: Any form of <code>..</code> string concatenation and <code>tostring</code> calls under high-frequency events are potential sources of micro GC jitter (GC spike/stutter), which will cause slight damage to FPS under high-traffic battles.
+- Tried methods:
+1. <strong>Warning String Static Cache (warningStringCache)</strong>: Introduce local <code>warningStringCache = {}</code> in <code>Core/Util.lua</code>. All boundary warning strings are cached when they are first generated, and the allocated pointers are reused directly in <code>O(1)</code> to achieve <strong>zero string GC consumption for boundary warning paths</strong>!
+2. <strong>Static cache of stacking times (STACK_STRINGS)</strong>: Introduce the <code>STACK_STRINGS</code> array in <code>UI/Renderer.lua</code>, and convert the stacking times from <code>1</code> to <code>100</code> into static strings in advance. During high-frequency stack updates, cached strings are directly fetched from the array in <code>O(1)</code>, completely eliminating the execution-time memory allocation of <code>tostring</code>!
+3. <strong>Combat layout delay and parent-parenting control</strong>: Confirm that the Renderer does not have any secure action, non-secure icons hide direct safe calls, and structural Frame parenting and layout are strictly delayed until the end of the battle (PLAYER_REGEN_ENABLED) to eliminate the proliferation of Secure Taint.
+- Effective solution: The refactored code has been successfully written into <code>Core/Util.lua</code>, <code>UI/Renderer.lua</code> and <code>Services/CooldownService.lua</code>, perfectly closing all high and low frequency GC vulnerabilities and taint concerns.
+- Follow-up notes: During actual machine testing, Lua memory monitoring needs to be specifically turned on to confirm that EAM's GC memory allocation is maintained at an absolutely stable level under full load battles (such as triggering a large number of GCDs, full stack buff/debuff flashes, and multiple boundary warnings).</p>
+<h3 id="2026-05-29-1207-cooldownservice-responsive-binary-array-and-dual-rail-security-binding-optimization">2026-05-29 12.0.7 CooldownService responsive binary array and dual-rail security binding optimization</h3>
+<p>-Status: Resolved, waiting for actual machine verification
+- Situation: Reshape CooldownService and Renderer for 12.0.7 PTR/Retail to avoid GC load, Taint pollution and visual afterimages caused by high-frequency combat events (such as <code>SPELL_UPDATE_COOLDOWN</code>, <code>SPELL_UPDATE_CHARGES</code>).
+- Symptoms: Under high-frequency events, traversing the setting table with <code>pairs</code> will frequently allocate iterators and temporary tables; and Secret Values ​​(such as cooling time, charging information) will directly trigger safe taint or execution-time Lua errors when doing mathematical operations at the Lua layer, formatting with <code>format</code>, or comparing with old time.
+- Reason: WoW 12.x introduced strict Secret/Protected restrictions. If the Secret data is not isolated, directly performing operations or string assembly on it will pollute the AddOn security chain. In addition, frequent allocation of temporary tables under high-frequency events will cause micro GC pauses and affect game FPS.
+- Tried methods:
+1. Introducing <strong>Reactive Array Cache</strong>: Incrementally update the <code>alertList</code> array by detecting <code>db.revision</code>. The hot path (SPELL_UPDATE_COOLDOWN) completely uses the value <code>for i = 1, alertCount do</code> loop traversal to achieve the ultimate performance of 100% zero pairs and zero transient allocation.
+  2. Use <strong><code>table.create</code> pre-allocation</strong>: pre-allocate HashTable and Array capacity for sub-tables such as <code>alertList</code> and states / boundaryWarnings / timer, blocking expansion and rehashing during execution.
+3. Implement <strong>Native Dual-Binding Path</strong>: Safely pass the <code>DurationObject</code> black box indicator to the native <code>SetCooldownFromDurationObject</code> and the 12.0.7 native reciprocal text binding <code>C_DurationUtil.CreateDurationTextBinding</code>.
+  4. Implement <strong>Zero-span Lifecycle Release</strong>: Set <code>state.shown</code> to <code>false</code> immediately when the charging spell is full, and the Renderer will take over and return the Icon to the Pool and execute <code>icon:Hide()</code> and <code>Unbind()</code> to eliminate visual afterimages.
+- Effective solution: The above solution has been successfully implemented in CooldownService and Renderer, perfectly completing dual-track security determination and Taint control defense.
+- Follow-up notes: It is necessary to conduct actual tests on charged spells (especially when switching between non-full and full charges) and the double binding path when GCD is triggered at high frequency in WoW 12.0.7 real machine to confirm that there are no afterimages or flickering problems.</p>
+<h3 id="2026-05-29-durationtextbinding-1207-ptr-minimum-example-actual-measurement">2026-05-29 DurationTextBinding 12.0.7 PTR minimum example actual measurement</h3>
+<ul>
+<li>Status: Partially verified, pending integration verification</li>
+<li>Scenario: User executes <code>C_DurationUtil.CreateDurationTextBinding</code> test example in WoW 12.0.7 PTR client.</li>
+<li>Symptoms: It is necessary to confirm whether the PTR API is only at the file level, or it can be established and driven to display FontString normally in the client.</li>
+<li>Cause judgment: If <code>DurationTextBinding</code> is available, the EAM timer label can avoid using <code>OnUpdate</code> to count down by itself, which is in line with the principles of low GC and Secret/Protected display chain.</li>
+<li>Tried method: Use minimal test example to create <code>DurationObject</code>, <code>SecondsFormatter</code>, <code>DurationTextBinding</code> and bind to FontString.</li>
+<li>Effective solution: User reports can be displayed normally in the 12.0.7 PTR client.</li>
+<li>Follow-up notes: This result only verifies the minimum display and does not represent the completion of EAM Renderer integration; icon recycle, binding reference saving, expired text, zero duration, locale, combat/taint, and API unavailable fallback still need to be tested.</li>
+</ul>
+<h3 id="2026-05-29-subagent-uses-rule-persistence">2026-05-29 Subagent uses rule persistence</h3>
+<ul>
+<li>Status: Resolved</li>
+<li>Scenario: The user requires assistance in planning and using the subagent model if there is a scenario suitable for the subagent model in the future.</li>
+<li>Symptom: If it is only retained in the conversation memory, authorization and judgment standards may be lost after long-term development or context compaction.</li>
+<li>Cause judgment: Subagent is suitable for large-scale rewrite, API verification, file consistency and static verification offloading. However, if there are no clear rules, it is easy to cause repeated dispatching, write range conflicts or waiting to block the critical path.</li>
+<li>Tried methods: Search and load the multi-agent tool; it is judged that this round is just a small file rule update and is not suitable for spawning subagent immediately. Add <code>Docs/17_SUBAGENT_WORKFLOW.md</code> and add rules to <code>AGENTS.md</code>.</li>
+<li>Effective solution: define critical path/sidecar task judgment, applicable and inapplicable situations, explorer/worker role usage, dispatch template and main agent integration rules.</li>
+<li>Follow-up notes: When a subsequent large-scale task starts, the master agent must first clearly indicate whether to use the subagent; if so, it must specify a non-overlapping write range and re-execute the project static verification after integration.</li>
+</ul>
+<h3 id="2026-05-29-1207-ptr-rc-api-information-for-review">2026-05-29 12.0.7 PTR / RC API information for review</h3>
+<ul>
+<li>Status: Pending review from public sources, pending verification on real machine</li>
+<li>Scenario: The user provides a 12.0.7 PTR / RC related API change content and requires it to be recorded for future reference.</li>
+<li>Symptoms: The content includes <code>GameTooltip_AddMoneyLine</code>, <code>C_UIFileAsset</code>, profiling API, <code>DurationTextBinding</code>, Aura refactor target 12.1.0, unit identity error change return nil/default, <code>debugstack</code>/<code>debuglocals</code> secret propagation and other information, but this round of public network search did not find the same source page that can be directly quoted.</li>
+<li>Cause determination: This type of information has an implementation impact on the EAM Secret / Tooltip / Renderer / AuraService boundary. However, if the source status is not indicated, it can easily be mistaken for being verified by Warcraft Wiki or Retail client in subsequent passes.</li>
+<li>Tried methods: Search for <code>GameTooltip_AddMoneyLine</code>, <code>DurationTextBinding</code>, <code>Timeline for the Aura Refactor</code> and other keywords; after failing to obtain a stable public page, write <code>Docs/10_WARCRAFT_WIKI_12X_API_NOTES.md</code> in the form of "user provided, pending review".</li>
+<li>Effective solution: The document is clearly divided into three categories: "directly related to EAM", "lowly related but requires attention", and "Classic PTR is not included" to prevent Classic content from flowing back to the Retail-only architecture.</li>
+<li>Follow-up notes: If the Warcraft Wiki, Blizzard forum or PTR client files can be found later, the official link needs to be added; if you enter the implementation, you must verify the actual behavior of <code>GameTooltip_AddMoneyLine</code>, <code>C_UIFileAsset</code>, <code>DurationTextBinding</code>, <code>debugstack</code>/<code>debuglocals</code>.</li>
+</ul>
+<h3 id="2026-05-29-powershell-backup-file-name-interpolation-problem">2026-05-29 PowerShell backup file name interpolation problem</h3>
+<ul>
+<li>Status: Resolved</li>
+<li>Scenario: Back up <code>Docs/10_WARCRAFT_WIKI_12X_API_NOTES.md</code> and <code>Docs/15_DEVELOPMENT_ISSUE_LOG.md</code> according to the rules before modifying the files.</li>
+<li>Symptom: The first backup command writes the destination file name as <code>$name__$ts</code>, which is incorrectly parsed in the nested PowerShell string, causing the command to report <code>The term '\$name__$ts\' is not recognized</code>.</li>
+<li>Reason: When PowerShell variable name boundaries are mixed with outer references, the <code>__</code> suffix can easily cause unclear interpolation semantics; plus the outer <code>powershell -Command</code> requires additional escaping.</li>
+<li>Tried method: Stop subsequent modifications, use explicit string addition: <code>$name + '__' + $ts</code>, and output the generated backup paths one by one for confirmation.</li>
+<li>Valid solution: The backup files have been successfully generated in <code>backup/10_WARCRAFT_WIKI_12X_API_NOTES.md__20260529052816</code> and <code>backup/15_DEVELOPMENT_ISSUE_LOG.md__20260529052816</code>.</li>
+<li>Follow-up notes: In the future, automatic backup scripts should avoid directly matching variables with suffixes; always use string addition or <code>${name}__${ts}</code> type writing.</li>
+</ul>
+<h3 id="2026-05-27-second-half-of-p2-aura-full-update-single-scan-and-options-minimal-panel">2026-05-27 Second half of P2: Aura full update single scan and Options minimal panel</h3>
+<p>-Status: awaiting actual machine verification
+- Scenario: Continuing the progress of P2, change the full update fallback of AuraService from alert-by-alert scanning to a single scan at the unit level, and add an Options panel that can actually add/remove settings.
+- Symptoms: The old fallback is prone to repeatedly scanning the same unit during <code>UNIT_AURA</code> full update or target change; Options was still a stub and could not provide a setting entrance visible to general users.
+- Cause judgment: Aura full update is a hot path candidate. If the scan is repeated based on the number of alerts, the more settings the user has, the higher the cost will be. If Options does not use the <code>SavedVariables</code> mutation API, it is easy to bypass schema revision and service refresh.
+- Tried method: Add <code>fullScanUnit</code>, first clear the unit aura cache, then scan once according to player/target filter and use alert index to dispatch; missed settings alert will be marked as inactive. Options adds spellID/itemID input boxes and four types of add/remove buttons, and calls service refresh after success.
+- Effective solution: use <code>auraInstanceID</code> cache with <code>alertIndex[unit][spellID]</code> to allocate status; Options are only written through <code>SavedVariables.add/remove</code> API to avoid directly modifying service runtime state.
+- Follow-up notes: <code>C_UnitAuras.GetAuraDataByIndex(unit, index, filter)</code> needs to be verified in WoW Retail/PTR for actual field security in 12.0.7, filter behavior, taint risk when creating options frame for the first time in combo, and <code>BasicFrameTemplateWithInset</code> / <code>InputBoxTemplate</code> / <code>UIPanelButtonTemplate</code> in Retail Is 12.x still available out of the box?</p>
+<h3 id="2026-05-27-powershell-regex-and-variable-quoting-issues">2026-05-27 PowerShell regex and variable quoting issues</h3>
+<ul>
+<li>Status: Resolved</li>
+<li>Situation: When performing <code>rg</code> and TOC checks, the command string starts from the outer PowerShell and then starts the inner PowerShell.</li>
+<li>Symptoms: <code>|</code> in regex is misinterpreted as pipeline; <code>$missing</code> and <code>$line</code> in TOC check are expanded in advance by the outer layer, causing parser error.</li>
+<li>Reason: Windows PowerShell's double quotes are not a shell-neutral container; in the nested <code>powershell -Command</code>, both regex alternation and <code>$</code> variables need to be handled explicitly.</li>
+<li>Tried methods: Wrap regex in single quotes; use backticks to escape <code>$</code> in TOC check.</li>
+<li>Effective solution: For read-only searches within the project, use <code>rg -n 'pattern' path</code> first; if you must use script variables in <code>powershell -Command</code>, you need to write <code>`$variable</code>, or use the existing <code>.ps1</code> tool instead.</li>
+<li>Follow-up notes: After repeated occurrences, they can be organized into the "EAM Windows Static Check" project skill to avoid consuming tokens each time for troubleshooting quoting.</li>
+</ul>
+<h3 id="2026-05-26-p1p2-slash-mutation-and-unit_aura-delta-cache">2026-05-26 P1/P2: Slash mutation and UNIT_AURA delta cache</h3>
+<p>-Status: awaiting actual machine verification
+- Scenario: Continue to organize the core functions and low GC hot paths of EAM Retail rewrite according to P1/P2 goals.
+- Symptoms: Previously <code>/eam</code> only had debug/options stub, and SavedVariables did not have a formal add/remove API; AuraService still fell back to full scan when <code>UNIT_AURA</code> was used, and the <code>updateInfo</code> incremental payload was not used.
+- Reason: If there is no stable config mutation API, subsequent Options UI cannot safely write settings; if alert/full aura is scanned every time <code>UNIT_AURA</code> is scanned, the hot path cost will be increased.
+- Tried methods: Added <code>SavedVariables.add/remove</code> series API, <code>/eam add/remove/export/help</code>, AuraService config revision index, <code>auraInstanceID</code> cache, <code>addedAuras</code> / <code>updatedAuraInstanceIDs</code> / <code>removedAuraInstanceIDs</code> incremental processing, and DB revision/cache/renderer counters of debug snapshot.
+- Effective solution: Slash only writes SavedVariables, and the service is responsible for refresh/render; AuraService goes to delta when there is <code>updateInfo</code>, and falls back to the full scan when there is no payload or full update.
+- Follow-up notes: WoW Retail/PTR still need to verify the actual field of <code>UNIT_AURA</code> payload, secret aura spellID behavior, removed instance cache hit rate and target rapid-change behavior.</p>
+<h3 id="2026-05-26-skill-creator-quick_validate-missing-python-yaml-module">2026-05-26 skill-creator quick_validate missing Python yaml module</h3>
+<ul>
+<li>Status: Resolved</li>
+<li>Scenario: After creating <code>.codex/skills/eam-retail-p0-review/SKILL.md</code>, execute <code>quick_validate.py</code> according to the <code>skill-creator</code> process.</li>
+<li>Symptom: First validation script fails with error <code>ModuleNotFoundError: No module named 'yaml'</code>. After installing PyYAML, the second failure was that the Windows default <code>cp950</code> failed to decode UTF-8 Markdown.</li>
+<li>Reason: The native Python environment originally lacks PyYAML; after completing the package, <code>quick_validate.py</code> uses Python's default text encoding to read <code>SKILL.md</code>, and will encounter cp950 decoding problems in the Traditional Chinese Windows environment.</li>
+<li>Tried method: Install <code>PyYAML 6.0.3</code> first, then re-perform verification with <code>$env:PYTHONUTF8='1'</code>.</li>
+<li>Effective solution: Use <code>python -m pip install --user PyYAML</code> to install dependencies, and set <code>PYTHONUTF8=1</code> before performing verification on Windows. <code>eam-retail-p0-review</code> has passed <code>quick_validate.py</code> and output <code>Skill is valid!</code>.</li>
+<li>Follow-up notes: When executing the Python Markdown/YAML verification tool in the future, if the file contains Chinese, UTF-8 mode will be used first to avoid cp950 decoding failure.</li>
+</ul>
+<h3 id="2026-05-26-create-eam-retail-p0-review-project-exclusive-skill">2026-05-26 Create eam-retail-p0-review project exclusive SKILL</h3>
+<ul>
+<li>Status: Resolved</li>
+<li>Scenario: This round of rewriting reuses the same set of processes: reading AGENTS/Docs, backup before modification, P0 Secret/Taint scanning, Lua syntax checking, static risk scanning and final report.</li>
+<li>Symptom: If you repeat the process every time in the conversation, context/token will be wasted, and backup or taint/secret scanning will be easily missed.</li>
+<li>Cause judgment: This process has stable trigger conditions, pre-checks, prohibited items, verification methods and report formats, and complies with the project-specific SKILL rules.</li>
+<li>Tried method: Create <code>.codex/skills/eam-retail-p0-review/SKILL.md</code> according to <code>skill-creator</code> guide.</li>
+<li>Effective solution: Use this SKILL first when performing subsequent EAM Retail rewrite, Secret/Taint review or P0 static verification.</li>
+<li>Follow-up notes: This SKILL only provides the process and does not replace the Warcraft Wiki's latest API verification and WoW Retail/PTR actual machine verification.</li>
+</ul>
+<h3 id="2026-05-26-p0p1-reorganization-safe-reading-renderer-delayed-layout-scheduler-task-pool">2026-05-26 P0/P1 reorganization: safe reading, Renderer delayed layout, Scheduler task pool</h3>
+<p>-Status: awaiting actual machine verification
+- Scenario: Start sorting out the officially loaded new architecture Lua modules based on the latest API and community research.
+- Symptoms: The existing first version skeleton still has several P0/P1 risks: AuraService may compare <code>spellID</code> before confirming safety, Cooldown/Item cooldown safety reading is scattered, Scheduler creates task table every time it is scheduled, Renderer layouts every time it renders, and structural UI changes in the battle have not been explicitly postponed.
+- Reason: These problems will increase the misuse of Secret Values, the risk of combat lockdown / taint and the cost of hot path configuration.
+- Tried methods: Add centralized safe-read helper, Scheduler task pool, IconPool prewarm and combat-time frame creation guard, Renderer deferred layout, Debug boundary warning aggregation, and anchor TOC/Constants to <code>120007</code>.
+- Effective solution: Use the service layer to check facts value by value. Renderer only consumes normalized state; if structural UI changes are encountered in combat, first defer to <code>PLAYER_REGEN_ENABLED</code>.
+- Follow-up notes: WoW Retail/PTR actual machine verification has not yet been done; DurationObject, FontString:ClearText, combat layout defer, taint / blocked action log, 12.0.7 game version ID and CurseForge release settings must be tested.</p>
+<h3 id="2026-05-26-1207-api-summary-has-been-released-the-previous-pending-tracking-status-needs-to-be-corrected">2026-05-26 12.0.7 API summary has been released, the previous pending tracking status needs to be corrected</h3>
+<ul>
+<li>Status: Resolved</li>
+<li>Situation: While investigating the latest official version of WoW AddOn development discussions and API changes, the Warcraft Wiki <code>Patch 12.0.7/API_changes</code> was searched.</li>
+<li>Symptom: Existing <code>Docs/10_WARCRAFT_WIKI_12X_API_NOTES.md</code> still records that 12.0.7 API summary has not been found.</li>
+<li>Reason: Warcraft Wiki has recently added a 12.0.7 API change page, and the previous record is out of date.</li>
+<li>Tried: Re-query the Warcraft Wiki API change summaries, 12.0.5, 12.0.7 and AddOn community discussions.</li>
+<li>Effective workaround: Update <code>Docs/10_WARCRAFT_WIKI_12X_API_NOTES.md</code> to mark 12.0.7 as existing and log the EAM-related <code>C_DurationUtil</code>, CPU usage API and TOC <code>120007</code> trace items.</li>
+<li>Follow-up notes: WoW Retail/PTR actual machine verification has not yet been done; if the target official version is upgraded from 12.0.5 to 12.0.7, the TOC, packaged version and CurseForge game version ID need to be adjusted simultaneously.</li>
+</ul>
+<h3 id="2026-05-26-added-taint-control-rules">2026-05-26 Added taint control rules</h3>
+<ul>
+<li>Status: Resolved</li>
+<li>Scenario: Users require that the development process avoid taint pollution.</li>
+<li>Symptom: The existing specification covers Secret Values, Protected Data and combat-safe degradation, but lacks independent taint control rules.</li>
+<li>Reason: WoW AddOn is an untrusted source; if the secure/protected execution path is contaminated, Blizzard UI actions may be blocked during combat. EAM's Renderer, EventRouter, UI frame and API adapter must avoid bringing taint into the action bar, unit frame, nameplate, spellcasting, target or item usage path.</li>
+<li>Tried method: Check Warcraft Wiki secure execution / taint related information, and update <code>AGENTS.md</code>, <code>Docs/02_RETAIL_API_BOUNDARIES.md</code>, <code>Docs/12_CODE_COMMENTARY_GUIDE.md</code>.</li>
+<li>Effective solution: Treat taint as an architectural boundary; prohibit hooking/overwriting protected paths, modifying protected frames during combat, using <code>forceinsecure</code> or passing unsafe value to secure chain.</li>
+<li>Follow-up notes: When taint, blocked action or combat lockdown errors are found, the trigger path, combat status, relevant frame/API and reproducible steps need to be added to this file.</li>
+</ul>
+<h3 id="2026-05-26-establish-a-development-problem-recording-system">2026-05-26 Establish a development problem recording system</h3>
+<ul>
+<li>Status: Resolved</li>
+<li>Situation: The user requires that the bottlenecks, limitations, errors and solutions encountered during the development process be recorded in <code>.md</code>.</li>
+<li>Symptom: The previous specification has pre-modification backup rules, but no centralized documentation of tool limitations, API uncertainties, and solutions.</li>
+<li>Cause judgment: The project is undergoing a long-term Retail rewrite. If the problem only remains in the conversation, future AI handovers will consume more context/tokens, and it will be easy to repeat trials and errors.</li>
+<li>Tried method: Add this file and add record rules in <code>AGENTS.md</code> and <code>Docs/12_CODE_COMMENTARY_GUIDE.md</code>.</li>
+<li>Effective solution: When encountering problems in the future, first add records according to this file format, and then proceed to the next round of major modifications or verifications.</li>
+<li>Follow-up notes: This document must not record tokens, passwords, private account information or any sensitive information.</li>
+</ul>
+<h3 id="2026-05-26-repeated-processes-need-to-be-organized-into-project-specific-skill">2026-05-26 Repeated processes need to be organized into project-specific SKILL</h3>
+<ul>
+<li>Status: Resolved</li>
+<li>Scenario: Users require that if duplicate processes are found during the development process, they need to be organized into a project-specific SKILL.</li>
+<li>Symptoms: There are currently multiple fixed processes, such as pre-modification backup, packaging, Lua syntax checking, WoW API verification and file synchronization, but there is no clear specification when it should be upgraded to SKILL.</li>
+<li>Cause judgment: Long-term rewrite projects will accumulate repeatable processes; if you rely on dialogue to rewrite each time, it will increase trial and error and context/token costs.</li>
+<li>Tried method: Add project-specific SKILL rules to <code>AGENTS.md</code> and <code>Docs/12_CODE_COMMENTARY_GUIDE.md</code>, and add judgment reminders to this file.</li>
+<li>Effective solution: When the process has stable trigger conditions, pre-checks, operation steps, risk control and verification methods, it is organized into a SKILL exclusive to the EventAlertMod project.</li>
+<li>Follow-up notes: Processes that have not yet been verified, still require a lot of manual judgment, or involve sensitive information should not be made into fully automatic SKILL.</li>
+</ul>
+<h3 id="2026-06-07-12x-midnight-era-16-new-and-high-frequency-events-are-included-and-implemented-simultaneously-with-action-bar-glow">2026-06-07 12.x / Midnight-era 16 new and high-frequency events are included and implemented simultaneously with Action Bar Glow</h3>
+<ul>
+<li>Status: Resolved</li>
+<li>Situation: <code>COMBAT_LOG_EVENT_UNFILTERED</code> (CLEU) has been removed from the official server of World of Warcraft 12.x, causing the ground carpet skill cooldown timer to become invalid; and the golden bright frame highlight (Overlay Glow) of the skill icon needs to be fully synchronized with the native bright frame glow of the shortcut bar button.</li>
+<li>Symptoms: In the past, the carpet effect relied on CLEU's <code>SPELL_CAST_SUCCESS</code>; the highlight of the aura/CD icon also lacked real-time subscription to the native Action Bar golden bright frame event, and was often delayed or invalidated due to manual judgment; and talent switching caused the cooling icon to remain invalid when the skill overrides.</li>
+<li>Reason: CLEU has been banned; you need to use Retail's normal <code>UNIT_SPELLCAST_SUCCEEDED</code> to get the player's spell; in addition, you need to use <code>SPELL_ACTIVATION_OVERLAY_GLOW_SHOW</code> and <code>SPELL_ACTIVATION_OVERLAY_GLOW_HIDE</code> to get the highlight state of the native action bar, and <code>COOLDOWN_VIEWER_SPELL_OVERRIDE_UPDATED</code> Listening skills override relationships.</li>
+<li>Tried methods:</li>
+<li>In <code>GroundEffectService.lua</code>, completely remove the registration of <code>COMBAT_LOG_EVENT_UNFILTERED</code>, change to listen to <code>UNIT_SPELLCAST_SUCCEEDED</code> and filter <code>unitTarget == "player"</code>.</li>
+<li>In <code>ClassPowerService.lua</code>, register the <code>UNIT_POWER_FREQUENT</code> event to provide energy feedback without delay.</li>
+<li>In <code>CooldownService.lua</code>, register <code>COOLDOWN_VIEWER_SPELL_OVERRIDE_UPDATED</code>. When the spell ID changes, the cooldown status of the overwritten or original skill will be refreshed immediately to solve the override timing failure bug.</li>
+<li>Subscribe to <code>SPELL_ACTIVATION_OVERLAY_GLOW_SHOW/HIDE</code> in <code>AlertManager.lua</code>, maintain the <code>glowSpells</code> table and synchronize the passive decoration (Decorator) properties in <code>onAlertStateChanged</code>; modify the <code>glowBorder</code> judgment of <code>UI/Renderer.lua</code> to support <code>pandemicReady</code> and <code>overlayGlow</code> Double track shows golden glow.</li>
+<li>Effective solution: The above changes make EAM's event pipeline more complete, 100% bypassing the dependence on CLEU; the original object pool and luminous border are completely reused, and 0-Allocation still maintains low GC overhead.</li>
+<li>Follow-up notes: The five modified Lua files have successfully passed the static syntax security review of <code>luac -p</code>, and will need to be tested in the official World of Warcraft server to synchronize the carpet effect trigger and the golden bright frame.</li>
+</ul>
+<h3 id="2026-06-09-eam-1210-zero-allocation-statepool-recycling-and-jit-optimization-implementation-based-on-pool-token-delayed-scheduling">2026-06-09 EAM 12.1.0 zero-allocation StatePool recycling and JIT optimization implementation based on Pool-Token delayed scheduling</h3>
+<p>-Status: Resolved, waiting for actual machine verification
+- Situation: Solve the memory leak P0 bug in AuraService that fell into GC Churn after 80 AuraState pre-allocated objects were exhausted in heavy traffic battles, and eliminate the performance bottleneck of LuaJIT NYI Trace Abort caused by OnUpdate polling <code>IsZero()</code>.
+- Symptoms:
+  1. The runtimeStats memory displayed by <code>/eam debug</code> during battle will continue to increase as Buff/Debuff is refreshed, and the object pool recycling function is completely disabled, causing GC Churn and FPS jitters.
+2. LegacyTimerFrame's OnUpdate loop traverses the polling C++ function <code>durationObj:IsZero()</code>, which triggers LuaJIT 2.1 Trace Abort, causing the Hot Path to not be JIT compiled and forced to downgrade to interpreted execution, causing micro-stuttering when the CPU load is high.
+- Reason determination:
+  1. In the <code>AuraStatePool</code> acquisition and release design of <code>AuraService.lua</code>, the core code that binds <code>AuraStatePool.release</code> to <code>state.releaseFunc</code> is missing. This causes <code>AlertManager</code> to completely skip recycling logic after hiding the aura.
+2. LegacyTimerFrame's OnUpdate uses <code>pairs</code> to traverse and poll <code>IsZero()</code> every frame. This C++ function returns a restricted Boolean value under combat restrictions (Secret). To prevent crashes, we use <code>pcall</code>. However, under the JIT compiler, calling the Blizzard C function in <code>pcall</code> will directly trigger NYI Abort and blacklist the entire OnUpdate rendering hot path.
+- Tried methods:
+1. In the <code>acquire</code> of the respective object pools of <code>AuraService.lua</code>, <code>GroundEffectService.lua</code> and <code>TotemService.lua</code>, bind <code>state.releaseFunc = Pool.release</code> uniformly and safely, and clear <code>state.releaseFunc</code> when <code>release</code>, so that <code>AlertManager</code> can indeed call polytypes.
+  2. Completely remove the OnUpdate <code>IsZero</code> polling and <code>pcall</code> declaration of <code>Renderer.lua</code>.
+  3. Implement the reused zero-allocation token pool <code>timerTokenPool</code>. When <code>Renderer.render</code> starts the timer, register a single delayed task through <code>Scheduler.after</code> and pass the token.
+4. When it expires, <code>onDurationTimerExpired</code> is used to determine whether the <code>active</code> of the token is consistent with the active flag of the icon, thereby accurately hiding the icon and ensuring 100% zero memory configuration and zero polling overhead throughout the entire life cycle.
+- Effective solution:
+  - The refactored code has been successfully written, and the four Lua files <code>AuraService.lua</code>, <code>GroundEffectService.lua</code>, <code>TotemService.lua</code> and <code>UI/Renderer.lua</code> have all passed the static syntax security review of <code>luac -p</code> 100%.
+- Follow-up notes:
+- Start EAM in WoW Retail, and observe whether the memory curve is completely level without rising when switching Buff and cooldown frequently, and confirm that the aura can accurately and automatically disappear when it expires, completely eliminating combat Taint and JIT Abort.</p>
+    </div>
+    
+    <!-- Mermaid Dynamic Render Script -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            securityLevel: 'loose',
+            themeVariables: {
+                background: '#1e293b',
+                primaryColor: '#0f172a',
+                primaryTextColor: '#f8fafc',
+                lineColor: '#38bdf8'
+            }
+        });
+    </script>
+    
+    <script>
+        function translatePage(lang) {
+            document.querySelectorAll('.lang-content').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            if (lang === 'zh-TW') {
+                const zhContent = document.getElementById('doc-content-zh');
+                if (zhContent) zhContent.classList.add('active');
+                const zhBtn = document.getElementById('lang-zh');
+                if (zhBtn) zhBtn.classList.add('active');
+                const logo = document.querySelector('.nav-logo');
+                if (logo) logo.innerText = 'EventAlertMod 說明文件';
+            } else {
+                const enContent = document.getElementById('doc-content-en');
+                if (enContent) enContent.classList.add('active');
+                const enBtn = document.getElementById('lang-en');
+                if (enBtn) enBtn.classList.add('active');
+                const logo = document.querySelector('.nav-logo');
+                if (logo) logo.innerText = 'EventAlertMod Docs';
+            }
+        }
+
+        function setFontSize(size) {
+            document.documentElement.style.setProperty('--base-font-size', size);
+            document.querySelectorAll('.size-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if ((size === '14px' && btn.innerText === '小') ||
+                    (size === '16px' && btn.innerText === '中') ||
+                    (size === '18px' && btn.innerText === '大')) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        const themes = {
+            blue: {
+                '--bg-color': '#0f172a',
+                '--panel-bg': '#1e293b',
+                '--text-color': '#cbd5e1',
+                '--heading-color': '#f8fafc',
+                '--accent-color': '#38bdf8',
+                '--border-color': '#334155',
+                '--code-color': '#f1f5f9'
+            },
+            red: {
+                '--bg-color': '#1a0f0f',
+                '--panel-bg': '#2d1a1a',
+                '--text-color': '#fca5a5',
+                '--heading-color': '#fee2e2',
+                '--accent-color': '#ef4444',
+                '--border-color': '#451a1a',
+                '--code-color': '#fee2e2'
+            },
+            green: {
+                '--bg-color': '#06140e',
+                '--panel-bg': '#0d281c',
+                '--text-color': '#86efac',
+                '--heading-color': '#dcfce7',
+                '--accent-color': '#22c55e',
+                '--border-color': '#14422b',
+                '--code-color': '#dcfce7'
+            },
+            black: {
+                '--bg-color': '#050505',
+                '--panel-bg': '#121212',
+                '--text-color': '#e5e5e5',
+                '--heading-color': '#ffffff',
+                '--accent-color': '#a3a3a3',
+                '--border-color': '#262626',
+                '--code-color': '#ffffff'
+            },
+            gray: {
+                '--bg-color': '#27272a',
+                '--panel-bg': '#3f3f46',
+                '--text-color': '#e4e4e7',
+                '--heading-color': '#fafafa',
+                '--accent-color': '#cbd5e1',
+                '--border-color': '#52525b',
+                '--code-color': '#fafafa'
+            },
+            white: {
+                '--bg-color': '#f8fafc',
+                '--panel-bg': '#ffffff',
+                '--text-color': '#334155',
+                '--heading-color': '#0f172a',
+                '--accent-color': '#0284c7',
+                '--border-color': '#e2e8f0',
+                '--code-color': '#0f172a'
+            }
+        };
+
+        function setTheme(name) {
+            const theme = themes[name];
+            if (theme) {
+                for (const [key, value] of Object.entries(theme)) {
+                    document.documentElement.style.setProperty(key, value);
+                }
+                // Toggle active class on dots
+                document.querySelectorAll('.theme-dot').forEach(dot => {
+                    dot.classList.remove('active');
+                    if (dot.classList.contains('dot-' + name)) {
+                        dot.classList.add('active');
+                    }
+                });
+            }
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,1612 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>11_WARCRAFT_WIKI_MAIN_MENU_TREE.md - EventAlertMod Docs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        
+    :root {
+        --base-font-size: 16px;
+        --bg-color: #0f172a;
+        --text-color: #cbd5e1;
+        --heading-color: #f8fafc;
+        --accent-color: #38bdf8;
+        --panel-bg: #1e293b;
+        --border-color: #334155;
+        --code-color: #f1f5f9;
+    }
+
+        
+    html, body {
+        overflow-x: hidden;
+    }
+    body {
+        font-family: 'Outfit', 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-size: var(--base-font-size);
+        line-height: 1.6;
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 80px 20px 40px 20px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+        color: var(--heading-color);
+        margin-top: 1.5em;
+        margin-bottom: 0.5em;
+        font-weight: 600;
+    }
+    
+    h1 {
+        font-size: 2.2rem;
+        border-bottom: 2px solid var(--border-color);
+        padding-bottom: 10px;
+        color: var(--accent-color);
+    }
+    
+    h2 {
+        font-size: 1.7rem;
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 8px;
+        color: var(--heading-color);
+    }
+    
+    h3 {
+        font-size: 1.35rem;
+        color: var(--heading-color);
+    }
+    
+    h4 {
+        font-size: 1.15rem;
+        color: var(--accent-color);
+        background-color: var(--panel-bg);
+        padding: 6px 12px;
+        border-radius: 6px;
+        display: inline-block;
+    }
+    
+    a {
+        color: var(--accent-color);
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+    
+    a:hover {
+        color: var(--accent-color);
+        text-decoration: underline;
+        opacity: 0.8;
+    }
+    
+    ul, ol {
+        padding-left: 24px;
+        margin-bottom: 20px;
+    }
+    
+    li {
+        margin-bottom: 6px;
+    }
+    
+    hr {
+        border: 0;
+        height: 1px;
+        background: var(--border-color);
+        margin: 30px 0;
+    }
+    
+    code {
+        font-family: 'Fira Code', 'Courier New', Courier, monospace;
+        background-color: var(--panel-bg);
+        padding: 2px 6px;
+        border-radius: 4px;
+        color: var(--code-color);
+        font-size: 0.9em;
+    }
+    
+    pre {
+        background-color: var(--panel-bg);
+        padding: 16px;
+        border-radius: 8px;
+        overflow-x: auto;
+        border: 1px solid var(--border-color);
+        margin: 20px 0;
+    }
+    
+    pre code {
+        background-color: transparent;
+        padding: 0;
+        border-radius: 0;
+        color: var(--text-color);
+    }
+    
+    blockquote {
+        border-left: 4px solid var(--accent-color);
+        padding: 10px 20px;
+        margin: 20px 0;
+        background-color: var(--panel-bg);
+        border-radius: 0 8px 8px 0;
+        color: var(--text-color);
+        opacity: 0.85;
+    }
+    
+    img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        margin: 20px 0;
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3);
+    }
+    
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 25px 0;
+        background-color: var(--panel-bg);
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        border: 1px solid var(--border-color);
+    }
+    
+    th, td {
+        padding: 12px 16px;
+        text-align: left;
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+        background-color: var(--bg-color);
+        color: var(--accent-color);
+        font-weight: 600;
+        border-bottom: 2px solid var(--border-color);
+    }
+    
+    tr:last-child td {
+        border-bottom: none;
+    }
+    
+    tr:hover {
+        background-color: var(--panel-bg);
+        opacity: 0.95;
+    }
+    
+    /* Mermaid Graph Center Alignment */
+    .mermaid {
+        display: flex;
+        justify-content: center;
+        background-color: var(--panel-bg);
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        margin: 25px 0;
+    }
+    
+    /* Back Button */
+    .back-btn {
+        display: inline-flex;
+        align-items: center;
+        margin-bottom: 20px;
+        background-color: var(--panel-bg);
+        color: var(--heading-color);
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-size: 0.9em;
+        border: 1px solid var(--border-color);
+        transition: all 0.2s ease;
+    }
+    
+    .back-btn:hover {
+        background-color: var(--border-color);
+        color: var(--accent-color);
+        text-decoration: none;
+    }
+    
+    @media (max-width: 600px) {
+        body {
+            padding: 20px 10px;
+        }
+        h1 {
+            font-size: 1.8rem;
+        }
+    }
+    
+        
+    /* Top Nav Bar Styles */
+    .top-nav-bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 60px;
+        background: rgba(30, 41, 59, 0.9);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border-color);
+        z-index: 10000;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+    
+    .nav-container {
+        max-width: 1000px;
+        height: 100%;
+        margin: 0 auto;
+        padding: 0 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    .nav-logo {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--accent-color);
+        text-decoration: none;
+        letter-spacing: 0.5px;
+        transition: color 0.3s ease;
+    }
+    
+    .nav-logo:hover {
+        color: var(--heading-color);
+        text-decoration: none;
+        opacity: 0.9;
+    }
+    
+    .nav-controls {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+    
+    .nav-control-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .nav-label {
+        font-size: 0.8rem;
+        color: var(--text-color);
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .control-options {
+        display: flex;
+        gap: 4px;
+    }
+    
+    .nav-btn {
+        background: var(--bg-color);
+        border: 1px solid var(--border-color);
+        color: var(--text-color);
+        padding: 4px 10px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.8rem;
+        transition: all 0.2s ease;
+        outline: none;
+    }
+    
+    .nav-btn:hover {
+        border-color: var(--accent-color);
+        color: var(--heading-color);
+    }
+    
+    .nav-btn.active {
+        background: var(--accent-color);
+        color: var(--bg-color);
+        border-color: var(--accent-color);
+        font-weight: 600;
+    }
+    
+    .nav-theme-dots {
+        display: flex;
+        gap: 6px;
+    }
+    
+    .theme-dot {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: transform 0.1s ease, border-color 0.2s ease;
+    }
+    
+    .theme-dot:hover {
+        transform: scale(1.2);
+    }
+    
+    .theme-dot.active {
+        border-color: #ffffff;
+        box-shadow: 0 0 0 2px var(--accent-color);
+    }
+    
+    .dot-blue { background-color: #38bdf8; }
+    .dot-red { background-color: #ef4444; }
+    .dot-green { background-color: #22c55e; }
+    .dot-black { background-color: #000000; border: 1px solid #334155; }
+    .dot-gray { background-color: #71717a; }
+    .dot-white { background-color: #ffffff; border: 1px solid #cbd5e1; }
+    
+    /* Responsive adjustment */
+    @media (max-width: 768px) {
+        .top-nav-bar {
+            height: auto;
+            padding: 10px 0;
+        }
+        .nav-container {
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+        }
+        .nav-controls {
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+    }
+
+        .lang-content {
+            display: none;
+        }
+        .lang-content.active {
+            display: block;
+        }
+        .translation-fallback {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .translation-fallback h3 {
+            color: #ef4444;
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="top-nav-bar">
+        <div class="nav-container">
+            <a href="AGENTS.md.html" class="nav-logo">EventAlertMod Docs</a>
+            <div class="nav-controls">
+                <!-- 語言 -->
+                <div class="nav-control-group">
+                    <span class="nav-label">語言 / Lang:</span>
+                    <div class="control-options">
+                        <button onclick="translatePage('zh-TW')" class="nav-btn lang-btn active" id="lang-zh">繁中</button>
+                        <button onclick="translatePage('en')" class="nav-btn lang-btn" id="lang-en">EN</button>
+                    </div>
+                </div>
+                <!-- 字級 -->
+                <div class="nav-control-group">
+                    <span class="nav-label">字級 / Font:</span>
+                    <div class="control-options">
+                        <button onclick="setFontSize('14px')" class="nav-btn size-btn">小</button>
+                        <button onclick="setFontSize('16px')" class="nav-btn size-btn active">中</button>
+                        <button onclick="setFontSize('18px')" class="nav-btn size-btn">大</button>
+                    </div>
+                </div>
+                <!-- 主題 -->
+                <div class="nav-control-group">
+                    <span class="nav-label">主題 / Theme:</span>
+                    <div class="nav-theme-dots">
+                        <span class="theme-dot dot-blue active" onclick="setTheme('blue')" title="Blue"></span>
+                        <span class="theme-dot dot-red" onclick="setTheme('red')" title="Red"></span>
+                        <span class="theme-dot dot-green" onclick="setTheme('green')" title="Green"></span>
+                        <span class="theme-dot dot-black" onclick="setTheme('black')" title="Black"></span>
+                        <span class="theme-dot dot-gray" onclick="setTheme('gray')" title="Gray"></span>
+                        <span class="theme-dot dot-white" onclick="setTheme('white')" title="White"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="doc-content-zh" class="lang-content active">
+        <a href="AGENTS.md.html" class="back-btn">← 返回 AI 入口指導檔 (AGENTS)</a>
+<h1 id="warcraft-wiki-main-menu">Warcraft Wiki Main Menu 三層遍歷筆記</h1>
+<p>本文件補足 <code>API_change_summaries</code> 頁面左側 <code>Main Menu</code> 的樹狀遍歷。</p>
+<p>目標不是複製整站內容，而是建立 EAM Retail rewrite 需要的導覽索引：</p>
+<ul>
+<li>第一層：<code>Main Menu</code> 入口。</li>
+<li>第二層：入口頁的主要分類或索引方向。</li>
+<li>第三層：代表性 API / 文件頁。</li>
+<li>第四層：與 EAM rewrite 的實作結論。</li>
+</ul>
+<h2 id="_1">來源入口</h2>
+<ul>
+<li>https://warcraft.wiki.gg/wiki/WoW_API</li>
+<li>https://warcraft.wiki.gg/wiki/Lua_functions</li>
+<li>https://warcraft.wiki.gg/wiki/FrameXML_functions</li>
+<li>https://warcraft.wiki.gg/wiki/Widget_API</li>
+<li>https://warcraft.wiki.gg/wiki/Widget_script_handlers</li>
+<li>https://warcraft.wiki.gg/wiki/XML_schema</li>
+<li>https://warcraft.wiki.gg/wiki/Events</li>
+<li>https://warcraft.wiki.gg/wiki/Console_variables</li>
+<li>https://warcraft.wiki.gg/wiki/Macro_commands</li>
+<li>https://warcraft.wiki.gg/wiki/Combat_Log</li>
+<li>https://warcraft.wiki.gg/wiki/COMBAT_LOG_EVENT_UNFILTERED</li>
+<li>https://warcraft.wiki.gg/wiki/UI_escape_sequences</li>
+<li>https://warcraft.wiki.gg/wiki/Hyperlinks</li>
+<li>https://warcraft.wiki.gg/wiki/API_change_summaries</li>
+<li>https://warcraft.wiki.gg/wiki/HOWTOs</li>
+</ul>
+<h2 id="tree-overview">Tree Overview</h2>
+<pre class="codehilite"><code class="language-text">Warcraft Wiki Main Menu
+├─ WoW API
+│  ├─ API systems
+│  │  ├─ C_UnitAuras
+│  │  ├─ C_Spell
+│  │  ├─ C_Item / C_CVar / C_TooltipInfo
+│  │  └─ C_Secrets
+│  ├─ API categories
+│  │  ├─ API functions
+│  │  ├─ API events
+│  │  ├─ API types
+│  │  └─ API systems
+│  └─ EAM relevance
+│     ├─ AuraService
+│     ├─ CooldownService
+│     ├─ ItemCooldownService
+│     └─ Debug boundary checks
+├─ Lua API
+│  ├─ Lua 5.1 subset
+│  │  ├─ basic functions
+│  │  ├─ string
+│  │  ├─ table
+│  │  └─ coroutine
+│  ├─ WoW custom Lua helpers
+│  │  ├─ table.create
+│  │  ├─ table.wipe
+│  │  ├─ table.freeze
+│  │  └─ table.isfrozen
+│  └─ EAM relevance
+│     ├─ low-GC policy
+│     ├─ no secret tostring/string.match
+│     └─ no hot-path transient tables
+├─ FrameXML API
+│  ├─ UIParent / panel helpers
+│  ├─ Mixins and pools
+│  │  ├─ CreateFramePool
+│  │  ├─ CreateTexturePool
+│  │  └─ CreateFontStringPool
+│  ├─ SharedXML utilities
+│  │  ├─ EventUtil
+│  │  ├─ FrameUtil
+│  │  ├─ TooltipUtil
+│  │  └─ LinkUtil
+│  └─ EAM relevance
+│     ├─ IconPool
+│     ├─ EventRouter
+│     └─ Tooltip fallback isolation
+├─ Widget API
+│  ├─ Widget objects
+│  │  ├─ Frame
+│  │  ├─ Button
+│  │  ├─ Cooldown
+│  │  ├─ FontString
+│  │  └─ Texture
+│  ├─ Widget methods
+│  │  ├─ ScriptObject:SetScript
+│  │  ├─ Frame:RegisterEvent
+│  │  ├─ Frame:RegisterAllEvents
+│  │  ├─ Cooldown:SetCooldownFromDurationObject
+│  │  └─ FontString:ClearText
+│  └─ EAM relevance
+│     ├─ Renderer
+│     ├─ no RegisterAllEvents
+│     ├─ no per-icon OnUpdate
+│     └─ DurationObject display
+├─ Widget scripts
+│  ├─ Frame scripts
+│  │  ├─ OnEvent
+│  │  ├─ OnUpdate
+│  │  ├─ OnShow / OnHide
+│  │  └─ OnDragStart / OnDragStop
+│  ├─ Button scripts
+│  │  ├─ OnClick
+│  │  ├─ PreClick
+│  │  └─ PostClick
+│  └─ EAM relevance
+│     ├─ single EventRouter OnEvent
+│     ├─ single Scheduler OnUpdate
+│     └─ Options drag handling only outside hot path
+├─ XML schema
+│  ├─ Ui
+│  │  ├─ Include
+│  │  └─ Script
+│  ├─ LayoutFrame
+│  │  ├─ Size
+│  │  ├─ Anchors
+│  │  └─ Animations
+│  ├─ Frame
+│  │  ├─ Layers
+│  │  ├─ Frames
+│  │  └─ Scripts
+│  └─ EAM relevance
+│     ├─ reduce large XML option surface
+│     ├─ avoid XML OnUpdate
+│     └─ keep UI templates isolated
+├─ Events
+│  ├─ API events category
+│  │  ├─ UNIT_AURA
+│  │  ├─ SPELL_UPDATE_COOLDOWN
+│  │  ├─ BAG_UPDATE_COOLDOWN
+│  │  └─ PLAYER_REGEN_ENABLED
+│  ├─ Event docs
+│  │  ├─ payload tables
+│  │  ├─ predicates
+│  │  └─ restrictions
+│  └─ EAM relevance
+│     ├─ event-driven first
+│     ├─ incremental aura handling
+│     └─ out-of-combat refresh
+├─ CVars
+│  ├─ Console variables
+│  │  ├─ GetCVar / SetCVar
+│  │  ├─ C_CVar.GetCVarInfo
+│  │  └─ C_CVar.RegisterCVar
+│  ├─ Console commands
+│  │  ├─ cvar_default
+│  │  ├─ cvar_reset
+│  │  └─ cvarlist
+│  └─ EAM relevance
+│     ├─ do not depend on user CVars for core logic
+│     ├─ secret forced CVars only for live validation
+│     └─ avoid protected CVar mutation in combat
+├─ Macro commands
+│  ├─ Character commands
+│  ├─ Combat commands
+│  │  ├─ cast / use
+│  │  ├─ cancelaura
+│  │  └─ startattack / stopattack
+│  └─ EAM relevance
+│     ├─ no combat automation
+│     └─ slash commands are config/debug only
+├─ Combat Log
+│  ├─ Combat Log page
+│  │  ├─ chat combat log
+│  │  └─ file logging
+│  ├─ COMBAT_LOG_EVENT / CLEU
+│  │  ├─ payload
+│  │  ├─ prefixes
+│  │  └─ suffixes
+│  └─ EAM relevance
+│     ├─ do not use CLEU as primary 12.x data source
+│     ├─ avoid blind combat parsing
+│     └─ prefer UNIT_AURA / cooldown events
+├─ Escape sequences
+│  ├─ UI text sequences
+│  │  ├─ color
+│  │  ├─ texture
+│  │  └─ reset
+│  └─ EAM relevance
+│     ├─ debug export escaping
+│     ├─ tooltip text safety
+│     └─ no secret string formatting
+├─ Hyperlinks
+│  ├─ link format
+│  │  ├─ color
+│  │  ├─ type:payload
+│  │  └─ display text
+│  ├─ inspecting
+│  │  ├─ SetItemRef
+│  │  └─ ExtractHyperlinkString
+│  └─ EAM relevance
+│     ├─ spell/item ID tooltip debug
+│     ├─ import/export text safety
+│     └─ no unsafe parsing of secret-derived text
+├─ API changes
+│  ├─ API change summaries
+│  │  ├─ 12.0.0
+│  │  ├─ 12.0.1
+│  │  ├─ 12.0.5
+│  │  └─ 12.0.7
+│  └─ EAM relevance
+│     ├─ target TOC/API generation
+│     ├─ removed API cleanup
+│     └─ live validation list
+├─ HOWTOs
+│  ├─ Getting Started
+│  │  ├─ Introduction to Lua
+│  │  └─ Create a WoW AddOn
+│  ├─ UI HOWTOs
+│  │  ├─ Making draggable frames
+│  │  └─ frame examples
+│  └─ EAM relevance
+│     ├─ options UI behavior reference
+│     ├─ draggable anchor handling
+│     └─ avoid copying example closures into hot paths
+└─ wowuidev
+   ├─ historical / community API discussion entry
+   ├─ related API docs / /api command references
+   └─ EAM relevance
+      ├─ useful as background only
+      └─ not an authoritative Retail 12.x runtime contract
+</code></pre>
+
+<h2 id="eam">EAM 實作導向摘要</h2>
+<h3 id="wow-api">WoW API</h3>
+<p><code>WoW API</code> 是主要 runtime API 入口。EAM rewrite 應優先從 API system 找到對應 namespace，而不是保留舊 global wrapper。</p>
+<p>重要三層：</p>
+<pre class="codehilite"><code class="language-text">WoW API
+├─ API systems
+│  ├─ C_UnitAuras
+│  │  └─ AuraService
+│  ├─ C_Spell
+│  │  └─ CooldownService / SpellInfoService
+│  ├─ C_Item
+│  │  └─ ItemCooldownService
+│  ├─ C_TooltipInfo
+│  │  └─ low-frequency fallback only
+│  └─ C_Secrets
+│     └─ boundary checks
+</code></pre>
+
+<p>結論：</p>
+<ul>
+<li>12.x 只用 Retail <code>C_*</code> namespace。</li>
+<li><code>C_Secrets</code> 應集中封裝，不要散落在每個 UI function。</li>
+<li><code>C_TooltipInfo</code> 是 fallback 資料來源，不是 hot path 事實來源。</li>
+</ul>
+<h3 id="lua-api">Lua API</h3>
+<p><code>Lua API</code> 說明 WoW 使用 Lua 5.1 子集，且缺少 OS / file I/O library。</p>
+<p>重要三層：</p>
+<pre class="codehilite"><code class="language-text">Lua API
+├─ basic functions
+│  ├─ pcall / xpcall
+│  └─ type / select
+├─ string
+│  ├─ string.match / gsub / format
+│  └─ WoW custom string helpers
+├─ table
+│  ├─ table.create
+│  ├─ table.wipe
+│  ├─ table.freeze
+│  └─ table.isfrozen
+</code></pre>
+
+<p>結論：</p>
+<ul>
+<li><code>string.match</code> 不可用在未確認安全的 secret-derived tooltip text。</li>
+<li>hot path 避免 transient table、<code>table.insert</code>、大量 <code>pairs</code>。</li>
+<li><code>table.freeze</code> 只用於 immutable constants。</li>
+</ul>
+<h3 id="framexml-api">FrameXML API</h3>
+<p><code>FrameXML functions</code> 包含 UI helper、pool、EventUtil、TooltipUtil、LinkUtil 等。</p>
+<p>重要三層：</p>
+<pre class="codehilite"><code class="language-text">FrameXML API
+├─ Mixins / pools
+│  ├─ CreateFramePool
+│  ├─ CreateTexturePool
+│  └─ CreateFontStringPool
+├─ SharedXML
+│  ├─ EventUtil
+│  ├─ FrameUtil
+│  └─ TooltipUtil
+└─ UIParent / panels
+   ├─ ShowUIPanel
+   └─ Toggle*Frame
+</code></pre>
+
+<p>結論：</p>
+<ul>
+<li>EAM 的 <code>UI/IconPool.lua</code> 可以參考 Blizzard pool pattern。</li>
+<li>不要在 combat 中呼叫會開關 protected panel 的函式。</li>
+<li>TooltipUtil 可作參考，但 tooltip parsing 必須低頻且 secret-safe。</li>
+</ul>
+<h3 id="widget-api-widget-scripts">Widget API / Widget Scripts</h3>
+<p><code>Widget API</code> 與 <code>Widget script handlers</code> 是 EAM Renderer、EventRouter、Scheduler 的基礎。</p>
+<p>重要三層：</p>
+<pre class="codehilite"><code class="language-text">Widget API
+├─ Frame
+│  ├─ RegisterEvent
+│  ├─ RegisterAllEvents
+│  └─ SetScript
+├─ Cooldown
+│  ├─ SetCooldownFromDurationObject
+│  ├─ SetCountdownFormatter
+│  └─ SetCountdownMillisecondsThreshold
+└─ FontString
+   ├─ SetText
+   └─ ClearText
+</code></pre>
+
+<pre class="codehilite"><code class="language-text">Widget scripts
+├─ Frame
+│  ├─ OnEvent
+│  └─ OnUpdate
+├─ Button
+│  ├─ OnClick
+│  └─ PreClick / PostClick
+└─ EditBox
+   ├─ OnTextChanged
+   └─ OnEnterPressed / OnEscapePressed
+</code></pre>
+
+<p>結論：</p>
+<ul>
+<li><code>RegisterAllEvents</code> 只適合 debug/datamining，不適合 EAM runtime。</li>
+<li>EAM 只應有一個 EventRouter <code>OnEvent</code>。</li>
+<li>EAM 只應有一個 Scheduler <code>OnUpdate</code>。</li>
+<li><code>Cooldown</code> 應承接 <code>DurationObject</code>，不要讓 Lua 每幀算秒。</li>
+</ul>
+<h3 id="xml-schema">XML schema</h3>
+<p><code>XML schema</code> 說明 XML 可以建立 UI，但 Lua Widget API 也能做多數事情。</p>
+<p>重要三層：</p>
+<pre class="codehilite"><code class="language-text">XML schema
+├─ Ui
+│  ├─ Include
+│  └─ Script
+├─ LayoutFrame
+│  ├─ Size
+│  ├─ Anchors
+│  └─ Animations
+└─ Frame
+   ├─ Layers
+   ├─ Frames
+   └─ Scripts
+</code></pre>
+
+<p>結論：</p>
+<ul>
+<li>新架構可保留簡單 XML loader，但 runtime icons 應交給 <code>IconPool</code>。</li>
+<li>避免 XML 內建立大量 global frame name。</li>
+<li>避免 XML <code>OnUpdate</code>。</li>
+</ul>
+<h3 id="events">Events</h3>
+<p><code>Events</code> / <code>Category:API events</code> 是 EventRouter 的事件來源。</p>
+<p>重要三層：</p>
+<pre class="codehilite"><code class="language-text">Events
+├─ UNIT_AURA
+│  ├─ unitTarget
+│  ├─ updateInfo.addedAuras
+│  ├─ updateInfo.updatedAuraInstanceIDs
+│  └─ updateInfo.removedAuraInstanceIDs
+├─ cooldown events
+│  ├─ SPELL_UPDATE_COOLDOWN
+│  ├─ SPELL_UPDATE_CHARGES
+│  └─ BAG_UPDATE_COOLDOWN
+└─ combat boundary
+   ├─ PLAYER_REGEN_DISABLED
+   └─ PLAYER_REGEN_ENABLED
+</code></pre>
+
+<p>結論：</p>
+<ul>
+<li><code>UNIT_AURA</code> 增量資料是 AuraService 核心入口。</li>
+<li>removed aura instance ID 無法再查完整 aura，服務要先 cache 安全摘要。</li>
+<li>脫戰刷新是 boundary-limited state 的校準點。</li>
+</ul>
+<h3 id="cvars">CVars</h3>
+<p><code>Console variables</code> 說明 CVar 可以用 <code>GetCVar</code> / <code>SetCVar</code> / <code>/console</code> 管理，部分 secure CVar 不能在 combat 改。</p>
+<p>重要三層：</p>
+<pre class="codehilite"><code class="language-text">CVars
+├─ query
+│  ├─ GetCVar
+│  ├─ GetCVarDefault
+│  └─ C_CVar.GetCVarInfo
+├─ mutation
+│  ├─ SetCVar
+│  └─ /console
+└─ reset
+   ├─ cvar_default
+   └─ cvar_reset
+</code></pre>
+
+<p>結論：</p>
+<ul>
+<li>EAM 不應依賴改 CVar 達成功能。</li>
+<li>secret forced CVars 只應放 live validation checklist。</li>
+<li>不在 combat 中修改 secure CVar。</li>
+</ul>
+<h3 id="macro-commands">Macro Commands</h3>
+<p><code>Macro commands</code> 分為 character、combat 等指令。</p>
+<p>重要三層：</p>
+<pre class="codehilite"><code class="language-text">Macro commands
+├─ character commands
+├─ combat commands
+│  ├─ cast / use
+│  ├─ cancelaura
+│  └─ startattack / stopattack
+└─ addon slash commands
+   ├─ /eam opt
+   ├─ /eam debug
+   └─ /eam export
+</code></pre>
+
+<p>結論：</p>
+<ul>
+<li>EAM slash commands 只能做設定、偵測、debug、匯出。</li>
+<li>不新增 combat automation。</li>
+<li>不產生 cast/use/cancelaura 類行為。</li>
+</ul>
+<h3 id="combat-log">Combat Log</h3>
+<p><code>Combat Log</code> / <code>COMBAT_LOG_EVENT_UNFILTERED</code> 是歷史上常見 AddOn 資料來源，但 12.x 目標與 EAM rewrite 不應依賴盲掃。</p>
+<p>重要三層：</p>
+<pre class="codehilite"><code class="language-text">Combat Log
+├─ Combat Log window / file
+├─ COMBAT_LOG_EVENT_UNFILTERED
+│  ├─ source
+│  ├─ destination
+│  ├─ prefix
+│  └─ suffix
+└─ EAM boundary
+   ├─ not primary source
+   ├─ no heavy parsing
+   └─ use event services instead
+</code></pre>
+
+<p>結論：</p>
+<ul>
+<li>12.x 的 EAM 不以 CLEU 作為 aura/cooldown 主要來源。</li>
+<li>只在必要 debug 或非 hot path 檢查時參考。</li>
+<li>不建立 WeakAura-like combat parser。</li>
+</ul>
+<h3 id="escape-sequences-hyperlinks">Escape Sequences / Hyperlinks</h3>
+<p><code>UI escape sequences</code> 和 <code>Hyperlinks</code> 是 debug text、tooltip、import/export 的風險區。</p>
+<p>重要三層：</p>
+<pre class="codehilite"><code class="language-text">Escape sequences
+├─ color
+├─ texture
+└─ reset
+</code></pre>
+
+<pre class="codehilite"><code class="language-text">Hyperlinks
+├─ link format
+│  ├─ color prefix
+│  ├─ type:payload
+│  └─ display text
+├─ inspection
+│  ├─ SetItemRef
+│  └─ ExtractHyperlinkString
+└─ EAM use
+   ├─ spell link display
+   ├─ item link display
+   └─ debug-safe export
+</code></pre>
+
+<p>結論：</p>
+<ul>
+<li>import/export 不應解析 secret-derived hyperlink text。</li>
+<li>tooltip spellID/itemID 顯示可以保留，但必須和 runtime facts 分開。</li>
+<li>debug export 要 escape pipe / hyperlink 類文字。</li>
+</ul>
+<h3 id="api-changes">API Changes</h3>
+<p><code>API change summaries</code> 是版本追蹤入口。</p>
+<p>重要三層：</p>
+<pre class="codehilite"><code class="language-text">API changes
+├─ Retail
+│  ├─ 12.0.0
+│  ├─ 12.0.1
+│  ├─ 12.0.5
+│  └─ 12.0.7
+├─ change categories
+│  ├─ Global API
+│  ├─ ScriptObjects
+│  ├─ Widgets
+│  ├─ Events
+│  └─ Structures
+└─ EAM use
+   ├─ removed API cleanup
+   ├─ C_* migration
+   └─ live validation targets
+</code></pre>
+
+<p>結論：</p>
+<ul>
+<li>每次 Retail patch 都要重新檢查 12.x API changes。</li>
+<li>12.0.7 API summary 已發布；仍需以實機驗證確認 EAM 行為。</li>
+<li>12.0.5 的 formatter / duration / table.freeze 已寫入 <code>Docs/10_WARCRAFT_WIKI_12X_API_NOTES.md</code>。</li>
+</ul>
+<h3 id="howtos">HOWTOs</h3>
+<p><code>HOWTOs</code> 是教學頁索引，適合作為 UI 操作參考，但不是 Retail 12.x API contract。</p>
+<p>重要三層：</p>
+<pre class="codehilite"><code class="language-text">HOWTOs
+├─ Getting Started
+│  ├─ Introduction to Lua
+│  └─ Create a WoW AddOn
+├─ UI examples
+│  ├─ Making draggable frames
+│  └─ frame examples
+└─ EAM use
+   ├─ options UI reference
+   ├─ anchor movement
+   └─ avoid example-grade hot path code
+</code></pre>
+
+<p>結論：</p>
+<ul>
+<li>可參考拖曳 frame 實作。</li>
+<li>不要直接複製 closure-heavy example 到 runtime hot path。</li>
+<li>Options UI 可以保留簡單，避免 WeakAura-like system。</li>
+</ul>
+<h2 id="eam-docs">對 EAM Docs 的後續建議</h2>
+<ul>
+<li><code>Docs/01_ARCHITECTURE.md</code> 可加入本文件作為 API 導覽。</li>
+<li><code>Docs/02_RETAIL_API_BOUNDARIES.md</code> 應引用 <code>WoW API</code>、<code>C_Secrets</code>、<code>Events</code>、<code>Widget API</code>。</li>
+<li><code>Docs/05_PERFORMANCE_GUIDE.md</code> 應引用 <code>Widget scripts</code>、<code>Lua API</code>、<code>Frame:RegisterAllEvents</code>。</li>
+<li><code>Docs/06_TEST_PLAN_RETAIL.md</code> 應加入 <code>CVar</code> forced-secret 測試與 <code>API changes</code> 版本追蹤。</li>
+</ul>
+<h2 id="_2">遍歷限制</h2>
+<ul>
+<li>本次是靜態文件遍歷，不是全站鏡像。</li>
+<li><code>wowuidev</code> 在 Main Menu 中作為入口出現，但本次查詢未找到獨立、可作為 Retail 12.x runtime contract 的新版頁面；只保留為背景入口。</li>
+<li><code>12.0.7/API_changes</code> 已找到；本文件只作導覽索引，不取代 <code>Docs/10_WARCRAFT_WIKI_12X_API_NOTES.md</code> 的詳細整理。</li>
+</ul>
+    </div>
+    <div id="doc-content-en" class="lang-content">
+        <a href="AGENTS.md.html" class="back-btn">← Back to AI Entrance (AGENTS)</a>
+<h1 id="warcraft-wiki-main-menu-three-level-traversal-notes">Warcraft Wiki Main Menu Three-level traversal notes</h1>
+<p>This file complements the tree traversal of the <code>Main Menu</code> on the left side of the <code>API_change_summaries</code> page.</p>
+<p>The goal is not to copy the entire site content, but to build the navigation index required by EAM Retail rewrite:</p>
+<ul>
+<li>First level: <code>Main Menu</code> entrance.</li>
+<li>Second level: the main classification or index direction of the entry page.</li>
+<li>Third layer: representative API/documentation page.</li>
+<li>Level 4: Implementation conclusion with EAM rewrite.</li>
+</ul>
+<h2 id="source-entry">Source entry</h2>
+<ul>
+<li>https://warcraft.wiki.gg/wiki/WoW_API</li>
+<li>https://warcraft.wiki.gg/wiki/Lua_functions</li>
+<li>https://warcraft.wiki.gg/wiki/FrameXML_functions</li>
+<li>https://warcraft.wiki.gg/wiki/Widget_API</li>
+<li>https://warcraft.wiki.gg/wiki/Widget_script_handlers</li>
+<li>https://warcraft.wiki.gg/wiki/XML_schema</li>
+<li>https://warcraft.wiki.gg/wiki/Events</li>
+<li>https://warcraft.wiki.gg/wiki/Console_variables</li>
+<li>https://warcraft.wiki.gg/wiki/Macro_commands</li>
+<li>https://warcraft.wiki.gg/wiki/Combat_Log</li>
+<li>https://warcraft.wiki.gg/wiki/COMBAT_LOG_EVENT_UNFILTERED</li>
+<li>https://warcraft.wiki.gg/wiki/UI_escape_sequences</li>
+<li>https://warcraft.wiki.gg/wiki/Hyperlinks</li>
+<li>https://warcraft.wiki.gg/wiki/API_change_summaries</li>
+<li>https://warcraft.wiki.gg/wiki/HOWTOs</li>
+</ul>
+<h2 id="tree-overview">Tree Overview</h2>
+<pre class="codehilite"><code class="language-text">Warcraft Wiki Main Menu
+├─ WoW API
+│  ├─ API systems
+│  │  ├─ C_UnitAuras
+│  │  ├─ C_Spell
+│  │  ├─ C_Item / C_CVar / C_TooltipInfo
+│  │  └─ C_Secrets
+│  ├─ API categories
+│  │  ├─ API functions
+│  │  ├─ API events
+│  │  ├─ API types
+│  │  └─ API systems
+│  └─ EAM relevance
+│     ├─ AuraService
+│     ├─ CooldownService
+│     ├─ ItemCooldownService
+│     └─ Debug boundary checks
+├─ Lua API
+│  ├─ Lua 5.1 subset
+│  │  ├─ basic functions
+│  │  ├─ string
+│  │  ├─ table
+│  │  └─ coroutine
+│  ├─ WoW custom Lua helpers
+│  │  ├─ table.create
+│  │  ├─ table.wipe
+│  │  ├─ table.freeze
+│  │  └─ table.isfrozen
+│  └─ EAM relevance
+│     ├─ low-GC policy
+│     ├─ no secret tostring/string.match
+│     └─ no hot-path transient tables
+├─ FrameXML API
+│  ├─ UIParent / panel helpers
+│  ├─ Mixins and pools
+│  │  ├─ CreateFramePool
+│  │  ├─ CreateTexturePool
+│  │  └─ CreateFontStringPool
+│  ├─ SharedXML utilities
+│  │  ├─ EventUtil
+│  │  ├─ FrameUtil
+│  │  ├─ TooltipUtil
+│  │  └─ LinkUtil
+│  └─ EAM relevance
+│     ├─ IconPool
+│     ├─ EventRouter
+│     └─ Tooltip fallback isolation
+├─ Widget API
+│  ├─ Widget objects
+│  │  ├─ Frame
+│  │  ├─ Button
+│  │  ├─ Cooldown
+│  │  ├─ FontString
+│  │  └─ Texture
+│  ├─ Widget methods
+│  │  ├─ ScriptObject:SetScript
+│  │  ├─ Frame:RegisterEvent
+│  │  ├─ Frame:RegisterAllEvents
+│  │  ├─ Cooldown:SetCooldownFromDurationObject
+│  │  └─ FontString:ClearText
+│  └─ EAM relevance
+│     ├─ Renderer
+│     ├─ no RegisterAllEvents
+│     ├─ no per-icon OnUpdate
+│     └─ DurationObject display
+├─ Widget scripts
+│  ├─ Frame scripts
+│  │  ├─ OnEvent
+│  │  ├─ OnUpdate
+│  │  ├─ OnShow / OnHide
+│  │  └─ OnDragStart / OnDragStop
+│  ├─ Button scripts
+│  │  ├─ OnClick
+│  │  ├─ PreClick
+│  │  └─ PostClick
+│  └─ EAM relevance
+│     ├─ single EventRouter OnEvent
+│     ├─ single Scheduler OnUpdate
+│     └─ Options drag handling only outside hot path
+├─ XML schema
+│  ├─ Ui
+│  │  ├─ Include
+│  │  └─ Script
+│  ├─ LayoutFrame
+│  │  ├─ Size
+│  │  ├─ Anchors
+│  │  └─ Animations
+│  ├─ Frame
+│  │  ├─ Layers
+│  │  ├─ Frames
+│  │  └─ Scripts
+│  └─ EAM relevance
+│     ├─ reduce large XML option surface
+│     ├─ avoid XML OnUpdate
+│     └─ keep UI templates isolated
+├─ Events
+│  ├─ API events category
+│  │  ├─ UNIT_AURA
+│  │  ├─ SPELL_UPDATE_COOLDOWN
+│  │  ├─ BAG_UPDATE_COOLDOWN
+│  │  └─ PLAYER_REGEN_ENABLED
+│  ├─ Event docs
+│  │  ├─ payload tables
+│  │  ├─ predicates
+│  │  └─ restrictions
+│  └─ EAM relevance
+│     ├─ event-driven first
+│     ├─ incremental aura handling
+│     └─ out-of-combat refresh
+├─ CVars
+│  ├─ Console variables
+│  │  ├─ GetCVar / SetCVar
+│  │  ├─ C_CVar.GetCVarInfo
+│  │  └─ C_CVar.RegisterCVar
+│  ├─ Console commands
+│  │  ├─ cvar_default
+│  │  ├─ cvar_reset
+│  │  └─ cvarlist
+│  └─ EAM relevance
+│     ├─ do not depend on user CVars for core logic
+│     ├─ secret forced CVars only for live validation
+│     └─ avoid protected CVar mutation in combat
+├─ Macro commands
+│  ├─ Character commands
+│  ├─ Combat commands
+│  │  ├─ cast / use
+│  │  ├─ cancelaura
+│  │  └─ startattack / stopattack
+│  └─ EAM relevance
+│     ├─ no combat automation
+│     └─ slash commands are config/debug only
+├─ Combat Log
+│  ├─ Combat Log page
+│  │  ├─ chat combat log
+│  │  └─ file logging
+│  ├─ COMBAT_LOG_EVENT / CLEU
+│  │  ├─ payload
+│  │  ├─ prefixes
+│  │  └─ suffixes
+│  └─ EAM relevance
+│     ├─ do not use CLEU as primary 12.x data source
+│     ├─ avoid blind combat parsing
+│     └─ prefer UNIT_AURA / cooldown events
+├─ Escape sequences
+│  ├─ UI text sequences
+│  │  ├─ color
+│  │  ├─ texture
+│  │  └─ reset
+│  └─ EAM relevance
+│     ├─ debug export escaping
+│     ├─ tooltip text safety
+│     └─ no secret string formatting
+├─ Hyperlinks
+│  ├─ link format
+│  │  ├─ color
+│  │  ├─ type:payload
+│  │  └─ display text
+│  ├─ inspecting
+│  │  ├─ SetItemRef
+│  │  └─ ExtractHyperlinkString
+│  └─ EAM relevance
+│     ├─ spell/item ID tooltip debug
+│     ├─ import/export text safety
+│     └─ no unsafe parsing of secret-derived text
+├─ API changes
+│  ├─ API change summaries
+│  │  ├─ 12.0.0
+│  │  ├─ 12.0.1
+│  │  ├─ 12.0.5
+│  │  └─ 12.0.7
+│  └─ EAM relevance
+│     ├─ target TOC/API generation
+│     ├─ removed API cleanup
+│     └─ live validation list
+├─ HOWTOs
+│  ├─ Getting Started
+│  │  ├─ Introduction to Lua
+│  │  └─ Create a WoW AddOn
+│  ├─ UI HOWTOs
+│  │  ├─ Making draggable frames
+│  │  └─ frame examples
+│  └─ EAM relevance
+│     ├─ options UI behavior reference
+│     ├─ draggable anchor handling
+│     └─ avoid copying example closures into hot paths
+└─ wowuidev
+   ├─ historical / community API discussion entry
+   ├─ related API docs / /api command references
+   └─ EAM relevance
+      ├─ useful as background only
+      └─ not an authoritative Retail 12.x runtime contract
+</code></pre>
+
+<h2 id="eam-implementation-guide-summary">EAM Implementation Guide Summary</h2>
+<h3 id="wow-api">WoW API</h3>
+<p><code>WoW API</code> is the main runtime API entry. EAM rewrite should give priority to finding the corresponding namespace from the API system instead of retaining the old global wrapper.</p>
+<p>Three important layers:</p>
+<pre class="codehilite"><code class="language-text">WoW API
+├─ API systems
+│  ├─ C_UnitAuras
+│  │  └─ AuraService
+│  ├─ C_Spell
+│  │  └─ CooldownService / SpellInfoService
+│  ├─ C_Item
+│  │  └─ ItemCooldownService
+│  ├─ C_TooltipInfo
+│  │  └─ low-frequency fallback only
+│  └─ C_Secrets
+│     └─ boundary checks
+</code></pre>
+
+<p>Conclusion:</p>
+<ul>
+<li>12.x only uses the Retail <code>C_*</code> namespace.</li>
+<li><code>C_Secrets</code> should be encapsulated centrally and not scattered in each UI function.</li>
+<li><code>C_TooltipInfo</code> is a fallback source, not a hot path fact source.</li>
+</ul>
+<h3 id="lua-api">Lua API</h3>
+<p><code>Lua API</code> Description WoW uses a Lua 5.1 subset and lacks the OS/file I/O library.</p>
+<p>Three important layers:</p>
+<pre class="codehilite"><code class="language-text">Lua API
+├─ basic functions
+│  ├─ pcall / xpcall
+│  └─ type / select
+├─ string
+│  ├─ string.match / gsub / format
+│  └─ WoW custom string helpers
+├─ table
+│  ├─ table.create
+│  ├─ table.wipe
+│  ├─ table.freeze
+│  └─ table.isfrozen
+</code></pre>
+
+<p>Conclusion:</p>
+<ul>
+<li><code>string.match</code> cannot be used with unsecured secret-derived tooltip text.</li>
+<li>hot path avoids transient tables, <code>table.insert</code>, and large numbers of <code>pairs</code>.</li>
+<li><code>table.freeze</code> only works with immutable constants.</li>
+</ul>
+<h3 id="framexml-api">FrameXML API</h3>
+<p><code>FrameXML functions</code> include UI helper, pool, EventUtil, TooltipUtil, LinkUtil, etc.</p>
+<p>Three important layers:</p>
+<pre class="codehilite"><code class="language-text">FrameXML API
+├─ Mixins / pools
+│  ├─ CreateFramePool
+│  ├─ CreateTexturePool
+│  └─ CreateFontStringPool
+├─ SharedXML
+│  ├─ EventUtil
+│  ├─ FrameUtil
+│  └─ TooltipUtil
+└─ UIParent / panels
+   ├─ ShowUIPanel
+   └─ Toggle*Frame
+</code></pre>
+
+<p>Conclusion:</p>
+<ul>
+<li>EAM's <code>UI/IconPool.lua</code> can refer to the Blizzard pool pattern.</li>
+<li>Do not call functions that open or close the protected panel in combat.</li>
+<li>TooltipUtil can be used as a reference, but tooltip parsing must be low-frequency and secret-safe.</li>
+</ul>
+<h3 id="widget-api-widget-scripts">Widget API / Widget Scripts</h3>
+<p><code>Widget API</code> and <code>Widget script handlers</code> are the basis of EAM Renderer, EventRouter, and Scheduler.</p>
+<p>Three important layers:</p>
+<pre class="codehilite"><code class="language-text">Widget API
+├─ Frame
+│  ├─ RegisterEvent
+│  ├─ RegisterAllEvents
+│  └─ SetScript
+├─ Cooldown
+│  ├─ SetCooldownFromDurationObject
+│  ├─ SetCountdownFormatter
+│  └─ SetCountdownMillisecondsThreshold
+└─ FontString
+   ├─ SetText
+   └─ ClearText
+</code></pre>
+
+<pre class="codehilite"><code class="language-text">Widget scripts
+├─ Frame
+│  ├─ OnEvent
+│  └─ OnUpdate
+├─ Button
+│  ├─ OnClick
+│  └─ PreClick / PostClick
+└─ EditBox
+   ├─ OnTextChanged
+   └─ OnEnterPressed / OnEscapePressed
+</code></pre>
+
+<p>Conclusion:</p>
+<ul>
+<li><code>RegisterAllEvents</code> is only suitable for debug/datamining, not EAM runtime.</li>
+<li>EAM should have only one EventRouter <code>OnEvent</code>.</li>
+<li>EAM should only have one Scheduler <code>OnUpdate</code>.</li>
+<li><code>Cooldown</code> should inherit <code>DurationObject</code>, do not let Lua count seconds every frame.</li>
+</ul>
+<h3 id="xml-schema">XML schema</h3>
+<p><code>XML schema</code> Description XML can be used to build UIs, but the Lua Widget API can also do most things.</p>
+<p>Three important layers:</p>
+<pre class="codehilite"><code class="language-text">XML schema
+├─ Ui
+│  ├─ Include
+│  └─ Script
+├─ LayoutFrame
+│  ├─ Size
+│  ├─ Anchors
+│  └─ Animations
+└─ Frame
+   ├─ Layers
+   ├─ Frames
+   └─ Scripts
+</code></pre>
+
+<p>Conclusion:</p>
+<ul>
+<li>The new architecture can keep the simple XML loader, but runtime icons should be given to <code>IconPool</code>.</li>
+<li>Avoid creating a large number of global frame names in XML.</li>
+<li>Avoid XML <code>OnUpdate</code>.</li>
+</ul>
+<h3 id="events">Events</h3>
+<p><code>Events</code> / <code>Category:API events</code> is the event source for EventRouter.</p>
+<p>Three important layers:</p>
+<pre class="codehilite"><code class="language-text">Events
+├─ UNIT_AURA
+│  ├─ unitTarget
+│  ├─ updateInfo.addedAuras
+│  ├─ updateInfo.updatedAuraInstanceIDs
+│  └─ updateInfo.removedAuraInstanceIDs
+├─ cooldown events
+│  ├─ SPELL_UPDATE_COOLDOWN
+│  ├─ SPELL_UPDATE_CHARGES
+│  └─ BAG_UPDATE_COOLDOWN
+└─ combat boundary
+   ├─ PLAYER_REGEN_DISABLED
+   └─ PLAYER_REGEN_ENABLED
+</code></pre>
+
+<p>Conclusion:</p>
+<ul>
+<li><code>UNIT_AURA</code> incremental data is the core entry of AuraService.</li>
+<li>Removed aura instance ID can no longer check the complete aura, the service must first cache the security summary.</li>
+<li>Out-of-combat refresh is the calibration point for boundary-limited state.</li>
+</ul>
+<h3 id="cvars">CVars</h3>
+<p><code>Console variables</code> Description CVar can be managed using <code>GetCVar</code> / <code>SetCVar</code> / <code>/console</code>. Some secure CVar cannot be changed in combat.</p>
+<p>Three important layers:</p>
+<pre class="codehilite"><code class="language-text">CVars
+├─ query
+│  ├─ GetCVar
+│  ├─ GetCVarDefault
+│  └─ C_CVar.GetCVarInfo
+├─ mutation
+│  ├─ SetCVar
+│  └─ /console
+└─ reset
+   ├─ cvar_default
+   └─ cvar_reset
+</code></pre>
+
+<p>Conclusion:</p>
+<ul>
+<li>EAM should not rely on changing CVar to achieve functionality.</li>
+<li>secret forced CVars should only be placed in live validation checklist.</li>
+<li>Do not modify secure CVar in combat.</li>
+</ul>
+<h3 id="macro-commands">Macro Commands</h3>
+<p><code>Macro commands</code> are divided into character, combat and other commands.</p>
+<p>Three important layers:</p>
+<pre class="codehilite"><code class="language-text">Macro commands
+├─ character commands
+├─ combat commands
+│  ├─ cast / use
+│  ├─ cancelaura
+│  └─ startattack / stopattack
+└─ addon slash commands
+   ├─ /eam opt
+   ├─ /eam debug
+   └─ /eam export
+</code></pre>
+
+<p>Conclusion:</p>
+<ul>
+<li>EAM slash commands can only be used for setting, detecting, debugging, and exporting.</li>
+<li>No new combat automation is added.</li>
+<li>Does not produce cast/use/cancelaura-like behavior.</li>
+</ul>
+<h3 id="combat-log">Combat Log</h3>
+<p><code>Combat Log</code> / <code>COMBAT_LOG_EVENT_UNFILTERED</code> are historically common AddOn sources, but 12.x targets with EAM rewrite should not rely on blind scanning.</p>
+<p>Three important layers:</p>
+<pre class="codehilite"><code class="language-text">Combat Log
+├─ Combat Log window / file
+├─ COMBAT_LOG_EVENT_UNFILTERED
+│  ├─ source
+│  ├─ destination
+│  ├─ prefix
+│  └─ suffix
+└─ EAM boundary
+   ├─ not primary source
+   ├─ no heavy parsing
+   └─ use event services instead
+</code></pre>
+
+<p>Conclusion:</p>
+<ul>
+<li>EAM for 12.x does not use CLEU as aura/cooldown primary source.</li>
+<li>Only refer to it when necessary for debugging or non-hot path inspection.</li>
+<li>Does not build WeakAura-like combat parser.</li>
+</ul>
+<h3 id="escape-sequences-hyperlinks">Escape Sequences / Hyperlinks</h3>
+<p><code>UI escape sequences</code> and <code>Hyperlinks</code> are risk areas for debug text, tooltips, and import/export.</p>
+<p>Three important layers:</p>
+<pre class="codehilite"><code class="language-text">Escape sequences
+├─ color
+├─ texture
+└─ reset
+</code></pre>
+
+<pre class="codehilite"><code class="language-text">Hyperlinks
+├─ link format
+│  ├─ color prefix
+│  ├─ type:payload
+│  └─ display text
+├─ inspection
+│  ├─ SetItemRef
+│  └─ ExtractHyperlinkString
+└─ EAM use
+   ├─ spell link display
+   ├─ item link display
+   └─ debug-safe export
+</code></pre>
+
+<p>Conclusion:</p>
+<ul>
+<li>import/export should not parse secret-derived hyperlink text.</li>
+<li>tooltip spellID/itemID display can be retained, but must be separated from runtime facts.</li>
+<li>debug export to escape pipe / hyperlink class literals.</li>
+</ul>
+<h3 id="api-changes">API Changes</h3>
+<p><code>API change summaries</code> is the version tracking entry.</p>
+<p>Three important layers:</p>
+<pre class="codehilite"><code class="language-text">API changes
+├─ Retail
+│  ├─ 12.0.0
+│  ├─ 12.0.1
+│  ├─ 12.0.5
+│  └─ 12.0.7
+├─ change categories
+│  ├─ Global API
+│  ├─ ScriptObjects
+│  ├─ Widgets
+│  ├─ Events
+│  └─ Structures
+└─ EAM use
+   ├─ removed API cleanup
+   ├─ C_* migration
+   └─ live validation targets
+</code></pre>
+
+<p>Conclusion:</p>
+<ul>
+<li>Every Retail patch needs to be rechecked for 12.x API changes.</li>
+<li>12.0.7 API summary has been released; actual machine verification is still required to confirm EAM behavior.</li>
+<li>Formatter/duration/table.freeze for 12.0.5 has been written to <code>Docs/10_WARCRAFT_WIKI_12X_API_NOTES.md</code>.</li>
+</ul>
+<h3 id="howtos">HOWTOs</h3>
+<p><code>HOWTOs</code> are tutorial page indexes, suitable as references for UI operations, but are not Retail 12.x API contracts.</p>
+<p>Three important layers:</p>
+<pre class="codehilite"><code class="language-text">HOWTOs
+├─ Getting Started
+│  ├─ Introduction to Lua
+│  └─ Create a WoW AddOn
+├─ UI examples
+│  ├─ Making draggable frames
+│  └─ frame examples
+└─ EAM use
+   ├─ options UI reference
+   ├─ anchor movement
+   └─ avoid example-grade hot path code
+</code></pre>
+
+<p>Conclusion:</p>
+<ul>
+<li>Please refer to drag frame implementation.</li>
+<li>Do not copy closure-heavy examples directly to the runtime hot path.</li>
+<li>Options UI can be kept simple and avoid WeakAura-like system.</li>
+</ul>
+<h2 id="follow-up-suggestions-for-eam-docs">Follow-up suggestions for EAM Docs</h2>
+<ul>
+<li><code>Docs/01_ARCHITECTURE.md</code> can be included as a tour guide for the API.</li>
+<li><code>Docs/02_RETAIL_API_BOUNDARIES.md</code> should reference <code>WoW API</code>, <code>C_Secrets</code>, <code>Events</code>, <code>Widget API</code>.</li>
+<li><code>Docs/05_PERFORMANCE_GUIDE.md</code> should reference <code>Widget scripts</code>, <code>Lua API</code>, <code>Frame:RegisterAllEvents</code>.</li>
+<li><code>Docs/06_TEST_PLAN_RETAIL.md</code> should add <code>CVar</code> forced-secret tests and <code>API changes</code> version tracking.</li>
+</ul>
+<h2 id="traversal-restrictions">Traversal restrictions</h2>
+<ul>
+<li>This time it is a static file traversal, not a full site mirror.</li>
+<li><code>wowuidev</code> appears as an entrance in the Main Menu, but this query did not find a new page that is independent and can be used as a Retail 12.x runtime contract; it is only kept as a background entrance.</li>
+<li><code>12.0.7/API_changes</code> has been found; this document is only used as a navigation index and does not replace the detailed organization of <code>Docs/10_WARCRAFT_WIKI_12X_API_NOTES.md</code>.</li>
+</ul>
+    </div>
+    
+    <!-- Mermaid Dynamic Render Script -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            securityLevel: 'loose',
+            themeVariables: {
+                background: '#1e293b',
+                primaryColor: '#0f172a',
+                primaryTextColor: '#f8fafc',
+                lineColor: '#38bdf8'
+            }
+        });
+    </script>
+    
+    <script>
+        function translatePage(lang) {
+            document.querySelectorAll('.lang-content').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            if (lang === 'zh-TW') {
+                const zhContent = document.getElementById('doc-content-zh');
+                if (zhContent) zhContent.classList.add('active');
+                const zhBtn = document.getElementById('lang-zh');
+                if (zhBtn) zhBtn.classList.add('active');
+                const logo = document.querySelector('.nav-logo');
+                if (logo) logo.innerText = 'EventAlertMod 說明文件';
+            } else {
+                const enContent = document.getElementById('doc-content-en');
+                if (enContent) enContent.classList.add('active');
+                const enBtn = document.getElementById('lang-en');
+                if (enBtn) enBtn.classList.add('active');
+                const logo = document.querySelector('.nav-logo');
+                if (logo) logo.innerText = 'EventAlertMod Docs';
+            }
+        }
+
+        function setFontSize(size) {
+            document.documentElement.style.setProperty('--base-font-size', size);
+            document.querySelectorAll('.size-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if ((size === '14px' && btn.innerText === '小') ||
+                    (size === '16px' && btn.innerText === '中') ||
+                    (size === '18px' && btn.innerText === '大')) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        const themes = {
+            blue: {
+                '--bg-color': '#0f172a',
+                '--panel-bg': '#1e293b',
+                '--text-color': '#cbd5e1',
+                '--heading-color': '#f8fafc',
+                '--accent-color': '#38bdf8',
+                '--border-color': '#334155',
+                '--code-color': '#f1f5f9'
+            },
+            red: {
+                '--bg-color': '#1a0f0f',
+                '--panel-bg': '#2d1a1a',
+                '--text-color': '#fca5a5',
+                '--heading-color': '#fee2e2',
+                '--accent-color': '#ef4444',
+                '--border-color': '#451a1a',
+                '--code-color': '#fee2e2'
+            },
+            green: {
+                '--bg-color': '#06140e',
+                '--panel-bg': '#0d281c',
+                '--text-color': '#86efac',
+                '--heading-color': '#dcfce7',
+                '--accent-color': '#22c55e',
+                '--border-color': '#14422b',
+                '--code-color': '#dcfce7'
+            },
+            black: {
+                '--bg-color': '#050505',
+                '--panel-bg': '#121212',
+                '--text-color': '#e5e5e5',
+                '--heading-color': '#ffffff',
+                '--accent-color': '#a3a3a3',
+                '--border-color': '#262626',
+                '--code-color': '#ffffff'
+            },
+            gray: {
+                '--bg-color': '#27272a',
+                '--panel-bg': '#3f3f46',
+                '--text-color': '#e4e4e7',
+                '--heading-color': '#fafafa',
+                '--accent-color': '#cbd5e1',
+                '--border-color': '#52525b',
+                '--code-color': '#fafafa'
+            },
+            white: {
+                '--bg-color': '#f8fafc',
+                '--panel-bg': '#ffffff',
+                '--text-color': '#334155',
+                '--heading-color': '#0f172a',
+                '--accent-color': '#0284c7',
+                '--border-color': '#e2e8f0',
+                '--code-color': '#0f172a'
+            }
+        };
+
+        function setTheme(name) {
+            const theme = themes[name];
+            if (theme) {
+                for (const [key, value] of Object.entries(theme)) {
+                    document.documentElement.style.setProperty(key, value);
+                }
+                // Toggle active class on dots
+                document.querySelectorAll('.theme-dot').forEach(dot => {
+                    dot.classList.remove('active');
+                    if (dot.classList.contains('dot-' + name)) {
+                        dot.classList.add('active');
+                    }
+                });
+            }
+        }
+    </script>
+
+</body>
+</html>

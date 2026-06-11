@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>17_SUBAGENT_WORKFLOW.md - EventAlertMod Docs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        
+    :root {
+        --base-font-size: 16px;
+        --bg-color: #0f172a;
+        --text-color: #cbd5e1;
+        --heading-color: #f8fafc;
+        --accent-color: #38bdf8;
+        --panel-bg: #1e293b;
+        --border-color: #334155;
+        --code-color: #f1f5f9;
+    }
+
+        
+    html, body {
+        overflow-x: hidden;
+    }
+    body {
+        font-family: 'Outfit', 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-size: var(--base-font-size);
+        line-height: 1.6;
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 80px 20px 40px 20px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+        color: var(--heading-color);
+        margin-top: 1.5em;
+        margin-bottom: 0.5em;
+        font-weight: 600;
+    }
+    
+    h1 {
+        font-size: 2.2rem;
+        border-bottom: 2px solid var(--border-color);
+        padding-bottom: 10px;
+        color: var(--accent-color);
+    }
+    
+    h2 {
+        font-size: 1.7rem;
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 8px;
+        color: var(--heading-color);
+    }
+    
+    h3 {
+        font-size: 1.35rem;
+        color: var(--heading-color);
+    }
+    
+    h4 {
+        font-size: 1.15rem;
+        color: var(--accent-color);
+        background-color: var(--panel-bg);
+        padding: 6px 12px;
+        border-radius: 6px;
+        display: inline-block;
+    }
+    
+    a {
+        color: var(--accent-color);
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+    
+    a:hover {
+        color: var(--accent-color);
+        text-decoration: underline;
+        opacity: 0.8;
+    }
+    
+    ul, ol {
+        padding-left: 24px;
+        margin-bottom: 20px;
+    }
+    
+    li {
+        margin-bottom: 6px;
+    }
+    
+    hr {
+        border: 0;
+        height: 1px;
+        background: var(--border-color);
+        margin: 30px 0;
+    }
+    
+    code {
+        font-family: 'Fira Code', 'Courier New', Courier, monospace;
+        background-color: var(--panel-bg);
+        padding: 2px 6px;
+        border-radius: 4px;
+        color: var(--code-color);
+        font-size: 0.9em;
+    }
+    
+    pre {
+        background-color: var(--panel-bg);
+        padding: 16px;
+        border-radius: 8px;
+        overflow-x: auto;
+        border: 1px solid var(--border-color);
+        margin: 20px 0;
+    }
+    
+    pre code {
+        background-color: transparent;
+        padding: 0;
+        border-radius: 0;
+        color: var(--text-color);
+    }
+    
+    blockquote {
+        border-left: 4px solid var(--accent-color);
+        padding: 10px 20px;
+        margin: 20px 0;
+        background-color: var(--panel-bg);
+        border-radius: 0 8px 8px 0;
+        color: var(--text-color);
+        opacity: 0.85;
+    }
+    
+    img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        margin: 20px 0;
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3);
+    }
+    
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 25px 0;
+        background-color: var(--panel-bg);
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        border: 1px solid var(--border-color);
+    }
+    
+    th, td {
+        padding: 12px 16px;
+        text-align: left;
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+        background-color: var(--bg-color);
+        color: var(--accent-color);
+        font-weight: 600;
+        border-bottom: 2px solid var(--border-color);
+    }
+    
+    tr:last-child td {
+        border-bottom: none;
+    }
+    
+    tr:hover {
+        background-color: var(--panel-bg);
+        opacity: 0.95;
+    }
+    
+    /* Mermaid Graph Center Alignment */
+    .mermaid {
+        display: flex;
+        justify-content: center;
+        background-color: var(--panel-bg);
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        margin: 25px 0;
+    }
+    
+    /* Back Button */
+    .back-btn {
+        display: inline-flex;
+        align-items: center;
+        margin-bottom: 20px;
+        background-color: var(--panel-bg);
+        color: var(--heading-color);
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-size: 0.9em;
+        border: 1px solid var(--border-color);
+        transition: all 0.2s ease;
+    }
+    
+    .back-btn:hover {
+        background-color: var(--border-color);
+        color: var(--accent-color);
+        text-decoration: none;
+    }
+    
+    @media (max-width: 600px) {
+        body {
+            padding: 20px 10px;
+        }
+        h1 {
+            font-size: 1.8rem;
+        }
+    }
+    
+        
+    /* Top Nav Bar Styles */
+    .top-nav-bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 60px;
+        background: rgba(30, 41, 59, 0.9);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border-color);
+        z-index: 10000;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+    
+    .nav-container {
+        max-width: 1000px;
+        height: 100%;
+        margin: 0 auto;
+        padding: 0 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    .nav-logo {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--accent-color);
+        text-decoration: none;
+        letter-spacing: 0.5px;
+        transition: color 0.3s ease;
+    }
+    
+    .nav-logo:hover {
+        color: var(--heading-color);
+        text-decoration: none;
+        opacity: 0.9;
+    }
+    
+    .nav-controls {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+    
+    .nav-control-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .nav-label {
+        font-size: 0.8rem;
+        color: var(--text-color);
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .control-options {
+        display: flex;
+        gap: 4px;
+    }
+    
+    .nav-btn {
+        background: var(--bg-color);
+        border: 1px solid var(--border-color);
+        color: var(--text-color);
+        padding: 4px 10px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.8rem;
+        transition: all 0.2s ease;
+        outline: none;
+    }
+    
+    .nav-btn:hover {
+        border-color: var(--accent-color);
+        color: var(--heading-color);
+    }
+    
+    .nav-btn.active {
+        background: var(--accent-color);
+        color: var(--bg-color);
+        border-color: var(--accent-color);
+        font-weight: 600;
+    }
+    
+    .nav-theme-dots {
+        display: flex;
+        gap: 6px;
+    }
+    
+    .theme-dot {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: transform 0.1s ease, border-color 0.2s ease;
+    }
+    
+    .theme-dot:hover {
+        transform: scale(1.2);
+    }
+    
+    .theme-dot.active {
+        border-color: #ffffff;
+        box-shadow: 0 0 0 2px var(--accent-color);
+    }
+    
+    .dot-blue { background-color: #38bdf8; }
+    .dot-red { background-color: #ef4444; }
+    .dot-green { background-color: #22c55e; }
+    .dot-black { background-color: #000000; border: 1px solid #334155; }
+    .dot-gray { background-color: #71717a; }
+    .dot-white { background-color: #ffffff; border: 1px solid #cbd5e1; }
+    
+    /* Responsive adjustment */
+    @media (max-width: 768px) {
+        .top-nav-bar {
+            height: auto;
+            padding: 10px 0;
+        }
+        .nav-container {
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+        }
+        .nav-controls {
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+    }
+
+        .lang-content {
+            display: none;
+        }
+        .lang-content.active {
+            display: block;
+        }
+        .translation-fallback {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .translation-fallback h3 {
+            color: #ef4444;
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="top-nav-bar">
+        <div class="nav-container">
+            <a href="AGENTS.md.html" class="nav-logo">EventAlertMod Docs</a>
+            <div class="nav-controls">
+                <!-- 語言 -->
+                <div class="nav-control-group">
+                    <span class="nav-label">語言 / Lang:</span>
+                    <div class="control-options">
+                        <button onclick="translatePage('zh-TW')" class="nav-btn lang-btn active" id="lang-zh">繁中</button>
+                        <button onclick="translatePage('en')" class="nav-btn lang-btn" id="lang-en">EN</button>
+                    </div>
+                </div>
+                <!-- 字級 -->
+                <div class="nav-control-group">
+                    <span class="nav-label">字級 / Font:</span>
+                    <div class="control-options">
+                        <button onclick="setFontSize('14px')" class="nav-btn size-btn">小</button>
+                        <button onclick="setFontSize('16px')" class="nav-btn size-btn active">中</button>
+                        <button onclick="setFontSize('18px')" class="nav-btn size-btn">大</button>
+                    </div>
+                </div>
+                <!-- 主題 -->
+                <div class="nav-control-group">
+                    <span class="nav-label">主題 / Theme:</span>
+                    <div class="nav-theme-dots">
+                        <span class="theme-dot dot-blue active" onclick="setTheme('blue')" title="Blue"></span>
+                        <span class="theme-dot dot-red" onclick="setTheme('red')" title="Red"></span>
+                        <span class="theme-dot dot-green" onclick="setTheme('green')" title="Green"></span>
+                        <span class="theme-dot dot-black" onclick="setTheme('black')" title="Black"></span>
+                        <span class="theme-dot dot-gray" onclick="setTheme('gray')" title="Gray"></span>
+                        <span class="theme-dot dot-white" onclick="setTheme('white')" title="White"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="doc-content-zh" class="lang-content active">
+        <a href="AGENTS.md.html" class="back-btn">← 返回 AI 入口指導檔 (AGENTS)</a>
+<h1 id="subagent">Subagent 工作流規劃</h1>
+<p>本文件定義 EventAlertMod 開發時何時規劃並使用 subagent。目標是讓大型工作可並行、可追溯、可控風險；不是把所有任務都外包，也不是增加不必要的協調成本。</p>
+<h2 id="_1">基本原則</h2>
+<ul>
+<li>只有在使用者已授權 subagent、且任務可拆成清楚邊界時才使用。</li>
+<li>主代理必須先判斷 critical path（關鍵路徑）：下一步立即阻塞的工作由主代理自己處理。</li>
+<li>Subagent 適合處理 sidecar task（旁路任務）：可並行、具體、可驗收、不阻塞主代理下一步。</li>
+<li>不重複派工；同一問題已有 subagent 結果時，除非有新證據或不同角度，不再派第二個做同樣分析。</li>
+<li>程式修改型 subagent 必須有明確寫入範圍，避免多個代理改同一批檔案。</li>
+<li>所有 subagent 結果都需由主代理整合與最終判斷，不直接視為已驗證事實。</li>
+</ul>
+<h2 id="subagent_1">適合使用 subagent 的情境</h2>
+<ul>
+<li>大型 rewrite pass 中，可切成互不重疊模組：</li>
+<li><code>Services/AuraService.lua</code></li>
+<li><code>Services/CooldownService.lua</code></li>
+<li><code>UI/Renderer.lua</code></li>
+<li><code>Debug/PromptExport.lua</code></li>
+<li>API 查證與文件整理可和本地實作並行，例如：</li>
+<li>12.x API change 來源複核。</li>
+<li>Secret Values / taint 討論整理。</li>
+<li>DurationObject / DurationTextBinding 實作方式比較。</li>
+<li>驗證與掃描可與修補並行，例如：</li>
+<li>搜尋舊 API 直接呼叫。</li>
+<li>檢查 <code>table.freeze</code> 誤用。</li>
+<li>檢查 <code>C_Timer.After(function() ...)</code> 熱路徑。</li>
+<li>對 Docs 與 AGENTS 進行一致性檢查。</li>
+<li>大量文件中文化、術語統一、測試清單補齊。</li>
+<li>Package / CurseForge 發佈流程的旁路檢查，例如排除清單、TOC 版本、zip 命名規則。</li>
+</ul>
+<h2 id="subagent_2">不適合使用 subagent 的情境</h2>
+<ul>
+<li>小型單檔修改，主代理可直接完成。</li>
+<li>下一步完全依賴該結果，等待 subagent 反而拖慢 critical path。</li>
+<li>需要即時判斷使用者意圖、風險或授權的操作。</li>
+<li>涉及刪除、搬移、覆寫大量檔案，而尚未完成備份與範圍確認。</li>
+<li>高耦合修改，例如同時改 <code>SavedVariables</code> schema、migration、Options UI、Slash command 且尚未界定寫入範圍。</li>
+<li>尚未有明確驗收條件的探索性問題。</li>
+</ul>
+<h2 id="_2">角色使用建議</h2>
+<ul>
+<li>explorer：用於具體問題的只讀調查，例如「找出 active Lua 中所有 cooldown API 呼叫」。</li>
+<li>worker：用於可分割的實作，例如「只修改 UI/Options.lua，新增某個設定欄位，不碰 SavedVariables」。</li>
+</ul>
+<p>除非任務有明確理由，subagent 使用預設繼承模型；不主動指定更昂貴或不同模型。</p>
+<h2 id="_3">派工模板</h2>
+<pre class="codehilite"><code class="language-text">你是 EventAlertMod Retail rewrite 的 subagent。
+
+範圍：
+- 只能處理：&lt;檔案或問題範圍&gt;
+- 不得修改：&lt;明確排除範圍&gt;
+
+必要規則：
+- Retail only。
+- 不支援 Classic / MOP / Cata / Wrath / Era。
+- 不繞過 Secret / Protected Data。
+- 避免 taint；不 hook secure/protected chain。
+- 修改任何既有檔案前需先備份到 backup/。
+- 不還原他人變更。
+
+輸出：
+- 完成事項。
+- 修改檔案。
+- 驗證方式與結果。
+- 未驗證項目。
+- 風險與建議。
+</code></pre>
+
+<h2 id="_4">主代理整合規則</h2>
+<ul>
+<li>Subagent 完成後，主代理需快速審查結果與檔案差異。</li>
+<li>若 subagent 修改程式碼，主代理仍需執行專案靜態驗證。</li>
+<li>若 subagent 提供 API 資訊，主代理需標明來源層級：</li>
+<li>官方文件或 Warcraft Wiki。</li>
+<li>使用者提供。</li>
+<li>搜尋索引。</li>
+<li>實機驗證。</li>
+<li>若 subagent 遇到工具限制、API 不確定性或錯誤，需追加到 <code>Docs/15_DEVELOPMENT_ISSUE_LOG.md</code>。</li>
+<li><strong>Markdown 絕對事實與 HTML 轉換守則</strong>：</li>
+<li>本專案與 subagent 開發協作的絕對指導文件，一律以 <code>AGENTS.md</code> 及其內文指名之 <code>.md</code> 檔案為唯一事實與 Facts-of-Truth 參考。</li>
+<li>HTML 版本僅為人類好讀與預覽使用。Subagent 執行開發、唯讀分析與回寫時，必須一律以 <code>.md</code> 原檔為唯一事實基準，不得以 HTML 檔案作為事實參考。</li>
+<li>任務若修改了 docs 下的 <code>.md</code> 檔案或 <code>AGENTS.md</code>，必須於修改後執行轉換工具，更新 <code>docs_html/</code> 下對應的 <code>.html</code> 檔案以確保一致性。</li>
+</ul>
+<h2 id="raci-pr">RACI 專家分工與 PR 審查原則</h2>
+<p>為了使 16 位 AI 專家在不同開發任務的定位明確，專案實施 RACI (Responsible, Accountable, Consulted, Informed) 分工定位。</p>
+<p>詳細 RACI 矩陣配置與原則見：<a href="file:///d:/EventAlertMod/Docs/21_RACI_EXPERTS_MATRIX.md.html">Docs/21_RACI_EXPERTS_MATRIX.md</a>。</p>
+<p>後續所有 subagent 派工時需注意：
+1. <strong>R (Responsible)</strong>：派工時，應指定被列為該任務領域 <strong>R</strong> 的專家作為 subagent 的 Role 與職能（例如修改 Class DB 時指派 <code>EAM_Class_Expert</code>）。
+2. <strong>A (Accountable)</strong>：Subagent 提交 PR 或成果後，主代理必須交給被列為該任務領域 <strong>A</strong> 的專家進行審查與批准。
+3. <strong>C (Consulted)</strong>：Subagent 在開發中遇到疑難問題時，必須主動向該任務領域被列為 <strong>C</strong> 的專家諮詢。</p>
+<h2 id="_5">專案品質管制與要因分析原則</h2>
+<p>為確保代碼品質與開發的嚴謹性，本專案導入 5 Whys (WHY-WHY 要因分析)、魚骨圖、對策評估矩陣與 PDPC 異常防禦機制。</p>
+<p>詳細 QC 規範與指引見：<a href="file:///d:/EventAlertMod/Docs/22_QC_ROOT_CAUSE_ANALYSIS_GUIDE.md.html">Docs/22_QC_ROOT_CAUSE_ANALYSIS_GUIDE.md</a>。</p>
+<p>後續開發遵循要求：
+1. <strong>Bug 診斷</strong>：遇任何 runtime 崩潰或邏輯 Bug，必須先執行 <strong>5 Whys 分析</strong> 與 <strong>魚骨圖要因分析</strong>，追查根本原因，並寫入問題紀錄中。
+2. <strong>對策擬定</strong>：設計複雜方案時，必須在 <code>implementation_plan.md</code> 提出至少兩個候選方案，並以對策矩陣從效果、可行性、效能、安全等維度進行量化打分。
+3. <strong>相依排程</strong>：<code>task.md</code> 任務必須標明依賴關係（甘特圖精神），確保並行開發不發生衝突。</p>
+<h2 id="eam">EAM 專案優先使用案例</h2>
+<ol>
+<li>Retail API 變更複核與 Docs 回寫。</li>
+<li>Secret / taint 風險審查。</li>
+<li>AuraService 12.1.0 refactor 前置調查。</li>
+<li>Renderer / DurationObject / DurationTextBinding 實作比較。</li>
+<li>SavedVariables migration 測試案例整理.</li>
+<li>打包與 CurseForge 發佈檢查。</li>
+</ol>
+<hr />
+<h2 id="subagent-predefined-subagent-experts">預定義 subagent 專家目錄 (Predefined Subagent Experts)</h2>
+<p>本專案預先配置了 16 個 subagent 專家角色，涵蓋 API 安全、效能優化、Lua 底層、UI 渲染與 13 個職業的實戰監控智囊團。主代理與開發者可在需要時，直接透過專家的職能定位進行派工與呼叫：</p>
+<h3 id="1">1. 核心開發與架構專家</h3>
+<ul>
+<li><strong>EAM_API_Security_Expert (API 與安全防禦專家)</strong><ul>
+<li><strong>職責</strong>：專注 12.x API 邊界與 Secret/Protected values 限制審查，解析安全讀取原則（<code>issecretvalue</code>, <code>canaccessvalue</code>, <code>canaccesstable</code>）、<code>DurationObject</code> 雙軌安全通道與 Tooltip Scraping 降級防範。</li>
+</ul>
+</li>
+<li><strong>EAM_Performance_Expert (效能與 Taint 控制專家)</strong><ul>
+<li><strong>職責</strong>：主導 Hot Path 零 GC（零時 allocation）控制、Taint 避讓政策（非 secure frame 隔離、InCombatLockdown 限制延後）、以及 <code>IconPool</code> frame 復用優化。</li>
+</ul>
+</li>
+<li><strong>EAM_UI_Renderer_Expert (UI 與渲染架構專家)</strong><ul>
+<li><strong>職責</strong>：專注 UI 與資料嚴格分離（Renderer 只消費 normalized states）、<code>IconPool</code> 與 <code>CooldownFrame</code> 渲染管理、Options 選單佈局與 12.0.7 native text binding 的實作。</li>
+</ul>
+</li>
+<li><strong>EAM_Addon_Architect (插件開發與架構專家)</strong><ul>
+<li><strong>職責</strong>：魔獸世界插件開發專家，熟悉 FrameXML、Taint 機制、安全模板、SavedVariables 結構與主流插件架構協作。</li>
+</ul>
+</li>
+<li><strong>EAM_Lua_VM_Expert (Lua 虛擬機與編譯優化專家)</strong><ul>
+<li><strong>職責</strong>：專注 0-GC 演算、閉包優化、記憶體管理、本地 Inline pcall 匿名閉包開銷與底層元表機制評估。</li>
+</ul>
+</li>
+<li><strong>EAM_Security_Auditor (安全與 Taint 稽核專家)</strong><ul>
+<li><strong>職責</strong>：針對「私有 ScrollingMessageFrame 原生解密法」、「一鍵硬體事件提權巨集」、「官方 UI 數據爬蟲 (UI Scraping)」等高難度繞過漏洞進行生命週期防堵與優化平穩降級稽核。</li>
+</ul>
+</li>
+</ul>
+<h3 id="2">2. 玩家體驗與實戰監控專家</h3>
+<ul>
+<li><strong>EAM_UX_Gameplay_Expert (玩法與 UX 體驗專家)</strong><ul>
+<li><strong>職責</strong>：熟悉 12.x 各職業機制、Pandemic 刷新點提示、DOT/BUFF 監視、視覺疲勞優化與戰鬥場景動態載入避讓。</li>
+</ul>
+</li>
+<li><strong>EAM_Class_Expert (職業專精智囊代表)</strong><ul>
+<li><strong>職責</strong>：代表 13 個職業、39 個專精進行實戰監控配置與優化，提供 30% Pandemic 臨界秒數與資源防溢出閾值。</li>
+</ul>
+</li>
+<li><strong>EAM_Class_Tanks (坦克專精智囊團)</strong><ul>
+<li><strong>職責</strong>：代表血DK、復仇DH、防騎、防戰、酒僧、熊德 6 大坦克，針對主動減傷、生存 Buff 與 Boss 尖峰傷害減傷預警給予配置建議。</li>
+</ul>
+</li>
+<li><strong>EAM_Class_Healers (治療專精智囊團)</strong><ul>
+<li><strong>職責</strong>：代表補德、神/戒牧、補僧、補薩、補騎、恩補喚能師 6 大治療，針對多目標 HoT 覆蓋、隨機觸發 Procs 與團隊框架藍耗提供實戰建議。</li>
+</ul>
+</li>
+<li><strong>EAM_Class_Melee (近戰 DPS 專精智囊團)</strong><ul>
+<li><strong>職責</strong>：代表賊、戰、DH、聖騎、DK、武僧、增強薩、貓德，針對能量/符文連續資源節奏與 DOT 流血的 Pandemic 刷新提供建議。</li>
+</ul>
+</li>
+<li><strong>EAM_Class_Ranged (遠程 DPS 專精智囊團)</strong><ul>
+<li><strong>職責</strong>：代表法、術、暗牧、鳥德、元素薩、獵、喚能師，針對多目標 DoT 維持、Procs 瞬發置頂與移動可用技能引導提供建議。</li>
+</ul>
+</li>
+<li><strong>EAM_Tank_Pro (頂尖坦克玩家代表)</strong>、<strong>EAM_Healer_Pro (頂尖治療玩家代表)</strong>、<strong>EAM_Melee_DPS_Pro (近戰輸出玩家代表)</strong>、<strong>EAM_Ranged_DPS_Pro (遠程輸出玩家代表)</strong><ul>
+<li><strong>職責</strong>：分別代表各個職能，以高玩實戰視角為 EAM 提供極限狀態監控與視覺優先級建議。</li>
+</ul>
+</li>
+</ul>
+    </div>
+    <div id="doc-content-en" class="lang-content">
+        <a href="AGENTS.md.html" class="back-btn">← Back to AI Entrance (AGENTS)</a>
+<h1 id="subagent-workflow-planning">Subagent workflow planning</h1>
+<p>This document defines when to plan and use subagent when developing EventAlertMod. The goal is to make large-scale work parallel, traceable, and controllable risks; not to outsource all tasks, nor to increase unnecessary coordination costs.</p>
+<h2 id="basic-principles">Basic principles</h2>
+<ul>
+<li>Only used when the user has authorized the subagent and the task can be broken down into clear boundaries.</li>
+<li>The main agent must first determine the critical path: the next immediately blocked work will be handled by the main agent itself.</li>
+<li>Subagent is suitable for processing sidecar tasks: it can be parallelized, specific, acceptable, and does not block the next step of the main agent.</li>
+<li>No duplicate work will be assigned; when the same problem already has subagent results, a second one will not be assigned to do the same analysis unless there is new evidence or a different perspective.</li>
+<li>Program modification subagent must have a clear writing range to prevent multiple agents from modifying the same batch of files.</li>
+<li>All subagent results are subject to integration and final judgment by the main agent and are not directly regarded as verified facts.</li>
+</ul>
+<h2 id="suitable-situations-for-using-subagent">Suitable situations for using subagent</h2>
+<ul>
+<li>Large rewrite passes can be divided into non-overlapping modules:</li>
+<li><code>Services/AuraService.lua</code></li>
+<li><code>Services/CooldownService.lua</code></li>
+<li><code>UI/Renderer.lua</code></li>
+<li><code>Debug/PromptExport.lua</code></li>
+<li>API verification and documentation can be done in parallel with local implementation, for example:</li>
+<li>12.x API change source review.</li>
+<li>Secret Values ​​/ taint discussion and organization.</li>
+<li>DurationObject / DurationTextBinding implementation comparison.</li>
+<li>Verification and scanning can be done in parallel with patching, for example:</li>
+<li>Search for old API direct calls.</li>
+<li>Check for <code>table.freeze</code> misuse.</li>
+<li>Check <code>C_Timer.After(function() ...)</code> hot path.
+  -Consistency check between Docs and AGENTS.</li>
+<li>Unified culture and terminology in a large number of documents, and completed test lists.</li>
+<li>Bypass checks for Package / CurseForge release process, such as exclusion lists, TOC versions, zip naming rules.</li>
+</ul>
+<h2 id="situations-not-suitable-for-using-subagent">Situations not suitable for using subagent</h2>
+<ul>
+<li>Small single file modifications can be completed directly by the main agent.</li>
+<li>The next step depends entirely on this result, and waiting for the subagent will slow down the critical path.</li>
+<li>Operations that require immediate judgment of user intent, risk, or authorization.</li>
+<li>Involves deleting, moving, and overwriting a large number of files without completing backup and scope confirmation.</li>
+<li>Highly coupled modifications, such as changing the <code>SavedVariables</code> schema, migration, Options UI, and Slash command at the same time and the writing range has not yet been defined.</li>
+<li>Exploratory questions for which acceptance conditions are not yet clear.</li>
+</ul>
+<h2 id="suggestions-for-using-roles">Suggestions for using roles</h2>
+<ul>
+<li>explorer: Read-only investigation for specific questions, such as "Find all cooldown API calls in active Lua".</li>
+<li>Worker: used for separable implementations, such as "only modify UI/Options.lua, add a certain setting field, and do not touch SavedVariables".
+Unless there is a clear reason for the task, subagent uses the default inheritance model; does not actively specify a more expensive or different model.</li>
+</ul>
+<h2 id="work-dispatch-template">Work dispatch template</h2>
+<pre class="codehilite"><code class="language-text">你是 EventAlertMod Retail rewrite 的 subagent。
+
+範圍：
+- 只能處理：&lt;檔案或問題範圍&gt;
+- 不得修改：&lt;明確排除範圍&gt;
+
+必要規則：
+- Retail only。
+- 不支援 Classic / MOP / Cata / Wrath / Era。
+- 不繞過 Secret / Protected Data。
+- 避免 taint；不 hook secure/protected chain。
+- 修改任何既有檔案前需先備份到 backup/。
+- 不還原他人變更。
+
+輸出：
+- 完成事項。
+- 修改檔案。
+- 驗證方式與結果。
+- 未驗證項目。
+- 風險與建議。
+</code></pre>
+
+<h2 id="master-agent-integration-rules">Master agent integration rules</h2>
+<ul>
+<li>After Subagent is completed, the master agent needs to quickly review the results and file differences.</li>
+<li>If the subagent modifies the code, the main agent still needs to perform static verification of the project.</li>
+<li>If the subagent provides API information, the main agent needs to indicate the source level:
+  -Official documentation or Warcraft Wiki.</li>
+<li>User provided.</li>
+<li>Search index.</li>
+<li>Real machine verification.</li>
+<li>If the subagent encounters tool limitations, API uncertainties or errors, append to <code>Docs/15_DEVELOPMENT_ISSUE_LOG.md</code>.</li>
+<li><strong>Markdown absolute facts and HTML conversion rules</strong>:</li>
+<li>The absolute guidance document for this project and subagent development collaboration will always use <code>AGENTS.md</code> and the <code>.md</code> file named in its content as the only fact and Facts-of-Truth reference.</li>
+<li>The HTML version is for human readability and preview purposes only. When Subagent performs development, read-only analysis, and writeback, it must always use the <code>.md</code> original file as the only factual basis, and HTML files cannot be used as the factual reference.</li>
+<li>If the task modifies the <code>.md</code> file or <code>AGENTS.md</code> under docs, the conversion tool must be executed after the modification and the corresponding <code>.html</code> file under <code>docs_html/</code> is updated to ensure consistency.</li>
+</ul>
+<h2 id="raci-expert-division-of-labor-and-pr-review-principles">RACI Expert Division of Labor and PR Review Principles</h2>
+<p>In order to make the positioning of 16 AI experts in different development tasks clear, the project implemented RACI (Responsible, Accountable, Consulted, Informed) division of labor positioning.</p>
+<p>For detailed RACI matrix configuration and principles, see: <a href="file:///d:/EventAlertMod/Docs/21_RACI_EXPERTS_MATRIX.md.html">Docs/21_RACI_EXPERTS_MATRIX.md</a>.
+Please note the following when dispatching all subsequent subagents:
+1. <strong>R (Responsible)</strong>: When dispatching workers, the expert listed as <strong>R</strong> in the task area should be designated as the role and function of the subagent (for example, when modifying Class DB, assign <code>EAM_Class_Expert</code>).
+2. <strong>A (Accountable)</strong>: After Subagent submits a PR or achievement, the master agent must submit it to an expert listed as <strong>A</strong> in the task area for review and approval.
+3. <strong>C (Consulted)</strong>: When Subagent encounters difficult problems during development, it must proactively consult experts listed as <strong>C</strong> in the task field.</p>
+<h2 id="project-quality-control-and-factor-analysis-principles">Project quality control and factor analysis principles</h2>
+<p>In order to ensure code quality and development rigor, this project introduced 5 Whys (WHY-WHY factor analysis), fishbone diagram, countermeasure evaluation matrix and PDPC anomaly defense mechanism.</p>
+<p>For detailed QC specifications and guidelines, see: <a href="file:///d:/EventAlertMod/Docs/22_QC_ROOT_CAUSE_ANALYSIS_GUIDE.md.html">Docs/22_QC_ROOT_CAUSE_ANALYSIS_GUIDE.md</a>.
+Subsequent development follows the requirements:
+1. <strong>Bug Diagnosis</strong>: In case of any runtime crash or logic bug, you must first perform <strong>5 Whys Analysis</strong> and <strong>Fishbone Diagram Analysis</strong> to trace the root cause and write it into the problem record.
+2. <strong>Countermeasure formulation</strong>: When designing a complex solution, at least two candidate solutions must be proposed in <code>implementation_plan.md</code>, and quantitatively scored from dimensions such as effect, feasibility, efficiency, and safety using a strategy matrix.
+3. <strong>Dependent Scheduling</strong>: <code>task.md</code> Tasks must indicate dependencies (Gantt chart spirit) to ensure that parallel development does not conflict.</p>
+<h2 id="eam-project-priority-use-case">EAM project priority use case</h2>
+<ol>
+<li>Retail API change review and Docs writeback.</li>
+<li>Secret / taint risk review.</li>
+<li>AuraService 12.1.0 refactor pre-investigation.</li>
+<li>Renderer / DurationObject / DurationTextBinding implementation comparison.</li>
+<li>SavedVariables migration test cases organized.</li>
+<li>Package and release checks with CurseForge.</li>
+</ol>
+<hr />
+<h2 id="predefined-subagent-experts-directory-predefined-subagent-experts">Predefined Subagent Experts Directory (Predefined Subagent Experts)</h2>
+<p>This project is pre-configured with 16 subagent expert roles, covering API security, performance optimization, Lua bottom layer, UI rendering and 13 professional practical monitoring think tanks. When needed, main agents and developers can directly dispatch work and call through the expert's function positioning:</p>
+<h3 id="1-core-development-and-architecture-experts">1. Core development and architecture experts</h3>
+<ul>
+<li><strong>EAM_API_Security_Expert (API and security defense expert)</strong></li>
+<li><strong>Responsibilities</strong>: Focus on 12.x API boundaries and Secret/Protected values ​​restriction review, parse safe reading principles (<code>issecretvalue</code>, <code>canaccessvalue</code>, <code>canaccesstable</code>), <code>DurationObject</code> dual-track security channel and Tooltip Scraping downgrade prevention.</li>
+<li><strong>EAM_Performance_Expert (Performance and Taint Control Expert)</strong><ul>
+<li><strong>Responsibilities</strong>: Lead Hot Path zero GC (zero time allocation) control, Taint avoidance policy (non-secure frame isolation, InCombatLockdown limit delay), and <code>IconPool</code> frame reuse optimization.</li>
+</ul>
+</li>
+<li><strong>EAM_UI_Renderer_Expert (UI and rendering architecture expert)</strong><ul>
+<li><strong>Responsibilities</strong>: Focus on strict separation of UI and data (Renderer only consumes normalized states), <code>IconPool</code> and <code>CooldownFrame</code> rendering management, Options menu layout and the implementation of 12.0.7 native text binding.</li>
+</ul>
+</li>
+<li><strong>EAM_Addon_Architect (Add-in development and architecture expert)</strong><ul>
+<li><strong>Responsibilities</strong>: World of Warcraft plug-in development expert, familiar with FrameXML, Taint mechanism, security templates, SavedVariables structure and collaboration with mainstream plug-in architecture.</li>
+</ul>
+</li>
+<li><strong>EAM_Lua_VM_Expert (Lua virtual machine and compilation optimization expert)</strong><ul>
+<li><strong>Responsibilities</strong>: Focus on 0-GC calculation, closure optimization, memory management, local Inline pcall anonymous closure overhead and underlying metatable mechanism evaluation.</li>
+</ul>
+</li>
+<li><strong>EAM_Security_Auditor (Security and Taint Audit Expert)</strong></li>
+<li><strong>Responsibilities</strong>: Conduct life cycle prevention and optimization smooth degradation audits for difficult bypass vulnerabilities such as "Private ScrollingMessageFrame native decryption method", "One-click hardware event privilege escalation macro", "Official UI data crawler (UI Scraping)".</li>
+</ul>
+<h3 id="2-player-experience-and-actual-combat-monitoring-expert">2. Player experience and actual combat monitoring expert</h3>
+<ul>
+<li><strong>EAM_UX_Gameplay_Expert (Gameplay and UX Experience Expert)</strong></li>
+<li><strong>Responsibilities</strong>: Familiar with the 12.x career mechanisms, Pandemic refresh point prompts, DOT/BUFF monitoring, visual fatigue optimization and combat scene dynamic loading avoidance.</li>
+<li><strong>EAM_Class_Expert (professional expert think tank representative)</strong><ul>
+<li><strong>Responsibilities</strong>: Conduct actual combat monitoring configuration and optimization on behalf of 13 professions and 39 specialties, and provide 30% Pandemic critical seconds and resource overflow prevention thresholds.</li>
+</ul>
+</li>
+<li><strong>EAM_Class_Tanks (Tank Specialization Think Tank)</strong></li>
+<li><strong>Responsibilities</strong>: Represent the six major tanks of blood DK, revenge DH, anti-cavalry, anti-war, wine monk, and bear druid. Provide configuration suggestions for active damage reduction, survival Buff, and boss peak damage reduction warning.</li>
+<li><strong>EAM_Class_Healers (Healing Expertise Think Tank)</strong></li>
+<li><strong>Responsibilities</strong>: Represents the 6 major treatments of repairing virtue, divine/discipline priest, repairing monk, repairing Sasha, repairing cavalry, and restoring grace and summoning master, and provides practical suggestions for multi-target HoT coverage, random triggering of Procs and team frame mana consumption.</li>
+<li><strong>EAM_Class_Melee (Melee DPS Specialized Think Tank)</strong><ul>
+<li><strong>Responsibilities</strong>: Represent Rogue, Warrior, DH, Paladin, DK, Monk, Enhancement Shaman, Cat Druid, and provide suggestions for the Pandemic refresh of energy/rune continuous resource rhythm and DOT bleeding.</li>
+</ul>
+</li>
+<li><strong>EAM_Class_Ranged (Ranged DPS Specialized Think Tank)</strong><ul>
+<li><strong>Responsibilities</strong>: Represents spells, spells, shadow priests, bird druids, elemental shamans, hunters, and evocation masters. Provides suggestions for multi-target DoT maintenance, Procs instant cast tops, and mobile available skill guidance.</li>
+</ul>
+</li>
+<li><strong>EAM_Tank_Pro (top tank player representative)</strong>, <strong>EAM_Healer_Pro (top healer player representative)</strong>, <strong>EAM_Melee_DPS_Pro (melee output player representative)</strong>, <strong>EAM_Ranged_DPS_Pro (ranged output player representative)</strong></li>
+<li><strong>Responsibilities</strong>: Represent each function respectively, and provide extreme state monitoring and visual priority suggestions for EAM from a high-player practical perspective.</li>
+</ul>
+    </div>
+    
+    <!-- Mermaid Dynamic Render Script -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            securityLevel: 'loose',
+            themeVariables: {
+                background: '#1e293b',
+                primaryColor: '#0f172a',
+                primaryTextColor: '#f8fafc',
+                lineColor: '#38bdf8'
+            }
+        });
+    </script>
+    
+    <script>
+        function translatePage(lang) {
+            document.querySelectorAll('.lang-content').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            if (lang === 'zh-TW') {
+                const zhContent = document.getElementById('doc-content-zh');
+                if (zhContent) zhContent.classList.add('active');
+                const zhBtn = document.getElementById('lang-zh');
+                if (zhBtn) zhBtn.classList.add('active');
+                const logo = document.querySelector('.nav-logo');
+                if (logo) logo.innerText = 'EventAlertMod 說明文件';
+            } else {
+                const enContent = document.getElementById('doc-content-en');
+                if (enContent) enContent.classList.add('active');
+                const enBtn = document.getElementById('lang-en');
+                if (enBtn) enBtn.classList.add('active');
+                const logo = document.querySelector('.nav-logo');
+                if (logo) logo.innerText = 'EventAlertMod Docs';
+            }
+        }
+
+        function setFontSize(size) {
+            document.documentElement.style.setProperty('--base-font-size', size);
+            document.querySelectorAll('.size-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if ((size === '14px' && btn.innerText === '小') ||
+                    (size === '16px' && btn.innerText === '中') ||
+                    (size === '18px' && btn.innerText === '大')) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        const themes = {
+            blue: {
+                '--bg-color': '#0f172a',
+                '--panel-bg': '#1e293b',
+                '--text-color': '#cbd5e1',
+                '--heading-color': '#f8fafc',
+                '--accent-color': '#38bdf8',
+                '--border-color': '#334155',
+                '--code-color': '#f1f5f9'
+            },
+            red: {
+                '--bg-color': '#1a0f0f',
+                '--panel-bg': '#2d1a1a',
+                '--text-color': '#fca5a5',
+                '--heading-color': '#fee2e2',
+                '--accent-color': '#ef4444',
+                '--border-color': '#451a1a',
+                '--code-color': '#fee2e2'
+            },
+            green: {
+                '--bg-color': '#06140e',
+                '--panel-bg': '#0d281c',
+                '--text-color': '#86efac',
+                '--heading-color': '#dcfce7',
+                '--accent-color': '#22c55e',
+                '--border-color': '#14422b',
+                '--code-color': '#dcfce7'
+            },
+            black: {
+                '--bg-color': '#050505',
+                '--panel-bg': '#121212',
+                '--text-color': '#e5e5e5',
+                '--heading-color': '#ffffff',
+                '--accent-color': '#a3a3a3',
+                '--border-color': '#262626',
+                '--code-color': '#ffffff'
+            },
+            gray: {
+                '--bg-color': '#27272a',
+                '--panel-bg': '#3f3f46',
+                '--text-color': '#e4e4e7',
+                '--heading-color': '#fafafa',
+                '--accent-color': '#cbd5e1',
+                '--border-color': '#52525b',
+                '--code-color': '#fafafa'
+            },
+            white: {
+                '--bg-color': '#f8fafc',
+                '--panel-bg': '#ffffff',
+                '--text-color': '#334155',
+                '--heading-color': '#0f172a',
+                '--accent-color': '#0284c7',
+                '--border-color': '#e2e8f0',
+                '--code-color': '#0f172a'
+            }
+        };
+
+        function setTheme(name) {
+            const theme = themes[name];
+            if (theme) {
+                for (const [key, value] of Object.entries(theme)) {
+                    document.documentElement.style.setProperty(key, value);
+                }
+                // Toggle active class on dots
+                document.querySelectorAll('.theme-dot').forEach(dot => {
+                    dot.classList.remove('active');
+                    if (dot.classList.contains('dot-' + name)) {
+                        dot.classList.add('active');
+                    }
+                });
+            }
+        }
+    </script>
+
+</body>
+</html>

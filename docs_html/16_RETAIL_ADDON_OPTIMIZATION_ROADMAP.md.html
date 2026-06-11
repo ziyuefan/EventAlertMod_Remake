@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>16_RETAIL_ADDON_OPTIMIZATION_ROADMAP.md - EventAlertMod Docs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        
+    :root {
+        --base-font-size: 16px;
+        --bg-color: #0f172a;
+        --text-color: #cbd5e1;
+        --heading-color: #f8fafc;
+        --accent-color: #38bdf8;
+        --panel-bg: #1e293b;
+        --border-color: #334155;
+        --code-color: #f1f5f9;
+    }
+
+        
+    html, body {
+        overflow-x: hidden;
+    }
+    body {
+        font-family: 'Outfit', 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-size: var(--base-font-size);
+        line-height: 1.6;
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 80px 20px 40px 20px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+        color: var(--heading-color);
+        margin-top: 1.5em;
+        margin-bottom: 0.5em;
+        font-weight: 600;
+    }
+    
+    h1 {
+        font-size: 2.2rem;
+        border-bottom: 2px solid var(--border-color);
+        padding-bottom: 10px;
+        color: var(--accent-color);
+    }
+    
+    h2 {
+        font-size: 1.7rem;
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 8px;
+        color: var(--heading-color);
+    }
+    
+    h3 {
+        font-size: 1.35rem;
+        color: var(--heading-color);
+    }
+    
+    h4 {
+        font-size: 1.15rem;
+        color: var(--accent-color);
+        background-color: var(--panel-bg);
+        padding: 6px 12px;
+        border-radius: 6px;
+        display: inline-block;
+    }
+    
+    a {
+        color: var(--accent-color);
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+    
+    a:hover {
+        color: var(--accent-color);
+        text-decoration: underline;
+        opacity: 0.8;
+    }
+    
+    ul, ol {
+        padding-left: 24px;
+        margin-bottom: 20px;
+    }
+    
+    li {
+        margin-bottom: 6px;
+    }
+    
+    hr {
+        border: 0;
+        height: 1px;
+        background: var(--border-color);
+        margin: 30px 0;
+    }
+    
+    code {
+        font-family: 'Fira Code', 'Courier New', Courier, monospace;
+        background-color: var(--panel-bg);
+        padding: 2px 6px;
+        border-radius: 4px;
+        color: var(--code-color);
+        font-size: 0.9em;
+    }
+    
+    pre {
+        background-color: var(--panel-bg);
+        padding: 16px;
+        border-radius: 8px;
+        overflow-x: auto;
+        border: 1px solid var(--border-color);
+        margin: 20px 0;
+    }
+    
+    pre code {
+        background-color: transparent;
+        padding: 0;
+        border-radius: 0;
+        color: var(--text-color);
+    }
+    
+    blockquote {
+        border-left: 4px solid var(--accent-color);
+        padding: 10px 20px;
+        margin: 20px 0;
+        background-color: var(--panel-bg);
+        border-radius: 0 8px 8px 0;
+        color: var(--text-color);
+        opacity: 0.85;
+    }
+    
+    img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        margin: 20px 0;
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3);
+    }
+    
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 25px 0;
+        background-color: var(--panel-bg);
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        border: 1px solid var(--border-color);
+    }
+    
+    th, td {
+        padding: 12px 16px;
+        text-align: left;
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+        background-color: var(--bg-color);
+        color: var(--accent-color);
+        font-weight: 600;
+        border-bottom: 2px solid var(--border-color);
+    }
+    
+    tr:last-child td {
+        border-bottom: none;
+    }
+    
+    tr:hover {
+        background-color: var(--panel-bg);
+        opacity: 0.95;
+    }
+    
+    /* Mermaid Graph Center Alignment */
+    .mermaid {
+        display: flex;
+        justify-content: center;
+        background-color: var(--panel-bg);
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        margin: 25px 0;
+    }
+    
+    /* Back Button */
+    .back-btn {
+        display: inline-flex;
+        align-items: center;
+        margin-bottom: 20px;
+        background-color: var(--panel-bg);
+        color: var(--heading-color);
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-size: 0.9em;
+        border: 1px solid var(--border-color);
+        transition: all 0.2s ease;
+    }
+    
+    .back-btn:hover {
+        background-color: var(--border-color);
+        color: var(--accent-color);
+        text-decoration: none;
+    }
+    
+    @media (max-width: 600px) {
+        body {
+            padding: 20px 10px;
+        }
+        h1 {
+            font-size: 1.8rem;
+        }
+    }
+    
+        
+    /* Top Nav Bar Styles */
+    .top-nav-bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 60px;
+        background: rgba(30, 41, 59, 0.9);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border-color);
+        z-index: 10000;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+    
+    .nav-container {
+        max-width: 1000px;
+        height: 100%;
+        margin: 0 auto;
+        padding: 0 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    .nav-logo {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--accent-color);
+        text-decoration: none;
+        letter-spacing: 0.5px;
+        transition: color 0.3s ease;
+    }
+    
+    .nav-logo:hover {
+        color: var(--heading-color);
+        text-decoration: none;
+        opacity: 0.9;
+    }
+    
+    .nav-controls {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+    
+    .nav-control-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .nav-label {
+        font-size: 0.8rem;
+        color: var(--text-color);
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .control-options {
+        display: flex;
+        gap: 4px;
+    }
+    
+    .nav-btn {
+        background: var(--bg-color);
+        border: 1px solid var(--border-color);
+        color: var(--text-color);
+        padding: 4px 10px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.8rem;
+        transition: all 0.2s ease;
+        outline: none;
+    }
+    
+    .nav-btn:hover {
+        border-color: var(--accent-color);
+        color: var(--heading-color);
+    }
+    
+    .nav-btn.active {
+        background: var(--accent-color);
+        color: var(--bg-color);
+        border-color: var(--accent-color);
+        font-weight: 600;
+    }
+    
+    .nav-theme-dots {
+        display: flex;
+        gap: 6px;
+    }
+    
+    .theme-dot {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: transform 0.1s ease, border-color 0.2s ease;
+    }
+    
+    .theme-dot:hover {
+        transform: scale(1.2);
+    }
+    
+    .theme-dot.active {
+        border-color: #ffffff;
+        box-shadow: 0 0 0 2px var(--accent-color);
+    }
+    
+    .dot-blue { background-color: #38bdf8; }
+    .dot-red { background-color: #ef4444; }
+    .dot-green { background-color: #22c55e; }
+    .dot-black { background-color: #000000; border: 1px solid #334155; }
+    .dot-gray { background-color: #71717a; }
+    .dot-white { background-color: #ffffff; border: 1px solid #cbd5e1; }
+    
+    /* Responsive adjustment */
+    @media (max-width: 768px) {
+        .top-nav-bar {
+            height: auto;
+            padding: 10px 0;
+        }
+        .nav-container {
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+        }
+        .nav-controls {
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+    }
+
+        .lang-content {
+            display: none;
+        }
+        .lang-content.active {
+            display: block;
+        }
+        .translation-fallback {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .translation-fallback h3 {
+            color: #ef4444;
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="top-nav-bar">
+        <div class="nav-container">
+            <a href="AGENTS.md.html" class="nav-logo">EventAlertMod Docs</a>
+            <div class="nav-controls">
+                <!-- 語言 -->
+                <div class="nav-control-group">
+                    <span class="nav-label">語言 / Lang:</span>
+                    <div class="control-options">
+                        <button onclick="translatePage('zh-TW')" class="nav-btn lang-btn active" id="lang-zh">繁中</button>
+                        <button onclick="translatePage('en')" class="nav-btn lang-btn" id="lang-en">EN</button>
+                    </div>
+                </div>
+                <!-- 字級 -->
+                <div class="nav-control-group">
+                    <span class="nav-label">字級 / Font:</span>
+                    <div class="control-options">
+                        <button onclick="setFontSize('14px')" class="nav-btn size-btn">小</button>
+                        <button onclick="setFontSize('16px')" class="nav-btn size-btn active">中</button>
+                        <button onclick="setFontSize('18px')" class="nav-btn size-btn">大</button>
+                    </div>
+                </div>
+                <!-- 主題 -->
+                <div class="nav-control-group">
+                    <span class="nav-label">主題 / Theme:</span>
+                    <div class="nav-theme-dots">
+                        <span class="theme-dot dot-blue active" onclick="setTheme('blue')" title="Blue"></span>
+                        <span class="theme-dot dot-red" onclick="setTheme('red')" title="Red"></span>
+                        <span class="theme-dot dot-green" onclick="setTheme('green')" title="Green"></span>
+                        <span class="theme-dot dot-black" onclick="setTheme('black')" title="Black"></span>
+                        <span class="theme-dot dot-gray" onclick="setTheme('gray')" title="Gray"></span>
+                        <span class="theme-dot dot-white" onclick="setTheme('white')" title="White"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="doc-content-zh" class="lang-content active">
+        <a href="AGENTS.md.html" class="back-btn">← 返回 AI 入口指導檔 (AGENTS)</a>
+<h1 id="retail-addon-eventalertmod">Retail AddOn 調研與 EventAlertMod 優化路線</h1>
+<p>本文件整理 2026-05-26 對 Warcraft Wiki、Blizzard forum、WoWInterface、CurseForge 與 Reddit AddOn 討論的調研結果，規劃 EventAlertMod Retail rewrite 的優化項目與目標。</p>
+<p>本文件不是實機驗證報告。所有 Retail 12.x 行為仍需在 WoW Retail / PTR client 中載入測試。</p>
+<h2 id="_1">調研來源</h2>
+<ul>
+<li>Warcraft Wiki：<code>API_change_summaries</code>、<code>Patch_12.0.0/API_changes</code>、<code>Patch_12.0.5/API_changes</code>、<code>Patch_12.0.7/API_changes</code>、<code>Secret_Values</code>。</li>
+<li>Blizzard forum：UI and Macro、Bug Report 中關於 Secret Values、UnitHealth、movement speed、PvP scoreboard、blocked action / taint 的討論。</li>
+<li>WoWInterface：Cell、TweaksUI: Cooldowns、Threat Plates、ViksUI、Item Upgrade Quality Icons 等 Midnight changelog。</li>
+<li>CurseForge：Midnight Sensei、MidnightSimpleAuras、Cooldown Cursor Manager、Cooldown Manager Loader、MidnightCD、Enhance QoL 等專案頁與 changelog。</li>
+<li>Reddit：r/wow、r/WowUI、r/wowaddons、r/CompetitiveWoW 中關於 12.0 / 12.0.5 / Midnight AddOn API 的使用者與作者回饋。</li>
+</ul>
+<h2 id="api">最新 API 結論</h2>
+<ul>
+<li>12.0.0 是 Secret Values 與 AddOn combat API 限制的核心起點。</li>
+<li>12.0.5 對 EAM 最重要：API predicates、<code>table.freeze</code>、<code>table.isfrozen</code>、formatter、DurationObject、aura 欄位 secrecy 調整、cooldown duration <code>ignoreGCD</code>。</li>
+<li>12.0.7 API summary 已存在，TOC 為 <code>120007</code>；目前對 EAM 的直接核心影響較小，但新增 <code>C_DurationUtil.CreateDurationTextBinding</code>、<code>C_DurationUtil.CreateManualClock</code>，並移除 <code>C_DurationUtil.GetCurrentTime</code>。</li>
+<li><code>GetEventCPUUsage</code>、<code>GetFunctionCPUUsage</code>、<code>GetScriptCPUUsage</code> 可作 on-demand profiling 候選，不可放入 hot path。</li>
+<li>Secret Values 不是單一欄位問題，而是 tainted execution path 下的普遍限制；不能靠 <code>pcall</code>、比較失敗 fallback 或 tooltip scraping 繞過。</li>
+</ul>
+<h2 id="_2">社群與插件趨勢</h2>
+<ul>
+<li>作者普遍從「讀 aura/cooldown 數值後自行判斷」轉向「讓 Blizzard widget / DurationObject 顯示」。</li>
+<li>多個插件改為逐值 <code>issecretvalue</code> 檢查，不再只依 context flag 判斷是否受限制。</li>
+<li>一些 aura uptime 類插件放棄 combat aura spellID comparison，改用 cast event 與安全窗口估算，但必須標記為 derived，不可冒充 aura fact。</li>
+<li>Cooldown 類插件明顯往 Blizzard Cooldown Manager 整合、DurationObject、cursor/HUD 顯示與 CDM profile 輔助發展。</li>
+<li>Nameplate、unit frame、PvP scoreboard、unit name / GUID / UnitIsUnit、movement speed、health/power 類資料在 Midnight 中風險高，EAM 不應把它們納入核心 alert matching。</li>
+<li>Tooltip 文字也可能包含 secret value；tooltip parsing 必須低頻、逐行檢查、失敗安靜降級。</li>
+<li>Taint / blocked action 仍是常見痛點；避免污染 protected frame 比事後壓制錯誤更重要。</li>
+</ul>
+<h2 id="eam">EAM 優化總目標</h2>
+<ol>
+<li>保持 EAM 的輕量定位：簡單、spellID 導向、比 WeakAuras 容易。</li>
+<li>把資料層改成「safe facts / derived / displayOnly / boundaryWarnings」明確分離。</li>
+<li>Renderer 以 Blizzard widget / DurationObject 為優先，避免 Lua 自行倒數與字串格式化。</li>
+<li>對 Secret Values 採逐值安全檢查，不依賴單一 context guard。</li>
+<li>儘量支援 Blizzard Cooldown Manager 生態，但不硬依賴外部 addon。</li>
+<li>降低 taint 風險：不接 secure action、不改 protected frame、不 hook Blizzard protected chain。</li>
+<li>所有 debug / profiling / export 都採 on-demand，不進 hot path。</li>
+</ol>
+<h2 id="p0">優先級 P0：安全與相容底線</h2>
+<ul>
+<li>TOC 目前已錨定 <code>120007</code>；發佈前需同步確認打包工具、CurseForge game version ID 與實機驗證。</li>
+<li>對 AuraService、CooldownService、ItemCooldownService 建立統一 secret-safe read adapter，避免各服務散落判斷。</li>
+<li>禁止 aura <code>spellID</code> 直接比較前未檢查 secret；若不安全，狀態轉為 <code>boundaryLimited</code>。</li>
+<li>禁止 tooltip line 未檢查就 <code>string.match</code>。</li>
+<li>Renderer 不讀回 Cooldown frame getter 作為 facts。</li>
+<li>Combat lockdown 下延後任何可能影響 frame 結構的 layout mutation。</li>
+</ul>
+<h2 id="p1">優先級 P1：核心功能穩定化</h2>
+<ul>
+<li>Player aura：先支援安全可讀的 self buff/debuff；不安全時顯示 icon/name 或 protected timer。</li>
+<li>Target aura：只追蹤 <code>target</code>，避免 targettarget / focus target / nameplate 延伸。</li>
+<li>Spell cooldown：使用 <code>C_Spell</code> structured returns；優先 <code>DurationObject</code>；支援 <code>ignoreGCD</code>。</li>
+<li>Item cooldown：直接 itemID 監控；不做大範圍 item scan。</li>
+<li>State model：每個 alert 明確標示 <code>factsSafe</code>、<code>timer.mode</code>、<code>source.api</code>、<code>boundaryWarnings</code>。</li>
+<li>Debug snapshot：輸出 facts / derived / boundaryWarnings / environment，不輸出 unsafe raw value。</li>
+</ul>
+<h2 id="p2-gc">優先級 P2：效能與低 GC</h2>
+<ul>
+<li>將 Scheduler task table 加入 pool，避免重複排程配置。</li>
+<li>AuraService 掃描改為「delta 優先 + full update 單位層級單次掃描」，避免每個 alert 重複掃描同一單位。</li>
+<li>Renderer 對 <code>SetText</code>、<code>SetTexture</code>、<code>SetCooldown</code>、<code>SetPoint</code> 全面 value gating。</li>
+<li>將 icon state 與 service state 物件重用，避免每次 render 建新 table。</li>
+<li>on-demand profiling 可研究 12.0.7 CPU usage API，但預設關閉。</li>
+</ul>
+<h2 id="p3">優先級 P3：使用者體驗</h2>
+<ul>
+<li>保留 <code>/eam add spellID</code>、<code>/eam remove spellID</code>、<code>/eam debug</code> 這種簡單語意。</li>
+<li>Options 只做必要功能：player aura、target aura、spell cooldown、item cooldown 的新增/刪除與啟用切換。</li>
+<li>加入「資料受保護」的簡短 UI 狀態，不顯示錯誤堆疊給一般使用者。</li>
+<li>可選擇提供 CDM 相關輔助：開啟 Blizzard Cooldown Viewer、提示使用者由 CDM 管理不適合 EAM 讀取的 cooldown。</li>
+</ul>
+<h2 id="p4">優先級 P4：文件、測試與發佈</h2>
+<ul>
+<li>更新 <code>Docs/06_TEST_PLAN_RETAIL.md</code>：新增 12.0.7、DurationObject、secret tooltip、taint log、combat lockdown 測試。</li>
+<li>建立專案專屬 SKILL 候選：</li>
+<li>EAM 打包與版本同步。</li>
+<li>EAM WoW API 查證與文件回寫。</li>
+<li>EAM Secret / Taint 審查。</li>
+<li>EAM Lua 靜態驗證與熱路徑掃描。</li>
+<li>每次遇到工具限制或 API 陷阱，追加到 <code>Docs/15_DEVELOPMENT_ISSUE_LOG.md</code>。</li>
+</ul>
+<h2 id="_3">不納入目標</h2>
+<ul>
+<li>不做 combat automation。</li>
+<li>不做 WeakAura scripting engine。</li>
+<li>不做 PvP enemy clickable frames。</li>
+<li>不靠 combat log 重建 secret facts。</li>
+<li>不在 combat 中重建 protected layout。</li>
+<li>不把 tooltip scraping 當核心資料來源。</li>
+<li>不支援 Classic / MOP Classic / Cata / Wrath / Era。</li>
+</ul>
+<h2 id="_4">下一步建議</h2>
+<ol>
+<li>已完成 P0 safe-read、Renderer combat defer、Scheduler task pool。</li>
+<li>已完成 P1/P2 初版：SavedVariables add/remove API、Slash add/remove、AuraService <code>UNIT_AURA</code> delta-aware cache、debug snapshot 增補。</li>
+<li>已完成 P2 後半：AuraService full update 單位層級單次掃描、Options 最小可用 add/remove 面板。</li>
+<li>P3 已有一項實測結果：使用者於 12.0.7 PTR client 確認 <code>C_DurationUtil.CreateDurationTextBinding</code> 最小範例可正常顯示。</li>
+<li>下一步應繼續實機驗證 <code>UNIT_AURA</code> delta/full payload、DurationObject / DurationTextBinding 整合、combat layout defer、Options template taint log。</li>
+<li>實機確認後再補舊 EAM group/special power 行為、Options 啟用切換與 CurseForge <code>120007</code> game version ID。</li>
+</ol>
+    </div>
+    <div id="doc-content-en" class="lang-content">
+        <a href="AGENTS.md.html" class="back-btn">← Back to AI Entrance (AGENTS)</a>
+<h1 id="retail-addon-research-and-eventalertmod-optimization-route">Retail AddOn Research and EventAlertMod Optimization Route</h1>
+<p>This document compiles the survey results of discussions on Warcraft Wiki, Blizzard forum, WoWInterface, CurseForge and Reddit AddOn on 2026-05-26, and plans the optimization projects and goals of EventAlertMod Retail rewrite.</p>
+<p>This document is not an actual machine verification report. All Retail 12.x behavior still needs to be loaded and tested in the WoW Retail / PTR client.</p>
+<h2 id="research-source">Research source</h2>
+<ul>
+<li>Warcraft Wiki: <code>API_change_summaries</code>, <code>Patch_12.0.0/API_changes</code>, <code>Patch_12.0.5/API_changes</code>, <code>Patch_12.0.7/API_changes</code>, <code>Secret_Values</code>.</li>
+<li>Blizzard forum: Discussions about Secret Values, UnitHealth, movement speed, PvP scoreboard, blocked action / taint in UI and Macro, Bug Report.</li>
+<li>WoWInterface: Cell, TweaksUI: Cooldowns, Threat Plates, ViksUI, Item Upgrade Quality Icons, etc. Midnight changelog.</li>
+<li>CurseForge: Project pages and changelogs for Midnight Sensei, MidnightSimpleAuras, Cooldown Cursor Manager, Cooldown Manager Loader, MidnightCD, Enhance QoL, etc.</li>
+<li>Reddit: user and author feedback on the 12.0 / 12.0.5 / Midnight AddOn API in r/wow, r/WowUI, r/wowaddons, r/CompetitiveWoW.</li>
+</ul>
+<h2 id="latest-api-conclusion">Latest API Conclusion</h2>
+<ul>
+<li>12.0.0 is the core starting point for Secret Values and AddOn combat API restrictions.</li>
+<li>Most important for EAM in 12.0.5: API predicates, <code>table.freeze</code>, <code>table.isfrozen</code>, formatter, DurationObject, aura field secrecy adjustment, cooldown duration <code>ignoreGCD</code>.</li>
+<li>12.0.7 API summary already exists, TOC <code>120007</code>; currently has little direct core impact on EAM, but adds <code>C_DurationUtil.CreateDurationTextBinding</code>, <code>C_DurationUtil.CreateManualClock</code>, and removes <code>C_DurationUtil.GetCurrentTime</code>.</li>
+<li><code>GetEventCPUUsage</code>, <code>GetFunctionCPUUsage</code>, <code>GetScriptCPUUsage</code> can be used as on-demand profiling candidates and cannot be placed in the hot path.</li>
+<li>Secret Values ​​is not a single field problem, but a general limitation under the tainted execution path; it cannot be bypassed by <code>pcall</code>, comparison failure fallback or tooltip scraping.</li>
+</ul>
+<h2 id="community-and-plug-in-trends">Community and plug-in trends</h2>
+<ul>
+<li>Authors generally shift from "reading aura/cooldown values and judging by yourself" to "let Blizzard widget / DurationObject display".</li>
+<li>Several plug-ins have been changed to value-by-value <code>issecretvalue</code> checks, and no longer rely solely on the context flag to determine whether they are restricted.</li>
+<li>Some aura uptime plug-ins abandon combat aura spellID comparison and instead use cast event and safe window estimation, but they must be marked as derived and cannot be impersonated as aura fact.</li>
+<li>Cooldown plug-ins are obviously developed to assist with Blizzard Cooldown Manager integration, DurationObject, cursor/HUD display and CDM profile.</li>
+<li>Data such as Nameplate, unit frame, PvP scoreboard, unit name / GUID / UnitIsUnit, movement speed, and health/power are of high risk in Midnight, and EAM should not include them in core alert matching.</li>
+<li>Tooltip text may also contain secret value; tooltip parsing must be performed at low frequency, checked line by line, and degraded quietly on failure.</li>
+<li>Taint / blocked action is still a common pain point; avoiding polluting protected frames is more important than suppressing errors after the fact.</li>
+</ul>
+<h2 id="eam-optimization-overall-goal">EAM optimization overall goal</h2>
+<ol>
+<li>Keep EAM's lightweight positioning: simple, spellID-oriented, easier than WeakAuras.</li>
+<li>Change the data layer to "safe facts / derived / displayOnly / boundaryWarnings" to clearly separate it.</li>
+<li>Renderer prioritizes Blizzard widget / DurationObject to avoid Lua’s own countdown and string formatting.</li>
+<li>Adopt value-by-value security checks for Secret Values ​​and do not rely on a single context guard.</li>
+<li>Try to support the Blizzard Cooldown Manager ecosystem, but do not rely on external addons.</li>
+<li>Reduce the risk of taint: do not accept secure action, do not change the protected frame, and do not hook the Blizzard protected chain.</li>
+<li>All debugging/profiling/export are on-demand and do not enter the hot path.</li>
+</ol>
+<h2 id="priority-p0-bottom-line-of-security-and-compatibility">Priority P0: Bottom line of security and compatibility</h2>
+<ul>
+<li>TOC is currently anchored to <code>120007</code>; the packaging tool, CurseForge game version ID and actual machine verification must be confirmed before release.</li>
+<li>Establish a unified secret-safe read adapter for AuraService, CooldownService, and ItemCooldownService to avoid scattered judgments on each service.</li>
+<li>Disable aura <code>spellID</code> from not checking the secret before direct comparison; if it is unsafe, the status changes to <code>boundaryLimited</code>.</li>
+<li>Disable tooltip line <code>string.match</code> without checking.</li>
+<li>Renderer does not read back the Cooldown frame getter as facts.</li>
+<li>Combat lockdown defers any layout mutation that may affect the frame structure.</li>
+</ul>
+<h2 id="priority-p1-stabilization-of-core-functions">Priority P1: Stabilization of core functions</h2>
+<ul>
+<li>Player aura: First support safe and readable self buff/debuff; when unsafe, display icon/name or protected timer.</li>
+<li>Target aura: only track <code>target</code>, avoid targettarget / focus target / nameplate extensions.</li>
+<li>Spell cooldown: Use <code>C_Spell</code> structured returns; prefer <code>DurationObject</code>; support <code>ignoreGCD</code>.</li>
+<li>Item cooldown: direct itemID monitoring; no large-scale item scan.</li>
+<li>State model: Each alert clearly identifies <code>factsSafe</code>, <code>timer.mode</code>, <code>source.api</code>, and <code>boundaryWarnings</code>.</li>
+<li>Debug snapshot: Output facts/derived/boundaryWarnings/environment, do not output unsafe raw value.</li>
+</ul>
+<h2 id="priority-p2-performance-and-low-gc">Priority P2: Performance and Low GC</h2>
+<ul>
+<li>Add Scheduler task table to the pool to avoid repeated scheduling configuration.</li>
+<li>AuraService scan is changed to "delta priority + full update unit level single scan" to avoid repeated scanning of the same unit for each alert.</li>
+<li>Renderer fully value gating <code>SetText</code>, <code>SetTexture</code>, <code>SetCooldown</code>, <code>SetPoint</code>.</li>
+<li>Reuse icon state and service state objects to avoid creating a new table every time you render.</li>
+<li>on-demand profiling to explore the 12.0.7 CPU usage API, but is turned off by default.</li>
+</ul>
+<h2 id="priority-p3-user-experience">Priority P3: User experience</h2>
+<ul>
+<li>Keep the simple semantics of <code>/eam add spellID</code>, <code>/eam remove spellID</code>, <code>/eam debug</code>.</li>
+<li>Options only perform necessary functions: adding/deleting and enabling switching of player aura, target aura, spell cooldown, and item cooldown.</li>
+<li>Added a short UI status of "data protected" to avoid displaying error stacks to general users.</li>
+<li>Optionally provide CDM-related assistance: open Blizzard Cooldown Viewer and prompt users that CDM manages cooldowns that are not suitable for EAM reading.</li>
+</ul>
+<h2 id="priority-p4-documentation-testing-and-release">Priority P4: Documentation, Testing and Release</h2>
+<ul>
+<li>Updated <code>Docs/06_TEST_PLAN_RETAIL.md</code>: Added 12.0.7, DurationObject, secret tooltip, taint log, combat lockdown tests.</li>
+<li>Create project-specific SKILL candidates:</li>
+<li>EAM packaging and version synchronization.</li>
+<li>EAM WoW API verification and file writeback.</li>
+<li>EAM Secret/Taint Review.</li>
+<li>EAM Lua static verification and hot path scanning.</li>
+<li>Append to <code>Docs/15_DEVELOPMENT_ISSUE_LOG.md</code> every time a tool limitation or API trap is encountered.</li>
+</ul>
+<h2 id="not-included-in-the-target">Not included in the target</h2>
+<ul>
+<li>No combat automation.</li>
+<li>No WeakAura scripting engine.</li>
+<li>Doesn't do PvP enemy clickable frames.</li>
+<li>Reconstruct secret facts without relying on combat log.</li>
+<li>Don't rebuild protected layout in combat.</li>
+<li>Do not use tooltip scraping as a core source of data.</li>
+<li>Classic / MOP Classic / Cata / Wrath / Era are not supported.</li>
+</ul>
+<h2 id="next-step-suggestions">Next step suggestions</h2>
+<ol>
+<li>P0 safe-read, Renderer combat defer, and Scheduler task pool have been completed.</li>
+<li>The first version of P1/P2 has been completed: SavedVariables add/remove API, Slash add/remove, AuraService <code>UNIT_AURA</code> delta-aware cache, debug snapshot additions.</li>
+<li>The second half of P2 has been completed: AuraService full update unit level single scan, Options minimum available add/remove panel.</li>
+<li>P3 has an actual test result: the user confirmed in the 12.0.7 PTR client that the minimum example of <code>C_DurationUtil.CreateDurationTextBinding</code> can be displayed normally.</li>
+<li>The next step should be to continue the actual machine verification of <code>UNIT_AURA</code> delta/full payload, DurationObject / DurationTextBinding integration, combo layout defer, Options template taint log.</li>
+<li>After the actual machine is confirmed, the old EAM group/special power behavior, Options enable switching and CurseForge <code>120007</code> game version ID will be added.</li>
+</ol>
+    </div>
+    
+    <!-- Mermaid Dynamic Render Script -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            securityLevel: 'loose',
+            themeVariables: {
+                background: '#1e293b',
+                primaryColor: '#0f172a',
+                primaryTextColor: '#f8fafc',
+                lineColor: '#38bdf8'
+            }
+        });
+    </script>
+    
+    <script>
+        function translatePage(lang) {
+            document.querySelectorAll('.lang-content').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            if (lang === 'zh-TW') {
+                const zhContent = document.getElementById('doc-content-zh');
+                if (zhContent) zhContent.classList.add('active');
+                const zhBtn = document.getElementById('lang-zh');
+                if (zhBtn) zhBtn.classList.add('active');
+                const logo = document.querySelector('.nav-logo');
+                if (logo) logo.innerText = 'EventAlertMod 說明文件';
+            } else {
+                const enContent = document.getElementById('doc-content-en');
+                if (enContent) enContent.classList.add('active');
+                const enBtn = document.getElementById('lang-en');
+                if (enBtn) enBtn.classList.add('active');
+                const logo = document.querySelector('.nav-logo');
+                if (logo) logo.innerText = 'EventAlertMod Docs';
+            }
+        }
+
+        function setFontSize(size) {
+            document.documentElement.style.setProperty('--base-font-size', size);
+            document.querySelectorAll('.size-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if ((size === '14px' && btn.innerText === '小') ||
+                    (size === '16px' && btn.innerText === '中') ||
+                    (size === '18px' && btn.innerText === '大')) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        const themes = {
+            blue: {
+                '--bg-color': '#0f172a',
+                '--panel-bg': '#1e293b',
+                '--text-color': '#cbd5e1',
+                '--heading-color': '#f8fafc',
+                '--accent-color': '#38bdf8',
+                '--border-color': '#334155',
+                '--code-color': '#f1f5f9'
+            },
+            red: {
+                '--bg-color': '#1a0f0f',
+                '--panel-bg': '#2d1a1a',
+                '--text-color': '#fca5a5',
+                '--heading-color': '#fee2e2',
+                '--accent-color': '#ef4444',
+                '--border-color': '#451a1a',
+                '--code-color': '#fee2e2'
+            },
+            green: {
+                '--bg-color': '#06140e',
+                '--panel-bg': '#0d281c',
+                '--text-color': '#86efac',
+                '--heading-color': '#dcfce7',
+                '--accent-color': '#22c55e',
+                '--border-color': '#14422b',
+                '--code-color': '#dcfce7'
+            },
+            black: {
+                '--bg-color': '#050505',
+                '--panel-bg': '#121212',
+                '--text-color': '#e5e5e5',
+                '--heading-color': '#ffffff',
+                '--accent-color': '#a3a3a3',
+                '--border-color': '#262626',
+                '--code-color': '#ffffff'
+            },
+            gray: {
+                '--bg-color': '#27272a',
+                '--panel-bg': '#3f3f46',
+                '--text-color': '#e4e4e7',
+                '--heading-color': '#fafafa',
+                '--accent-color': '#cbd5e1',
+                '--border-color': '#52525b',
+                '--code-color': '#fafafa'
+            },
+            white: {
+                '--bg-color': '#f8fafc',
+                '--panel-bg': '#ffffff',
+                '--text-color': '#334155',
+                '--heading-color': '#0f172a',
+                '--accent-color': '#0284c7',
+                '--border-color': '#e2e8f0',
+                '--code-color': '#0f172a'
+            }
+        };
+
+        function setTheme(name) {
+            const theme = themes[name];
+            if (theme) {
+                for (const [key, value] of Object.entries(theme)) {
+                    document.documentElement.style.setProperty(key, value);
+                }
+                // Toggle active class on dots
+                document.querySelectorAll('.theme-dot').forEach(dot => {
+                    dot.classList.remove('active');
+                    if (dot.classList.contains('dot-' + name)) {
+                        dot.classList.add('active');
+                    }
+                });
+            }
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,535 @@
+--[[ EAM_FILE_COMMENTARY
+EventAlertMod Retail Rewrite
+Module: Locale/ruRU
+檔案: Locale\ruRU.lua
+
+理念:
+- 俄文語系字串表，僅作字串覆蓋。
+- 語系與邏輯分離。
+
+責任:
+- 透過 Locale.register("ruRU") 覆蓋 L.* keys。
+
+資料所有權:
+- 擁有 ruRU key/value。
+
+可變狀態:
+- 只在載入且目前語系為 ruRU 時覆蓋 EAM.L。
+
+邊界:
+- 不建立 EA_* globals。
+- 不混入 UI 行為或 API 查詢。
+
+效能注意:
+- 載入期一次性賦值。
+
+Retail API 注意:
+- 保留舊 key 名稱供 migration。
+
+]]
+local _, EAM = ...
+
+local Locale = EAM.Locale
+if not Locale then
+    return
+end
+
+Locale.register("ruRU", function(L)
+L.EA_SPELL_POWER_NAME =	{
+	Health			=	"Здоровье",
+	Mana			=	"Мана",
+	Happiness		=	"Настроение",
+	Energy			=	"Энергия",
+	Rage			=	"Ярость",
+	Focus			=	"Концентрация",
+	FocusPet		=	"Концентрация питомца",
+	RunicPower		=	"Сила рун",
+	Runes			=	"Руны",
+	Pain			=	"Боль",
+	Fury			=	"Энергия неистовства",
+	ComboPoints		=	"Приёмы",
+	LunarPower		=	"Астральная сила",
+	HolyPower		=	"Сила Света",
+	ArcaneCharges	=	"Чародейские заряды",
+	Insanity		=	"Безумие",
+	Maelstrom		=	"Энергия водоворота",
+	SoulShards		=	"Осколки души",
+	Chi				=	"Ци",	
+	DemonicFury		=	"Демоническая ярость",
+	BurningEmbers	=	"Пылающие угли",
+	LifeBloom		=	"Жизнецвет",
+	Essence			=	"Сущность",
+	Vigor			=	"Бодрость",
+	}
+	
+L.EA_TTIP_SPECFLAG_CHECK = {}
+for k,v in pairs(L.EA_SPELL_POWER_NAME) do
+	L.EA_TTIP_SPECFLAG_CHECK[k]="Вкл/Выкл отображение "..v.." рядом с фреймом собственных баффов"
+end		
+
+L.EA_XGRPALERT_POWERTYPE = "Тип энергии:"
+L.EA_XGRPALERT_POWERTYPES = {}
+for k,v in pairs(L.EA_SPELL_POWER_NAME) do
+	L.EA_XGRPALERT_POWERTYPES[#L.EA_XGRPALERT_POWERTYPES + 1]={}
+	L.EA_XGRPALERT_POWERTYPES[#L.EA_XGRPALERT_POWERTYPES].text  = v
+	L.EA_XGRPALERT_POWERTYPES[#L.EA_XGRPALERT_POWERTYPES].value = Enum.PowerType[k]	
+end
+		
+L.EA_TTIP_DOALERTSOUND = "Воспроизводить звук при срабатывании события."
+L.EA_TTIP_ALERTSOUNDSELECT = "Выбрать звук, проигрываемый при срабатывании события."
+L.EA_TTIP_LOCKFRAME = "Заблокировать фрейм оповещений от перемещения мышкой."
+L.EA_TTIP_SHARESETTINGS = "Использовать одинаковые позиции фреймов для всех классов."
+L.EA_TTIP_SHOWFRAME = "Показать/скрыть фрейм оповещений при срабатывании события."
+L.EA_TTIP_SHOWNAME = "Показать/скрыть название заклинания при срабатывании события."
+L.EA_TTIP_SHOWFLASH = "Показать/скрыть полноэкранную вспышку при срабатывании события."
+L.EA_TTIP_SHOWTIMER = "Показать/скрыть оставшееся время заклинания при срабатывании события."
+L.EA_TTIP_CHANGETIMER = "Изменить размер и положение шрифта оставшегося времени."
+L.EA_TTIP_ICONSIZE = "Изменить размер иконок оповещений."
+-- L.EA_TTIP_ICONSPACE = "变更提示的图示间距."
+-- L.EA_TTIP_ICONDROPDOWN = "变更提示的图示延展方向."
+L.EA_TTIP_ALLOWESC = "Разрешить закрывать фрейм оповещений клавишей ESC (требует перезагрузки UI)."
+L.EA_TTIP_ALTALERTS = "Включить/отключить оповещения EventAlertMod о дополнительных событиях (не баффы/дебаффы)."
+
+L.EA_TTIP_ICONXOFFSET = "Настройка горизонтального расстояния фрейма оповещений."
+L.EA_TTIP_ICONYOFFSET = "Настройка вертикального расстояния фрейма оповещений."
+L.EA_TTIP_ICONREDDEBUFF = "Настройка насыщенности красного цвета иконок собственных дебаффов."
+L.EA_TTIP_ICONGREENDEBUFF = "Настройка насыщенности зелёного цвета иконок дебаффов цели."
+L.EA_TTIP_ICONEXECUTION = "Настройка порога добивания для боссов (0% — отключить)."
+L.EA_TTIP_PLAYERLV2BOSS = "Применять порог добивания к мобам на 2 уровня выше (например, боссы 5-перс. подземелий)."
+L.EA_TTIP_SCD_USECOOLDOWN = "Использовать тень перезарядки для отката способностей (требует перезагрузки UI)."
+L.EA_TTIP_TAR_NEWLINE = "Отображать дебаффы цели отдельной строкой."
+L.EA_TTIP_TAR_ICONXOFFSET = "Горизонтальное расстояние строки дебаффов цели от фрейма оповещений."
+L.EA_TTIP_TAR_ICONYOFFSET = "Вертикальное расстояние строки дебаффов цели от фрейма оповещений."
+L.EA_TTIP_TARGET_MYDEBUFF = "Показывать в строке дебаффов цели только те, что наложены игроком."
+L.EA_TTIP_SPELLCOND_STACK = "Вкл/Выкл отображение фрейма только при достижении указанного количества стаков (мин. 2)."
+L.EA_TTIP_SPELLCOND_SELF = "Вкл/Выкл — отслеживать только заклинания, наложенные игроком."
+L.EA_TTIP_SPELLCOND_OVERGROW = "Вкл/Выкл — подсвечивать иконку при достижении указанного количества стаков (мин. 1)."
+L.EA_TTIP_SPELLCOND_REDSECTEXT = "Вкл/Выкл — увеличивать и красить текст таймера, когда осталось ≤ указанных секунд (мин. 1)."
+L.EA_TTIP_SPELLCOND_ORDERWTD = "Вкл/Выкл — приоритет отображения (чем выше число, тем ближе к центру, 1–20)."
+
+L.EA_TTIP_SPELLCOND_AURAVALUE1 = "Вкл/Выкл отображение значения ауры 1 (можно задать метку справа)."
+L.EA_TTIP_SPELLCOND_AURAVALUE2 = "Вкл/Выкл отображение значения ауры 2 (можно задать метку справа)."
+L.EA_TTIP_SPELLCOND_AURAVALUE3 = "Вкл/Выкл отображение значения ауры 3 (можно задать метку справа)."
+L.EA_TTIP_SPELLCOND_AURAVALUE4 = "Вкл/Выкл отображение значения ауры 4 (можно задать метку справа)."  
+
+L.EA_TTIP_GRPCFG_ICONALPHA = "Изменить прозрачность иконок."
+L.EA_TTIP_GRPCFG_TALENT = "Действует только для выбранной специализации."
+L.EA_TTIP_GRPCFG_HIDEONLEAVECOMBAT = "Скрывать иконки после выхода из боя."
+L.EA_TTIP_GRPCFG_HIDEONLOSTTARGET = "Скрывать иконки без цели."
+L.EA_TTIP_GRPCFG_GLOWWHENTRUE = "Подсвечивать иконку при выполнении условия."
+
+L.EA_TTIP_SCD_REMOVEWHENCOOLDOWN = "Убирать иконку способности на откате."
+L.EA_TTIP_SCD_GLOWWHENUSABLE = "Подсвечивать иконку SCD, когда способность готова."
+L.EA_TTIP_SCD_NOCOMBATSTILLKEEP = "Показывать иконки SCD даже вне боя."   
+L.EA_TTIP_SCD_ITEMCOOLDOWN = "Включить отслеживание перезарядки предметов (влияет на производительность, требуется перезагрузка UI)."
+L.EA_TTIP_SHOWRUNESBAR = "Показывать панель рун над баффами."
+
+L.EA_TTIP_SNAMEFONTSIZE = "Размер шрифта названия заклинания (влияет на значения аур)."
+L.EA_TTIP_TIMERFONTSIZE = "Размер шрифта таймера."
+L.EA_TTIP_STACKFONTSIZE = "Размер шрифта количества стаков."
+
+
+L.EA_XOPT_SCD_REMOVEWHENCOOLDOWN = "Убирать иконку способности на откате."
+L.EA_XOPT_SCD_GLOWWHENUSABLE = "Подсвечивать иконку SCD, когда способность готова."
+L.EA_XOPT_SCD_NOCOMBATSTILLKEEP = "Показывать иконки SCD даже вне боя."
+L.EA_XOPT_SCD_ITEMCOOLDOWN = "Включить отслеживание перезарядки предметов."                   
+
+L.EA_XOPT_SHOWRUNESBAR = "Показывать панель рун DK."
+
+
+L.EA_XOPT_ICONPOSOPT = "Позиция иконок и второстепенные ресурсы"
+L.EA_XOPT_SHOW_ALTFRAME = "Показать основной фрейм оповещений"
+L.EA_XOPT_SHOW_BUFFNAME = "Показать название заклинания"
+L.EA_XOPT_SHOW_TIMER = "Показать таймер"
+L.EA_XOPT_SHOW_OMNICC = "Таймер внутри фрейма"
+L.EA_XOPT_SHOW_FULLFLASH = "Полноэкранная вспышка"
+L.EA_XOPT_PLAY_SOUNDALERT = "Звуковое оповещение"
+L.EA_XOPT_ESC_CLOSEALERT = "ESC закрывает оповещение"
+L.EA_XOPT_SHOW_ALTERALERT = "Дополнительные оповещения"
+L.EA_XOPT_SHOW_CHECKLISTALERT = "Включить"
+L.EA_XOPT_SHOW_CLASSALERT = "Текущий класс — баффы/дебаффы"
+L.EA_XOPT_SHOW_OTHERALERT = "Другие классы — баффы/дебаффы"
+L.EA_XOPT_SHOW_TARGETALERT = "Цель — баффы/дебаффы"
+L.EA_XOPT_SHOW_SCDALERT = "Текущий класс — откат способностей"
+L.EA_XOPT_SHOW_GROUPALERT = "Текущий класс — условные способности"
+L.EA_XOPT_OKAY = "Закрыть"
+L.EA_XOPT_SAVE = "Сохранить"
+L.EA_XOPT_CANCEL = "Отмена"
+L.EA_XOPT_VERURLTEXT = "Страница EAM:\nwww.curseforge.com/wow/addons/eventalertmod"
+L.EA_XOPT_VERBTN1 = "CurseForge"
+L.EA_XOPT_VERURL1 = "http://www.curseforge.com/wow/addons/eventalertmod"
+
+L.EA_XOPT_SPELLCOND_STACK = "Показывать фрейм при стаках ≥:"
+L.EA_XOPT_SPELLCOND_SELF = "Только заклинания, наложенные игроком"
+L.EA_XOPT_SPELLCOND_OVERGROW = "Подсвечивать при стаках ≥:"
+L.EA_XOPT_SPELLCOND_REDSECTEXT = "Красный таймер при остатке ≤ сек:"
+L.EA_XOPT_SPELLCOND_ORDERWTD   = "Приоритет отображения (1-20):"
+
+L.EA_XOPT_SPELLCOND_AURAVALUE1 = "Показать значение ауры 1"
+L.EA_XOPT_SPELLCOND_AURAVALUE2 = "Показать значение ауры 2"
+L.EA_XOPT_SPELLCOND_AURAVALUE3 = "Показать значение ауры 3"
+L.EA_XOPT_SPELLCOND_AURAVALUE4 = "Показать значение ауры 4"
+
+L.EA_XICON_LOCKFRAME = "Заблокировать пример фрейма"
+L.EA_XICON_LOCKFRAMETIP = "Чтобы перемещать фрейм оповещений или сбросить его позицию, снимите галочку «Заблокировать пример фрейма»."
+L.EA_XICON_SHARESETTING = "Общие позиции фреймов"
+L.EA_XICON_ICONSIZE = "Размер иконок"
+-- L.EA_XICON_ICONSIZE2 = "目标图示大小"
+-- L.EA_XICON_ICONSIZE3 = "CD图示大小"
+L.EA_XICON_LARGE = "Большой"
+L.EA_XICON_SMALL = "Маленький"
+L.EA_XICON_HORSPACE = "Горизонтальный отступ"
+L.EA_XICON_VERSPACE = "Вертикальный отступ"
+-- L.EA_XICON_ICONSPACE1 = "自身图示间距"
+-- L.EA_XICON_ICONSPACE2 = "目标图示间距"
+-- L.EA_XICON_ICONSPACE3 = "CD图示间距"
+L.EA_XICON_MORE = "Больше"
+L.EA_XICON_LESS = "Меньше"
+L.EA_XICON_REDDEBUFF = "Насыщенность красного для собственных дебаффов"
+L.EA_XICON_GREENDEBUFF = "Насыщенность зелёного для дебаффов цели"
+L.EA_XICON_DEEP = "Глубокий"
+L.EA_XICON_LIGHT = "Светлый"
+-- L.EA_XICON_DIRECTION = "延展方向"
+-- L.EA_XICON_DIRUP = "上"
+-- L.EA_XICON_DIRDOWN = "下"
+-- L.EA_XICON_DIRLEFT = "左"
+-- L.EA_XICON_DIRRIGHT = "右"
+L.EA_XICON_TAR_NEWLINE = "Дебаффы цели отдельной строкой"
+L.EA_XICON_TAR_HORSPACE = "Горизонтальный отступ строки дебаффов цели"
+L.EA_XICON_TAR_VERSPACE = "Вертикальный отступ строки дебаффов цели"
+L.EA_XICON_TOGGLE_ALERTFRAME = "Перемещение фрейма"
+L.EA_XICON_RESET_FRAMEPOS = "Сбросить позиции фреймов"
+L.EA_XICON_SELF_BUFF = "Собственные баффы"
+L.EA_XICON_SELF_SPBUFF = "Собственные дебаффы(1)\nили особый фрейм"
+L.EA_XICON_SELF_DEBUFF = "Собственные дебаффы"
+L.EA_XICON_TARGET_BUFF = "Баффы цели"
+L.EA_XICON_TARGET_SPBUFF = "Баффы цели(1)\nили особый фрейм"
+L.EA_XICON_TARGET_DEBUFF = "Дебаффы цели"
+L.EA_XICON_SCD = "Откат способностей"
+L.EA_XICON_EXECUTION = "Порог добивания для боссов"
+L.EA_XICON_EXEFULL = "100%"
+L.EA_XICON_EXECLOSE = "Откл"
+L.EA_XICON_SCD_USECOOLDOWN = "Тень перезарядки для отката (требует перезагрузки UI)"
+
+L.EA_XICON_SNAMEFONTSIZE = "Размер шрифта названия заклинания"
+L.EA_XICON_TIMERFONTSIZE = "Размер шрифта таймера"
+L.EA_XICON_STACKFONTSIZE = "Размер шрифта стаков"
+
+
+EX_XCLSALERT_SELALL = "Выделить все"
+EX_XCLSALERT_CLRALL = "Снять всё"
+EX_XCLSALERT_LOADDEFAULT = "По умолчанию"
+EX_XCLSALERT_REMOVEALL = "Удалить всё"
+EX_XCLSALERT_SPELL = "ID заклинания:"
+EX_XCLSALERT_ADDSPELL = "Добавить"
+EX_XCLSALERT_DELSPELL = "Удалить"
+EX_XCLSALERT_HELP1 = "Список выше сортируется по [ID заклинания]."
+EX_XCLSALERT_HELP2 = "Для поиска ID заклинания используйте команду /eam help."
+EX_XCLSALERT_HELP3 = "Подробности о командах поиска заклинаний в игре."
+EX_XCLSALERT_HELP4 = "Дополнительная зона — для условных способностей, не являющихся баффами."
+EX_XCLSALERT_HELP5 = "Например: добивание цели или использование после парирования."
+EX_XCLSALERT_HELP6 = ", способности, не отображающие бафф, но готовые к использованию."
+EX_XCLSALERT_SPELLURL = "http://www.wowhead.com/spells"
+
+L.EA_XTARALERT_TARGET_MYDEBUFF = "Только наложенные игроком дебаффы"
+
+L.EA_XGRPALERT_ICONALPHA = "Прозрачность иконок"
+L.EA_XGRPALERT_GRPID = "ID группы:"
+L.EA_XGRPALERT_TALENT1 = "Спек 1"
+L.EA_XGRPALERT_TALENT2 = "Спек 2"
+L.EA_XGRPALERT_TALENT3 = "Спек 3"
+L.EA_XGRPALERT_TALENT4 = "Спек 4"
+L.EA_XGRPALERT_HIDEONLEAVECOMBAT = "Скрывать вне боя"
+L.EA_XGRPALERT_HIDEONLOSTTARGET = "Скрывать без цели"
+
+L.EA_XGRPALERT_GLOWWHENTRUE = "Подсветка при выполнении условия"
+
+L.EA_XGRPALERT_TALENTS = "Любой спек"
+L.EA_XGRPALERT_NEWSPELLBTN = "Новое заклинание"
+L.EA_XGRPALERT_NEWCHECKBTN = "Новое родительское условие"
+L.EA_XGRPALERT_NEWSUBCHECKBTN = "Новое дочернее условие"
+L.EA_XGRPALERT_SPELLNAME = "Название заклинания:"
+L.EA_XGRPALERT_SPELLICON = "Иконка заклинания:"
+L.EA_XGRPALERT_TITLECHECK = "Родительское условие:"
+L.EA_XGRPALERT_TITLESUBCHECK = "Дочернее условие:"
+L.EA_XGRPALERT_TITLEORDERUP = "Повысить приоритет"
+L.EA_XGRPALERT_TITLEORDERDOWN = "Понизить приоритет"
+L.EA_XGRPALERT_LOGICS = {
+	[1]={text="И", value=1},
+	[2]={text="ИЛИ", value=0}, }
+L.EA_XGRPALERT_EVENTTYPE = "Тип события:"
+L.EA_XGRPALERT_EVENTTYPES = {
+	[1]={text="Изменение энергии объекта", value="UNIT_POWER_UPDATE"},
+	[2]={text="Изменение здоровья объекта", value="UNIT_HEALTH"},
+	[3]={text="Изменение аур объекта", value="UNIT_AURA"},
+	[4]={text="Изменение комбо-очков", value="UNIT_COMBO_POINTS"}, }
+L.EA_XGRPALERT_UNITTYPE = "Объект:"
+L.EA_XGRPALERT_UNITTYPES = {
+	[1]={text="Игрок", value="player"},
+	[2]={text="Цель", value="target"},
+	[3]={text="Фокус", value="focus"},
+	[4]={text="Питомец", value="pet"},
+	[5]={text="Босс 1", value="boss1"},
+	[6]={text="Босс 2", value="boss2"},
+	[7]={text="Босс 3", value="boss3"},
+	[8]={text="Босс 4", value="boss4"}, 
+	[9]={text="Участник 1", value="party1"},
+	[10]={text="Участник 2", value="party2"},
+	[11]={text="Участник 3", value="party3"},
+	[12]={text="Участник 4", value="party4"},
+	[13]={text="Рейд 1", value="raid1"},
+	[14]={text="Рейд 2", value="raid2"},
+	[15]={text="Рейд 3", value="raid3"},
+	[16]={text="Рейд 4", value="raid4"},
+	[17]={text="Рейд 5", value="raid5"},
+	[18]={text="Рейд 6", value="raid6"},
+	[19]={text="Рейд 7", value="raid7"},
+	[20]={text="Рейд 8", value="raid8"},
+	[21]={text="Рейд 9", value="raid9"},
+}
+
+L.EA_XGRPALERT_CHECKCD = "Проверять откат заклинания:"
+
+L.EA_XGRPALERT_HEALTH = "Здоровье:"
+
+L.EA_XGRPALERT_COMPARETYPES = {
+	[1]={text="Значение", value=1},
+	[2]={text="Процент", value=2},
+}
+L.EA_XGRPALERT_CHECKAURA = "Аура:"
+L.EA_XGRPALERT_CHECKAURAS = {
+	[1]={text="Присутствует", value=1},
+	[2]={text="Отсутствует", value=2},
+}
+L.EA_XGRPALERT_AURATIME = "Время:"
+L.EA_XGRPALERT_AURASTACK = "Стаки:"
+L.EA_XGRPALERT_CASTBYPLAYER = "Только наложенные игроком"
+L.EA_XGRPALERT_COMBOPOINT = "Комбо-очки:"
+
+L.EA_XLOOKUP_START1 = "Поиск названия заклинания"
+L.EA_XLOOKUP_START2 = "Полное совпадение"
+L.EA_XLOOKUP_RESULT1 = "Результаты поиска заклинаний"
+L.EA_XLOOKUP_RESULT2 = "совпадений"
+L.EA_XLOAD_LOAD = "\124cffFFFF00EventAlertMod\124r: загружено, версия:\124cff00FFFF"
+
+L.EA_XLOAD_FIRST_LOAD = "\124cffFF0000Первый запуск EventAlertMod — загружены настройки по умолчанию\124r。\n\n".. 
+"Используйте \124cffFFFF00/eam opt\124r для настройки параметров, заклинаний и позиций фреймов。\n\n"
+
+L.EA_XLOAD_NEWVERSION_LOAD = "Используйте \124cffFFFF00/eam help\124r для подробного списка команд。\n\n\n"..
+"\124cff00FFFF- Основные обновления -\124r\n\n"..
+"*Новая функция: групповые оповещения с множественными условиями。\n\n"..
+"Поддерживаемые события:\n"..
+"1. Энергия объекта ≥ или ≤ заданного значения/процента\n"..
+"2. Здоровье объекта ≥ или ≤ заданного значения/процента\n"..
+"3. Наличие/отсутствие конкретного ID ауры (можно фильтровать по стакам или времени)\n"..
+"4. Комбо-очки игрока по цели ≥ или ≤ заданного значения\n"..
+"Все условия можно комбинировать через AND или OR。\n"..
+"При выполнении условий отображается указанная иконка。\n"..
+"" -- END OF NEWVERSION
+
+
+
+L.EA_XCMD_VER = " \124cff00FFFFАвтор: Whitep@雷鳞\124r версия: "
+L.EA_XCMD_DEBUG = " режим: "
+L.EA_XCMD_SELFLIST = " Отображать собственные баффы/дебаффы: "
+L.EA_XCMD_TARGETLIST = " Отображать дебаффы цели: "
+L.EA_XCMD_CASTSPELL = " Отображать ID кастуемых заклинаний: "
+L.EA_XCMD_AUTOADD_SELFLIST = " Автодобавление всех собственных баффов/дебаффов: "
+L.EA_XCMD_ENVADD_SELFLIST = " Автодобавление собственных баффов/дебаффов (без групповых): "
+L.EA_XCMD_DEBUG_P0 = "Список срабатывающих заклинаний"
+L.EA_XCMD_DEBUG_P1 = "Заклинание"
+L.EA_XCMD_DEBUG_P2 = "ID заклинания"
+L.EA_XCMD_DEBUG_P3 = "Стаки"
+L.EA_XCMD_DEBUG_P4 = "Осталось сек"
+
+
+L.EA_XCMD_CMDHELP = {
+	["TITLE"] = "\124cffFFFF00EventAlertMod\124r \124cff00FF00Команды\124r (/eventalertmod или /eam):",
+	["OPT"] = "\124cff00FF00/eam options(или opt)\124r — открыть/закрыть окно настроек.",
+	["HELP"] = "\124cff00FF00/eam help\124r — подробная справка по командам.",
+	["SHOW"] = {
+		"\124cff00FF00/eam show [сек]\124r —",
+		"Начать/остановить вывод ID всех баффов/дебаффов на игроке, действующих ≤ указанных секунд",
+	},
+	["SHOWT"] = {
+		"\124cff00FF00/eam showtarget(или showt) [сек]\124r —",
+		"Начать/остановить вывод ID всех дебаффов на цели, действующих ≤ указанных секунд",
+	},
+	["SHOWC"] = {
+		"\124cff00FF00/eam showcast(или showc)\124r —",
+		"Начать/остановить вывод ID успешно применённых заклинаний",
+	},
+	["SHOWA"] = {
+		"\124cff00FF00/eam showautoadd(или showa) [сек]\124r —",
+		"Автодобавление в список всех баффов/дебаффов игрока, действующих ≤ указанных секунд (по умолчанию 60)",
+	},
+	["SHOWE"] = {
+		"\124cff00FF00/eam showenvadd(или showe) [сек]\124r —",
+		"Автодобавление в список баффов/дебаффов игрока (исключая групповые), действующих ≤ указанных секунд (по умолчанию 60)",
+	},
+	["LIST"] = {
+		"\124cff00FF00/eam list\124r — показать список срабатывающих заклинаний",
+		"Показать/скрыть вывод команд show, showc, showt, lookup, lookupfull",
+	},
+	["LOOKUP"] = {
+		"\124cff00FF00/eam lookup(или l) запрос\124r — частичный поиск ID заклинаний",
+		"Поиск всех заклинаний, частично совпадающих с запросом",
+	},
+	["LOOKUPFULL"] = {
+		"\124cff00FF00/eam lookupfull(или lf) запрос\124r — полный поиск ID заклинаний",
+		"Поиск всех заклинаний, полностью совпадающих с запросом",
+	},
+}
+-- EAM Rewrite Additions (Auto-generated)
+L.EAM_FRAME_SELF_AURA = "EAM - Эффекты игрока"
+L.EAM_FRAME_TARGET_AURA = "EAM - Эффекты цели"
+L.EAM_FRAME_SPELL_COOLDOWN = "EAM - КД заклинаний"
+L.EAM_FRAME_ITEM_COOLDOWN = "EAM - КД предметов"
+L.EAM_FRAME_CLASS_POWER = "EAM - Ресурсы класса"
+L.EAM_FRAME_GROUND_EFFECT = "EAM - Эффекты на земле"
+L.EAM_FRAME_TOTEM = "EAM - Тотемы"
+L.EAM_FRAME_POS_SAVED = "Позиция сохранена: %s, X: %.1f, Y: %.1f"
+L.EAM_MOVE_MODE_ON = "Режим перемещения рамок включен! Перетаскивайте рамки мышью, нажмите кнопку еще раз для фиксации."
+L.EAM_MOVE_MODE_OFF = "Режим перемещения рамок выключен. Макет сохранен."
+L.EAM_POWER_CLASS_POWER = "Ресурс класса"
+L.EAM_POWER_HOLY_POWER = "Энергия Света"
+L.EAM_POWER_SOUL_SHARDS = "Осколки душ"
+L.EAM_POWER_COMBO_POINTS = "Длина серии"
+L.EAM_POWER_CHI = "Энергия Ци"
+L.EAM_POWER_ARCANE_CHARGES = "Чародейские заряды"
+L.EAM_POWER_RUNIC_POWER = "Сила рун"
+L.EAM_POWER_RAGE = "Ярость"
+L.EAM_POWER_FURY_PAIN = "Гнев/Боль"
+L.EAM_GROUND_SKILL_DEFAULT = "Эффект на земле"
+L.EAM_ITEM_PREFIX = "Предмет "
+L.EAM_OPT_POS_AND_POWER_BTN = "Позиция и ресурсы"
+L.EAM_OPT_ENABLE_FRAME = "Включить рамку"
+L.EAM_OPT_SHOW_SPELL_NAME = "Показывать название"
+L.EAM_OPT_SHOW_TIME_VAL = "Показывать время"
+L.EAM_OPT_SHOW_CHANGE_IN_OUT = "Внутри/Снаружи"
+L.EAM_OPT_SHOW_FLASH = "Вспышка экрана"
+L.EAM_OPT_SHOW_SOUND = "Звуковой сигнал"
+L.EAM_OPT_SOUND_PREFIX = "Звук: "
+L.EAM_OPT_TEST_BTN = "Тест"
+L.EAM_OPT_ALLOW_ESC = "Закрывать по ESC"
+L.EAM_OPT_SHOW_EXTRA_ALERT = "Доп. оповещения"
+L.EAM_OPT_COOLDOWN_REMOVE = "Убрать ауру по КД"
+L.EAM_OPT_SHOW_SCD_OUTSIDE = "Показывать КД вне боя"
+L.EAM_OPT_GLOW_SCD = "Подсветка КД при готовности"
+L.EAM_OPT_SHOW_DK_RUNE = "Показывать руны ДК"
+L.EAM_OPT_ENABLE_ITEM_CD = "Мониторинг КД предметов"
+L.EAM_OPT_ENABLE_CDM = "Привязать к CooldownViewer Blizzard"
+L.EAM_OPT_CLOSE_BTN = "Закрыть (Close)"
+L.EAM_OPT_DEBUG_BTN = "Отладка (Debug)"
+L.EAM_OPT_DEBUG_NOT_LOADED = "Модуль отладки не загружен!"
+L.EAM_OPT_SLIDER_ICON_SIZE = "Размер иконки"
+L.EAM_OPT_SLIDER_ICON_SPACING = "Горизонт. интервал"
+L.EAM_OPT_SLIDER_VERT_SPACING = "Вертик. интервал"
+L.EAM_OPT_SLIDER_DEBUFF_RED = "Красный для дебаффов игрока"
+L.EAM_OPT_SLIDER_DEBUFF_GREEN = "Зеленый для дебаффов цели"
+L.EAM_OPT_SLIDER_EXECUTE_LIMIT = "Порог фазы казни"
+L.EAM_OPT_ENABLE_EXECUTE = "Включить фазу казни"
+L.EAM_OPT_SLIDER_FONT_SPELL = "Шрифт названий"
+L.EAM_OPT_SLIDER_FONT_CD = "Шрифт таймера"
+L.EAM_OPT_SLIDER_FONT_STACK = "Шрифт стаков"
+L.EAM_OPT_SLIDER_SHADOW_ALPHA = "Прозрачность тени таймера"
+L.EAM_OPT_DIR_TITLE = "Направление роста иконок"
+L.EAM_OPT_DIR_RIGHT = "Вправо (→)"
+L.EAM_OPT_DIR_LEFT = "Влево (←)"
+L.EAM_OPT_DIR_UP = "Вверх (↑)"
+L.EAM_OPT_DIR_DOWN = "Вниз (↓)"
+L.EAM_OPT_GROW_SELF_AURA = "Рост эффектов игрока"
+L.EAM_OPT_GROW_TARGET_AURA = "Рост эффектов цели"
+L.EAM_OPT_GROW_SPELL_COOLDOWN = "Рост КД заклинаний"
+L.EAM_OPT_GROW_ITEM_COOLDOWN = "Рост КД предметов"
+L.EAM_OPT_GROW_GROUND_EFFECT = "Рост эффектов на земле"
+L.EAM_OPT_GROW_TOTEM = "Рост тотемов"
+L.EAM_OPT_GROW_CLASS_POWER = "Рост ресурсов класса"
+L.EAM_OPT_TIMER_INSIDE = "Таймер внутри иконки"
+L.EAM_OPT_TIMER_ALIGN = "Выравнивание таймера"
+L.EAM_OPT_POWER_MONITOR_TITLE = "Особые ресурсы класса"
+L.EAM_OPT_MOVE_FRAME_BTN = "Переместить рамки"
+L.EAM_OPT_MOVE_MODE_ON_PRINT = "Режим перемещения включен (используйте /eam для перетаскивания)"
+L.EAM_OPT_RESET_FRAME_BTN = "Сбросить иконки и позиции"
+L.EAM_OPT_RESET_FRAME_SUCCESS = "Сброс всех рамок к исходным позициям."
+L.EAM_OPT_LIST_TITLE = "Список отслеживаемых заклинаний"
+L.EAM_OPT_SELECT_ALL = "Выбрать все"
+L.EAM_OPT_DESELECT_ALL = "Снять выделение"
+L.EAM_OPT_DEFAULTS_BTN = "По умолчанию"
+L.EAM_OPT_DEFAULTS_SUCCESS = "Успешно загружены заклинания по умолчанию!"
+L.EAM_OPT_DEFAULTS_FAIL = "Заклинания по умолчанию для текущего класса не найдены."
+L.EAM_OPT_DELETE_ALL = "Удалить все"
+L.EAM_OPT_FILTER_ALL = "Фильтр: все заклинания"
+L.EAM_OPT_FILTER_PREFIX = "Фильтр: "
+L.EAM_OPT_FILTER_GENERAL = "Общие / Свои"
+L.EAM_OPT_ADD_SUCCESS = "Оповещение добавлено [ID: %s]"
+L.EAM_OPT_ADD_FAIL = "Ошибка добавления оповещения: %s"
+L.EAM_OPT_DEL_SUCCESS = "Оповещение удалено [ID: %s]"
+L.EAM_OPT_DEL_FAIL = "Ошибка удаления оповещения: %s"
+L.EAM_OPT_ADD_BTN = "Добавить"
+L.EAM_OPT_DEL_BTN = "Удалить"
+L.EAM_OPT_ERR_INVALID_ID = "Пожалуйста, введите корректный ID!"
+L.EAM_OPT_ADD_DEL_DESC = "Введите SpellID или ItemID и нажмите Добавить/Удалить."
+L.EAM_OPT_COND_SPELL_NAME = "Название заклинания"
+L.EAM_OPT_COND_STACK = "Порог стаков"
+L.EAM_OPT_COND_GLOW = "Порог подсветки стаков"
+L.EAM_OPT_COND_RED_LIMIT = "Лимит красного текста таймера"
+L.EAM_OPT_COND_PRIORITY = "Приоритет сортировки"
+L.EAM_OPT_COND_PLAYER_ONLY = "Только мои заклинания"
+L.EAM_OPT_COND_VAL_TITLE = "Показывать значения эффекта:"
+L.EAM_OPT_COND_VAL1 = "Показывать значение 1"
+L.EAM_OPT_COND_VAL2 = "Показывать значение 2"
+L.EAM_OPT_COND_VAL3 = "Показывать значение 3"
+L.EAM_OPT_COND_VAL4 = "Показывать значение 4"
+L.EAM_OPT_COND_TOOLTIP = "Парсить тултип для КД"
+L.EAM_OPT_COND_MANUAL_DUR = "Свое время КД (сек)"
+L.EAM_OPT_COND_SCRAPE_BTN = "Спарсить"
+L.EAM_OPT_SCRAPE_SUCCESS = "Длительность спарсена: %s сек"
+L.EAM_OPT_SCRAPE_FAIL = "Не удалось определить время из описания, введите вручную."
+L.EAM_OPT_COND_SAVE_BTN = "Сохранить (Save)"
+L.EAM_OPT_COND_SAVE_SUCCESS = "Настройки сохранены."
+L.EAM_OPT_COND_CANCEL_BTN = "Отмена (Cancel)"
+L.EAM_OPT_COMBAT_WARNING = "Нельзя открыть настройки в бою. Они откроются автоматически после боя."
+L.EAM_OPT_MINIMAP_LCLICK = "ЛКМ: настройки"
+L.EAM_OPT_MINIMAP_RCLICK = "ПКМ: отладка"
+L.EAM_OPT_MINIMAP_DRAG = "Перетаскивайте для перемещения"
+L.EAM_ALIGN_CENTER = "Центр"
+L.EAM_ALIGN_TOP = "Вверху"
+L.EAM_ALIGN_BOTTOM = "Внизу"
+L.EAM_ALIGN_LEFT = "Слева"
+L.EAM_ALIGN_RIGHT = "Справа"
+L.EAM_ALIGN_TOPLEFT = "Вверху слева"
+L.EAM_ALIGN_TOPRIGHT = "Вверху справа"
+L.EAM_ALIGN_BOTTOMLEFT = "Внизу слева"
+L.EAM_ALIGN_BOTTOMRIGHT = "Внизу справа"
+L.EAM_OPT_CAT_SELF = "Эффекты игрока (Self)"
+L.EAM_OPT_CAT_CLASS = "Эффекты классов (Class)"
+L.EAM_OPT_CAT_TARGET = "Эффекты цели (Target)"
+L.EAM_OPT_CAT_SPELL_CD = "КД заклинаний (Spell CD)"
+L.EAM_OPT_CAT_ITEM_CD = "КД предметов (Item CD)"
+L.EAM_OPT_CAT_GROUND = "Эффекты на земле (Ground)"
+L.EAM_OPT_CAT_LAYOUT = "Позиция и ресурсы (Layout)"
+L.EAM_SLASH_HELP_OPT = "/eam opt - Открыть окно настроек"
+L.EAM_SLASH_HELP_DOCTOR = "/eam doctor - Запустить диагностику API"
+L.EAM_SLASH_HELP_VALIDATE = "/eam validate - То же, что и /eam doctor"
+L.EAM_SLASH_HELP_DEBUG = "/eam debug - Показать сводку отладки"
+L.EAM_SLASH_HELP_EXPORT = "/eam export - Экспортировать отладочный отчет"
+L.EAM_SLASH_HELP_ADD = "/eam add <spellID> - Добавить ауру игрока"
+L.EAM_SLASH_HELP_ADD_TARGET = "/eam add target <spellID> - Добавить ауру цели"
+L.EAM_SLASH_HELP_ADD_CD = "/eam add cd <spellID> - Добавить КД заклинания"
+L.EAM_SLASH_HELP_ADD_ITEM = "/eam add item <itemID> - Добавить КД предмета"
+L.EAM_SLASH_HELP_REMOVE = "/eam remove <spellID|target|cd|item> <id> - Удалить оповещение"
+L.EAM_SLASH_NOT_INIT = "SavedVariables еще не инициализирован."
+L.EAM_SLASH_OP_FAIL = "Операция не удалась: "
+L.EAM_SLASH_DEBUG_GROUND_START = "Отладка парсинга тултипа эффектов на земле (язык: %s)..."
+L.EAM_SLASH_DEBUG_GROUND_SUCCESS = "Заклинание [%d] длительность определена: |cff00ff00%s сек|r"
+L.EAM_SLASH_DEBUG_GROUND_FAIL = "Заклинание [%d] ошибка парсинга тултипа, используется время по умолчанию"
+L.EAM_SLASH_GROUND_NOT_LOADED = "GroundEffectService не загружен!"
+L.EAM_SLASH_SPECIFY_SPELLID = "Укажите верный ID заклинания: /eam debug ground <spellID>"
+-- EAM Spec Filter Additions (Auto-generated)
+L.EAM_OPT_FILTER_ALL_VAL = "Все заклинания"
+
+
+
+end)
+

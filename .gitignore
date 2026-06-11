@@ -1,0 +1,7 @@
+# EventAlertMod Rewrite .gitignore
+backup/
+Dist/
+scratch/
+.codex/
+*.zip
+*.log

@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>04_MODULE_CONTRACTS.md - EventAlertMod Docs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        
+    :root {
+        --base-font-size: 16px;
+        --bg-color: #0f172a;
+        --text-color: #cbd5e1;
+        --heading-color: #f8fafc;
+        --accent-color: #38bdf8;
+        --panel-bg: #1e293b;
+        --border-color: #334155;
+        --code-color: #f1f5f9;
+    }
+
+        
+    html, body {
+        overflow-x: hidden;
+    }
+    body {
+        font-family: 'Outfit', 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-size: var(--base-font-size);
+        line-height: 1.6;
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 80px 20px 40px 20px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+        color: var(--heading-color);
+        margin-top: 1.5em;
+        margin-bottom: 0.5em;
+        font-weight: 600;
+    }
+    
+    h1 {
+        font-size: 2.2rem;
+        border-bottom: 2px solid var(--border-color);
+        padding-bottom: 10px;
+        color: var(--accent-color);
+    }
+    
+    h2 {
+        font-size: 1.7rem;
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 8px;
+        color: var(--heading-color);
+    }
+    
+    h3 {
+        font-size: 1.35rem;
+        color: var(--heading-color);
+    }
+    
+    h4 {
+        font-size: 1.15rem;
+        color: var(--accent-color);
+        background-color: var(--panel-bg);
+        padding: 6px 12px;
+        border-radius: 6px;
+        display: inline-block;
+    }
+    
+    a {
+        color: var(--accent-color);
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+    
+    a:hover {
+        color: var(--accent-color);
+        text-decoration: underline;
+        opacity: 0.8;
+    }
+    
+    ul, ol {
+        padding-left: 24px;
+        margin-bottom: 20px;
+    }
+    
+    li {
+        margin-bottom: 6px;
+    }
+    
+    hr {
+        border: 0;
+        height: 1px;
+        background: var(--border-color);
+        margin: 30px 0;
+    }
+    
+    code {
+        font-family: 'Fira Code', 'Courier New', Courier, monospace;
+        background-color: var(--panel-bg);
+        padding: 2px 6px;
+        border-radius: 4px;
+        color: var(--code-color);
+        font-size: 0.9em;
+    }
+    
+    pre {
+        background-color: var(--panel-bg);
+        padding: 16px;
+        border-radius: 8px;
+        overflow-x: auto;
+        border: 1px solid var(--border-color);
+        margin: 20px 0;
+    }
+    
+    pre code {
+        background-color: transparent;
+        padding: 0;
+        border-radius: 0;
+        color: var(--text-color);
+    }
+    
+    blockquote {
+        border-left: 4px solid var(--accent-color);
+        padding: 10px 20px;
+        margin: 20px 0;
+        background-color: var(--panel-bg);
+        border-radius: 0 8px 8px 0;
+        color: var(--text-color);
+        opacity: 0.85;
+    }
+    
+    img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        margin: 20px 0;
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3);
+    }
+    
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 25px 0;
+        background-color: var(--panel-bg);
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        border: 1px solid var(--border-color);
+    }
+    
+    th, td {
+        padding: 12px 16px;
+        text-align: left;
+        border-bottom: 1px solid var(--border-color);
+    }
+    
+    th {
+        background-color: var(--bg-color);
+        color: var(--accent-color);
+        font-weight: 600;
+        border-bottom: 2px solid var(--border-color);
+    }
+    
+    tr:last-child td {
+        border-bottom: none;
+    }
+    
+    tr:hover {
+        background-color: var(--panel-bg);
+        opacity: 0.95;
+    }
+    
+    /* Mermaid Graph Center Alignment */
+    .mermaid {
+        display: flex;
+        justify-content: center;
+        background-color: var(--panel-bg);
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        margin: 25px 0;
+    }
+    
+    /* Back Button */
+    .back-btn {
+        display: inline-flex;
+        align-items: center;
+        margin-bottom: 20px;
+        background-color: var(--panel-bg);
+        color: var(--heading-color);
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-size: 0.9em;
+        border: 1px solid var(--border-color);
+        transition: all 0.2s ease;
+    }
+    
+    .back-btn:hover {
+        background-color: var(--border-color);
+        color: var(--accent-color);
+        text-decoration: none;
+    }
+    
+    @media (max-width: 600px) {
+        body {
+            padding: 20px 10px;
+        }
+        h1 {
+            font-size: 1.8rem;
+        }
+    }
+    
+        
+    /* Top Nav Bar Styles */
+    .top-nav-bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 60px;
+        background: rgba(30, 41, 59, 0.9);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border-color);
+        z-index: 10000;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+    
+    .nav-container {
+        max-width: 1000px;
+        height: 100%;
+        margin: 0 auto;
+        padding: 0 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    .nav-logo {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--accent-color);
+        text-decoration: none;
+        letter-spacing: 0.5px;
+        transition: color 0.3s ease;
+    }
+    
+    .nav-logo:hover {
+        color: var(--heading-color);
+        text-decoration: none;
+        opacity: 0.9;
+    }
+    
+    .nav-controls {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+    
+    .nav-control-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .nav-label {
+        font-size: 0.8rem;
+        color: var(--text-color);
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .control-options {
+        display: flex;
+        gap: 4px;
+    }
+    
+    .nav-btn {
+        background: var(--bg-color);
+        border: 1px solid var(--border-color);
+        color: var(--text-color);
+        padding: 4px 10px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.8rem;
+        transition: all 0.2s ease;
+        outline: none;
+    }
+    
+    .nav-btn:hover {
+        border-color: var(--accent-color);
+        color: var(--heading-color);
+    }
+    
+    .nav-btn.active {
+        background: var(--accent-color);
+        color: var(--bg-color);
+        border-color: var(--accent-color);
+        font-weight: 600;
+    }
+    
+    .nav-theme-dots {
+        display: flex;
+        gap: 6px;
+    }
+    
+    .theme-dot {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: transform 0.1s ease, border-color 0.2s ease;
+    }
+    
+    .theme-dot:hover {
+        transform: scale(1.2);
+    }
+    
+    .theme-dot.active {
+        border-color: #ffffff;
+        box-shadow: 0 0 0 2px var(--accent-color);
+    }
+    
+    .dot-blue { background-color: #38bdf8; }
+    .dot-red { background-color: #ef4444; }
+    .dot-green { background-color: #22c55e; }
+    .dot-black { background-color: #000000; border: 1px solid #334155; }
+    .dot-gray { background-color: #71717a; }
+    .dot-white { background-color: #ffffff; border: 1px solid #cbd5e1; }
+    
+    /* Responsive adjustment */
+    @media (max-width: 768px) {
+        .top-nav-bar {
+            height: auto;
+            padding: 10px 0;
+        }
+        .nav-container {
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+        }
+        .nav-controls {
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+    }
+
+        .lang-content {
+            display: none;
+        }
+        .lang-content.active {
+            display: block;
+        }
+        .translation-fallback {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .translation-fallback h3 {
+            color: #ef4444;
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="top-nav-bar">
+        <div class="nav-container">
+            <a href="AGENTS.md.html" class="nav-logo">EventAlertMod Docs</a>
+            <div class="nav-controls">
+                <!-- 語言 -->
+                <div class="nav-control-group">
+                    <span class="nav-label">語言 / Lang:</span>
+                    <div class="control-options">
+                        <button onclick="translatePage('zh-TW')" class="nav-btn lang-btn active" id="lang-zh">繁中</button>
+                        <button onclick="translatePage('en')" class="nav-btn lang-btn" id="lang-en">EN</button>
+                    </div>
+                </div>
+                <!-- 字級 -->
+                <div class="nav-control-group">
+                    <span class="nav-label">字級 / Font:</span>
+                    <div class="control-options">
+                        <button onclick="setFontSize('14px')" class="nav-btn size-btn">小</button>
+                        <button onclick="setFontSize('16px')" class="nav-btn size-btn active">中</button>
+                        <button onclick="setFontSize('18px')" class="nav-btn size-btn">大</button>
+                    </div>
+                </div>
+                <!-- 主題 -->
+                <div class="nav-control-group">
+                    <span class="nav-label">主題 / Theme:</span>
+                    <div class="nav-theme-dots">
+                        <span class="theme-dot dot-blue active" onclick="setTheme('blue')" title="Blue"></span>
+                        <span class="theme-dot dot-red" onclick="setTheme('red')" title="Red"></span>
+                        <span class="theme-dot dot-green" onclick="setTheme('green')" title="Green"></span>
+                        <span class="theme-dot dot-black" onclick="setTheme('black')" title="Black"></span>
+                        <span class="theme-dot dot-gray" onclick="setTheme('gray')" title="Gray"></span>
+                        <span class="theme-dot dot-white" onclick="setTheme('white')" title="White"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="doc-content-zh" class="lang-content active">
+        <a href="AGENTS.md.html" class="back-btn">← 返回 AI 入口指導檔 (AGENTS)</a>
+<h1 id="module-contracts">Module Contracts</h1>
+<h2 id="ownership-rules">Ownership Rules</h2>
+<ul>
+<li><code>SavedVariables</code> owns persistent config tables and migration.</li>
+<li>Services own runtime facts.</li>
+<li><code>Renderer</code> owns rendered UI state.</li>
+<li><code>IconPool</code> owns frame objects.</li>
+<li><code>Scheduler</code> owns due jobs.</li>
+<li><code>DebugState</code> owns debug/session snapshots.</li>
+<li>Static constants may be frozen. Runtime state and SavedVariables must never
+  be frozen.</li>
+<li>Every actively loaded source file must begin with a module commentary block
+  that records purpose, design philosophy, ownership, mutation boundary, and
+  maintenance notes. Keep this commentary current when module contracts change.
+  See <code>Docs/12_CODE_COMMENTARY_GUIDE.md</code>.</li>
+</ul>
+<h2 id="coreenv">Core/Env</h2>
+<p>Inputs:</p>
+<ul>
+<li>addon name and namespace</li>
+<li>Retail build/flavor APIs</li>
+</ul>
+<p>Outputs:</p>
+<ul>
+<li>addon namespace</li>
+<li>local API alias table</li>
+<li>Retail-only guard result</li>
+</ul>
+<p>Mutation:</p>
+<ul>
+<li>may initialize the addon namespace once</li>
+<li>must not mutate SavedVariables</li>
+</ul>
+<h2 id="coreutil">Core/Util</h2>
+<p>Inputs:</p>
+<ul>
+<li>raw Lua/WoW table APIs</li>
+</ul>
+<p>Outputs:</p>
+<ul>
+<li><code>CreateTable</code>, <code>FreezeTable</code>, <code>IsFrozen</code>, pool helpers, safe wipe/release,
+  stable enum helpers, debug assertions</li>
+<li>secret/protected value safe-read helpers:</li>
+<li><code>readSafeField</code></li>
+<li><code>readSafeScalar</code></li>
+<li><code>markBoundary</code></li>
+<li><code>appendBoundaryWarning</code></li>
+<li><code>clearTimer</code></li>
+</ul>
+<p>Mutation:</p>
+<ul>
+<li>owns helper-local pools only</li>
+</ul>
+<h2 id="coreconstants">Core/Constants</h2>
+<p>Inputs:</p>
+<ul>
+<li>none after module load</li>
+</ul>
+<p>Outputs:</p>
+<ul>
+<li>frozen enum tables, module names, event names, status constants, schema
+  versions, sentinel constants such as <code>UNKNOWN</code> and <code>EMPTY</code></li>
+</ul>
+<p>Mutation:</p>
+<ul>
+<li>none after freeze</li>
+</ul>
+<h2 id="coreeventrouter">Core/EventRouter</h2>
+<p>Inputs:</p>
+<ul>
+<li>module event subscriptions</li>
+<li>Blizzard events</li>
+</ul>
+<p>Outputs:</p>
+<ul>
+<li>dispatch calls to registered module handlers with parameterized <code>pcall</code> error isolation, ensuring a failure in one module's handler does not block other subscribers</li>
+</ul>
+<p>Mutation:</p>
+<ul>
+<li>owns event frame and event subscription table</li>
+<li>no closure allocation per event registration</li>
+</ul>
+<h2 id="corescheduler">Core/Scheduler</h2>
+<p>Inputs:</p>
+<ul>
+<li>due jobs requested by modules</li>
+</ul>
+<p>Outputs:</p>
+<ul>
+<li>due callback dispatch under protective <code>pcall</code> isolation, ensuring job runtime failures are caught and don't break the global ticker frame</li>
+<li>safe queue cleanup and task record recycling regardless of callback success</li>
+</ul>
+<p>Mutation:</p>
+<ul>
+<li>owns one OnUpdate frame, due queue, reusable job records, and task pool</li>
+<li>no per-icon scheduler tables</li>
+</ul>
+<h2 id="coresavedvariables">Core/SavedVariables</h2>
+<p>Inputs:</p>
+<ul>
+<li>legacy globals: <code>EA_Config</code>, <code>EA_Position</code>, <code>EA_Items</code>, <code>EA_AltItems</code>,
+  <code>EA_TarItems</code>, <code>EA_ScdItems</code>, <code>EA_GrpItems</code>, <code>EA_Pos</code></li>
+</ul>
+<p>Outputs:</p>
+<ul>
+<li>versioned active profile</li>
+<li>migration report</li>
+<li>validation warnings</li>
+<li>user-triggered alert add/remove APIs for aura, spell cooldown, and item cooldown</li>
+</ul>
+<p>Mutation:</p>
+<ul>
+<li>may mutate SavedVariables during load/migration/config changes</li>
+<li>must not write high-frequency runtime state</li>
+<li>must not freeze SavedVariables</li>
+<li>increments <code>EAM_DB.revision</code> after user-triggered config mutation</li>
+</ul>
+<h2 id="coreperformance">Core/Performance</h2>
+<p>Inputs:</p>
+<ul>
+<li><code>GetFramerate</code>, combat lockdown state, optional <code>debugprofilestop</code></li>
+</ul>
+<p>Outputs:</p>
+<ul>
+<li>throttle decisions, profiling samples, shared table pools</li>
+</ul>
+<p>Mutation:</p>
+<ul>
+<li>owns profiling/session counters only</li>
+</ul>
+<h2 id="servicesauraservice">Services/AuraService</h2>
+<p>Inputs:</p>
+<ul>
+<li>configured player/target aura alerts</li>
+<li><code>UNIT_AURA</code>, <code>PLAYER_TARGET_CHANGED</code>, login/world events</li>
+</ul>
+<p>Outputs:</p>
+<ul>
+<li><code>EAM_AURA_STATE_CHANGED</code> events fired to EventRouter with parameterized state and frameName</li>
+<li>normalized <code>AuraState</code> and <code>AlertState</code> allocated from <code>AuraStatePool</code></li>
+<li>boundary warnings</li>
+<li>delta-aware aura cache keyed by unit and <code>auraInstanceID</code></li>
+<li>config revision aware alert index keyed by unit and configured spellID</li>
+<li>full update fallback scans each tracked unit/filter once, rebuilds the unit aura cache, and marks unmatched configured alerts inactive</li>
+</ul>
+<p>Mutation:</p>
+<ul>
+<li>owns aura runtime cache and <code>AuraStatePool</code> only</li>
+<li>must not create UI frames</li>
+<li>must not write SavedVariables</li>
+<li>may rebuild alert index when SavedVariables revision changes</li>
+</ul>
+<h2 id="managersalertmanager">Managers/AlertManager</h2>
+<p>Inputs:</p>
+<ul>
+<li><code>EAM_AURA_STATE_CHANGED</code>, <code>EAM_COOLDOWN_STATE_CHANGED</code>, <code>EAM_ITEM_COOLDOWN_STATE_CHANGED</code>, <code>EAM_GROUND_EFFECT_STATE_CHANGED</code>, and <code>EAM_TOTEM_STATE_CHANGED</code> events from EventRouter</li>
+<li>configured alert lists</li>
+</ul>
+<p>Outputs:</p>
+<ul>
+<li>batch/throttled calls to <code>Renderer.render</code> wrapped in layout batch control (<code>Renderer.BeginBatch</code> / <code>Renderer.EndBatch</code>)</li>
+<li>multi-type state table recycling via <code>state.releaseFunc(state)</code> to recycle inactive states (Aura, Cooldown, Item, GroundEffect, Totem) after UI hide rendering completes</li>
+</ul>
+<p>Mutation:</p>
+<ul>
+<li>owns pending updates queue and throttle scheduler status</li>
+<li>does not own AlertState, SavedVariables, or UI icons</li>
+</ul>
+<h2 id="servicescooldownservice">Services/CooldownService</h2>
+<p>Inputs:</p>
+<ul>
+<li>configured spell cooldown alerts</li>
+<li>cooldown-related events and scheduler fallback ticks</li>
+</ul>
+<p>Outputs:</p>
+<ul>
+<li>normalized <code>CooldownState</code> and <code>AlertState</code></li>
+<li>dirty alert IDs</li>
+</ul>
+<p>Mutation:</p>
+<ul>
+<li>owns spell cooldown cache only</li>
+</ul>
+<h2 id="servicesshadowhostservice">Services/ShadowHostService</h2>
+<p>Inputs:</p>
+<ul>
+<li>Blizzard's native <code>EssentialCooldownViewer</code> and <code>Utility</code> frame pool states</li>
+<li>dynamic frame <code>Acquire</code> and <code>Release</code> hooks</li>
+<li>World entering and regeneration state events</li>
+</ul>
+<p>Outputs:</p>
+<ul>
+<li>mapped active host icon frames per spellID</li>
+<li>zero-taint invisible setting (Alpha=0) to native frames in non-combat</li>
+</ul>
+<p>Mutation:</p>
+<ul>
+<li>owns internal spellID-to-frame mapping registry only</li>
+<li>must not modify secure properties in combat</li>
+</ul>
+<h2 id="servicesitemcooldownservice">Services/ItemCooldownService</h2>
+<p>Inputs:</p>
+<ul>
+<li>configured itemID alerts</li>
+<li>item cooldown events</li>
+<li>optional explicit cache-build command</li>
+</ul>
+<p>Outputs:</p>
+<ul>
+<li>normalized <code>ItemCooldownState</code> and <code>AlertState</code></li>
+<li>cache status</li>
+</ul>
+<p>Mutation:</p>
+<ul>
+<li>owns item cooldown runtime cache</li>
+<li>any item-spell mapping cache must be incremental and interruptible</li>
+</ul>
+<h2 id="servicesspellinfoservice">Services/SpellInfoService</h2>
+<p>Inputs:</p>
+<ul>
+<li>spellID/itemID lookup requests</li>
+</ul>
+<p>Outputs:</p>
+<ul>
+<li>safe name/icon/link facts where available</li>
+<li>bounded lookup cache that stores only safe fields and boundary warnings</li>
+</ul>
+<p>Mutation:</p>
+<ul>
+<li>owns lookup cache</li>
+<li>must avoid heavy combat query loops</li>
+</ul>
+<h2 id="servicesclasspowerservice">Services/ClassPowerService</h2>
+<p>Inputs:</p>
+<ul>
+<li>configured class resource options</li>
+<li>player power events (UNIT_POWER_UPDATE, UNIT_MAXPOWER, PLAYER_TALENT_UPDATE)</li>
+</ul>
+<p>Outputs:</p>
+<ul>
+<li>dynamic central stack numbers and AlertState for current class power type, protected by <code>pcall</code> isolation and <code>issecretvalue</code> checks during power updates to bypass restricted value/table runtime exceptions in combat</li>
+<li>direct layout rendering to classPower frame</li>
+</ul>
+<p>Mutation:</p>
+<ul>
+<li>none except dispatching event state updates and defensive boundary logging</li>
+</ul>
+<h2 id="servicesgroundeffectservice">Services/GroundEffectService</h2>
+<p>Inputs:</p>
+<ul>
+<li>configured ground effect items (dynamic/manual modes)</li>
+<li>combat log event unfiltered (SPELL_CAST_SUCCESS)</li>
+<li>low-frequency C_TooltipInfo.GetSpellByID lookups during spell cast successes</li>
+</ul>
+<p>Outputs:</p>
+<ul>
+<li><code>EAM_GROUND_EFFECT_STATE_CHANGED</code> events fired to EventRouter with state and frameName</li>
+<li>normalized <code>GroundEffectState</code> and <code>AlertState</code> allocated from <code>GroundEffectStatePool</code></li>
+<li>scheduled release timers via Scheduler.after</li>
+</ul>
+<p>Mutation:</p>
+<ul>
+<li>owns ground effect active timer table, activeStates cache, and <code>GroundEffectStatePool</code> only</li>
+</ul>
+<h2 id="servicestotemservice">Services/TotemService</h2>
+<p>Inputs:</p>
+<ul>
+<li>Shaman totem events (PLAYER_TOTEM_UPDATE)</li>
+<li>native C_Totems.GetTotemInfo API updates</li>
+</ul>
+<p>Outputs:</p>
+<ul>
+<li><code>EAM_TOTEM_STATE_CHANGED</code> events fired to EventRouter with state and frameName</li>
+<li>normalized <code>TotemState</code> and <code>AlertState</code> allocated from <code>TotemStatePool</code></li>
+</ul>
+<p>Mutation:</p>
+<ul>
+<li>owns activeStates cache and <code>TotemStatePool</code> only</li>
+</ul>
+<h2 id="uiiconpool">UI/IconPool</h2>
+<p>Inputs:</p>
+<ul>
+<li>desired icon count/class</li>
+</ul>
+<p>Outputs:</p>
+<ul>
+<li>acquired/released icon frame records</li>
+<li>prewarmed inactive icons to avoid combat-time frame creation</li>
+</ul>
+<p>Mutation:</p>
+<ul>
+<li>owns frames, textures, cooldown regions, FontStrings</li>
+<li>frame creation should happen during initialization or controlled growth only</li>
+<li>must not create new icon frames in combat when pool is empty</li>
+</ul>
+<h2 id="uirenderer">UI/Renderer</h2>
+<p>Inputs:</p>
+<ul>
+<li><code>IconRenderState</code></li>
+</ul>
+<p>Outputs:</p>
+<ul>
+<li>visible UI state</li>
+<li>layout batch control endpoints (<code>Renderer.BeginBatch</code> / <code>Renderer.EndBatch</code>) to defer expensive X/Y layout calculations</li>
+</ul>
+<p>Mutation:</p>
+<ul>
+<li>mutates UI frames only</li>
+<li>never fetches aura/cooldown data</li>
+<li>gates all expensive UI writes</li>
+<li>defers structural layout changes and first-time icon acquisition while in combat</li>
+</ul>
+<h2 id="uioptions">UI/Options</h2>
+<p>Inputs:</p>
+<ul>
+<li>active profile</li>
+<li>class token to class ID mapping table (<code>CLASS_TOKEN_TO_ID</code>)</li>
+</ul>
+<p>Outputs:</p>
+<ul>
+<li>config mutations through <code>SavedVariables</code></li>
+<li>dynamic, localized specialization drop-down filtering using native <code>GetSpecializationInfoForClassID(classID, specIndex)</code> with robust static fallback tables, ensuring 100% localized class/spec UI texts without hardcoding</li>
+<li>a minimal in-game panel for explicit add/remove actions:</li>
+<li>player aura spellID</li>
+<li>target aura spellID</li>
+<li>spell cooldown spellID</li>
+<li>item cooldown itemID</li>
+<li>immediate service refresh after successful user-triggered mutation</li>
+</ul>
+<p>Mutation:</p>
+<ul>
+<li>UI widgets and explicit config values only</li>
+<li>first-time frame creation must be delayed in combat if Retail blocks or risks protected UI mutation</li>
+</ul>
+<h2 id="uislash">UI/Slash</h2>
+<p>Inputs:</p>
+<ul>
+<li><code>/eam</code> command text</li>
+</ul>
+<p>Outputs:</p>
+<ul>
+<li>config actions, status text, debug export requests</li>
+<li>simple <code>/eam add</code> and <code>/eam remove</code> commands for player aura, target aura, spell cooldown, and item cooldown</li>
+</ul>
+<p>Mutation:</p>
+<ul>
+<li>may call module APIs; must not directly edit service internals</li>
+<li>writes persistent alert config only through <code>Core/SavedVariables</code></li>
+</ul>
+<h2 id="debugdebugstate">Debug/DebugState</h2>
+<p>Inputs:</p>
+<ul>
+<li>module state snapshots</li>
+</ul>
+<p>Outputs:</p>
+<ul>
+<li>compact <code>DebugSnapshot</code></li>
+<li>aggregated boundary warnings from service state</li>
+</ul>
+<p>Mutation:</p>
+<ul>
+<li>owns transient debug records only</li>
+</ul>
+<h2 id="debugpromptexport">Debug/PromptExport</h2>
+<p>Inputs:</p>
+<ul>
+<li><code>DebugSnapshot</code></li>
+<li>export mode: <code>debug-min</code>, <code>analysis-full</code>, <code>github-issue</code></li>
+</ul>
+<p>Outputs:</p>
+<ul>
+<li>compact JSON-like text</li>
+</ul>
+<p>Mutation:</p>
+<ul>
+<li>none except transient string builder buffers</li>
+</ul>
+    </div>
+    <div id="doc-content-en" class="lang-content">
+        <a href="AGENTS.md.html" class="back-btn">← Back to AI Entrance (AGENTS)</a>
+<h1 id="modulecontracts">ModuleContracts</h1>
+<h2 id="ownership-rules">Ownership Rules</h2>
+<ul>
+<li><code>SavedVariables</code> owns persistent config tables and migration.</li>
+<li>Services own runtime facts.</li>
+<li><code>Renderer</code> owns rendered UI state.</li>
+<li><code>IconPool</code> owns frame objects.</li>
+<li><code>Scheduler</code> owns due jobs.</li>
+<li><code>DebugState</code> owns debug/session snapshots.</li>
+<li>Static constants may be frozen. Runtime state and SavedVariables must never
+  be frozen.</li>
+<li>Every actively loaded source file must begin with a module commentary block
+  that records purpose, design philosophy, ownership, mutation boundary, and
+  maintenance notes. Keep this commentary current when module contracts change.
+  See <code>Docs/12_CODE_COMMENTARY_GUIDE.md</code>.</li>
+</ul>
+<h2 id="coreenv">Core/Env</h2>
+<p>Inputs:</p>
+<ul>
+<li>addon name and namespace</li>
+<li>Retail build/flavor APIs</li>
+</ul>
+<p>Outputs:</p>
+<ul>
+<li>addon namespace</li>
+<li>local API alias table</li>
+<li>Retail-only guard result</li>
+</ul>
+<p>Mutation:</p>
+<ul>
+<li>may initialize the addon namespace once</li>
+<li>must not mutate SavedVariables</li>
+</ul>
+<h2 id="coreutil">Core/Util</h2>
+<p>Inputs:</p>
+<ul>
+<li>raw Lua/WoW table APIs</li>
+</ul>
+<p>Outputs:</p>
+<ul>
+<li><code>CreateTable</code>, <code>FreezeTable</code>, <code>IsFrozen</code>, pool helpers, safe wipe/release,
+  stable enum helpers, debug assertions</li>
+<li>secret/protected value safe-read helpers:</li>
+<li><code>readSafeField</code></li>
+<li><code>readSafeScalar</code></li>
+<li><code>markBoundary</code></li>
+<li><code>appendBoundaryWarning</code></li>
+<li><code>clearTimer</code></li>
+</ul>
+<p>Mutation:</p>
+<ul>
+<li>owns helper-local pools only</li>
+</ul>
+<h2 id="coreconstants">Core/Constants</h2>
+<p>Inputs:</p>
+<ul>
+<li>none after module load</li>
+</ul>
+<p>Outputs:</p>
+<ul>
+<li>frozen enum tables, module names, event names, status constants, schema
+  versions, sentinel constants such as <code>UNKNOWN</code> and <code>EMPTY</code></li>
+</ul>
+<p>Mutation:</p>
+<ul>
+<li>none after freeze</li>
+</ul>
+<h2 id="coreeventrouter">Core/EventRouter</h2>
+<p>Inputs:</p>
+<ul>
+<li>module event subscriptions</li>
+<li>Blizzard events</li>
+</ul>
+<p>Outputs:
+- dispatch calls to registered module handlers with parameterized <code>pcall</code> error isolation, ensuring a failure in one module's handler does not block other subscribers</p>
+<p>Mutation:</p>
+<ul>
+<li>owns event frame and event subscription table</li>
+<li>no closure allocation per event registration</li>
+</ul>
+<h2 id="corescheduler">Core/Scheduler</h2>
+<p>Inputs:</p>
+<ul>
+<li>due jobs requested by modules</li>
+</ul>
+<p>Outputs:</p>
+<ul>
+<li>due callback dispatch under protective <code>pcall</code> isolation, ensuring job runtime failures are caught and don't break the global ticker frame</li>
+<li>safe queue cleanup and task record recycling regardless of callback success</li>
+</ul>
+<p>Mutation:</p>
+<ul>
+<li>owns one OnUpdate frame, due queue, reusable job records, and task pool</li>
+<li>no per-icon scheduler tables</li>
+</ul>
+<h2 id="coresavedvariables">Core/SavedVariables</h2>
+<p>Inputs:</p>
+<ul>
+<li>
+<p>legacy globals: <code>EA_Config</code>, <code>EA_Position</code>, <code>EA_Items</code>, <code>EA_AltItems</code>,
+  <code>EA_TarItems</code>, <code>EA_ScdItems</code>, <code>EA_GrpItems</code>, <code>EA_Pos</code>
+Outputs:</p>
+</li>
+<li>
+<p>versioned active profile
+-migration report
+-validation warnings</p>
+</li>
+<li>user-triggered alert add/remove APIs for aura, spell cooldown, and item cooldown</li>
+</ul>
+<p>Mutation:</p>
+<ul>
+<li>may mutate SavedVariables during load/migration/config changes</li>
+<li>must not write high-frequency runtime state</li>
+<li>must not freeze SavedVariables</li>
+<li>increments <code>EAM_DB.revision</code> after user-triggered config mutation</li>
+</ul>
+<h2 id="coreperformance">Core/Performance</h2>
+<p>Inputs:</p>
+<ul>
+<li><code>GetFramerate</code>, combat lockdown state, optional <code>debugprofilestop</code></li>
+</ul>
+<p>Outputs:</p>
+<ul>
+<li>throttle decisions, profiling samples, shared table pools</li>
+</ul>
+<p>Mutation:</p>
+<ul>
+<li>owns profiling/session counters only</li>
+</ul>
+<h2 id="servicesauraservice">Services/AuraService</h2>
+<p>Inputs:</p>
+<ul>
+<li>configured player/target aura alerts</li>
+<li><code>UNIT_AURA</code>, <code>PLAYER_TARGET_CHANGED</code>, login/world events</li>
+</ul>
+<p>Outputs:</p>
+<ul>
+<li><code>EAM_AURA_STATE_CHANGED</code> events fired to EventRouter with parameterized state and frameName</li>
+<li>normalized <code>AuraState</code> and <code>AlertState</code> allocated from <code>AuraStatePool</code></li>
+<li>boundary warnings</li>
+<li>delta-aware aura cache keyed by unit and <code>auraInstanceID</code></li>
+<li>config revision aware alert index keyed by unit and configured spellID</li>
+<li>full update fallback scans each tracked unit/filter once, rebuilds the unit aura cache, and marks unmatched configured alerts inactive</li>
+</ul>
+<p>Mutation:</p>
+<ul>
+<li>owns aura runtime cache and <code>AuraStatePool</code> only</li>
+<li>must not create UI frames</li>
+<li>must not write SavedVariables</li>
+<li>may rebuild alert index when SavedVariables revision changes</li>
+</ul>
+<h2 id="managersalertmanager">Managers/AlertManager</h2>
+<p>Inputs:</p>
+<ul>
+<li><code>EAM_AURA_STATE_CHANGED</code>, <code>EAM_COOLDOWN_STATE_CHANGED</code>, <code>EAM_ITEM_COOLDOWN_STATE_CHANGED</code>, <code>EAM_GROUND_EFFECT_STATE_CHANGED</code>, and <code>EAM_TOTEM_STATE_CHANGED</code> events from EventRouter</li>
+<li>configured alert lists</li>
+</ul>
+<p>Outputs:
+- batch/throttled calls to <code>Renderer.render</code> wrapped in layout batch control (<code>Renderer.BeginBatch</code> / <code>Renderer.EndBatch</code>)
+- multi-type state table recycling via <code>state.releaseFunc(state)</code> to recycle inactive states (Aura, Cooldown, Item, GroundEffect, Totem) after UI hide rendering completes</p>
+<p>Mutation:</p>
+<ul>
+<li>owns pending updates queue and throttle scheduler status</li>
+<li>does not own AlertState, SavedVariables, or UI icons</li>
+</ul>
+<h2 id="servicescooldownservice">Services/CooldownService</h2>
+<p>Inputs:</p>
+<ul>
+<li>configured spell cooldown alerts</li>
+<li>cooldown-related events and scheduler fallback ticks</li>
+</ul>
+<p>Outputs:</p>
+<ul>
+<li>normalized <code>CooldownState</code> and <code>AlertState</code>
+-dirty alert IDs</li>
+</ul>
+<p>Mutation:</p>
+<ul>
+<li>owns spell cooldown cache only</li>
+</ul>
+<h2 id="servicesshadowhostservice">Services/ShadowHostService</h2>
+<p>Inputs:</p>
+<ul>
+<li>Blizzard's native <code>EssentialCooldownViewer</code> and <code>Utility</code> frame pool states</li>
+<li>dynamic frame <code>Acquire</code> and <code>Release</code> hooks</li>
+<li>World entering and regeneration state events</li>
+</ul>
+<p>Outputs:</p>
+<ul>
+<li>mapped active host icon frames per spellID</li>
+<li>zero-taint invisible setting (Alpha=0) to native frames in non-combat</li>
+</ul>
+<p>Mutation:</p>
+<ul>
+<li>owns internal spellID-to-frame mapping registry only</li>
+<li>must not modify secure properties in combat</li>
+</ul>
+<h2 id="servicesitemcooldownservice">Services/ItemCooldownService</h2>
+<p>Inputs:</p>
+<ul>
+<li>configured itemID alerts
+-item cooldown events</li>
+<li>optional explicit cache-build command</li>
+</ul>
+<p>Outputs:</p>
+<ul>
+<li>normalized <code>ItemCooldownState</code> and <code>AlertState</code>
+-cache status</li>
+</ul>
+<p>Mutation:</p>
+<ul>
+<li>owns item cooldown runtime cache</li>
+<li>any item-spell mapping cache must be incremental and interruptible</li>
+</ul>
+<h2 id="servicesspellinfoservice">Services/SpellInfoService</h2>
+<p>Inputs:</p>
+<ul>
+<li>spellID/itemID lookup requests</li>
+</ul>
+<p>Outputs:</p>
+<ul>
+<li>safe name/icon/link facts where available</li>
+<li>bounded lookup cache that stores only safe fields and boundary warnings</li>
+</ul>
+<p>Mutation:</p>
+<ul>
+<li>owns lookup cache</li>
+<li>must avoid heavy combat query loops</li>
+</ul>
+<h2 id="servicesclasspowerservice">Services/ClassPowerService</h2>
+<p>Inputs:</p>
+<ul>
+<li>configured class resource options</li>
+<li>player power events (UNIT_POWER_UPDATE, UNIT_MAXPOWER, PLAYER_TALENT_UPDATE)</li>
+</ul>
+<p>Outputs:</p>
+<ul>
+<li>dynamic central stack numbers and AlertState for current class power type, protected by <code>pcall</code> isolation and <code>issecretvalue</code> checks during power updates to bypass restricted value/table runtime exceptions in combat</li>
+<li>direct layout rendering to classPower frame</li>
+</ul>
+<p>Mutation:</p>
+<ul>
+<li>none except dispatching event state updates and defensive boundary logging</li>
+</ul>
+<h2 id="servicesgroundeffectservice">Services/GroundEffectService</h2>
+<p>Inputs:</p>
+<ul>
+<li>configured ground effect items (dynamic/manual modes)</li>
+<li>combat log event unfiltered (SPELL_CAST_SUCCESS)</li>
+<li>low-frequency C_TooltipInfo.GetSpellByID lookups during spell cast successes</li>
+</ul>
+<p>Outputs:</p>
+<ul>
+<li><code>EAM_GROUND_EFFECT_STATE_CHANGED</code> events fired to EventRouter with state and frameName</li>
+<li>normalized <code>GroundEffectState</code> and <code>AlertState</code> allocated from <code>GroundEffectStatePool</code></li>
+<li>scheduled release timers via Scheduler.after</li>
+</ul>
+<p>Mutation:</p>
+<ul>
+<li>owns ground effect active timer table, activeStates cache, and <code>GroundEffectStatePool</code> only</li>
+</ul>
+<h2 id="servicestotemservice">Services/TotemService</h2>
+<p>Inputs:</p>
+<ul>
+<li>Shaman totem events (PLAYER_TOTEM_UPDATE)</li>
+<li>native C_Totems.GetTotemInfo API updates</li>
+</ul>
+<p>Outputs:</p>
+<ul>
+<li><code>EAM_TOTEM_STATE_CHANGED</code> events fired to EventRouter with state and frameName</li>
+<li>normalized <code>TotemState</code> and <code>AlertState</code> allocated from <code>TotemStatePool</code></li>
+</ul>
+<p>Mutation:</p>
+<ul>
+<li>owns activeStates cache and <code>TotemStatePool</code> only</li>
+</ul>
+<h2 id="uiiconpool">UI/IconPool</h2>
+<p>Inputs:</p>
+<ul>
+<li>desired icon count/class</li>
+</ul>
+<p>Outputs:</p>
+<ul>
+<li>acquired/released icon frame records</li>
+<li>prewarmed inactive icons to avoid combat-time frame creation</li>
+</ul>
+<p>Mutation:</p>
+<ul>
+<li>owns frames, textures, cooldown regions, FontStrings</li>
+<li>frame creation should happen during initialization or controlled growth only</li>
+<li>must not create new icon frames in combat when pool is empty</li>
+</ul>
+<h2 id="uirenderer">UI/Renderer</h2>
+<p>Inputs:</p>
+<ul>
+<li><code>IconRenderState</code></li>
+</ul>
+<p>Outputs:</p>
+<ul>
+<li>visible UI state</li>
+<li>layout batch control endpoints (<code>Renderer.BeginBatch</code> / <code>Renderer.EndBatch</code>) to defer expensive X/Y layout calculations</li>
+</ul>
+<p>Mutation:</p>
+<ul>
+<li>mutates UI frames only</li>
+<li>never fetches aura/cooldown data</li>
+<li>gates all expensive UI writes</li>
+<li>defers structural layout changes and first-time icon acquisition while in combat</li>
+</ul>
+<h2 id="uioptions">UI/Options</h2>
+<p>Inputs:</p>
+<ul>
+<li>active profile</li>
+<li>class token to class ID mapping table (<code>CLASS_TOKEN_TO_ID</code>)</li>
+</ul>
+<p>Outputs:</p>
+<ul>
+<li>config mutations through <code>SavedVariables</code></li>
+<li>dynamic, localized specialization drop-down filtering using native <code>GetSpecializationInfoForClassID(classID, specIndex)</code> with robust static fallback tables, ensuring 100% localized class/spec UI texts without hardcoding</li>
+<li>a minimal in-game panel for explicit add/remove actions:</li>
+<li>player aura spellID</li>
+<li>target aura spellID</li>
+<li>spell cooldown spellID</li>
+<li>item cooldown itemID</li>
+<li>immediate service refresh after successful user-triggered mutation</li>
+</ul>
+<p>Mutation:</p>
+<ul>
+<li>UI widgets and explicit config values only</li>
+<li>first-time frame creation must be delayed in combat if Retail blocks or risks protected UI mutation</li>
+</ul>
+<h2 id="uislash">UI/Slash</h2>
+<p>Inputs:</p>
+<ul>
+<li><code>/eam</code> command text</li>
+</ul>
+<p>Outputs:</p>
+<ul>
+<li>config actions, status text, debug export requests</li>
+<li>simple <code>/eam add</code> and <code>/eam remove</code> commands for player aura, target aura, spell cooldown, and item cooldown</li>
+</ul>
+<p>Mutation:
+- may call module APIs; must not directly edit service internals
+- writes persistent alert config only through <code>Core/SavedVariables</code></p>
+<h2 id="debugdebugstate">Debug/DebugState</h2>
+<p>Inputs:</p>
+<ul>
+<li>module state snapshots</li>
+</ul>
+<p>Outputs:</p>
+<ul>
+<li>compact <code>DebugSnapshot</code></li>
+<li>aggregated boundary warnings from service state</li>
+</ul>
+<p>Mutation:</p>
+<ul>
+<li>owns transient debug records only</li>
+</ul>
+<h2 id="debugpromptexport">Debug/PromptExport</h2>
+<p>Inputs:</p>
+<ul>
+<li><code>DebugSnapshot</code></li>
+<li>export mode: <code>debug-min</code>, <code>analysis-full</code>, <code>github-issue</code></li>
+</ul>
+<p>Outputs:</p>
+<ul>
+<li>compact JSON-like text</li>
+</ul>
+<p>Mutation:</p>
+<ul>
+<li>none except transient string builder buffers</li>
+</ul>
+    </div>
+    
+    <!-- Mermaid Dynamic Render Script -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            securityLevel: 'loose',
+            themeVariables: {
+                background: '#1e293b',
+                primaryColor: '#0f172a',
+                primaryTextColor: '#f8fafc',
+                lineColor: '#38bdf8'
+            }
+        });
+    </script>
+    
+    <script>
+        function translatePage(lang) {
+            document.querySelectorAll('.lang-content').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            if (lang === 'zh-TW') {
+                const zhContent = document.getElementById('doc-content-zh');
+                if (zhContent) zhContent.classList.add('active');
+                const zhBtn = document.getElementById('lang-zh');
+                if (zhBtn) zhBtn.classList.add('active');
+                const logo = document.querySelector('.nav-logo');
+                if (logo) logo.innerText = 'EventAlertMod 說明文件';
+            } else {
+                const enContent = document.getElementById('doc-content-en');
+                if (enContent) enContent.classList.add('active');
+                const enBtn = document.getElementById('lang-en');
+                if (enBtn) enBtn.classList.add('active');
+                const logo = document.querySelector('.nav-logo');
+                if (logo) logo.innerText = 'EventAlertMod Docs';
+            }
+        }
+
+        function setFontSize(size) {
+            document.documentElement.style.setProperty('--base-font-size', size);
+            document.querySelectorAll('.size-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if ((size === '14px' && btn.innerText === '小') ||
+                    (size === '16px' && btn.innerText === '中') ||
+                    (size === '18px' && btn.innerText === '大')) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        const themes = {
+            blue: {
+                '--bg-color': '#0f172a',
+                '--panel-bg': '#1e293b',
+                '--text-color': '#cbd5e1',
+                '--heading-color': '#f8fafc',
+                '--accent-color': '#38bdf8',
+                '--border-color': '#334155',
+                '--code-color': '#f1f5f9'
+            },
+            red: {
+                '--bg-color': '#1a0f0f',
+                '--panel-bg': '#2d1a1a',
+                '--text-color': '#fca5a5',
+                '--heading-color': '#fee2e2',
+                '--accent-color': '#ef4444',
+                '--border-color': '#451a1a',
+                '--code-color': '#fee2e2'
+            },
+            green: {
+                '--bg-color': '#06140e',
+                '--panel-bg': '#0d281c',
+                '--text-color': '#86efac',
+                '--heading-color': '#dcfce7',
+                '--accent-color': '#22c55e',
+                '--border-color': '#14422b',
+                '--code-color': '#dcfce7'
+            },
+            black: {
+                '--bg-color': '#050505',
+                '--panel-bg': '#121212',
+                '--text-color': '#e5e5e5',
+                '--heading-color': '#ffffff',
+                '--accent-color': '#a3a3a3',
+                '--border-color': '#262626',
+                '--code-color': '#ffffff'
+            },
+            gray: {
+                '--bg-color': '#27272a',
+                '--panel-bg': '#3f3f46',
+                '--text-color': '#e4e4e7',
+                '--heading-color': '#fafafa',
+                '--accent-color': '#cbd5e1',
+                '--border-color': '#52525b',
+                '--code-color': '#fafafa'
+            },
+            white: {
+                '--bg-color': '#f8fafc',
+                '--panel-bg': '#ffffff',
+                '--text-color': '#334155',
+                '--heading-color': '#0f172a',
+                '--accent-color': '#0284c7',
+                '--border-color': '#e2e8f0',
+                '--code-color': '#0f172a'
+            }
+        };
+
+        function setTheme(name) {
+            const theme = themes[name];
+            if (theme) {
+                for (const [key, value] of Object.entries(theme)) {
+                    document.documentElement.style.setProperty(key, value);
+                }
+                // Toggle active class on dots
+                document.querySelectorAll('.theme-dot').forEach(dot => {
+                    dot.classList.remove('active');
+                    if (dot.classList.contains('dot-' + name)) {
+                        dot.classList.add('active');
+                    }
+                });
+            }
+        }
+    </script>
+
+</body>
+</html>

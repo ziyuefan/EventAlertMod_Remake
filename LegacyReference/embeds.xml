@@ -1,0 +1,21 @@
+<!-- EAM_FILE_COMMENTARY
+EventAlertMod Retail Rewrite
+檔案: LegacyReference\embeds.xml
+
+理念:
+- XML 檔保留舊版 UI 行為與版面參考，供 Retail rewrite 對照。
+- 新架構 UI 應優先轉入 UI/IconPool、UI/Renderer、UI/Options。
+
+責任:
+- 記錄舊版 XML template、frame 版面與使用者介面語意。
+
+邊界:
+- 不屬目前正式載入路徑。
+- 不得直接延續舊式 frame/logic 混合架構到新模組。
+-->
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">  
+  
+  <Script  file = "libs\LibStub\LibStub.lua"/>       
+  <Include file = "libs\LibCustomGlow-1.0\LibCustomGlow-1.0.xml"/>
+                   
+</Ui>
