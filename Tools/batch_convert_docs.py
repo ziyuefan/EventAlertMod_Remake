@@ -926,6 +926,14 @@ def main():
         if convert_txt_to_html(changelog_txt, dest_dir):
             converted_count += 1
             
+    # Generate index.html by copying AGENTS.md.html for GitHub Pages root rendering
+    agents_html_path = os.path.join(dest_dir, "AGENTS.md.html")
+    index_html_path = os.path.join(dest_dir, "index.html")
+    if os.path.exists(agents_html_path):
+        import shutil
+        shutil.copyfile(agents_html_path, index_html_path)
+        print("Generated index.html from AGENTS.md.html")
+            
     print(f"--------------------------------------------------")
     print(f"Batch conversion completed. Converted {converted_count} files.")
     print(f"Output files stored in {dest_dir}")
