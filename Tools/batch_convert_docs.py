@@ -16,6 +16,49 @@ except ImportError:
 import urllib.request
 import urllib.parse
 import json
+import time
+
+import hashlib
+import random
+
+CACHE_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".translation_cache.json")
+TRANSLATION_CACHE = {}
+
+def load_cache():
+    global TRANSLATION_CACHE
+    if os.path.exists(CACHE_FILE):
+        try:
+            with open(CACHE_FILE, "r", encoding="utf-8") as f:
+                TRANSLATION_CACHE = json.load(f)
+            total_entries = sum(len(v) for v in TRANSLATION_CACHE.values() if isinstance(v, dict))
+            print(f"[Cache] Loaded {total_entries} entries from {CACHE_FILE}")
+        except Exception as e:
+            print(f"[Cache Warning] Failed to load cache: {e}")
+            TRANSLATION_CACHE = {}
+    else:
+        TRANSLATION_CACHE = {}
+
+def save_cache():
+    try:
+        with open(CACHE_FILE, "w", encoding="utf-8") as f:
+            json.dump(TRANSLATION_CACHE, f, ensure_ascii=False, indent=2)
+    except Exception as e:
+        print(f"[Cache Error] Failed to save cache: {e}")
+
+def get_cached_translation(text, src_lang, dest_lang):
+    key = f"{src_lang}_to_{dest_lang}"
+    if key not in TRANSLATION_CACHE:
+        return None
+    text_hash = hashlib.md5(text.encode('utf-8')).hexdigest()
+    return TRANSLATION_CACHE[key].get(text_hash)
+
+def set_cached_translation(text, translated, src_lang, dest_lang):
+    key = f"{src_lang}_to_{dest_lang}"
+    if key not in TRANSLATION_CACHE:
+        TRANSLATION_CACHE[key] = {}
+    text_hash = hashlib.md5(text.encode('utf-8')).hexdigest()
+    TRANSLATION_CACHE[key][text_hash] = translated
+    save_cache()
 
 def is_chinese_text(text):
     # Detects if the text contains Chinese characters
@@ -24,19 +67,41 @@ def is_chinese_text(text):
 def translate_chunk(chunk_text, src_lang="zh-TW", dest_lang="en"):
     if not chunk_text.strip():
         return chunk_text
-    try:
-        query = urllib.parse.quote(chunk_text)
-        url = f"https://translate.googleapis.com/translate_a/single?client=gtx&sl={src_lang}&tl={dest_lang}&dt=t&q={query}"
         
-        req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-        with urllib.request.urlopen(req, timeout=3.0) as response:
-            result = json.loads(response.read().decode('utf-8'))
+    # Check cache first
+    cached = get_cached_translation(chunk_text, src_lang, dest_lang)
+    if cached:
+        return cached
+
+    # Rate limit delay: sleep random 1.2s to 2.8s before every API call to prevent being blocked
+    time.sleep(random.uniform(1.2, 2.8))
+    
+    max_retries = 5
+    timeout_val = 8.0
+    clients = ["gtx", "dict-chrome-ex", "t"]
+    
+    for attempt in range(max_retries):
+        client = clients[attempt % len(clients)]
+        try:
+            query = urllib.parse.quote(chunk_text)
+            url = f"https://translate.googleapis.com/translate_a/single?client={client}&sl={src_lang}&tl={dest_lang}&dt=t&q={query}"
             
-        translated_part = "".join([part[0] for part in result[0] if part[0]])
-        return translated_part
-    except Exception as e:
-        print(f"  [Chunk Warning] Translate chunk failed: {e}. Fallback to original text.")
-        return chunk_text
+            req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+            with urllib.request.urlopen(req, timeout=timeout_val) as response:
+                result = json.loads(response.read().decode('utf-8'))
+                
+            translated_part = "".join([part[0] for part in result[0] if part[0]])
+            if translated_part:
+                set_cached_translation(chunk_text, translated_part, src_lang, dest_lang)
+                # print(f"  [Cache Saved] Translated chunk successfully.")
+                return translated_part
+        except Exception as e:
+            wait_time = (2 ** attempt) * 3.0 + random.uniform(0.5, 1.5)
+            print(f"  [Chunk Warning] Translate chunk failed (client={client}): {e}. Retrying in {wait_time:.1f}s... (Attempt {attempt+1}/{max_retries})")
+            time.sleep(wait_time)
+            
+    print(f"  [Chunk Error] All {max_retries} attempts failed. Fallback to original text (Not Cached).")
+    return chunk_text
 
 def translate_via_google_api(text, src_lang="zh-TW", dest_lang="en"):
     if not text.strip():
@@ -925,6 +990,7 @@ Recommended Solution: Directly use your browser's built-in "Translate to English
     return True
 
 def main():
+    load_cache()
     workspace = "d:/EventAlertMod"
     docs_dir = os.path.join(workspace, "Docs")
     dest_dir = os.path.join(workspace, "docs_html")

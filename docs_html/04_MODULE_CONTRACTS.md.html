@@ -574,33 +574,33 @@
 <li>配置警報列表</li>
 </ul>
 <p>輸出：
-- batch/throttled calls to <code>Renderer.render</code> wrapped in layout batch control (<code>Renderer.BeginBatch</code> / <code>Renderer.EndBatch</code>)
-- multi-type state table recycling via <code>state.releaseFunc(state)</code> to recycle inactive states (Aura, Cooldown, Item, GroundEffect, Totem) after UI hide rendering completes</p>
-<p>Mutation:</p>
+- 對包含在佈局批次控制中的「Renderer.render」進行批次/節流呼叫（「Renderer.BeginBatch」/「Renderer.EndBatch」）
+- 透過 <code>state.releaseFunc(state)</code> 進行多類型狀態表回收，以在 UI 隱藏渲染完成後回收非活動狀態（Aura、Cooldown、Item、GroundEffect、Totem）</p>
+<p>突變：</p>
 <ul>
-<li>owns pending updates queue and throttle scheduler status</li>
-<li>does not own AlertState, SavedVariables, or UI icons</li>
+<li>擁有掛起的更新佇列和節流調度程序狀態</li>
+<li>不擁有 AlertState、SavedVariables 或 UI 圖標</li>
 </ul>
-<h2 id="servicescooldownservice">Services/CooldownService</h2>
-<p>Inputs:</p>
+<h2 id="cooldownservice">服務/CooldownService</h2>
+<p>輸入：</p>
 <ul>
-<li>configured spell cooldown alerts</li>
-<li>cooldown-related events and scheduler fallback ticks</li>
+<li>配置法術冷卻時間警報</li>
+<li>與冷卻相關的事件和調度程序後備刻度</li>
 </ul>
-<p>Outputs:</p>
+<p>輸出：</p>
 <ul>
-<li>normalized <code>CooldownState</code> and <code>AlertState</code></li>
-<li>dirty alert IDs</li>
+<li>標準化的“CooldownState”和“AlertState”</li>
+<li>髒警報 ID</li>
 </ul>
-<p>Mutation:</p>
+<p>突變：</p>
 <ul>
-<li>owns spell cooldown cache only</li>
+<li>僅擁有法術冷卻緩存</li>
 </ul>
-<h2 id="servicesshadowhostservice">Services/ShadowHostService</h2>
-<p>Inputs:</p>
+<h2 id="shadowhostservice">服務/ShadowHostService</h2>
+<p>輸入：</p>
 <ul>
-<li>Blizzard's native <code>EssentialCooldownViewer</code> and <code>Utility</code> frame pool states</li>
-<li>dynamic frame <code>Acquire</code> and <code>Release</code> hooks</li>
+<li>暴雪原生的「EssentialCooldownViewer」和「Utility」框架池狀態</li>
+<li>動態框架「Acquire」和「Release」掛鉤</li>
 <li>世界進入與再生狀態事件</li>
 </ul>
 <p>輸出：</p>

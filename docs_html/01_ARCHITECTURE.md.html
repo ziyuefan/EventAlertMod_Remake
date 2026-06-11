@@ -583,23 +583,23 @@
 <li><code>SPELL_UPDATE_CHARGES</code></li>
 <li><code>BAG_UPDATE_COOLDOWN</code></li>
 <li><code>UNIT_SPELLCAST_SUCCEEDED</code></li>
-<li>power/resource events only when special-resource UI is enabled</li>
+<li>僅當啟用特殊資源 UI 時才發生電源/資源事件</li>
 </ul>
-<p>No <code>RegisterAllEvents</code>.</p>
-<h2 id="ui-render-flow">UI Render Flow</h2>
-<p>Renderer input is <code>IconRenderState</code>, not raw aura/cooldown API data. Renderer:</p>
+<p>沒有「RegisterAllEvents」。</p>
+<h2 id="ui">UI 渲染流程</h2>
+<p>渲染器輸入是“IconRenderState”，而不是原始光環/冷卻 API 資料。渲染器：</p>
 <ul>
-<li>acquires icons from <code>IconPool</code>;</li>
-<li>writes changed texture, stack, timer, name, cooldown, glow, and alpha only;</li>
-<li>batches layout changes with parent hidden, then shows once;</li>
-<li>avoids <code>ClearAllPoints</code> and <code>SetPoint</code> unless layout keys changed;</li>
-<li>never queries C_* APIs.</li>
+<li>從「IconPool」取得圖示；</li>
+<li>僅寫入更改後的紋理、堆疊、計時器、名稱、冷卻時間、發光和 alpha；</li>
+<li>批次更改佈局並隱藏父級，然後顯示一次；</li>
+<li>避免<code>ClearAllPoints</code>和<code>SetPoint</code>除非佈局鍵改變；</li>
+<li>從不查詢 C_* API。</li>
 </ul>
-<h2 id="scheduler-flow">Scheduler Flow</h2>
-<p>One scheduler frame tracks due jobs by numeric time. Jobs are reusable records,
-not closure allocation points. Fallback polling must be low frequency and
-disabled or throttled in combat/low FPS unless it protects correctness.</p>
-<h2 id="retail-only-rewrite-plan">Retail-Only Rewrite Plan</h2>
+<h2 id="_7">排程程式流程</h2>
+<p>一個調度程序框架按數字時間追蹤到期作業。工作是可重複使用的記錄，
+不封配置點。後備輪詢必須是低頻的並且
+在戰鬥/低 FPS 中停用或節流，除非它可以保護正確性。</p>
+<h2 id="_8">僅限零售重寫計劃</h2>
 <p>1.在<code>Core/</code>、<code>Services/</code>下引入新的模組骨架和載入順序，
    “UI/”和“調試/”。
 2. 在建立新表時僅保留舊的“Main/”表作為遷移/參考

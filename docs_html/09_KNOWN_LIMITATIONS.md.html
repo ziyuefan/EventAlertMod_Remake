@@ -415,38 +415,36 @@
 
     <div id="doc-content-zh" class="lang-content active">
         <a href="AGENTS.md.html" class="back-btn">← 返回 AI 入口指導檔 (AGENTS)</a>
-<h1 id="known-limitations">Known Limitations</h1>
-<h2 id="live-validation-gap">Live Validation Gap</h2>
-<p>This audit was static. No WoW Retail 12.x client was available, so API names,
-return shapes, secret/protected behavior, and XML runtime behavior still require
-in-game validation.</p>
-<h2 id="secret-protected-values">Secret / Protected Values</h2>
-<p>Retail may return secret, protected, display-only, or unavailable data for aura
-and cooldown state. The rewrite must degrade safely:</p>
+<h1 id="_1">已知限制</h1>
+<h2 id="_2">即時驗證差距</h2>
+<p>這次審計是靜態的。沒有可用的 WoW Retail 12.x 用戶端，因此 API 名稱，
+傳回形狀、秘密/受保護的行為和 XML 運行時行為仍然需要
+遊戲內驗證。</p>
+<h2 id="_3">秘密/受保護的值</h2>
+<p>零售業可能會返回秘密、受保護、僅供顯示或不可用的光環數據
+和冷卻狀態。重寫必須安全降級：</p>
 <ul>
-<li>icon-only display;</li>
-<li>known-safe name/icon/stacks only;</li>
-<li>timer mode <code>protected</code>, <code>displayOnly</code>, or <code>unknown</code>;</li>
-<li>no fabricated duration/expiration/cooldown facts;</li>
-<li>debug boundary warning only when debug/export is requested.</li>
+<li>僅圖示顯示；</li>
+<li>僅已知安全的名稱/圖示/堆疊；</li>
+<li>計時器模式「受保護」、「僅顯示」或「未知」；</li>
+<li>沒有捏造的持續時間/到期時間/冷卻時間事實；</li>
+<li>僅當請求調試/導出時調試邊界警告。</li>
 </ul>
-<h2 id="combat-restrictions">Combat Restrictions</h2>
-<p>Some UI or data updates may be unsafe or unavailable in combat. Heavy work,
-cache building, layout rebuilding, and migration-like operations must be delayed
-or throttled.</p>
-<h2 id="unsupported-branches">Unsupported Branches</h2>
-<p>The rewrite does not support:</p>
-<ul>
-<li>經典</li>
-<li>霧經典</li>
-<li>卡塔經典賽</li>
-<li>憤怒經典</li>
-<li>TBC經典賽</li>
-<li>時代</li>
-<li>特定於區域的經典相容性分支</li>
-</ul>
+<h2 id="_4">戰鬥限制</h2>
+<p>某些 UI 或資料更新可能不安全或在戰鬥中不可用。繁重的工作，
+快取建置、佈局重建和類似遷移的操作必須延遲
+或節流。</p>
+<h2 id="_5">不支援的分支</h2>
+<p>重寫不支援：
+- 經典
+- 霧經典
+- 卡塔經典賽
+- 憤怒經典
+- TBC經典賽
+- 時代
+- 特定於區域的經典相容性分支</p>
 <p>舊目錄可能保留在儲存庫中，僅供參考。</p>
-<h2 id="_1">目前來源風險</h2>
+<h2 id="_6">目前來源風險</h2>
 <p>首次透過審核發現以下風險：</p>
 <ul>
 <li>主線中混合零售和遺留相容性分支；</li>
@@ -462,11 +460,11 @@ or throttled.</p>
 <li><code>EventAlert_ImportExport.lua</code> 具有原型全域變量，並被註解掉
   載入順序。</li>
 </ul>
-<h2 id="_2">使用者介面限制</h2>
+<h2 id="_7">使用者介面限制</h2>
 <p>目前的 XML 會建立大型靜態選項面板和許多全域框架名稱。的
 重寫應該更喜歡較小的選項表面和池化運行時圖標，但是
 刪除之前必須先映射現有的 UI 行為。</p>
-<h2 id="_3">需要零售驗證的領域</h2>
+<h2 id="_8">需要零售驗證的領域</h2>
 <ul>
 <li>精確的「C_UnitAuras」安全存取行為；</li>
 <li>精確的「C_Spell.GetSpellCooldown」結構化回傳行為；</li>
