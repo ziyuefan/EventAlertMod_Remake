@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>00_INDEX.md - EventAlertMod Docs</title>
+    <title>00_INDEX_en.md - EventAlertMod Docs</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -415,66 +415,66 @@
 
     <div id="doc-content-zh" class="lang-content active">
         <a href="AGENTS.md.html" class="back-btn">← 返回 AI 入口指導檔 (AGENTS)</a>
-<h1 id="eventalertmod-remake-documentation-hub">EventAlertMod Remake 說明文件導航中心 / Documentation Hub</h1>
-<p>歡迎使用 EventAlertMod (EAM) 正式服重構版本說明文件中心。本中心為<strong>插件使用者 (Players &amp; Users)</strong> 以及<strong>代理開發者 (AI &amp; Human Developers)</strong> 提供了專屬的資訊入口。</p>
+<h1 id="eventalertmod-remake-documentation-hub">EventAlertMod Remake Documentation Hub</h1>
+<p>Welcome to the EventAlertMod (EAM) Retail Rewrite Documentation Hub. This center provides tailored entry portals for both <strong>AddOn users/players</strong> and <strong>AI/Human developers</strong>.</p>
 <hr />
-<h2 id="players-users">🎮 插件使用者 / 玩家專區 (Players &amp; Users)</h2>
-<p>如果您是使用此插件的玩家，請造訪以下檔案了解如何安裝、使用插件以及查看最近的更新日誌：</p>
+<h2 id="players-users-portal">🎮 Players &amp; Users Portal</h2>
+<p>If you are a player using this AddOn, please visit the following documents to learn about installation, usage, and recent update logs:</p>
 <ul>
-<li>📖 <strong><a href="README.md.html">快速使用指南 (README)</a></strong><ul>
-<li>插件安裝方法、命令列指令、主畫面調整、以及特色功能介紹（Pandemic 刷新提示、英雄天賦支援）。</li>
+<li>📖 <strong><a href="README.md.html">Quick Start Guide (README)</a></strong><ul>
+<li>AddOn installation, slash commands, frame adjustments, and feature highlights (Pandemic glow, hero talent support).</li>
 </ul>
 </li>
-<li>📜 <strong><a href="changelog.txt.html">版本更新日誌 (Changelog)</a></strong><ul>
-<li>查看 12.0.7 與 12.1.0 版本的完整重構更新細節，包含零分配垃圾回收與影子載體 (Shadow Host) 渲染避讓技術的部署歷史。</li>
+<li>📜 <strong><a href="changelog.txt.html">Changelog (Updates)</a></strong><ul>
+<li>Full details of rewrite updates in 12.0.7 and 12.1.0, including zero-allocation JIT optimizations and shadow host CDM bypass rendering history.</li>
 </ul>
 </li>
 </ul>
 <hr />
-<h2 id="ai-human-developers">🤖 代理開發與協作者專區 (AI &amp; Human Developers)</h2>
-<p>如果您是參與本專案的 AI 編碼助理或是人類協作者，請詳細閱讀以下專案架構與開發規範：</p>
-<h3 id="core-guidelines">🛠️ 開發核心指導與規範 (Core Guidelines)</h3>
+<h2 id="ai-human-developers-portal">🤖 AI &amp; Human Developers Portal</h2>
+<p>If you are an AI coding agent or a human developer contributing to this project, please read the system architecture and development guidelines carefully:</p>
+<h3 id="core-guidelines">🛠️ Core Guidelines</h3>
 <ul>
-<li>🔑 <strong><a href="AGENTS.md.html">AI 開發入口與硬性限制 (AGENTS)</a></strong><ul>
-<li><strong>開發 Fact-of-Truth 最核心導引</strong>。包含戰鬥中 Secret 檢查機制、Taint 防禦防禦規則、 OnUpdate 控制、以及開發版打包快捷指令。</li>
+<li>🔑 <strong><a href="AGENTS.md.html">AI Entrance &amp; Hard Constraints (AGENTS)</a></strong><ul>
+<li><strong>The absolute Fact-of-Truth guide for developers</strong>. Includes combat Secret check protocols, Taint control rules, OnUpdate scheduler limits, and package building scripts.</li>
 </ul>
 </li>
-<li>🔄 <strong><a href="17_SUBAGENT_WORKFLOW.md.html">子代理派工與協作工作流 (Subagent Workflow)</a></strong><ul>
-<li>多 AI 專家（子代理）協作開發流程、RACI 矩陣（權責劃分）及 QC 根因分析的工程實施準則。</li>
+<li>🔄 <strong><a href="17_SUBAGENT_WORKFLOW.md.html">Subagent Workflows (Collab)</a></strong><ul>
+<li>Multi-agent collaboration procedures, RACI expert matrix, and QA root cause analysis guidelines.</li>
 </ul>
 </li>
 </ul>
-<h3 id="api-architecture-api">🏗️ 系統架構與 API 邊界 (Architecture &amp; API)</h3>
+<h3 id="architecture-apis">🏗️ Architecture &amp; APIs</h3>
 <ul>
-<li>📐 <strong><a href="01_ARCHITECTURE.md.html">整體重構系統架構 (Architecture)</a></strong><ul>
-<li>數據層與渲染層（Renderer）完全解耦、EventRouter 事件驅動模型、以及 AlertManager 批次節流的系統級設計。</li>
+<li>📐 <strong><a href="01_ARCHITECTURE.md.html">System Architecture (Decoupled Design)</a></strong><ul>
+<li>Complete decoupling between data layers and the Renderer, EventRouter dispatching, and AlertManager batch throttle mechanism.</li>
 </ul>
 </li>
-<li>🛡️ <strong><a href="02_RETAIL_API_BOUNDARIES.md.html">正式服 12.x API 安全防線 (Retail API Boundaries)</a></strong><ul>
-<li>四大核心 Secret 檢查 API、Table 索引安全防禦、與 C++ DurationObject 渲染通道。</li>
+<li>🛡️ <strong><a href="02_RETAIL_API_BOUNDARIES.md.html">Retail 12.x API Boundaries</a></strong><ul>
+<li>The 4 core Secret/Protected value checking functions, secure table indexing guards, and C++ DurationObject rendering pipelines.</li>
 </ul>
 </li>
-<li>💾 <strong><a href="03_STATE_SCHEMA.md.html">數據狀態 Schema 規範 (State Schema)</a></strong><ul>
-<li>零配置池（AuraStatePool）的數據格式定義、計時器狀態、以及回收邏輯。</li>
+<li>💾 <strong><a href="03_STATE_SCHEMA.md.html">Data State Schema</a></strong><ul>
+<li>Data structures of the zero-allocation cache pool (AuraStatePool), countdown states, and memory recycling strategies.</li>
 </ul>
 </li>
-<li>📜 <strong><a href="04_MODULE_CONTRACTS.md.html">模組內部契約規範 (Module Contracts)</a></strong><ul>
-<li>五大數據服務與 Renderer/AlertManager 之間的接口契約定義。</li>
+<li>📜 <strong><a href="04_MODULE_CONTRACTS.md.html">Module Contracts</a></strong><ul>
+<li>API contract interfaces between the 5 core data services and the Renderer/AlertManager.</li>
 </ul>
 </li>
 </ul>
-<h3 id="performance-qa">⚡ 效能優化與質量控管 (Performance &amp; QA)</h3>
+<h3 id="performance-quality">⚡ Performance &amp; Quality</h3>
 <ul>
-<li>🏎️ <strong><a href="05_PERFORMANCE_GUIDE.md.html">極限效能與 JIT 編譯優化指南 (Performance Guide)</a></strong><ul>
-<li>戰鬥熱路徑中 anonymous closures 產生的垃圾避讓、<code>pcall</code> 故障隔離、及 0-AllocationStatePool 的 JIT 優化實作。</li>
+<li>🏎️ <strong><a href="05_PERFORMANCE_GUIDE.md.html">JIT Optimization &amp; Performance Guide</a></strong><ul>
+<li>Heap garbage prevention in hot paths (avoiding anonymous closures), pcall crash isolation, and JIT compiler friendly StatePool practices.</li>
 </ul>
 </li>
-<li>📋 <strong><a href="06_TEST_PLAN_RETAIL.md.html">正式服實機測試計畫 (Test Plan)</a></strong><ul>
-<li>冒煙測試案例、實機戰鬥 taint 檢驗、以及開發版打包安裝驗證方案。</li>
+<li>📋 <strong><a href="06_TEST_PLAN_RETAIL.md.html">Retail Smoke Test Plan</a></strong><ul>
+<li>Smoke test scenarios, in-combat taint checks, and local development package verification.</li>
 </ul>
 </li>
-<li>📓 <strong><a href="15_DEVELOPMENT_ISSUE_LOG.md.html">開發瓶頸與避坑日誌 (Development Issue Log)</a></strong><ul>
-<li>記錄所有已解決的 JIT Abort、Blizzard protected frames 限制、與 frame clipsChildren 等邊界問題。</li>
+<li>📓 <strong><a href="15_DEVELOPMENT_ISSUE_LOG.md.html">Development Issue Log</a></strong><ul>
+<li>A comprehensive log of resolved JIT Aborts, Blizzard protected frame restrictions, and frame clipsChildren issues.</li>
 </ul>
 </li>
 </ul>
@@ -512,10 +512,8 @@
 </ul>
 <h3 id="architecture-apis">🏗️ Architecture &amp; APIs</h3>
 <ul>
-<li>📐 <strong><a href="01_ARCHITECTURE.md.html">System Architecture (Decoupled Design)</a></strong><ul>
+<li>📐 <strong><a href="01_ARCHITECTURE.md.html">System Architecture (Decoupled Design)</a></strong></li>
 <li>Complete decoupling between data layers and the Renderer, EventRouter dispatching, and AlertManager batch throttle mechanism.</li>
-</ul>
-</li>
 <li>🛡️ <strong><a href="02_RETAIL_API_BOUNDARIES.md.html">Retail 12.x API Boundaries</a></strong><ul>
 <li>The 4 core Secret/Protected value checking functions, secure table indexing guards, and C++ DurationObject rendering pipelines.</li>
 </ul>
