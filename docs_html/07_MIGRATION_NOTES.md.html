@@ -415,6 +415,128 @@
 
     <div id="doc-content-zh" class="lang-content active">
         <a href="AGENTS.md.html" class="back-btn">← 返回 AI 入口指導檔 (AGENTS)</a>
+<h1 id="_1">遷移注意事項</h1>
+<h2 id="_2">舊行為映射</h2>
+<p>盡可能保留：</p>
+<ul>
+<li>自我增益/減益警報圖示；</li>
+<li>目標增益/減益警報圖示；</li>
+<li>法術冷卻時間警報圖示；</li>
+<li>按 itemID 排列的物品冷卻警報圖示；</li>
+<li>簡單的spellID新增/刪除工作流程；</li>
+<li><code>/eam opt</code> 設定入口點；</li>
+<li><code>/eam show</code>、<code>/eam showt</code>、<code>/eam showc</code>、<code>/eam showa</code> 偵測工作流程；</li>
+<li>冷卻行為切換：</li>
+<li>冷卻完成後移除；</li>
+<li>讓冷卻圖示遠離戰鬥；</li>
+<li>使用時發光；</li>
+<li>圖示顯示切換：</li>
+<li>顯示框架；</li>
+<li>顯示姓名；</li>
+<li>顯示計時器；</li>
+<li>顯示閃光/發光；</li>
+<li>工具提示附加咒語/物品 ID；</li>
+<li>名稱、計時器和堆疊的字體大小控制；</li>
+<li>小地圖選項按鈕語意；</li>
+<li>本地化字串，尤其是存在的 zhTW、enUS、koKR、zhCN；</li>
+<li>零售驗證後有用的預設咒語/物品表。</li>
+</ul>
+<h2 id="savedvariables">舊 SavedVariables 遷移</h2>
+<p>舊版輸入：</p>
+<pre class="codehilite"><code class="language-lua">EA_Config
+EA_Position
+EA_Items
+EA_AltItems
+EA_TarItems
+EA_ScdItems
+EA_GrpItems
+EA_Pos
+</code></pre>
+
+<p>目標遷移：</p>
+<pre class="codehilite"><code class="language-js">EventAlertModDB = {
+  schemaVersion: 1,
+  profile: {
+    display: {},
+    behavior: {},
+    alerts: {
+      playerAuras: [],
+      targetAuras: [],
+      spellCooldowns: [],
+      itemCooldowns: [],
+      groupAlerts: []
+    },
+    layout: {}
+  },
+  migration: {
+    fromLegacy: true,
+    sourceKeys: [],
+    warnings: []
+  }
+}
+</code></pre>
+
+<p>確切的目標變數名稱是重寫決定。如果舊變數名
+為了相容性，它們仍然需要架構標記和遷移狀態。</p>
+<p>遷移規則：</p>
+<ul>
+<li>絕不凍結遷移的 SavedVariables；</li>
+<li>絕不將運行時狀態儲存在 SavedVariables 中；</li>
+<li>在遷移安全性擴充表下保留未知的遺留欄位或
+  警告名單；</li>
+<li>驗證spellID/itemID數字欄位；</li>
+<li>將刪除的僅限 Classic 的欄位記錄為遷移警告；</li>
+<li>在備份或遷移置信策略生效之前不要刪除舊字段
+  定義的。</li>
+</ul>
+<h2 id="_3">刪除舊行為</h2>
+<p>從活躍的零售架構中刪除：</p>
+<ul>
+<li>Classic、TBC、Wrath、Cata、Mists TOC 和負載根；</li>
+<li>經典行為的「G.WOW_VERSION」分支；</li>
+<li>經典 API 的舊解壓縮傳回相容層；</li>
+<li>老獵人寵物幸福/焦點分支只存在於經典時代
+  行為；</li>
+<li>大量正常運作時項目 ID 掃描；</li>
+<li>每個圖示計時器和每個法術計時器刷新鏈；</li>
+<li>工具提示掃描作為正常事實來源；</li>
+<li>核心操作的外部依賴要求。</li>
+</ul>
+<h2 id="_4">相容性中斷</h2>
+<p>預計休息時間：</p>
+<ul>
+<li>舊的經典目錄不再載入；</li>
+<li>依賴傳統 Classic 特定資源的使用者會遺失這些警報；</li>
+<li>團體事件腳本/配置可能需要簡化；</li>
+<li>匯入/匯出原型必須重新設計或刪除，除非是簡單的安全
+  需要路徑；</li>
+<li><code>Lib_ZYF</code> 助手應該被替換或隔離；不要假設它存在於
+  新的核心。</li>
+</ul>
+<h2 id="_5">本地化遷移</h2>
+<p>現有的語言環境文件：</p>
+<ul>
+<li><code>locale/localization.comm.lua</code></li>
+<li><code>locale/localization.en.lua</code></li>
+<li><code>locale/localization.tw.lua</code></li>
+<li><code>locale/localization.cn.lua</code></li>
+<li><code>locale/localization.kr.lua</code></li>
+<li><code>locale/localization.ru.lua</code>
+保持本地化隔離。不要將字串混合到邏輯模組中。請勿添加
+簡體中文字串轉換為 zhTW。</li>
+</ul>
+<h2 id="_6">遺留來源處理</h2>
+<p>目前的舊原始碼保留供審核/參考：</p>
+<ul>
+<li><code>經典/</code></li>
+<li><code>待定/</code>
+-<code>憤怒/</code></li>
+</ul>
+<p>它們不應由 Retail 重寫載入。如果保留在儲存庫中，
+將它們標記為已存檔/不受支援。</p>
+    </div>
+    <div id="doc-content-en" class="lang-content">
+        <a href="AGENTS.md.html" class="back-btn">← Back to AI Entrance (AGENTS)</a>
 <h1 id="migration-notes">Migration Notes</h1>
 <h2 id="old-behavior-mapping">Old Behavior Mapping</h2>
 <p>Preserve where feasible:</p>
@@ -525,128 +647,6 @@ remain for compatibility, they still need schema markers and migration status.</
 </ul>
 <p>Keep localization isolated. Do not mix strings into logic modules. Do not add
 Simplified Chinese strings to zhTW.</p>
-<h2 id="legacy-source-handling">Legacy Source Handling</h2>
-<p>Current old source roots remain for audit/reference:</p>
-<ul>
-<li><code>Classic/</code></li>
-<li><code>TBC/</code></li>
-<li><code>Wrath/</code></li>
-</ul>
-<p>They should not be loaded by the Retail rewrite. If retained in the repository,
-mark them archived/unsupported.</p>
-    </div>
-    <div id="doc-content-en" class="lang-content">
-        <a href="AGENTS.md.html" class="back-btn">← Back to AI Entrance (AGENTS)</a>
-<h1 id="migrationnotes">MigrationNotes</h1>
-<h2 id="old-behavior-mapping">Old Behavior Mapping</h2>
-<p>Preserve where feasible:</p>
-<ul>
-<li>self buff/debuff alert icons;</li>
-<li>target buff/debuff alert icons;</li>
-<li>spell cooldown alert icons;</li>
-<li>item cooldown alert icons by itemID;</li>
-<li>easy spellID add/remove workflow;</li>
-<li><code>/eam opt</code> settings entry point;</li>
-<li><code>/eam show</code>, <code>/eam showt</code>, <code>/eam showc</code>, <code>/eam showa</code> detection workflows;</li>
-<li>cooldown behavior toggle:</li>
-<li>remove when cooldown completes;</li>
-<li>keep cooldown icons out of combat;</li>
-<li>glow when usable;
--icon display toggle:</li>
-<li>show frame;</li>
-<li>show name;</li>
-<li>show timer;</li>
-<li>show flash/glow;</li>
-<li>tooltip append spell/item ID;</li>
-<li>font size controls for name, timer, and stacks;</li>
-<li>minimap option button semantics;</li>
-<li>localization strings, especially zhTW, enUS, koKR, zhCN where present;</li>
-<li>useful default spell/item tables after Retail validation.</li>
-</ul>
-<h2 id="old-savedvariables-migration">Old SavedVariables Migration</h2>
-<p>Legacy inputs:</p>
-<pre class="codehilite"><code class="language-lua">EA_Config
-EA_Position
-EA_Items
-EA_AltItems
-EA_TarItems
-EA_ScdItems
-EA_GrpItems
-EA_Pos
-</code></pre>
-
-<p>Target migration:</p>
-<pre class="codehilite"><code class="language-js">EventAlertModDB = {
-  schemaVersion: 1,
-  profile: {
-    display: {},
-    behavior: {},
-    alerts: {
-      playerAuras: [],
-      targetAuras: [],
-      spellCooldowns: [],
-      itemCooldowns: [],
-      groupAlerts: []
-    },
-    layout: {}
-  },
-  migration: {
-    fromLegacy: true,
-    sourceKeys: [],
-    warnings: []
-  }
-}
-</code></pre>
-
-<p>The exact target variable name is a rewrite decision. If the old variable names
-remain for compatibility, they still need schema markers and migration status.</p>
-<p>Migration rules:</p>
-<ul>
-<li>never freeze migrated SavedVariables;</li>
-<li>never store runtime state in SavedVariables;</li>
-<li>preserve unknown legacy fields under a migration-safe extension table or
-  warning list;</li>
-<li>validate spellID/itemID numeric fields;</li>
-<li>record removed Classic-only fields as migration warnings;</li>
-<li>do not delete old fields until a backup or migration confidence strategy is
-  defined.</li>
-</ul>
-<h2 id="removed-old-behaviors">Removed Old Behaviors</h2>
-<p>Remove from active Retail architecture:</p>
-<ul>
-<li>Classic, TBC, Wrath, Cata, Mists TOCs and load roots;</li>
-<li><code>G.WOW_VERSION</code> branches for Classic behavior;</li>
-<li>old unpacked return compatibility layers for Classic APIs;</li>
-<li>old hunter pet happiness/focus branches that only exist for Classic-era
-  behavior;</li>
-<li>huge normal-runtime item ID scans;</li>
-<li>timer-per-icon and timer-per-spell refresh chains;</li>
-<li>tooltip scanning as normal fact source;</li>
-<li>external dependency requirement for core operation.</li>
-</ul>
-<h2 id="compatibility-breaks">Compatibility Breaks</h2>
-<p>Expected breaks:</p>
-<ul>
-<li>old Classic TOCs no longer load;</li>
-<li>users relying on legacy Classic-specific resources lose those alerts;</li>
-<li>group-event scripting/configuration may need simplification;</li>
-<li>import/export prototype must be redesigned or removed unless a simple safe
-  path is needed;</li>
-<li><code>Lib_ZYF</code> helpers should be replaced or isolated; do not assume it exists in
-  the new core.</li>
-</ul>
-<h2 id="localization-migration">Localization Migration</h2>
-<p>Existing locale files:</p>
-<ul>
-<li><code>locale/localization.comm.lua</code></li>
-<li><code>locale/localization.en.lua</code></li>
-<li><code>locale/localization.tw.lua</code></li>
-<li><code>locale/localization.cn.lua</code></li>
-<li><code>locale/localization.kr.lua</code></li>
-<li><code>locale/localization.ru.lua</code>
-Keep localization isolated. Do not mix strings into logic modules. Do not add
-Simplified Chinese strings to zhTW.</li>
-</ul>
 <h2 id="legacy-source-handling">Legacy Source Handling</h2>
 <p>Current old source roots remain for audit/reference:</p>
 <ul>

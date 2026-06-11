@@ -415,6 +415,160 @@
 
     <div id="doc-content-zh" class="lang-content active">
         <a href="AGENTS.md.html" class="back-btn">← 返回 AI 入口指導檔 (AGENTS)</a>
+<h1 id="_1">效能指南</h1>
+<h2 id="_2">熱路徑候選者</h2>
+<p>目前主線熱路徑候選人：</p>
+<ul>
+<li><code>主/EventAlert_Core.lua</code></li>
+<li>事件調度和處理程序</li>
+<li><code>COMBAT_LOG_EVENT_UNFILTERED</code></li>
+<li><code>UNIT_AURA</code></li>
+<li><code>BAG_UPDATE_COOLDOWN</code></li>
+<li><code>SPELL_UPDATE_COOLDOWN</code></li>
+<li><code>SPELL_UPDATE_CHARGES</code></li>
+<li><code>SPELL_UPDATE_USABLE</code></li>
+<li><code>ACTIONBAR_UPDATE_COOLDOWN</code></li>
+<li>使用股票/協程進行查找掃描</li>
+<li><code>主/EventAlert_Aura_Self.lua</code></li>
+<li><code>Buffs_Update</code></li>
+<li><code>更新時</code></li>
+<li><code>位置框架</code></li>
+<li><code>主/EventAlert_Aura_Target.lua</code></li>
+<li><code>TarBuffs_Update</code></li>
+<li><code>OnTarUpdate</code></li>
+<li><code>TarPositionFrames</code></li>
+<li><code>主/EventAlert_Cooldown.lua</code></li>
+<li><code>OnSCDUpdate</code></li>
+<li><code>ScdBuffs_Update</code></li>
+<li><code>更新ScdFrame</code></li>
+<li><code>ScdPositionFrames</code></li>
+<li><code>主/EventAlert_ItemSpellCache.lua</code></li>
+<li>專案範圍掃描建構器</li>
+<li><code>主/EventAlert_SpecialPower.lua</code></li>
+<li>資源/力量更新</li>
+<li>符文 OnUpdate 腳本</li>
+<li><code>主/EventAlert_CreateFrames.lua</code></li>
+<li>框架創建和滾動列表生成</li>
+<li><code>主/EventAlert_EAFun.lua</code></li>
+<li>版面配置、工具提示、計時器文字、偵錯標籤助手</li>
+</ul>
+<h2 id="onupdate-c_timer">目前 OnUpdate / C_Timer 使用情況</h2>
+<p>觀察到的主線使用情況：</p>
+<ul>
+<li><code>EventAlert_Core.lua</code></li>
+<li>遞歸<code>C_Timer.After(tempInterval, RecurringFrameUpdate)</code></li>
+<li>FPS 調整節奏用於位置/特殊幀更新</li>
+<li><code>C_Timer.NewTicker(1 / GetFramerate(), function() ...)</code> 用來尋找</li>
+<li><code>EventAlert_Aura_Self.lua</code></li>
+<li><code>G:OnUpdate(spellId)</code> 用於光環計時器刷新</li>
+<li>在先前指派 <code>tempFunc = function() G.OnUpdate(spellId) end</code>
+    <code>C_Timer.After（延遲，tempFunc）</code></li>
+<li><code>EventAlert_Aura_Target.lua</code></li>
+<li><code>C_Timer.After（延遲，G.OnTarUpdate，G，spellId）</code></li>
+<li><code>EventAlert_Cooldown.lua</code></li>
+<li><code>C_Timer.After(nextInterval, G.OnSCDUpdate, G, sid)</code></li>
+<li><code>EventAlert_ItemSpellCache.lua</code></li>
+<li><code>C_Timer.NewTicker(0.01, function() ...)</code></li>
+<li><code>C_Timer.After(1, ProcessBatch)</code> 用於批次掃描繼續</li>
+<li><code>EventAlert_SpecialPower.lua</code></li>
+<li>每個符文 <code>SetScript("OnUpdate", function(self, elapsedTime) ...)</code></li>
+<li><code>C_Timer.After</code> 用於生命綻放刷新</li>
+<li><code>EventAlert_Util.lua</code></li>
+<li><code>Lib_ZYF:StopOnUpdate(eaf)</code> 在幀清理中調用</li>
+</ul>
+<p>重寫規則：</p>
+<ul>
+<li>用一個中央調度程式取代它們。</li>
+<li>調度程式回調記錄應可重複使用，並由警報/服務 ID 鍵入。</li>
+<li>重複刷新路徑中沒有每個圖示計時器和閉包分配。</li>
+</ul>
+<h2 id="_3">分配政策</h2>
+<p>使用 <code>table.create</code> 用於：</p>
+<ul>
+<li>配置警報陣列</li>
+<li>活動狀態數組</li>
+<li>骯髒的隊列</li>
+<li>圖示池記錄</li>
+<li>排程程式作業記錄</li>
+<li>調試環形緩衝區</li>
+<li>預設設定檔模板</li>
+</ul>
+<p>避免在熱路徑中：</p>
+<ul>
+<li>每個光環的瞬態表</li>
+<li>當直接數字索引分配就足夠時<code>table.insert</code></li>
+<li><code>pairs</code>/<code>ipairs</code> 其中確定性數字循環可用</li>
+<li>臨時字串構建</li>
+<li>匿名回呼函數</li>
+</ul>
+<h2 id="freeze">表.freeze 策略</h2>
+<p>僅凍結：</p>
+<ul>
+<li>常數</li>
+<li>列舉</li>
+<li>狀態名稱</li>
+<li>模式描述</li>
+<li>不可變的預設欄位設定文件</li>
+<li>靜態模組合約</li>
+</ul>
+<p>切勿凍結：</p>
+<ul>
+<li>保存的變數</li>
+<li>運轉時間環/冷卻狀態</li>
+<li>圖示渲染狀態</li>
+<li>UI框架記錄</li>
+<li>調度程序佇列</li>
+<li>池對象</li>
+<li>調試快照</li>
+</ul>
+<h2 id="ui">UI 寫入策略</h2>
+<p>渲染器必須快取最後渲染的值並跳過無操作寫入：</p>
+<ul>
+<li><code>設定文字</code></li>
+<li><code>設定紋理</code></li>
+<li><code>設定阿爾法</code></li>
+<li><code>設定冷卻時間</code></li>
+<li><code>設定點</code></li>
+<li><code>設定大小</code></li>
+<li>“顯示”/“隱藏”</li>
+</ul>
+<p>佈局應該是批量的：</p>
+<ol>
+<li>收集髒佈局鍵。</li>
+<li>隱藏父框架。</li>
+<li>僅套用更改的位置/尺寸。</li>
+<li>顯示一次父框架。</li>
+</ol>
+<h2 id="fps">戰鬥/低 FPS 節流</h2>
+<p>在以下情況下，繁重的工作必須被阻止、延遲或降級：</p>
+<ul>
+<li><code>InCombatLockdown()</code> 為 true；</li>
+<li>FPS 低於配置的閾值；</li>
+<li>工作需要大掃描；</li>
+<li>達到受保護/秘密邊界。</li>
+</ul>
+<p>允許的降級行為：</p>
+<ul>
+<li>僅顯示安全圖示/名稱；</li>
+<li>將計時器標記為「未知」、「受保護」或「僅顯示」；</li>
+<li>跳過可選項目快取進程；</li>
+<li>安排非戰鬥刷新。</li>
+</ul>
+<h2 id="_4">目前配置風險</h2>
+<p>首次透過審核發現了這些可能的來源：</p>
+<ul>
+<li>重複光環掃描循環超過 1..40 個有用且有害的指數；</li>
+<li><code>AuraUtil.ForEachAura</code> 回呼使用；</li>
+<li>工具提示呼叫後掛鉤和工具提示解析路徑；</li>
+<li>aura 更新中的 <code>C_Timer.After(function() ...)</code> 閉包分配；</li>
+<li>冷卻更新後備中的動態影格建立；</li>
+<li>具有股票回調的項目範圍掃描；</li>
+<li>調試標籤和查找輸出中的字串格式；</li>
+<li>全域意外變數導致生命週期和 GC 行為不明確。</li>
+</ul>
+    </div>
+    <div id="doc-content-en" class="lang-content">
+        <a href="AGENTS.md.html" class="back-btn">← Back to AI Entrance (AGENTS)</a>
 <h1 id="performance-guide">Performance Guide</h1>
 <h2 id="hot-path-candidates">Hot Path Candidates</h2>
 <p>Current Mainline hot path candidates:</p>
@@ -520,160 +674,6 @@
 <li>scheduler queues</li>
 <li>pool objects</li>
 <li>debug snapshots</li>
-</ul>
-<h2 id="ui-write-policy">UI Write Policy</h2>
-<p>Renderer must cache last-rendered values and skip no-op writes:</p>
-<ul>
-<li><code>SetText</code></li>
-<li><code>SetTexture</code></li>
-<li><code>SetAlpha</code></li>
-<li><code>SetCooldown</code></li>
-<li><code>SetPoint</code></li>
-<li><code>SetSize</code></li>
-<li><code>Show</code> / <code>Hide</code></li>
-</ul>
-<p>Layout should be batched:</p>
-<ol>
-<li>Collect dirty layout keys.</li>
-<li>Hide parent frame.</li>
-<li>Apply only changed positions/sizes.</li>
-<li>Show parent frame once.</li>
-</ol>
-<h2 id="combat-low-fps-throttling">Combat / Low-FPS Throttling</h2>
-<p>Heavy work must be blocked, delayed, or degraded when:</p>
-<ul>
-<li><code>InCombatLockdown()</code> is true;</li>
-<li>FPS is below the configured threshold;</li>
-<li>the work requires large scans;</li>
-<li>a protected/secret boundary is reached.</li>
-</ul>
-<p>Allowed degraded behavior:</p>
-<ul>
-<li>show safe icon/name only;</li>
-<li>mark timer as <code>unknown</code>, <code>protected</code>, or <code>displayOnly</code>;</li>
-<li>skip optional item cache progression;</li>
-<li>schedule out-of-combat refresh.</li>
-</ul>
-<h2 id="current-allocation-risks">Current Allocation Risks</h2>
-<p>First-pass audit found these likely sources:</p>
-<ul>
-<li>repeated aura scan loops over 1..40 helpful and harmful indices;</li>
-<li><code>AuraUtil.ForEachAura</code> callback use;</li>
-<li>tooltip post-call hooks and tooltip parsing paths;</li>
-<li><code>C_Timer.After(function() ...)</code> closure allocation in aura update;</li>
-<li>dynamic frame creation in cooldown update fallback;</li>
-<li>item range scanning with ticker callbacks;</li>
-<li>string formatting in debug labels and lookup output;</li>
-<li>global accidental variables causing unclear lifetime and GC behavior.</li>
-</ul>
-    </div>
-    <div id="doc-content-en" class="lang-content">
-        <a href="AGENTS.md.html" class="back-btn">← Back to AI Entrance (AGENTS)</a>
-<h1 id="performanceguide">PerformanceGuide</h1>
-<h2 id="hot-path-candidates">Hot Path Candidates</h2>
-<p>Current Mainline hot path candidates:</p>
-<ul>
-<li><code>Main/EventAlert_Core.lua</code></li>
-<li>event dispatch and handlers</li>
-<li><code>COMBAT_LOG_EVENT_UNFILTERED</code></li>
-<li><code>UNIT_AURA</code></li>
-<li><code>BAG_UPDATE_COOLDOWN</code></li>
-<li><code>SPELL_UPDATE_COOLDOWN</code></li>
-<li><code>SPELL_UPDATE_CHARGES</code></li>
-<li><code>SPELL_UPDATE_USABLE</code></li>
-<li><code>ACTIONBAR_UPDATE_COOLDOWN</code></li>
-<li>lookup scanning with ticker/coroutine</li>
-<li><code>Main/EventAlert_Aura_Self.lua</code></li>
-<li><code>Buffs_Update</code></li>
-<li><code>OnUpdate</code></li>
-<li><code>PositionFrames</code></li>
-<li><code>Main/EventAlert_Aura_Target.lua</code></li>
-<li><code>TarBuffs_Update</code></li>
-<li><code>OnTarUpdate</code></li>
-<li><code>TarPositionFrames</code></li>
-<li><code>Main/EventAlert_Cooldown.lua</code></li>
-<li><code>OnSCDUpdate</code></li>
-<li><code>ScdBuffs_Update</code></li>
-<li><code>UpdateScdFrame</code></li>
-<li><code>ScdPositionFrames</code></li>
-<li><code>Main/EventAlert_ItemSpellCache.lua</code></li>
-<li>item range scan builders</li>
-<li><code>Main/EventAlert_SpecialPower.lua</code></li>
-<li>resource/power updates
-  -runeOnUpdate scripts</li>
-<li><code>Main/EventAlert_CreateFrames.lua</code></li>
-<li>frame creation and scroll-list generation</li>
-<li><code>Main/EventAlert_EAFun.lua</code></li>
-<li>layout, tooltip, timer text, debug label helpers</li>
-</ul>
-<h2 id="current-onupdate-c_timer-usage">Current OnUpdate / C_Timer Usage</h2>
-<p>Observed Mainline usage:</p>
-<ul>
-<li><code>EventAlert_Core.lua</code></li>
-<li>recursive <code>C_Timer.After(tempInterval, RecurringFrameUpdate)</code></li>
-<li>FPS-adjusted cadence for position/special frame updates</li>
-<li><code>C_Timer.NewTicker(1 / GetFramerate(), function() ...)</code> for lookup</li>
-<li><code>EventAlert_Aura_Self.lua</code></li>
-<li><code>G:OnUpdate(spellId)</code> for aura timer refresh</li>
-<li>allocates <code>tempFunc = function() G.OnUpdate(spellId) end</code> before
-    <code>C_Timer.After(delay, tempFunc)</code></li>
-<li><code>EventAlert_Aura_Target.lua</code></li>
-<li><code>C_Timer.After(delay, G.OnTarUpdate, G, spellId)</code></li>
-<li><code>EventAlert_Cooldown.lua</code></li>
-<li><code>C_Timer.After(nextInterval, G.OnSCDUpdate, G, sid)</code></li>
-<li><code>EventAlert_ItemSpellCache.lua</code></li>
-<li><code>C_Timer.NewTicker(0.01, function() ...)</code></li>
-<li><code>C_Timer.After(1, ProcessBatch)</code> for batch scan continuation</li>
-<li><code>EventAlert_SpecialPower.lua</code></li>
-<li>per-rune <code>SetScript("OnUpdate", function(self, elapsedTime) ...)</code></li>
-<li><code>C_Timer.After</code> for lifebloom refresh</li>
-<li><code>EventAlert_Util.lua</code></li>
-<li><code>Lib_ZYF:StopOnUpdate(eaf)</code> calls in frame cleanup</li>
-</ul>
-<p>Rewrite rule:</p>
-<ul>
-<li>Replace these with one central scheduler.</li>
-<li>Scheduler callback records should be reusable and keyed by alert/service ID.</li>
-<li>No per-icon timers and no closure allocation in repeated refresh paths.</li>
-</ul>
-<h2 id="allocation-policy">Allocation Policy</h2>
-<p>Use <code>table.create</code> for:</p>
-<ul>
-<li>configured alert arrays</li>
-<li>active state arrays
--dirty queues</li>
-<li>icon pool records
--scheduler job records</li>
-<li>debug ring buffers</li>
-<li>default profile templates</li>
-</ul>
-<p>Avoid in hot paths:</p>
-<ul>
-<li>transient tables per aura</li>
-<li><code>table.insert</code> when direct numeric index assignment is enough</li>
-<li><code>pairs</code>/<code>ipairs</code> where a deterministic numeric loop is available
--ad hoc string building</li>
-<li>anonymous callback functions</li>
-</ul>
-<h2 id="tablefreeze-policy">table.freeze Policy</h2>
-<p>Freeze only:</p>
-<ul>
-<li>constants</li>
-<li>enums</li>
-<li>status names</li>
-<li>schema descriptions</li>
-<li>immutable default field profiles</li>
-<li>static module contracts</li>
-</ul>
-<p>Never freeze:</p>
-<ul>
-<li>SavedVariables
--runtime aura/cooldown state
--icon render state</li>
-<li>UI frame records
--scheduler queues</li>
-<li>pool objects
--debug snapshots</li>
 </ul>
 <h2 id="ui-write-policy">UI Write Policy</h2>
 <p>Renderer must cache last-rendered values and skip no-op writes:</p>

@@ -17,12 +17,16 @@ import urllib.request
 import urllib.parse
 import json
 
-def translate_chunk(chunk_text):
+def is_chinese_text(text):
+    # Detects if the text contains Chinese characters
+    return bool(re.search(r'[\u4e00-\u9fff]', text))
+
+def translate_chunk(chunk_text, src_lang="zh-TW", dest_lang="en"):
     if not chunk_text.strip():
         return chunk_text
     try:
         query = urllib.parse.quote(chunk_text)
-        url = f"https://translate.googleapis.com/translate_a/single?client=gtx&sl=zh-TW&tl=en&dt=t&q={query}"
+        url = f"https://translate.googleapis.com/translate_a/single?client=gtx&sl={src_lang}&tl={dest_lang}&dt=t&q={query}"
         
         req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
         with urllib.request.urlopen(req, timeout=3.0) as response:
@@ -34,7 +38,7 @@ def translate_chunk(chunk_text):
         print(f"  [Chunk Warning] Translate chunk failed: {e}. Fallback to original text.")
         return chunk_text
 
-def translate_via_google_api(text):
+def translate_via_google_api(text, src_lang="zh-TW", dest_lang="en"):
     if not text.strip():
         return ""
     try:
@@ -85,12 +89,12 @@ def translate_via_google_api(text):
                 # If single line is too long, we translate it alone
                 if encoded_len > 1200:
                     if current_sub_chunk:
-                        translated_segments.append(translate_chunk("\n".join(current_sub_chunk)))
+                        translated_segments.append(translate_chunk("\n".join(current_sub_chunk), src_lang, dest_lang))
                         current_sub_chunk = []
                         current_sub_len = 0
-                    translated_segments.append(translate_chunk(sub_line))
+                    translated_segments.append(translate_chunk(sub_line, src_lang, dest_lang))
                 elif current_sub_len + encoded_len > 1200:
-                    translated_segments.append(translate_chunk("\n".join(current_sub_chunk)))
+                    translated_segments.append(translate_chunk("\n".join(current_sub_chunk), src_lang, dest_lang))
                     current_sub_chunk = [sub_line]
                     current_sub_len = encoded_len
                 else:
@@ -98,7 +102,7 @@ def translate_via_google_api(text):
                     current_sub_len += encoded_len + 3 # %0A for \n
                     
             if current_sub_chunk:
-                translated_segments.append(translate_chunk("\n".join(current_sub_chunk)))
+                translated_segments.append(translate_chunk("\n".join(current_sub_chunk), src_lang, dest_lang))
                 
         return "\n".join(translated_segments)
     except Exception as e:
@@ -444,36 +448,63 @@ def convert_to_html(md_path, dest_dir, force_convert=False):
     dest_path = os.path.join(dest_dir, out_filename)
     
     with open(md_path, "r", encoding="utf-8") as f:
-        content_zh = f.read()
+        file_content = f.read()
         
-    if not force_convert and not should_convert(content_zh):
+    if not force_convert and not should_convert(file_content):
         print(f"[Skip] {filename} does not contain mindmaps, tables, flowcharts, or images.")
         return False
 
     print(f"[Process] Converting {filename} -> {out_filename}")
     
-    # 1. Pre-process Mermaid blocks for Chinese version
-    pattern = re.compile(r'```mermaid\s*\n(.*?)\n```', re.DOTALL)
-    processed_content_zh = pattern.sub(r'\n<div class="mermaid">\n\1\n</div>\n', content_zh)
-    html_content_zh = markdown.markdown(processed_content_zh, extensions=['extra', 'codehilite', 'toc'])
+    # Language direction detection
+    is_zh = is_chinese_text(file_content)
     
-    # Process links for Chinese version
-    html_content_zh = re.sub(r'href="Docs/([^"]+?)\.md"', r'href="\1.md.html"', html_content_zh)
-    html_content_zh = re.sub(r'href="([^"]+?)\.md"', r'href="\1.md.html"', html_content_zh)
-    html_content_zh = re.sub(r'href="\.\./Docs/([^"]+?)\.md"', r'href="\1.md.html"', html_content_zh)
-    
-    # 2. English version generation
-    content_en = None
-    base, ext = os.path.splitext(md_path)
-    en_md_path = base + "_en" + ext
-    if os.path.exists(en_md_path):
-        print(f"  [Local EN] Found local English file: {os.path.basename(en_md_path)}")
-        with open(en_md_path, "r", encoding="utf-8") as f:
-            content_en = f.read()
-    else:
-        print("  [Auto EN] Translating content to English...")
-        content_en = translate_via_google_api(content_zh)
+    if is_zh:
+        content_zh = file_content
+        content_en = None
         
+        # Look for local English version
+        base, ext = os.path.splitext(md_path)
+        en_md_path = base + "_en" + ext
+        if os.path.exists(en_md_path):
+            print(f"  [Local EN] Found local English file: {os.path.basename(en_md_path)}")
+            with open(en_md_path, "r", encoding="utf-8") as f:
+                content_en = f.read()
+        else:
+            print("  [Auto EN] Translating content to English...")
+            content_en = translate_via_google_api(content_zh, src_lang="zh-TW", dest_lang="en")
+    else:
+        # Original file is English
+        content_en = file_content
+        content_zh = None
+        
+        # Look for local Chinese version (e.g. filename_zh.md)
+        base, ext = os.path.splitext(md_path)
+        zh_md_path = base + "_zh" + ext
+        if os.path.exists(zh_md_path):
+            print(f"  [Local ZH] Found local Chinese file: {os.path.basename(zh_md_path)}")
+            with open(zh_md_path, "r", encoding="utf-8") as f:
+                content_zh = f.read()
+        else:
+            print("  [Auto ZH] Translating content to Traditional Chinese...")
+            content_zh = translate_via_google_api(content_en, src_lang="en", dest_lang="zh-TW")
+
+    pattern = re.compile(r'```mermaid\s*\n(.*?)\n```', re.DOTALL)
+    
+    if content_zh:
+        processed_content_zh = pattern.sub(r'\n<div class="mermaid">\n\1\n</div>\n', content_zh)
+        html_content_zh = markdown.markdown(processed_content_zh, extensions=['extra', 'codehilite', 'toc'])
+        html_content_zh = re.sub(r'href="Docs/([^"]+?)\.md"', r'href="\1.md.html"', html_content_zh)
+        html_content_zh = re.sub(r'href="([^"]+?)\.md"', r'href="\1.md.html"', html_content_zh)
+        html_content_zh = re.sub(r'href="\.\./Docs/([^"]+?)\.md"', r'href="\1.md.html"', html_content_zh)
+    else:
+        html_content_zh = """
+        <div class="translation-fallback">
+            <h3>繁體中文版本載入失敗 / Translation Unavailable</h3>
+            <p>無法動態生成此文件的繁體中文翻譯。請嘗試使用瀏覽器內置的「翻譯成繁體中文」功能。</p>
+        </div>
+        """
+
     if content_en:
         processed_content_en = pattern.sub(r'\n<div class="mermaid">\n\1\n</div>\n', content_en)
         html_content_en = markdown.markdown(processed_content_en, extensions=['extra', 'codehilite', 'toc'])
@@ -905,6 +936,8 @@ def main():
         
     # Gather target md files in Docs/
     md_files = glob.glob(os.path.join(docs_dir, "*.md"))
+    # Filter out bilingual suffix files to prevent redundant html generation
+    md_files = [f for f in md_files if not f.endswith("_en.md") and not f.endswith("_zh.md")]
     
     converted_count = 0
     # Convert Docs/ md files

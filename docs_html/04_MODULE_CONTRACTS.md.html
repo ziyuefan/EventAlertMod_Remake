@@ -415,6 +415,382 @@
 
     <div id="doc-content-zh" class="lang-content active">
         <a href="AGENTS.md.html" class="back-btn">← 返回 AI 入口指導檔 (AGENTS)</a>
+<h1 id="_1">模組合約</h1>
+<h2 id="_2">所有權規則</h2>
+<ul>
+<li><code>SavedVariables</code> 擁有持久配置表和遷移。</li>
+<li>服務擁有運行時事實。</li>
+<li><code>Renderer</code> 擁有渲染的 UI 狀態。</li>
+<li><code>IconPool</code> 擁有框架物件。</li>
+<li><code>Scheduler</code> 擁有應有的工作。</li>
+<li><code>DebugState</code> 擁有偵錯/會話快照。</li>
+<li>靜態常數可能會被凍結。運行時狀態和 SavedVariables 絕不能
+  被凍結。</li>
+<li>每個主動載入的來源檔案必須以模組註解區塊開頭
+  記錄目的、設計理念、所有權、突變邊界，以及
+  保養注意事項。當模組合約發生變化時，請保持此評論最新。
+  請參閱“Docs/12_CODE_COMMENTARY_GUIDE.md”。</li>
+</ul>
+<h2 id="_3">核心/環境</h2>
+<p>輸入：</p>
+<ul>
+<li>外掛名稱和命名空間</li>
+<li>零售構建/風味 API</li>
+</ul>
+<p>輸出：</p>
+<ul>
+<li>外掛程式命名空間</li>
+<li>本機API別名表</li>
+<li>僅限零售的防護結果</li>
+</ul>
+<p>突變：</p>
+<ul>
+<li>可以初始化外掛名稱空間一次</li>
+<li>不得更改 SavedVariables</li>
+</ul>
+<h2 id="_4">核心/實用程式</h2>
+<p>輸入：</p>
+<ul>
+<li>原始 Lua/WoW 表 API</li>
+</ul>
+<p>輸出：</p>
+<ul>
+<li><code>CreateTable</code>、<code>FreezeTable</code>、<code>IsFrozen</code>、池助手、安全擦除/釋放、
+  穩定的枚舉助手，調試斷言</li>
+<li>秘密/受保護值安全讀取助手：</li>
+<li><code>readSafeField</code></li>
+<li><code>readSafeScalar</code></li>
+<li><code>標記邊界</code></li>
+<li><code>appendBoundaryWarning</code></li>
+<li><code>清除定時器</code></li>
+</ul>
+<p>突變：</p>
+<ul>
+<li>僅擁有輔助本地池</li>
+</ul>
+<h2 id="_5">核心/常數</h2>
+<p>輸入：</p>
+<ul>
+<li>模組載入後無</li>
+</ul>
+<p>輸出：</p>
+<ul>
+<li>凍結枚舉表、模組名稱、事件名稱、狀態常數、模式
+  版本、哨兵常數，例如“UNKNOWN”和“EMPTY”</li>
+</ul>
+<p>突變：</p>
+<ul>
+<li>凍結後沒有</li>
+</ul>
+<h2 id="_6">核心/事件路由器</h2>
+<p>輸入：</p>
+<ul>
+<li>模組事件訂閱</li>
+<li>暴雪事件</li>
+</ul>
+<p>輸出：
+- 透過參數化「pcall」錯誤隔離來分派對已註冊模組處理程序的調用，確保一個模組處理程序中的故障不會阻止其他訂閱者</p>
+<p>突變：</p>
+<ul>
+<li>擁有事件框架與事件訂閱表</li>
+<li>每個活動報名沒有關閉分配</li>
+</ul>
+<h2 id="_7">核心/調度程序</h2>
+<p>輸入：</p>
+<ul>
+<li>模組請求的到期作業</li>
+</ul>
+<p>輸出：</p>
+<ul>
+<li>在保護性「pcall」隔離下進行適當的回調調度，確保捕獲作業運行時故障並且不會破壞全域程式碼框架</li>
+<li>無論回調成功與否，安全佇列清理和任務記錄回收</li>
+</ul>
+<p>突變：</p>
+<ul>
+<li>擁有一個OnUpdate幀、到期佇列、可重複使用的作業記錄和任務池</li>
+<li>沒有每個圖示的調度表</li>
+</ul>
+<h2 id="_8">核心/保存變數</h2>
+<p>輸入：</p>
+<ul>
+<li>
+<p>遺留全域變數：<code>EA_Config</code>、<code>EA_Position</code>、<code>EA_Items</code>、<code>EA_AltItems</code>、
+  <code>EA_TarItems</code>、<code>EA_ScdItems</code>、<code>EA_GrpItems</code>、<code>EA_Pos</code>
+輸出：</p>
+</li>
+<li>
+<p>版本化的活動設定文件</p>
+</li>
+<li>遷移報告</li>
+<li>驗證警告</li>
+<li>用戶觸發的警報添加/刪除光環、法術冷卻和物品冷卻的 API</li>
+</ul>
+<p>突變：</p>
+<ul>
+<li>在載入/遷移/配置變更期間可能會改變 SavedVariables</li>
+<li>不得寫入高頻運轉時狀態</li>
+<li>不得凍結 SavedVariables</li>
+<li>在使用者觸發的配置突變後增加“EAM_DB.revision”</li>
+</ul>
+<h2 id="_9">核心/效能</h2>
+<p>輸入：</p>
+<ul>
+<li><code>GetFramerate</code>，戰鬥鎖定狀態，可選的<code>debugprofilestop</code></li>
+</ul>
+<p>輸出：</p>
+<ul>
+<li>節流決策、分析樣本、共享表池</li>
+</ul>
+<p>突變：</p>
+<ul>
+<li>僅擁有分析/會話計數器</li>
+</ul>
+<h2 id="auraservice">服務/AuraService</h2>
+<p>輸入：</p>
+<ul>
+<li>設定玩家/目標光環警報</li>
+<li><code>UNIT_AURA</code>、<code>PLAYER_TARGET_CHANGED</code>、登入/世界事件</li>
+</ul>
+<p>輸出：</p>
+<ul>
+<li>“EAM_AURA_STATE_CHANGED”事件透過參數化狀態和frameName觸發到EventRouter</li>
+<li>從“AuraStatePool”分配的標準化“AuraState”和“AlertState”</li>
+<li>邊界警告</li>
+<li>由單位和“auraInstanceID”鍵控的增量感知光環緩存</li>
+<li>配置修訂感知警報索引，由單位和配置的拼字ID鍵入</li>
+<li>完整更新回退掃描每個追蹤單元/過濾器一次，重建單元光環緩存，並將不匹配的配置警報標記為非活動狀態</li>
+</ul>
+<p>突變：</p>
+<ul>
+<li>僅擁有 aura 運行時快取和 <code>AuraStatePool</code></li>
+<li>不得創建 UI 框架</li>
+<li>不得寫入 SavedVariables</li>
+<li>當 SavedVariables 版本變更時可能會重建警報索引</li>
+</ul>
+<h2 id="_10">管理器/警報管理器</h2>
+<p>輸入：</p>
+<ul>
+<li>來自 EventRouter 的「EAM_AURA_STATE_CHANGED」、「EAM_COOLDOWN_STATE_CHANGED」、「EAM_ITEM_COOLDOWN_STATE_CHANGED」、「EAM_GROUND_EFFECT_STATE_CHANGED」和「EAM_TOTEM_STATE_ANGSTATED」事件</li>
+<li>配置警報列表</li>
+</ul>
+<p>輸出：
+- batch/throttled calls to <code>Renderer.render</code> wrapped in layout batch control (<code>Renderer.BeginBatch</code> / <code>Renderer.EndBatch</code>)
+- multi-type state table recycling via <code>state.releaseFunc(state)</code> to recycle inactive states (Aura, Cooldown, Item, GroundEffect, Totem) after UI hide rendering completes</p>
+<p>Mutation:</p>
+<ul>
+<li>owns pending updates queue and throttle scheduler status</li>
+<li>does not own AlertState, SavedVariables, or UI icons</li>
+</ul>
+<h2 id="servicescooldownservice">Services/CooldownService</h2>
+<p>Inputs:</p>
+<ul>
+<li>configured spell cooldown alerts</li>
+<li>cooldown-related events and scheduler fallback ticks</li>
+</ul>
+<p>Outputs:</p>
+<ul>
+<li>normalized <code>CooldownState</code> and <code>AlertState</code></li>
+<li>dirty alert IDs</li>
+</ul>
+<p>Mutation:</p>
+<ul>
+<li>owns spell cooldown cache only</li>
+</ul>
+<h2 id="servicesshadowhostservice">Services/ShadowHostService</h2>
+<p>Inputs:</p>
+<ul>
+<li>Blizzard's native <code>EssentialCooldownViewer</code> and <code>Utility</code> frame pool states</li>
+<li>dynamic frame <code>Acquire</code> and <code>Release</code> hooks</li>
+<li>世界進入與再生狀態事件</li>
+</ul>
+<p>輸出：</p>
+<ul>
+<li>每個spellID映射活動主機圖示幀</li>
+<li>非戰鬥中本機幀的零污染不可見設定（Alpha = 0）</li>
+</ul>
+<p>突變：</p>
+<ul>
+<li>僅擁有內部拼字ID到框架映射註冊表</li>
+<li>不得在戰鬥中修改安全屬性</li>
+</ul>
+<h2 id="itemcooldownservice">服務/ItemCooldownService</h2>
+<p>輸入：</p>
+<ul>
+<li>配置的itemID警報</li>
+<li>物品冷卻事件</li>
+<li>可選的顯式快取建置命令</li>
+</ul>
+<p>輸出：</p>
+<ul>
+<li>規範化的“ItemCooldownState”和“AlertState”</li>
+<li>快取狀態</li>
+</ul>
+<p>突變：</p>
+<ul>
+<li>擁有物品冷卻運轉時緩存</li>
+<li>任何物品-法術映射快取都必須是增量且可中斷的</li>
+</ul>
+<h2 id="spellinfoservice">服務/SpellInfoService</h2>
+<p>輸入：</p>
+<ul>
+<li>拼字ID/物品ID查找請求</li>
+</ul>
+<p>輸出：</p>
+<ul>
+<li>安全名稱/圖示/連結事實（如果有）</li>
+<li>有界查找緩存，僅儲存安全欄位和邊界警告</li>
+</ul>
+<p>突變：</p>
+<ul>
+<li>擁有查找緩存</li>
+<li>必須避免激烈的戰鬥查詢循環</li>
+</ul>
+<h2 id="classpowerservice">服務/ClassPowerService</h2>
+<p>輸入：</p>
+<ul>
+<li>配置類別資源選項</li>
+<li>玩家能量事件（UNIT_POWER_UPDATE、UNIT_MAXPOWER、PLAYER_TALENT_UPDATE）</li>
+</ul>
+<p>輸出：</p>
+<ul>
+<li>目前類別電源類型的動態中央堆疊編號和警報狀態，在電源更新期間透過「pcall」隔離和「issecretvalue」檢查進行保護，以繞過戰鬥中的受限值/表運行時異常</li>
+<li>直接佈局渲染到classPower框架</li>
+</ul>
+<p>突變：</p>
+<ul>
+<li>除了調度事件狀態更新和防禦邊界記錄之外，沒有其他操作</li>
+</ul>
+<h2 id="groundeffectservice">服務/GroundEffectService</h2>
+<p>輸入：</p>
+<ul>
+<li>配置地面效應項目（動態/手動模式）</li>
+<li>戰鬥日誌事件未過濾（SPELL_CAST_SUCCESS）</li>
+<li>施法成功期間低頻 C_TooltipInfo.GetSpellByID 查找</li>
+</ul>
+<p>輸出：</p>
+<ul>
+<li><code>EAM_GROUND_EFFECT_STATE_CHANGED</code> 事件透過狀態和框架名稱觸發到 EventRouter</li>
+<li>從“GroundEffectStatePool”分配的標準化“GroundEffectState”和“AlertState”</li>
+<li>透過 Scheduler.after 安排發布計時器</li>
+</ul>
+<p>突變：</p>
+<ul>
+<li>僅擁有地面效應活動計時器表、activeStates 快取和“GroundEffectStatePool”</li>
+</ul>
+<h2 id="_11">服務/圖騰服務</h2>
+<p>輸入：</p>
+<ul>
+<li>薩滿圖騰事件（PLAYER_TOTEM_UPDATE）</li>
+<li>本機 C_Totems.GetTotemInfo API 更新</li>
+</ul>
+<p>輸出：</p>
+<ul>
+<li>“EAM_TOTEM_STATE_CHANGED”事件透過狀態和訊框名稱觸發到 EventRouter</li>
+<li>從“TotemStatePool”分配的標準化“TotemState”和“AlertState”</li>
+</ul>
+<p>突變：</p>
+<ul>
+<li>僅擁有 activeStates 快取和 <code>TotemStatePool</code></li>
+</ul>
+<h2 id="ui">UI/圖示池</h2>
+<p>輸入：</p>
+<ul>
+<li>所需的圖示數量/類別</li>
+</ul>
+<p>輸出：</p>
+<ul>
+<li>取得/釋放圖示框記錄</li>
+<li>預熱非活動圖示以避免創建戰鬥時間框架</li>
+</ul>
+<p>突變：</p>
+<ul>
+<li>擁有框架、紋理、冷卻區域、FontStrings</li>
+<li>框架創建應該在初始化期間或僅在受控增長期間發生</li>
+<li>當池為空時，不得在戰鬥中創建新的圖標框架</li>
+</ul>
+<h2 id="_12">使用者介面/渲染器</h2>
+<p>輸入：</p>
+<ul>
+<li><code>圖示渲染狀態</code></li>
+</ul>
+<p>輸出：</p>
+<ul>
+<li>可見的UI狀態</li>
+<li>佈局批次控制端點（<code>Renderer.BeginBatch</code> / <code>Renderer.EndBatch</code>）以推遲昂貴的 X/Y 佈局計算</li>
+</ul>
+<p>突變：</p>
+<ul>
+<li>僅改變 UI 框架</li>
+<li>從不取得光環/冷卻數據</li>
+<li>控制所有昂貴的 UI 寫入</li>
+<li>推遲戰鬥中的結構佈局變化和首次圖標獲取</li>
+</ul>
+<h2 id="_13">使用者介面/選項</h2>
+<p>輸入：</p>
+<ul>
+<li>活躍的個人資料</li>
+<li>類別令牌到類別 ID 映射表（<code>CLASS_TOKEN_TO_ID</code>）</li>
+</ul>
+<p>輸出：</p>
+<ul>
+<li>透過「SavedVariables」進行配置突變</li>
+<li>使用原生「GetSpecializationInfoForClassID(classID, specIndex)」和強大的靜態後備表進行動態、本地化專業化下拉過濾，確保 100% 本地化類別/規範 UI 文本，無需硬編碼</li>
+<li>用於明確新增/刪除操作的最小遊戲內面板：</li>
+<li>玩家光環法術ID</li>
+<li>目標光環法術ID</li>
+<li>法術冷卻時間法術ID</li>
+<li>物品冷卻時間物品ID</li>
+<li>用戶觸發突變成功後立即刷新服務</li>
+</ul>
+<p>突變：</p>
+<ul>
+<li>僅 UI 小部件和明確配置值</li>
+<li>如果零售阻止或面臨受保護的 UI 突變的風險，則必須在戰鬥中延遲首次框架創建</li>
+</ul>
+<h2 id="_14">使用者介面/斜線</h2>
+<p>輸入：</p>
+<ul>
+<li><code>/eam</code> 指令文本</li>
+</ul>
+<p>輸出：</p>
+<ul>
+<li>設定操作、狀態文字、偵錯匯出請求</li>
+<li>簡單的「/eam add」和「/eam remove」指令，用於玩家光環、目標光環、法術冷卻時間和物品冷卻時間</li>
+</ul>
+<p>突變：
+- 可呼叫模組API；不得直接編輯服務內部
+- 僅透過「Core/SavedVariables」寫入持久警報配置</p>
+<h2 id="_15">調試/調試狀態</h2>
+<p>輸入：</p>
+<ul>
+<li>模組狀態快照</li>
+</ul>
+<p>輸出：</p>
+<ul>
+<li>緊湊的“調試快照”</li>
+<li>來自服務狀態的聚合邊界警告</li>
+</ul>
+<p>突變：</p>
+<ul>
+<li>僅擁有瞬時調試記錄</li>
+</ul>
+<h2 id="_16">調試/提示匯出</h2>
+<p>輸入：</p>
+<ul>
+<li><code>調試快照</code></li>
+<li>匯出模式：<code>debug-min</code>、<code>analysis-full</code>、<code>github-issue</code></li>
+</ul>
+<p>輸出：</p>
+<ul>
+<li>緊湊的類似 JSON 的文本</li>
+</ul>
+<p>突變：</p>
+<ul>
+<li>除了瞬態字串產生器緩衝區之外沒有任何其他</li>
+</ul>
+    </div>
+    <div id="doc-content-en" class="lang-content">
+        <a href="AGENTS.md.html" class="back-btn">← Back to AI Entrance (AGENTS)</a>
 <h1 id="module-contracts">Module Contracts</h1>
 <h2 id="ownership-rules">Ownership Rules</h2>
 <ul>
@@ -764,382 +1140,6 @@
 <li>may call module APIs; must not directly edit service internals</li>
 <li>writes persistent alert config only through <code>Core/SavedVariables</code></li>
 </ul>
-<h2 id="debugdebugstate">Debug/DebugState</h2>
-<p>Inputs:</p>
-<ul>
-<li>module state snapshots</li>
-</ul>
-<p>Outputs:</p>
-<ul>
-<li>compact <code>DebugSnapshot</code></li>
-<li>aggregated boundary warnings from service state</li>
-</ul>
-<p>Mutation:</p>
-<ul>
-<li>owns transient debug records only</li>
-</ul>
-<h2 id="debugpromptexport">Debug/PromptExport</h2>
-<p>Inputs:</p>
-<ul>
-<li><code>DebugSnapshot</code></li>
-<li>export mode: <code>debug-min</code>, <code>analysis-full</code>, <code>github-issue</code></li>
-</ul>
-<p>Outputs:</p>
-<ul>
-<li>compact JSON-like text</li>
-</ul>
-<p>Mutation:</p>
-<ul>
-<li>none except transient string builder buffers</li>
-</ul>
-    </div>
-    <div id="doc-content-en" class="lang-content">
-        <a href="AGENTS.md.html" class="back-btn">← Back to AI Entrance (AGENTS)</a>
-<h1 id="modulecontracts">ModuleContracts</h1>
-<h2 id="ownership-rules">Ownership Rules</h2>
-<ul>
-<li><code>SavedVariables</code> owns persistent config tables and migration.</li>
-<li>Services own runtime facts.</li>
-<li><code>Renderer</code> owns rendered UI state.</li>
-<li><code>IconPool</code> owns frame objects.</li>
-<li><code>Scheduler</code> owns due jobs.</li>
-<li><code>DebugState</code> owns debug/session snapshots.</li>
-<li>Static constants may be frozen. Runtime state and SavedVariables must never
-  be frozen.</li>
-<li>Every actively loaded source file must begin with a module commentary block
-  that records purpose, design philosophy, ownership, mutation boundary, and
-  maintenance notes. Keep this commentary current when module contracts change.
-  See <code>Docs/12_CODE_COMMENTARY_GUIDE.md</code>.</li>
-</ul>
-<h2 id="coreenv">Core/Env</h2>
-<p>Inputs:</p>
-<ul>
-<li>addon name and namespace</li>
-<li>Retail build/flavor APIs</li>
-</ul>
-<p>Outputs:</p>
-<ul>
-<li>addon namespace</li>
-<li>local API alias table</li>
-<li>Retail-only guard result</li>
-</ul>
-<p>Mutation:</p>
-<ul>
-<li>may initialize the addon namespace once</li>
-<li>must not mutate SavedVariables</li>
-</ul>
-<h2 id="coreutil">Core/Util</h2>
-<p>Inputs:</p>
-<ul>
-<li>raw Lua/WoW table APIs</li>
-</ul>
-<p>Outputs:</p>
-<ul>
-<li><code>CreateTable</code>, <code>FreezeTable</code>, <code>IsFrozen</code>, pool helpers, safe wipe/release,
-  stable enum helpers, debug assertions</li>
-<li>secret/protected value safe-read helpers:</li>
-<li><code>readSafeField</code></li>
-<li><code>readSafeScalar</code></li>
-<li><code>markBoundary</code></li>
-<li><code>appendBoundaryWarning</code></li>
-<li><code>clearTimer</code></li>
-</ul>
-<p>Mutation:</p>
-<ul>
-<li>owns helper-local pools only</li>
-</ul>
-<h2 id="coreconstants">Core/Constants</h2>
-<p>Inputs:</p>
-<ul>
-<li>none after module load</li>
-</ul>
-<p>Outputs:</p>
-<ul>
-<li>frozen enum tables, module names, event names, status constants, schema
-  versions, sentinel constants such as <code>UNKNOWN</code> and <code>EMPTY</code></li>
-</ul>
-<p>Mutation:</p>
-<ul>
-<li>none after freeze</li>
-</ul>
-<h2 id="coreeventrouter">Core/EventRouter</h2>
-<p>Inputs:</p>
-<ul>
-<li>module event subscriptions</li>
-<li>Blizzard events</li>
-</ul>
-<p>Outputs:
-- dispatch calls to registered module handlers with parameterized <code>pcall</code> error isolation, ensuring a failure in one module's handler does not block other subscribers</p>
-<p>Mutation:</p>
-<ul>
-<li>owns event frame and event subscription table</li>
-<li>no closure allocation per event registration</li>
-</ul>
-<h2 id="corescheduler">Core/Scheduler</h2>
-<p>Inputs:</p>
-<ul>
-<li>due jobs requested by modules</li>
-</ul>
-<p>Outputs:</p>
-<ul>
-<li>due callback dispatch under protective <code>pcall</code> isolation, ensuring job runtime failures are caught and don't break the global ticker frame</li>
-<li>safe queue cleanup and task record recycling regardless of callback success</li>
-</ul>
-<p>Mutation:</p>
-<ul>
-<li>owns one OnUpdate frame, due queue, reusable job records, and task pool</li>
-<li>no per-icon scheduler tables</li>
-</ul>
-<h2 id="coresavedvariables">Core/SavedVariables</h2>
-<p>Inputs:</p>
-<ul>
-<li>
-<p>legacy globals: <code>EA_Config</code>, <code>EA_Position</code>, <code>EA_Items</code>, <code>EA_AltItems</code>,
-  <code>EA_TarItems</code>, <code>EA_ScdItems</code>, <code>EA_GrpItems</code>, <code>EA_Pos</code>
-Outputs:</p>
-</li>
-<li>
-<p>versioned active profile
--migration report
--validation warnings</p>
-</li>
-<li>user-triggered alert add/remove APIs for aura, spell cooldown, and item cooldown</li>
-</ul>
-<p>Mutation:</p>
-<ul>
-<li>may mutate SavedVariables during load/migration/config changes</li>
-<li>must not write high-frequency runtime state</li>
-<li>must not freeze SavedVariables</li>
-<li>increments <code>EAM_DB.revision</code> after user-triggered config mutation</li>
-</ul>
-<h2 id="coreperformance">Core/Performance</h2>
-<p>Inputs:</p>
-<ul>
-<li><code>GetFramerate</code>, combat lockdown state, optional <code>debugprofilestop</code></li>
-</ul>
-<p>Outputs:</p>
-<ul>
-<li>throttle decisions, profiling samples, shared table pools</li>
-</ul>
-<p>Mutation:</p>
-<ul>
-<li>owns profiling/session counters only</li>
-</ul>
-<h2 id="servicesauraservice">Services/AuraService</h2>
-<p>Inputs:</p>
-<ul>
-<li>configured player/target aura alerts</li>
-<li><code>UNIT_AURA</code>, <code>PLAYER_TARGET_CHANGED</code>, login/world events</li>
-</ul>
-<p>Outputs:</p>
-<ul>
-<li><code>EAM_AURA_STATE_CHANGED</code> events fired to EventRouter with parameterized state and frameName</li>
-<li>normalized <code>AuraState</code> and <code>AlertState</code> allocated from <code>AuraStatePool</code></li>
-<li>boundary warnings</li>
-<li>delta-aware aura cache keyed by unit and <code>auraInstanceID</code></li>
-<li>config revision aware alert index keyed by unit and configured spellID</li>
-<li>full update fallback scans each tracked unit/filter once, rebuilds the unit aura cache, and marks unmatched configured alerts inactive</li>
-</ul>
-<p>Mutation:</p>
-<ul>
-<li>owns aura runtime cache and <code>AuraStatePool</code> only</li>
-<li>must not create UI frames</li>
-<li>must not write SavedVariables</li>
-<li>may rebuild alert index when SavedVariables revision changes</li>
-</ul>
-<h2 id="managersalertmanager">Managers/AlertManager</h2>
-<p>Inputs:</p>
-<ul>
-<li><code>EAM_AURA_STATE_CHANGED</code>, <code>EAM_COOLDOWN_STATE_CHANGED</code>, <code>EAM_ITEM_COOLDOWN_STATE_CHANGED</code>, <code>EAM_GROUND_EFFECT_STATE_CHANGED</code>, and <code>EAM_TOTEM_STATE_CHANGED</code> events from EventRouter</li>
-<li>configured alert lists</li>
-</ul>
-<p>Outputs:
-- batch/throttled calls to <code>Renderer.render</code> wrapped in layout batch control (<code>Renderer.BeginBatch</code> / <code>Renderer.EndBatch</code>)
-- multi-type state table recycling via <code>state.releaseFunc(state)</code> to recycle inactive states (Aura, Cooldown, Item, GroundEffect, Totem) after UI hide rendering completes</p>
-<p>Mutation:</p>
-<ul>
-<li>owns pending updates queue and throttle scheduler status</li>
-<li>does not own AlertState, SavedVariables, or UI icons</li>
-</ul>
-<h2 id="servicescooldownservice">Services/CooldownService</h2>
-<p>Inputs:</p>
-<ul>
-<li>configured spell cooldown alerts</li>
-<li>cooldown-related events and scheduler fallback ticks</li>
-</ul>
-<p>Outputs:</p>
-<ul>
-<li>normalized <code>CooldownState</code> and <code>AlertState</code>
--dirty alert IDs</li>
-</ul>
-<p>Mutation:</p>
-<ul>
-<li>owns spell cooldown cache only</li>
-</ul>
-<h2 id="servicesshadowhostservice">Services/ShadowHostService</h2>
-<p>Inputs:</p>
-<ul>
-<li>Blizzard's native <code>EssentialCooldownViewer</code> and <code>Utility</code> frame pool states</li>
-<li>dynamic frame <code>Acquire</code> and <code>Release</code> hooks</li>
-<li>World entering and regeneration state events</li>
-</ul>
-<p>Outputs:</p>
-<ul>
-<li>mapped active host icon frames per spellID</li>
-<li>zero-taint invisible setting (Alpha=0) to native frames in non-combat</li>
-</ul>
-<p>Mutation:</p>
-<ul>
-<li>owns internal spellID-to-frame mapping registry only</li>
-<li>must not modify secure properties in combat</li>
-</ul>
-<h2 id="servicesitemcooldownservice">Services/ItemCooldownService</h2>
-<p>Inputs:</p>
-<ul>
-<li>configured itemID alerts
--item cooldown events</li>
-<li>optional explicit cache-build command</li>
-</ul>
-<p>Outputs:</p>
-<ul>
-<li>normalized <code>ItemCooldownState</code> and <code>AlertState</code>
--cache status</li>
-</ul>
-<p>Mutation:</p>
-<ul>
-<li>owns item cooldown runtime cache</li>
-<li>any item-spell mapping cache must be incremental and interruptible</li>
-</ul>
-<h2 id="servicesspellinfoservice">Services/SpellInfoService</h2>
-<p>Inputs:</p>
-<ul>
-<li>spellID/itemID lookup requests</li>
-</ul>
-<p>Outputs:</p>
-<ul>
-<li>safe name/icon/link facts where available</li>
-<li>bounded lookup cache that stores only safe fields and boundary warnings</li>
-</ul>
-<p>Mutation:</p>
-<ul>
-<li>owns lookup cache</li>
-<li>must avoid heavy combat query loops</li>
-</ul>
-<h2 id="servicesclasspowerservice">Services/ClassPowerService</h2>
-<p>Inputs:</p>
-<ul>
-<li>configured class resource options</li>
-<li>player power events (UNIT_POWER_UPDATE, UNIT_MAXPOWER, PLAYER_TALENT_UPDATE)</li>
-</ul>
-<p>Outputs:</p>
-<ul>
-<li>dynamic central stack numbers and AlertState for current class power type, protected by <code>pcall</code> isolation and <code>issecretvalue</code> checks during power updates to bypass restricted value/table runtime exceptions in combat</li>
-<li>direct layout rendering to classPower frame</li>
-</ul>
-<p>Mutation:</p>
-<ul>
-<li>none except dispatching event state updates and defensive boundary logging</li>
-</ul>
-<h2 id="servicesgroundeffectservice">Services/GroundEffectService</h2>
-<p>Inputs:</p>
-<ul>
-<li>configured ground effect items (dynamic/manual modes)</li>
-<li>combat log event unfiltered (SPELL_CAST_SUCCESS)</li>
-<li>low-frequency C_TooltipInfo.GetSpellByID lookups during spell cast successes</li>
-</ul>
-<p>Outputs:</p>
-<ul>
-<li><code>EAM_GROUND_EFFECT_STATE_CHANGED</code> events fired to EventRouter with state and frameName</li>
-<li>normalized <code>GroundEffectState</code> and <code>AlertState</code> allocated from <code>GroundEffectStatePool</code></li>
-<li>scheduled release timers via Scheduler.after</li>
-</ul>
-<p>Mutation:</p>
-<ul>
-<li>owns ground effect active timer table, activeStates cache, and <code>GroundEffectStatePool</code> only</li>
-</ul>
-<h2 id="servicestotemservice">Services/TotemService</h2>
-<p>Inputs:</p>
-<ul>
-<li>Shaman totem events (PLAYER_TOTEM_UPDATE)</li>
-<li>native C_Totems.GetTotemInfo API updates</li>
-</ul>
-<p>Outputs:</p>
-<ul>
-<li><code>EAM_TOTEM_STATE_CHANGED</code> events fired to EventRouter with state and frameName</li>
-<li>normalized <code>TotemState</code> and <code>AlertState</code> allocated from <code>TotemStatePool</code></li>
-</ul>
-<p>Mutation:</p>
-<ul>
-<li>owns activeStates cache and <code>TotemStatePool</code> only</li>
-</ul>
-<h2 id="uiiconpool">UI/IconPool</h2>
-<p>Inputs:</p>
-<ul>
-<li>desired icon count/class</li>
-</ul>
-<p>Outputs:</p>
-<ul>
-<li>acquired/released icon frame records</li>
-<li>prewarmed inactive icons to avoid combat-time frame creation</li>
-</ul>
-<p>Mutation:</p>
-<ul>
-<li>owns frames, textures, cooldown regions, FontStrings</li>
-<li>frame creation should happen during initialization or controlled growth only</li>
-<li>must not create new icon frames in combat when pool is empty</li>
-</ul>
-<h2 id="uirenderer">UI/Renderer</h2>
-<p>Inputs:</p>
-<ul>
-<li><code>IconRenderState</code></li>
-</ul>
-<p>Outputs:</p>
-<ul>
-<li>visible UI state</li>
-<li>layout batch control endpoints (<code>Renderer.BeginBatch</code> / <code>Renderer.EndBatch</code>) to defer expensive X/Y layout calculations</li>
-</ul>
-<p>Mutation:</p>
-<ul>
-<li>mutates UI frames only</li>
-<li>never fetches aura/cooldown data</li>
-<li>gates all expensive UI writes</li>
-<li>defers structural layout changes and first-time icon acquisition while in combat</li>
-</ul>
-<h2 id="uioptions">UI/Options</h2>
-<p>Inputs:</p>
-<ul>
-<li>active profile</li>
-<li>class token to class ID mapping table (<code>CLASS_TOKEN_TO_ID</code>)</li>
-</ul>
-<p>Outputs:</p>
-<ul>
-<li>config mutations through <code>SavedVariables</code></li>
-<li>dynamic, localized specialization drop-down filtering using native <code>GetSpecializationInfoForClassID(classID, specIndex)</code> with robust static fallback tables, ensuring 100% localized class/spec UI texts without hardcoding</li>
-<li>a minimal in-game panel for explicit add/remove actions:</li>
-<li>player aura spellID</li>
-<li>target aura spellID</li>
-<li>spell cooldown spellID</li>
-<li>item cooldown itemID</li>
-<li>immediate service refresh after successful user-triggered mutation</li>
-</ul>
-<p>Mutation:</p>
-<ul>
-<li>UI widgets and explicit config values only</li>
-<li>first-time frame creation must be delayed in combat if Retail blocks or risks protected UI mutation</li>
-</ul>
-<h2 id="uislash">UI/Slash</h2>
-<p>Inputs:</p>
-<ul>
-<li><code>/eam</code> command text</li>
-</ul>
-<p>Outputs:</p>
-<ul>
-<li>config actions, status text, debug export requests</li>
-<li>simple <code>/eam add</code> and <code>/eam remove</code> commands for player aura, target aura, spell cooldown, and item cooldown</li>
-</ul>
-<p>Mutation:
-- may call module APIs; must not directly edit service internals
-- writes persistent alert config only through <code>Core/SavedVariables</code></p>
 <h2 id="debugdebugstate">Debug/DebugState</h2>
 <p>Inputs:</p>
 <ul>
