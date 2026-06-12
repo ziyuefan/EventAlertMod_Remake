@@ -415,13 +415,13 @@
 
     <div id="doc-content-zh" class="lang-content active">
         <a href="AGENTS.md.html" class="back-btn">← 返回 AI 入口指導檔 (AGENTS)</a>
-<h1 id="eventalertmod-ai">EventAlertMod 零售重寫：AI 上下文</h1>
+<h1 id="eventalertmod-ai">EventAlertMod 正式服重寫：AI 上下文</h1>
 <h2 id="_1">專案概要</h2>
 <p>EventAlertMod (EAM) 是一個用於輕量級光環的魔獸世界插件，
 冷卻時間和物品冷卻警報。它的身份很簡單：顯示重要
 法術和物品狀態為可讀圖標，而不會成為 WeakAuras 克隆。</p>
-<p>此重寫僅針對魔獸世界零售版，零售版 12.x /
-午夜時代的 API 是預期的世代。現有經典、霧經典、
+<p>此重寫僅針對魔獸世界正式服版，正式服版 12.x /
+午夜時代的 API 是預期的世代。現有經典、熊貓人之謎經典服、
 Cata Classic、Wrath Classic、TBC、Era 和特定地區的 Classic 分店是
 僅行為歷史，不得塑造新架構。</p>
 <h2 id="_2">重寫方向</h2>
@@ -458,10 +458,10 @@ Cata Classic、Wrath Classic、TBC、Era 和特定地區的 Classic 分店是
 <li>沒有外部依賴。</li>
 <li>沒有複雜的使用者腳本引擎。</li>
 <li>無需頻繁的持續掃描。</li>
-<li>沒有每個圖示計時器、每個咒語計時器或每個專案計時器架構。</li>
+<li>沒有每個圖示計時器、每個法術計時器或每個專案計時器架構。</li>
 </ul>
 <h2 id="_4">簡單原則</h2>
-<p>EAM 對於一般使用者來說應該保持簡單：新增拼字 ID、啟用警報，請參閱
+<p>EAM 對於一般使用者來說應該保持簡單：新增法術 ID、啟用警報，請參閱
 圖標，調整一小組顯示選項，並匯出緊湊的調試狀態
 僅按需提供。</p>
 <h2 id="_5">現有討論主播</h2>
@@ -476,7 +476,7 @@ Cata Classic、Wrath Classic、TBC、Era 和特定地區的 Classic 分店是
   外部依賴。</li>
 <li><code>/eam opt</code> 是記錄的設定指令。</li>
 <li>現有行為包括自身光環、目標光環、法術冷卻時間、物品
-  冷卻時間、工具提示拼字/物品 ID、本地化和可選的調試助手。</li>
+  冷卻時間、工具提示法術/物品 ID、本地化和可選的調試助手。</li>
 <li>較早的工作已經觸及“Main/EventAlert_EAFun.lua”作為相容性
   門面。未來的代理人一定不能假設文件是最終的架構。</li>
 </ul>

@@ -415,11 +415,11 @@
 
     <div id="doc-content-zh" class="lang-content active">
         <a href="AGENTS.md.html" class="back-btn">← 返回 AI 入口指導檔 (AGENTS)</a>
-<h1 id="_1">零售測試計劃</h1>
-<p>此文件通行證未執行任何即時零售驗證。</p>
+<h1 id="_1">正式服測試計劃</h1>
+<p>此文件通行證未執行任何即時正式服驗證。</p>
 <h2 id="_2">靜態檢查</h2>
 <ul>
-<li>確認僅零售目錄處於活動狀態以進行重寫。</li>
+<li>確認僅正式服目錄處於活動狀態以進行重寫。</li>
 <li>當針對 Retail 12.0.7 時，確認 TOC 介面為「120007」。</li>
 <li>確認沒有載入 Classic/MOP/Cata/Wrath/TBC 來源根。</li>
 <li>搜尋意外的全域變數。</li>
@@ -431,7 +431,7 @@
 <li>搜尋舊的全域「GetSpellCooldown」解包假設。</li>
 <li>在秘密檢查之前搜尋不安全光環「spellID」比較。</li>
 <li>搜尋用作事實的 Cooldown 小部件 getter 讀回。</li>
-<li>搜尋戰鬥時間框架創建或佈局突變。</li>
+<li>搜尋戰鬥中框架創建或佈局突變。</li>
 </ul>
 <h2 id="ui">登入/重新載入UI</h2>
 <ul>
@@ -457,7 +457,7 @@
 <li><code>/eam export</code> 列印緊湊的提示/調試導出。
 -<code>/eam show</code>切換自我光環spellID偵測。
 -<code>/eam showt</code>切換目標光環spellID偵測。</li>
-<li><code>/eam showc</code> 切換施放拼字 ID 偵測。</li>
+<li><code>/eam showc</code> 切換施放法術 ID 偵測。</li>
 <li><code>/eam showa</code> 是選擇加入的並且顯然是可以阻止的。</li>
 <li><code>/eam MiniMap</code> 切換小地圖選項按鈕。</li>
 <li><code>/eam MiniMap Reset</code> 重設小地圖位置。</li>
@@ -514,7 +514,7 @@
 <li>確認基於衝鋒的法術的衝鋒更新。</li>
 <li>確認僅 GCD 冷卻時間不會錯誤地顯示為真實冷卻時間。</li>
 <li>確認安全時可用的輝光遵循「C_Spell.IsSpellUsable」。</li>
-<li>確認沒有按咒語計時器攪拌。</li>
+<li>確認沒有按法術計時器攪拌。</li>
 </ul>
 <h2 id="_7">物品冷卻測試</h2>
 <ul>
@@ -536,7 +536,7 @@
 <li>確認戰鬥中沒有開始大量緩存建置。</li>
 <li>確認戰鬥結束後運行非戰鬥刷新。</li>
 </ul>
-<h2 id="1207-api">零售 12.0.7/午夜 API 測試</h2>
+<h2 id="1207-api">正式服 12.0.7/午夜 API 測試</h2>
 <ul>
 <li>確認「C_DurationUtil.CreateDurationTextBinding」存在並確定它是否有利於 EAM 計時器標籤。</li>
 <li>2026-05-29 PTR 注意：使用者確認最小的「C_DurationUtil.CreateDurationTextBinding」範例在 12.0.7 PTR 用戶端中正常顯示。</li>

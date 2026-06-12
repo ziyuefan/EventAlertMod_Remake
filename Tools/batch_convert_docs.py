@@ -24,12 +24,104 @@ import random
 CACHE_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".translation_cache.json")
 TRANSLATION_CACHE = {}
 
+def post_process_translation(text, src_lang, dest_lang):
+    if dest_lang == "zh-TW":
+        # 1. 替換零售相關
+        text = re.sub(r'零售業?', '正式服', text)
+        text = re.sub(r'零售版', '正式版', text)
+        text = re.sub(r'魔獸世界零售', '魔獸世界正式服', text)
+        text = re.sub(r'主線/零售', '主線/正式服', text)
+        text = re.sub(r'零售和遺留', '正式服與舊版', text)
+        
+        # 2. 替換 spell / 拼寫 / 咒語
+        text = re.sub(r'咒語', '法術', text)
+        text = re.sub(r'拼寫', '法術', text)
+        text = re.sub(r'拼字', '法術', text)
+        
+        # 3. 替換 ticker / 股票
+        text = re.sub(r'股票', '計時器', text)
+        
+        # 4. 修正一些常見專有名詞的硬翻
+        text = re.sub(r'奧術費用', '奧術充能', text)
+        text = re.sub(r'卡塔經典', '浩劫與重生經典服', text)
+        text = re.sub(r'卡塔經典賽', '浩劫與重生經典服', text)
+        text = re.sub(r'憤怒經典', '巫妖王之怒經典服', text)
+        text = re.sub(r'憤怒經典賽', '巫妖王之怒經典服', text)
+        text = re.sub(r'霧經典', '熊貓人之謎經典服', text)
+        text = re.sub(r'霧經典賽', '熊貓人之謎經典服', text)
+        text = re.sub(r'TBC經典賽', '燃燒的遠征經典服', text)
+        text = re.sub(r'TBC經典', '燃燒的遠征經典服', text)
+        text = re.sub(r'戰鬥時間框架', '戰鬥中框架', text)
+        text = re.sub(r'專案範圍掃描', '物品範圍掃描', text)
+        text = re.sub(r'專案首頁', '首頁', text)
+        text = re.sub(r'本文件通行證', '本文件', text)
+        text = re.sub(r'這個文件通行證', '本文件', text)
+        text = re.sub(r'這份文件通行證', '本文件', text)
+    return text
+
+def protect_symbols(text):
+    placeholders = []
+    
+    # 匹配魔獸 API、檔案路徑、小駝峰/大駝峰、大寫底線、括號函數呼叫等
+    pattern = re.compile(
+        r'('
+        r'\b[\w/\\]+\.(?:lua|toc|xml|md|html|txt|json|yml|yaml|png|jpg|gif|blp)\b'
+        r'|\bC_[a-zA-Z0-9_]+(?:\.[a-zA-Z0-9_]+)*\b'
+        r'|\b[a-zA-Z0-9_]+_[a-zA-Z0-9_]+\b'
+        r'|\b[a-z]+[A-Z][a-zA-Z0-9]*\b'  # 小駝峰如 classID, specIndex, timerTokenPool
+        r'|\b[A-Z][a-z]+[A-Z][a-zA-Z0-9]*\b' # 大駝峰如 GetSpellCooldown, InCombatLockdown, CooldownFrame
+        r'|\b[a-zA-Z0-9_]+(?:\.[a-zA-Z0-9_]+)*\(\)\b' # 函數呼叫如 IsZero()
+        r')'
+    )
+    
+    def replace_match(match):
+        val = match.group(1)
+        for idx, pval in enumerate(placeholders):
+            if pval == val:
+                return f"__EAMCODE_{idx}__"
+        idx = len(placeholders)
+        placeholders.append(val)
+        return f"__EAMCODE_{idx}__"
+        
+    protected_text = pattern.sub(replace_match, text)
+    return protected_text, placeholders
+
+def restore_symbols(text, placeholders):
+    if not placeholders:
+        return text
+    def replace_placeholder(match):
+        idx = int(match.group(1))
+        if idx < len(placeholders):
+            return placeholders[idx]
+        return match.group(0)
+    # 用寬鬆的正則匹配以防 Google 翻譯在底線前後加上空格
+    restored = re.sub(r'__\s*EAMCODE\s*_\s*(\d+)\s*__', replace_placeholder, text)
+    return restored
+
 def load_cache():
     global TRANSLATION_CACHE
     if os.path.exists(CACHE_FILE):
         try:
             with open(CACHE_FILE, "r", encoding="utf-8") as f:
                 TRANSLATION_CACHE = json.load(f)
+            
+            # 清洗快取中的所有中文 value
+            dirty = False
+            for lang_key, entries in TRANSLATION_CACHE.items():
+                if not isinstance(entries, dict):
+                    continue
+                if lang_key == "en_to_zh-TW" or lang_key == "zh-TW_to_en":
+                    dest_lang = "zh-TW" if lang_key == "en_to_zh-TW" else "en"
+                    for text_hash, translated in list(entries.items()):
+                        cleaned = post_process_translation(translated, "en" if dest_lang == "zh-TW" else "zh-TW", dest_lang)
+                        if cleaned != translated:
+                            entries[text_hash] = cleaned
+                            dirty = True
+            
+            if dirty:
+                print("[Cache] Detected uncleaned translation terms in cache. Cleaned and saving back...")
+                save_cache()
+                
             total_entries = sum(len(v) for v in TRANSLATION_CACHE.values() if isinstance(v, dict))
             print(f"[Cache] Loaded {total_entries} entries from {CACHE_FILE}")
         except Exception as e:
@@ -73,6 +165,9 @@ def translate_chunk(chunk_text, src_lang="zh-TW", dest_lang="en"):
     if cached:
         return cached
 
+    # Protect code symbols before translation
+    protected_text, placeholders = protect_symbols(chunk_text)
+
     # Rate limit delay: sleep random 1.2s to 2.8s before every API call to prevent being blocked
     time.sleep(random.uniform(1.2, 2.8))
     
@@ -83,7 +178,7 @@ def translate_chunk(chunk_text, src_lang="zh-TW", dest_lang="en"):
     for attempt in range(max_retries):
         client = clients[attempt % len(clients)]
         try:
-            query = urllib.parse.quote(chunk_text)
+            query = urllib.parse.quote(protected_text)
             url = f"https://translate.googleapis.com/translate_a/single?client={client}&sl={src_lang}&tl={dest_lang}&dt=t&q={query}"
             
             req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
@@ -92,9 +187,13 @@ def translate_chunk(chunk_text, src_lang="zh-TW", dest_lang="en"):
                 
             translated_part = "".join([part[0] for part in result[0] if part[0]])
             if translated_part:
-                set_cached_translation(chunk_text, translated_part, src_lang, dest_lang)
-                # print(f"  [Cache Saved] Translated chunk successfully.")
-                return translated_part
+                # Restore protected symbols
+                restored_text = restore_symbols(translated_part, placeholders)
+                # Apply glossary corrections
+                final_translated = post_process_translation(restored_text, src_lang, dest_lang)
+                
+                set_cached_translation(chunk_text, final_translated, src_lang, dest_lang)
+                return final_translated
         except Exception as e:
             wait_time = (2 ** attempt) * 3.0 + random.uniform(0.5, 1.5)
             print(f"  [Chunk Warning] Translate chunk failed (client={client}): {e}. Retrying in {wait_time:.1f}s... (Attempt {attempt+1}/{max_retries})")
