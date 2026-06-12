@@ -1,25 +1,26 @@
-# EventAlertMod Retail Rewrite: AI Context
+<!-- EAM_DOCUMENTATION_SOURCE: zh-TW -->
+# EventAlertMod 正式服裝重寫：AI 上下文
 
-## Project Summary
+## 專案概要
 
-EventAlertMod (EAM) is a World of Warcraft addon for lightweight aura,
-cooldown, and item cooldown alerts. Its identity is simple: show important
-spell and item states as readable icons without becoming a WeakAuras clone.
+EventAlertMod (EAM) 是一個用於輕量級光環的魔獸世界插件，
+冷卻的時間和物品冷卻。冷卻的身份很簡單：顯示很重要
+屬性和物品狀態為關鍵圖標，而不會成為 WeakAuras 克隆。
 
-This rewrite targets World of Warcraft Retail only, with Retail 12.x /
-Midnight-era APIs as the intended generation. Existing Classic, Mists Classic,
-Cata Classic, Wrath Classic, TBC, Era, and region-specific Classic branches are
-behavior history only and must not shape the new architecture.
+此重寫僅針對魔獸世界正式服版，正式服版 12.x /
+午夜時代的 API 是預期的衍生性商品。現有經典、熊貓之謎經典服、
+Cata Classic、Wrath Classic、TBC、Era 和特定地區的經典分店是
+僅歷史行為，不得加工新架構。
 
-## Rewrite Direction
+## 重寫方向
 
-The current source tree preserves years of behavior but mixes compatibility
-branches, UI construction, aura scanning, cooldown logic, item-cache generation,
-special resources, slash commands, globals, localization, and frame layout in
-the same runtime surface. The rewrite should keep useful data and user-facing
-semantics while replacing the internals with explicit modules.
+目前的原始碼樹保留了許多行為，但混合了相容性
+分支、UI建置、光環掃描、冷卻專案、緩存產生、
+特殊資源、斜線指令、全域變數、本地化和框架佈局
+相同的運行時表面。重寫應保留有用的數據並提供給用戶
+影像，同時以顯式模組取代內部結構。
 
-Required target modules:
+所需的目標模組：
 
 - `Core/Env.lua`
 - `Core/Util.lua`
@@ -39,43 +40,40 @@ Required target modules:
 - `Debug/DebugState.lua`
 - `Debug/PromptExport.lua`
 
-## Non-Negotiable Boundaries
+## 不可協商的界限
 
-- No secret value bypass.
-- No protected data bypass.
-- No combat automation.
-- No external dependencies.
-- No complex user scripting engine.
-- No heavy always-on scanning.
-- No timer-per-icon, timer-per-spell, or timer-per-project architecture.
+- 沒有秘密值可以繞過。
+- 沒有受到保護的資料繞過。
+- 沒有戰鬥自動化。
+- 沒有外部依賴。
+- 沒有複雜的使用者腳本引擎。
+- 密集的持續掃描。
+- 沒有每個圖示計時器、每個示波器計時器或每個專案計時器硬體。
+## 簡單原則
+EAM 對於一般使用者來說應該簡單保留：新增文字 ID、啟用警報，請參閱
+圖標，調整小組顯示選項，並匯出緊湊的調試狀態
+僅提供。
 
-## Simplicity Principle
+## 現有討論主播
 
-EAM should remain easy for normal users: add spell IDs, enable alerts, see
-icons, adjust a small set of display options, and export a compact debug state
-only on demand.
-
-## Existing Discussion Anchor
-
-Prior ChatGPT discussion context exists at:
+之前的ChatGPT討論上下文位於：
 
 - `DevDocument/ChatGPT/EventAlertMod_ChatGPT_Discussion_Context.md`
 
-Important historical points from that file:
+該文件中的重要歷史要點：
 
-- EAM is not Ace3 based.
-- Current TOC uses `RequiredDeps: !Lib_ZYF`, but the rewrite goal is no new
-  external dependency.
-- `/eam opt` is the documented settings command.
-- Existing behavior includes self aura, target aura, spell cooldown, item
-  cooldown, tooltip spell/item IDs, localization, and optional debug helpers.
-- Older work already touched `Main/EventAlert_EAFun.lua` as a compatibility
-  facade. Future agents must not assume that file is the final architecture.
+- EAM 不基於 Ace3。
+-目前目錄使用 `RequiredDeps: !Lib_ZYF`，但重寫目標並不是新的
+  外部依賴。
+- `/eam opt` 是記錄的設定指令。
+- 現有行為包括自身光環、目標光環、角色冷卻時間、物品
+  冷卻時間、工具提示符號/物品ID、在地化和選擇性的調試助手。
+- 較早的工作已經超過“Main/EventAlert_EAFun.lua”作為相容性
+門面。未來的代理人一定不能把文件想像成最終的架構。
 
-## First-Pass Audit Result
-
-`Docs/01_ARCHITECTURE.md` contains the current file map and module
-responsibilities. `Docs/03_STATE_SCHEMA.md` contains SavedVariables and global
-state anchors. `Docs/05_PERFORMANCE_GUIDE.md` contains hot path candidates,
-OnUpdate/C_Timer usage, and allocation risks. `Docs/07_MIGRATION_NOTES.md`
-contains behavior migration notes.
+## 首次通過審核結果
+`Docs/01_ARCHITECTURE.md` 包含目前檔案對映和模組
+`Docs/03_STATE_SCHEMA.md` 包含 SavedVariables 和全域變量
+`Docs/05_PERFORMANCE_GUIDE.md` 包含候選熱路徑，
+OnUpdate/C_Timer的使用和分配風險。 `文件/07_MIGRATION_NOTES.md`
+包含行為遷移註釋。

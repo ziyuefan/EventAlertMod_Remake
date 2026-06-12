@@ -1,28 +1,28 @@
-# Architecture
+<!-- EAM_DOCUMENTATION_SOURCE: zh-TW -->
+# 架構
 
-## Current File Map
+目前##文件映射
 
-Root:
+根：
 
-- `EventAlertMod_Mainline.toc`: Retail/Mainline TOC, currently interface
-  `120000`, version `TWW_11.2.5_20251111`.
-- `EventAlertMod_Cata.toc`, `EventAlertMod_Mists.toc`,
-  `EventAlertMod_TBC.toc`, `EventAlertMod_Wrath.toc`: unsupported legacy TOCs.
-- `embeds.xml`: loads bundled libraries.
-- `README.md`, `changelog.txt`: historical behavior and command context.
-- `libs/`: bundled `LibCustomGlow-1.0`, `LibDebug`, `LibStub`.
-- `locale/`: `localization.comm.lua`, `.en.lua`, `.tw.lua`, `.cn.lua`,
-  `.kr.lua`, `.ru.lua`.
-- `Images/`, `Music/`: media assets.
-- `DevDocument/`: reference URLs and prior ChatGPT context.
-- `Classic/`, `TBC/`, `Wrath/`: unsupported legacy source roots.
-- `Main/`: current Mainline implementation.
+- `EventAlertMod_Mainline.toc`：正式服裝/主線目錄，目前接口
+  `120000`，版本`TWW_11.2.5_20251111`。
+- `EventAlertMod_Cata.toc`、`EventAlertMod_Mists.toc`、
+  `EventAlertMod_TBC.toc`、`EventAlertMod_Wrath.toc`：不支援的舊版目錄。
+- `embeds.xml`：裝載捆庫。
+- `README.md`、`changelog.txt`：歷史行為和命令上下文。
+- `libs/`：捆`LibCustomGlow-1.0`、`LibDebug`、`LibStub`。
+- `locale/`: `本地化.comm.lua`, `.en.lua`, `.tw.lua`, `.cn.lua`,
+  `.kr.lua`、`.ru.lua`。
+- `Images/`、`Sounds/`：媒體資產。
+- `DevDocument/`：參考 URL 和先前的 ChatGPT 上下文。
+- `Classic/`、`TBC/`、`Wrath/`：不支援繼承來源。
+- `Main/`：目前主線實作。
 
-Current Mainline load anchor:
-
-- `Main/EventAlertMod.xml`: loads Mainline Lua modules and creates
-  `EA_Main_Frame` / `EA_Version_Frame`.
-- XML option panels:
+目前主線負載設備：
+- `Main/EventAlertMod.xml`：載入主線Lua模組並建立
+  `EA_Main_Frame` / `EA_Version_Frame`。
+- XML 選項面板：
   - `Main/EventAlert_Options.xml`
   - `Main/EventAlert_IconOptions.xml`
   - `Main/EventAlert_ClassAlerts.xml`
@@ -30,44 +30,43 @@ Current Mainline load anchor:
   - `Main/EventAlert_TargetAlerts.xml`
   - `Main/EventAlert_SCDAlerts.xml`
   - `Main/EventAlert_GroupAlerts.xml`
+目前主線Lua模組：
 
-Current Mainline Lua modules:
+- `EventAlert_LoadDefault.lua`：預設的`EA_Config2`值。
+- `EventAlert_InitVar.lua`：初始化`EA_Config`、`EA_Position`、命名空間
+  運行時表、偵錯標誌、類別/規範全局變數。
+- `EventAlert_InitVar_DK.lua`：死亡騎士符文/紋理。
+- `EventAlert_SpellItem.lua`：大型武器/物品資料表。
+- `EventAlert_CreateFrames.lua`：建立圖示、輔助點、捲動清單、
+  小地圖按鈕、群組框架和特殊資源框架。
+- `EventAlert_SpellArray.lua`：類別/預設座標系和資料載入。
+- `EventAlert_Animation.lua`：視覺動畫/背景助手。
+- `EventAlert_Util.lua`：印刷助理、工具提示助手、光環查找、
+  增益清單缺陷、發光助手、法術/天賦檢查。
+- `EventAlert_EAFun.lua`：滾動/調試、遷移的兼容性外觀，
+  工具提示、條件、計時器文字、分組結果、版面配置和提示綁定。
+- `EventAlert_SlashCommand.lua`：`/eam` 指令處理。
+- `EventAlert_GroupEvent.lua`：使用者定義的條件/群組警報檢查。
+- `EventAlert_Core.lua`：插件加載，事件註冊/調度，大多數
+  頂級事件處理程序、查找、版本檢查、更新循環。
+- `EventAlert_ItemSpellCache.lua`：專案到道具緩存瀏覽器和大型項目
+  掃描。
+- `EventAlert_Aura_Core.lua`：完整/增量光環緩存助手。
+- `EventAlert_Aura_Self.lua`：玩家/寵物光環警報和自我圖示佈局。
+- `EventAlert_Aura_Target.lua`：目標光環警報和目標圖示佈局。
+- `EventAlert_Cooldown.lua`：資產/物品冷卻和SCD佈局。
+- `EventAlert_SpecialPower.lua`：符文、組合點、類別資源、
+  生命綻放、活力和其他特殊力量框架。
+- `EventAlert_API.lua`：API別名層，目前不在XML載入清單中。
+- `EventAlert_Options.lua`：選項UI邏輯與群組事件編輯器。
+- `EventAlert_IconOptions.lua`：圖示選項UI、按鈕點移動、字體/位置
+設定。
+- `EventAlert_ImportExport.lua`：匯入/匯出原型，目前已註釋
+  以XML形式輸出。
 
-- `EventAlert_LoadDefault.lua`: default `EA_Config2` values.
-- `EventAlert_InitVar.lua`: initializes `EA_Config`, `EA_Position`, namespace
-  runtime tables, debug flags, class/spec globals.
-- `EventAlert_InitVar_DK.lua`: death knight rune constants/textures.
-- `EventAlert_SpellItem.lua`: large spell/item data table.
-- `EventAlert_CreateFrames.lua`: creates icons, anchors, scroll lists,
-  minimap button, group frames, and special resource frames.
-- `EventAlert_SpellArray.lua`: class/default spell arrays and data loading.
-- `EventAlert_Animation.lua`: visual animation/backdrop helpers.
-- `EventAlert_Util.lua`: print helpers, tooltip helpers, aura lookup,
-  buff-list mutation, glow helpers, spell/talent checks.
-- `EventAlert_EAFun.lua`: compatibility facade for scroll/debug, migration,
-  tooltip, condition, timer text, group result, layout, and tip binding.
-- `EventAlert_SlashCommand.lua`: `/eam` command handling.
-- `EventAlert_GroupEvent.lua`: user-defined condition/group alert checks.
-- `EventAlert_Core.lua`: addon load, event registration/dispatch, most
-  top-level event handlers, lookup, version checks, update loop.
-- `EventAlert_ItemSpellCache.lua`: item-to-spell cache builders and large item
-  scans.
-- `EventAlert_Aura_Core.lua`: full/incremental aura cache helpers.
-- `EventAlert_Aura_Self.lua`: player/pet aura alerts and self icon layout.
-- `EventAlert_Aura_Target.lua`: target aura alerts and target icon layout.
-- `EventAlert_Cooldown.lua`: spell/item cooldown alerts and SCD layout.
-- `EventAlert_SpecialPower.lua`: runes, combo points, class resources,
-  lifebloom, vigor, and other special power frames.
-- `EventAlert_API.lua`: API alias layer, currently not in the XML load list.
-- `EventAlert_Options.lua`: option UI logic and group event editor.
-- `EventAlert_IconOptions.lua`: icon option UI, anchor movement, font/position
-  settings.
-- `EventAlert_ImportExport.lua`: import/export prototype, currently commented
-  out in XML.
+目前## XML/UI 範本使用情況
 
-## Current XML / UI Template Usage
-
-Static XML panels use these template families:
+靜態 XML 面板使用這些範本系列：
 
 - `UIPanelButtonTemplate`
 - `UICheckButtonTemplate`
@@ -80,92 +79,91 @@ Static XML panels use these template families:
 - `GameFontHighlight`
 - `EA_SpellEditTextTemplate`
 
-Dynamic Lua frame creation uses:
+動態Lua框架搭建使用：
 
-- `CreateFrame("Frame", ...)` for alert icons, anchors, list containers, group
-  frames, and minimap button.
-- `CreateFrame("Cooldown", ..., "CooldownFrameTemplate")` for cooldown swipe
-  frames.
-- `CreateFrame("ScrollFrame", ..., "UIPanelScrollFrameTemplate")` for spell
-  lists and import/export panels.
-- `CreateFrame("EditBox", ..., "InputBoxTemplate")` and XML edit-box
-  templates for spell IDs and import/export text.
-- `CreateFrame("Button", ..., "UIPanelButtonTemplate")` and XML option
-  buttons.
-- `CreateFontString(..., "GameFontNormal")` and related game fonts.
-- Backdrop calls through `Lib_ZYF:SetBackdrop` and direct `BackdropTemplate`
-  usage in prototype import/export code.
+- `CreateFrame("Frame", ...)` 用於警報圖示、條目、清單容器、群組
+框架和小地圖按鈕。
+- `CreateFrame("Cooldown", ..., "CooldownFrameTemplate")` 用於冷卻滑動
+  一幀。
+- `CreateFrame("ScrollFrame", ..., "UIPanelScrollFrameTemplate")` 用於法術
+  列表和導入/導出面板。
+- `CreateFrame("EditBox", ..., "InputBoxTemplate")` 和 XML 編輯框
+  符碼ID和匯入/匯出文字的範本。
+- `CreateFrame("Button", ..., "UIPanelButtonTemplate")` 和 XML 選項
+  按鈕。
+- `CreateFontString(..., "GameFontNormal")` 和相關遊戲字體。
+- 穿透 `Lib_ZYF:SetBackdrop` 和直接 `BackdropTemplate` 呼叫背景
+在初始化導入/導出程式碼中的使用。
 
-Rewrite rule: UI templates belong in `UI/IconPool`, `UI/Renderer`, and
-`UI/Options`. Services must not create frames or mutate frame layout directly.
+重寫規則：UI範本屬於 `UI/IconPool`、`UI/Renderer` 和
+`用戶界面/選項`。服務無法直接建立框架或改變框架佈局。
 
-## Current Responsibilities
+目前##的職責
 
-Current code responsibilities are mixed:
+目前的課程編號職責是混合的：
 
-- `Core.lua` owns load order, event registration, event routing, feature
-  handlers, lookup scanning, version checks, and fallback update scheduling.
-- Aura services are split across `Aura_Core`, `Aura_Self`, and `Aura_Target`,
-  but still render and schedule directly.
-- Cooldown service performs spell cooldown queries, item cooldown queries,
-  rendered frame mutation, and delayed updates in one module.
-- Frame creation and renderer behavior are spread across `CreateFrames`,
-  `EAFun`, `Aura_*`, `Cooldown`, `SpecialPower`, and option modules.
-- SavedVariables are initialized directly in global tables without schema
-  versioning or validation boundaries.
-- Localization uses global string constants and is mixed into UI setup.
+- `Core.lua` 擁有載入順序、事件註冊、事件路由、功能
+  處理程序、尋找掃描、版本檢查和回退更新計畫。
+- Aura 服務分為“Aura_Core”、“Aura_Self”和“Aura_Target”，
+  但仍然是直接渲染和調度。
+- 冷卻服務執行冷卻查詢、冷卻物品查詢、
+  渲染延遲，以及一個模組中的延遲更新。
+- 幀建立和渲染器行為分佈在「CreateFrames」中，
+  `EAFun`、`Aura_*`、`Cooldown`、`SpecialPower` 和選項模組。
+- SavedVariables直接在全域表中初始化，消耗模式
+  版本控製或驗證邊界。
+- 本地化使用全局字符串並混合到 UI 設定中。
 
-## Target Module Map
+## 目標模組映射
 
-Core:
+核心：
 
-- `Env`: addon namespace, local API aliases, build/flavor guard, Retail-only
-  guard.
-- `Util`: allocation helpers, pools, fallback table APIs, enum helpers,
-  assertions.
-- `Constants`: frozen enums, event names, status codes, schema versions.
-- `EventRouter`: one frame, one `OnEvent`, event-to-module dispatch table.
-- `Scheduler`: one `OnUpdate`, due-time queue, low-frequency fallback, no
-  per-icon timers.
-- `SavedVariables`: defaults, migration, validation, versioned schema.
-- `Performance`: FPS/combat throttling, optional profiling, shared pools.
+- `Env`：外掛模式命名空間、本地 API 別名、構建/風味保護、僅限正式服
+  守衛。
+- `Util`：貢獻助手、池、後備表API、枚舉助手、
+  斷言。
+- `預設`：列出枚舉、事件名稱、狀態代碼、模式版本。
+- `EventRouter`：一幀，一個`OnEvent`，事件到模組的調度表。
+-`Scheduler`：一個`OnUpdate`，不一致佇列，低頻回退，無
+  每個圖示計時器。
+- `SavedVariables`：預設值、遷移、驗證、版本化模式。
+- `性能`：FPS/戰鬥節流、任選分析、共享池。
 
-Services:
+服務：
 
-- `AuraService`: safe player/target aura adapter and cache owner.
-- `CooldownService`: spell cooldown adapter and normalized cooldown state.
-- `ItemCooldownService`: item cooldown adapter and optional incremental cache.
-- `SpellInfoService`: spell name/icon/link cache.
-- `ClassPowerService`: player class special power (Holy power, Shards, Combo points, Chi, Arcane charges) adapter and central stack numbers.
-- `GroundEffectService`: ground effect spells monitor (SPELL_CAST_SUCCESS) with dual-duration (dynamic Tooltip scraping vs manual inputs) timer tracking.
-- `TotemService`: Shaman totem slots monitor using C_Totems.GetTotemInfo.
+- `AuraService`：安全玩家/目標光環支架和緩存業主。
+- `CooldownService`：自動冷卻冷卻和標準化冷卻狀態。
+- `ItemCooldownService`：物品冷卻佇列和選擇性的增量緩存。
+- `SpellInfoService`：法術名稱/圖示/連結緩存。
+- `ClassPowerService`：玩家職業特殊能量（聖能、靈魂碎片、連擊點、真氣、奧術充能）與中央狀態管理。
+- `GroundEffectService`：地面效果感應 (SPELL_CAST_SUCCESS) 具有雙重持續時間（動態工具提示抓取與手動輸入）計時器追蹤。
+- `TotemService`：薩滿圖騰插槽使用C_Totems.GetTotemInfo進行監控。
 
-UI:
+使用者簡介：
 
-- `IconPool`: pooled buttons, textures, cooldown regions, and FontStrings.
-- `Renderer`: consumes normalized render state only; no data fetching.
-- `Options`: simple config panels.
-- `Slash`: `/eam` command parser and debug export commands.
+- `IconPool`：擷取按鈕、紋理、冷卻區域和FontStrings。
+- `Renderer`：僅消耗標準化渲染狀態；未取得資料。
+- `選項`：簡單的配置面板。
+- `Slash`：`/eam`指令解析器並偵查錯匯出指令。
 
-Debug:
+錯偵：
+- `DebugState`：簡潔的執行階段快照分割事實、衍生狀態、
+人類筆記、邊界警戒和環境。
+- `PromptExport`：連續連續的類似 JSON 的輸出。
 
-- `DebugState`: compact runtime snapshot split into facts, derived state,
-  human notes, boundary warnings, and environment.
-- `PromptExport`: on-demand compact JSON-like output.
+## 資料流
 
-## Data Flow
+1.暴雪事件進入`EventRouter`。
+2. 路由器向某個或設定服務進行調度。
+3.服務讀取安全的正式服API並更新擁有的執行時間狀態。
+4. 服務發布或標記「AlertState」記錄。
+5. `Renderer`接收接收警報狀態並更新池圖示。
+6.「調度程序」僅處理刷新、回退採樣和調試突發。
+7. __​​EAMCODE_0__ 在載入時讀取/遷移，並且僅更改配置讀取。
 
-1. Blizzard event enters `EventRouter`.
-2. Router dispatches to one or more services.
-3. Service reads safe Retail APIs and updates owned runtime state.
-4. Service emits or marks dirty `AlertState` records.
-5. `Renderer` receives dirty alert states and updates pooled icons.
-6. `Scheduler` handles only due refreshes, fallback sampling, and debug bursts.
-7. SavedVariables are read/migrated on load and written only by config changes.
+## 事件流程
 
-## Event Flow
-
-Primary events should include only necessary Retail events such as:
+主要事件應僅包括必要的正式服事件，例如：
 
 - `PLAYER_LOGIN`
 - `PLAYER_ENTERING_WORLD`
@@ -177,37 +175,36 @@ Primary events should include only necessary Retail events such as:
 - `SPELL_UPDATE_CHARGES`
 - `BAG_UPDATE_COOLDOWN`
 - `UNIT_SPELLCAST_SUCCEEDED`
-- power/resource events only when special-resource UI is enabled
+- 只有在啟用特殊資源UI時才發生能量/資源事件（Power/Resource）
 
-No `RegisterAllEvents`.
+沒有“RegisterAllEvents”。
 
-## UI Render Flow
+## UI 渲染流程
 
-Renderer input is `IconRenderState`, not raw aura/cooldown API data. Renderer:
+渲染器輸入是“IconRenderState”，而不是原始光環/冷卻API資料。渲染器：
 
-- acquires icons from `IconPool`;
-- writes changed texture, stack, timer, name, cooldown, glow, and alpha only;
-- batches layout changes with parent hidden, then shows once;
-- avoids `ClearAllPoints` and `SetPoint` unless layout keys changed;
-- never queries C_* APIs.
+- 從「IconPool」取得圖示；
+- 只需寫入後更改紋理的名稱、時間、計時器、冷卻時間、發光和阿爾法；
+- 批次更改佈局並隱藏父級，然後顯示一次；
+- 避免`ClearAllPoints`和`SetPoint`不用佈局鍵改變；
+- 從不查詢C_* API。
 
-## Scheduler Flow
+## 排程規劃流程
 
-One scheduler frame tracks due jobs by numeric time. Jobs are reusable records,
-not closure allocation points. Fallback polling must be low frequency and
-disabled or throttled in combat/low FPS unless it protects correctness.
+一個調度程序框架按數位時間追蹤作業。工作是可重複使用的記錄，
+不封配置點。後備輪詢必須是低頻的並且
+在戰鬥/低FPS或失效節流，除非它可以保護正確性。
 
-## Retail-Only Rewrite Plan
-
-1. Introduce new module skeleton and load order under `Core/`, `Services/`,
-   `UI/`, and `Debug/`.
-2. Keep old `Main/` tables as migration/reference only while building a new
-   schema.
-3. Migrate SavedVariables into a versioned profile and alert list model.
-4. Port localization strings into an isolated localization module.
-5. Implement `EventRouter` and `Scheduler` before porting services.
-6. Port player aura, target aura, spell cooldown, and item cooldown services.
-7. Implement pooled renderer and move frame creation out of service modules.
-8. Rebuild slash commands against the new services and debug exporter.
-9. Remove legacy TOCs and Classic/MOP compatibility branches from active load.
-10. Perform static checks, then live Retail validation.
+## 限正式服改計劃
+1.在`Core/`、`Services/`下匯入新的模組元件並載入順序，
+   “UI/”和“調試/”。
+2. 建立新表時僅保留舊的“Main/”表作為遷移/參考
+   架構。
+3. 將 SavedVariables 遷移到版本化設定檔和警報清單模型。
+4. 將本地化字符串移植到獨立的本地化模組中。
+5. 在移植服務前實施`EventRouter`和`Scheduler`。
+6.移植玩家光環、目標光環、角色冷卻、冷卻服務項目。
+7.實施池化渲染器放置影格建立移出服務模組。
+8.針對新服務重建斜線指令並除錯導出器。
+9. 從活動負載中刪除舊版 TOC 和 Classic/MOP 相容性分支。
+10.執行靜態檢查，然後立即進行正式服裝驗證。

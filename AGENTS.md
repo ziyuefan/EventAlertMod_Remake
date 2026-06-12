@@ -1,24 +1,23 @@
+<!-- EAM_DOCUMENTATION_SOURCE: zh-TW -->
 # EventAlertMod AI 入口指導檔
 
-本專案正在進行 EventAlertMod（EAM）正式服重寫。現有程式碼只作為「行為參考」，不得直接沿用舊架構作為新架構基礎。
+本專案發布EventAlertMod（EAM）正式服重寫。現有方案代碼作為「行為參考」，只能直接沿用舊架構作為新的架構基礎。
 
 ## 對話與文件原則
 
-- 預設使用台灣慣用繁體中文。
-- 使用者稱呼為「少年欸」。
-- 回覆直接切入任務，保持技術判斷清楚、結構明確。
+- 使用預設台灣慣用繁體中文。
+- 用戶名為「少年欸」。
+- 回覆直接切入任務，保持技術清晰、結構清晰。
 - WoW AddOn 相關任務必須先確認正式服與經典服差異；本專案只處理正式服。
-- 涉及 12.x API、Secret Values、C_* 命名空間或 Widget 行為時，需優先參考 `Docs` 與最新 Warcraft Wiki API change 資訊。
-- 不得宣稱已完成 WoW 正式服實機驗證，除非確實在 WoW Retail 中載入並測試過。
-- 每次開發時，Docs/ 內相關文件必須主動一併同步更新，保持文檔與代碼一致性，不得被動等待使用者指示（不要一動才一動）。
-- **文件與 HTML 轉換規則**：
-  - 後續開發與 AI 協作的絕對指導檔案，一律以 `AGENTS.md` 以及其內文指名之 `.md` 檔案為唯一事實與 Facts-of-Truth 參考。
-  - HTML 版本僅供人類（少年欸）在瀏覽器中好看易讀使用，AI 在讀寫與參考時，必須一律以 `.md` 原檔為唯一基準，不得以 HTML 作為開發事實參考。
-  - 當 `./Docs/*.md` 或 `./AGENTS.md` 修改且包含心智圖（Mermaid）、表格、流程圖、圖像時，必須執行轉換工具（`batch_convert_docs.py`），於 `./docs_html` 內多生成一份同名的 `.html` 檔案（例如 `00_AI_CONTEXT.md.html`）。
-
+- 涉及 12.x API、Secret Values、C_* 命名空間或 Widget 行為時，需優先參考 `Docs` 與最新魔獸爭霸 Wiki API 變更資訊。
+- 尚未完成WoW正式實用機驗證，除非確實在WoW Retail中加載並測試過。
+- 消耗開發時，文件/內相關文件必須主動一併同步更新，保持文件與程式碼的一致性，不得等待使用者指示（不要一動才一動）。
+- **檔案與HTML轉換規則**：
+  - 後續開發與 AI 協作的絕對指導文件，一律以 `AGENTS.md` 以及其內文指名之 `.md` 文件為唯一事實與 Facts-of-Truth 參考。
+- HTML版本成人人類（少年欸）在瀏覽器中觀看易讀使用，AI在讀寫器與參考時，必須一律以`.md`原檔為唯一基準，不得以HTML作為開發事實參考。
+  - 當`./Docs/*.md`或`./AGENTS.md`修改時包含心智圖（Mermaid）、表格、流程圖、映像時，必須執行轉換工具（`batch_convert_docs.py`），在`./docs_html`內多產生一個同名的__EAMCODE___檔（例如檔案）。
 ## 必讀文件
-
-變更程式碼前，先閱讀下列文件：
+在更改程式碼之前，請先閱讀以下文件：
 
 - `Docs/00_AI_CONTEXT.md`
 - `Docs/01_ARCHITECTURE.md`
@@ -42,478 +41,449 @@
 - `Docs/20_CDM_BYPASS_FEASIBILITY_STUDY.md`
 - `Docs/21_RACI_EXPERTS_MATRIX.md`
 - `Docs/22_QC_ROOT_CAUSE_ANALYSIS_GUIDE.md`
-
 舊討論脈絡可參考：
 
 - `DevDocument/ChatGPT/EventAlertMod_ChatGPT_Discussion_Context.md`
 
 ## 專案目標
 
-- 目標遊戲：World of Warcraft Retail only。
-- 目標 API 世代：Retail 12.x / Midnight-era AddOn API。
-- 架構方向：事件驅動、低 GC、模組化、可維護。
-- 使用者體驗：保留 EAM「比 WeakAuras 簡單、輕量、專注光環與冷卻提醒」的定位。
-- 現有資料表、在地化字串、Slash Command 語意與使用者可見行為可保留；內部架構應重新設計。
+- 目標遊戲：僅限魔獸世界正式服版。
+- 目標 API 世代：正式服 12.x / 午夜時代 AddOn API。
+- 架構方向：事件驅動、低GC、模組化、可維護。
+- 使用者體驗：保留EAM「比WeakAuras簡單、輕量、專注光環與冷卻提醒」的定位。
+- 現有資料表、地化字符串、斜線命令語意與使用者行為視覺化可保留；內部架構應重新設計。
 
 ## 硬性限制
 
-- 不支援 Classi## Secret / Protected Data 規則與安全檢查
+- 不支援Classi##秘密/受保護資料規則與安全檢查
+Retail 12.x 可能將光環、冷卻、作用、時間、單位或字串資料標記為 Secret / Protected / Display-only。為戰鬥中防禦 Secret/Protected 限制引發 Lua 碰撞或頭部錯誤，實施四大核心檢定 API 規範因數表索引防禦機制：
 
-Retail 12.x 可能將光環、冷卻、法術、時間、單位或字串資料標記為 Secret / Protected / Display-only。為防範在戰鬥中因 Secret/Protected 限制引發 Lua 崩潰或阻擋錯誤，必須實施四大核心檢查 API 規範與 Table 索引防禦機制：
+- **四大核心檢查功能**：
+  - `issecretvalue(value)`：判斷特定值是否受保護之秘密值（Secret Value）。
+- `canaccessvalue(value)`：判斷目前是否有權限存取與讀取該值。
+- `canaccesstable(table)`：判斷整個表格物件可是否被安全讀取（非架構）。
+  - `issecrettable(table)` / `hasanysecretvalues(table)`：檢查表格物件結構本身是否被限製或包含秘密值已。
+- **表格索引防護（關鍵）**：嚴禁使用為秘密值（如保證驗證的 `spellId` 或 `text` 等）的密鑰去對任何非安全的嚴重自訂表進行索引操作，否則會立即觸發`attempted to index a table that cannot beindexed with Key Secrets`錯誤。在自訂表索引進行之前，必須先`issecretvalue(key)`確認該金鑰匙不是受保護的秘密值，並以`canaccesstable(targetTable)`檢查表安全性。
+- 先確認來源表是否為秘密（`canaccesstable`），再讀取欄位，再確認欄位值是否為秘密（`issecretvalue`）。
+- 未確認安全前，不得對duration、expirationTime、spellID、timeLeft等值做算術、比較、字串化、表鍵、序列化或任何函數輸入。
+- 不得擠壓創造持續時間、過渡時間、冷卻時間或所需價值。
+- 不得把猜測值混入事實；推導值標記必須為推導值。
+- 資料無法安全取得時，保留可安全顯示的圖示、名稱、活動狀態，計時器顯示為受保護、displayOnly 或未知。
+- 錯偵狀態需記錄boundaryWarnings。
+- 若裝備，排程離開戰鬥後刷新。能將光環、冷卻、法術、時間、單位或字串資料標記為秘密/受保護/僅顯示。為防禦戰鬥中因秘密/受保護限制引發Lua崩潰或潰決錯誤，必須四大核心檢驗API規範與表索引防禦機制：
 
-- **四大核心檢查 Function**：
-  - `issecretvalue(value)`：判斷特定值是否為受保護之秘密值（Secret Value）。
-  - `canaccessvalue(value)`：判斷目前是否有權限存取與讀取該值。
-  - `canaccesstable(table)`：判斷整個 table 物件是否可被安全讀取（非 Restricted）。
-  - `issecrettable(table)` / `hasanysecretvalues(table)`：檢查 table 物件結構是否本身已被限制或含有秘密值。
-- **Table 索引防範 (Critical)**：嚴禁使用可能為秘密值（例如未經驗證的 `spellId` 或 `text` 等）的 key 去對任何非 secure 的自訂 table 進行 index 操作，否則將立即觸發 `attempted to index a table that cannot be indexed with secret keys` 嚴重錯誤。在對自訂 config table 進行索引前，必須先以 `issecretvalue(key)` 確保該 key 不是受保護的秘密值，並以 `canaccesstable(targetTable)` 檢查 table 安全。
-- 先確認來源 table 是否可讀（`canaccesstable`），再讀取欄位，再確認欄位值是否為 Secret（`issecretvalue`）。
-- 未確認安全前，不得對 duration、expirationTime、spellID、timeLeft 等值做算術、比較、字串化、table key、序列化或任意函式傳遞。
-- 不得捏造 duration、expiration、cooldown 或 stack 值。
-- 不得把猜測值混入 facts；推導值必須標記為 derived。
-- 資料不可安全取得時，保留可安全顯示的 icon、name、active 狀態，timer 顯示為 protected、displayOnly 或 unknown。
-- Debug 狀態需記錄 boundaryWarnings。
-- 若可行，排程離開戰鬥後 refresh。能將光環、冷卻、法術、時間、單位或字串資料標記為 Secret / Protected / Display-only。為防範在戰鬥中因 Secret/Protected 限制引發 Lua 崩潰或阻擋錯誤，必須實施四大核心檢查 API 規範與 Table 索引防禦機制：
+- **三大核心檢查功能**：
+  - `issecretvalue(value)`：判斷特定值是否受保護之秘密值（Secret Value）。
+- `canaccessvalue(value)`：判斷目前是否有權限存取與讀取該值。
+  - `canaccesstable(table)`：判斷整個表格物件可是否被安全讀取（非架構）。
+- **表格特殊檢查與索引防禦**：
+  - `issecrettable(table)`：檢查目標表本身是否已被標記為 Secret Table。
+  - `hasanysecretvalues(table)`：檢查表中是否包含任何秘密值（Secret Values）。
+- **表格索引防護（關鍵）**：嚴禁使用為秘密值（如保證驗證的 `spellId` 或 `text` 等）的密鑰去對任何非安全的嚴重自訂表進行索引操作，否則會立即觸發`attempted to index a table that cannot beindexed with Key Secrets`錯誤。在自訂表索引進行之前，必須先`issecretvalue(key)`確認該金鑰匙不是受保護的秘密值，並以`canaccesstable(targetTable)`檢查表安全性。
+- 先確認來源表是否為秘密（`canaccesstable`），再讀取欄位，再確認欄位值是否為秘密（`issecretvalue`）。
+- 未確認安全前，不得對duration、expirationTime、spellID、timeLeft等值做算術、比較、字串化、表鍵、序列化或任何函數輸入。
+- 不得擠壓創造持續時間、過渡時間、冷卻時間或所需價值。
+- 不得把猜測值混入事實；推導值標記必須為推導值。
+- 資料無法安全取得時，保留可安全顯示的圖示、名稱、活動狀態，計時器顯示為受保護、displayOnly 或未知。
+- 錯偵狀態需記錄boundaryWarnings。
+- 如果可行，排程將在不久後離開戰鬥。
 
-- **三大核心檢查 Function**：
-  - `issecretvalue(value)`：判斷特定值是否為受保護之秘密值（Secret Value）。
-  - `canaccessvalue(value)`：判斷目前是否有權限存取與讀取該值。
-  - `canaccesstable(table)`：判斷整個 table 物件是否可被安全讀取（非 Restricted）。
-- **Table 特殊檢查與索引防禦**：
-  - `issecrettable(table)`：檢查目標 table 是否本身已被標記為 Secret Table。
-  - `hasanysecretvalues(table)`：檢查 table 中是否包含任何秘密值（Secret Values）。
-  - **Table 索引防範 (Critical)**：嚴禁使用可能為秘密值（例如未經驗證的 `spellId` 或 `text` 等）的 key 去對任何非 secure 的自訂 table 進行 index 操作，否則將立即觸發 `attempted to index a table that cannot be indexed with secret keys` 嚴重錯誤。在對自訂 config table 進行索引前，必須先以 `issecretvalue(key)` 確保該 key 不是受保護的秘密值，並以 `canaccesstable(targetTable)` 檢查 table 安全。
-- 先確認來源 table 是否可讀（`canaccesstable`），再讀取欄位，再確認欄位值是否為 Secret（`issecretvalue`）。
-- 未確認安全前，不得對 duration、expirationTime、spellID、timeLeft 等值做算術、比較、字串化、table key、序列化或任意函式傳遞。
-- 不得捏造 duration、expiration、cooldown 或 stack 值。
-- 不得把猜測值混入 facts；推導值必須標記為 derived。
-- 資料不可安全取得時，保留可安全顯示的 icon、name、active 狀態，timer 顯示為 protected、displayOnly 或 unknown。
-- Debug 狀態需記錄 boundaryWarnings。
-- 若可行，排程離開戰鬥後 refresh。
-
-## Taint 控制規則
-
-- 不 hook、覆寫、重定義或 monkey patch Blizzard secure/protected 函式、FrameXML 核心函式、action button、unit frame、nameplate、spell cast、targeting、item use 相關路徑。
-- 不在戰鬥中修改 protected frame 的 attribute、parent、anchor、size、visibility、template 或 click 行為。
-- 不把 EAM runtime state、secret/protected value、debug object 或 addon callback 傳入可能污染 secure chain 的 Blizzard frame。
-- EventRouter 使用孤兒 frame；Renderer frame 只負責顯示，不承擔 secure action 或 protected interaction。
-- 若需要操作 UIParent 下的 frame，必須限制在非 protected 顯示用途，並在 `InCombatLockdown()` 時延後可能造成 taint 的結構性變更。
-- 不使用 `forceinsecure`、不嘗試清除或繞過 taint、不以第三方 workaround 壓制 Blizzard blocked action。
-- 發現 taint、blocked action、combat lockdown 錯誤時，需記錄到 `Docs/15_DEVELOPMENT_ISSUE_LOG.md`，並標明觸發路徑、戰鬥狀態與可重現步驟。
+## 污點控制規則
+- 不鉤、覆寫、重新定義或猴子補丁 Blizzard secure/protected 函數、FrameXML 核心函數、動作按鈕、單位框架、銘牌、法術施法、定位、物品使用相關路徑。
+- 不在戰鬥中修改受保護框架的屬性、父級、規則點、大小、可見性、範本或點擊行為。
+- 不把EAM運行時狀態、秘密/保護值、偵錯物件或外掛程式回呼形成可能污染安全鏈的暴雪框架。
+- 使用EventRouter孤兒框架；渲染框架只負責顯示，不承擔安全操作或受保護的互動。
+- 如果需要限制操作 UIParent 下方的框架，則必須在非受保護的顯示用途，並在 `InCombatLockdown()` 時延遲可能會導致 taint 的結構性變化。
+- 不使用`forceinsecure`、不嘗試清除或繞過污染點、不以第三方變通方式壓制暴雪阻止行動。
+- 發現污點、被阻止的動作、戰鬥鎖定錯誤時，需記錄到`Docs/15_DEVELOPMENT_ISSUE_LOG.md`，並綁定觸發路徑、戰鬥狀態與可重置步驟。
 
 ## DurationObject 與時間顯示
 
-- Secret 或受保護時間資料不得用 `OnUpdate` 自行倒數。
-- 若 Retail 提供 DurationObject，優先交給原生 UI 處理，例如 `CooldownFrame:SetCooldownFromDurationObject()` 或 `FontString:SetDurationText()`。
+- 秘密或受保護時間資料不得使用`OnUpdate`手機倒數。
+- 若 Retail 提供 DurationObject，優先取代 UI 處理，例如 `CooldownFrame:SetCooldownFromDurationObject()` 或 `FontString:SetDurationText()`。
 - `Cooldown:SetCountdownFormatter()`、`Cooldown:SetCountdownMillisecondsThreshold()` 等 12.0.5 後相關能力需以文件與實機確認後使用。
-- 手動 timer 字串只能用於已確認安全的普通數值。
+- 手動定時器鍵盤僅用於確認安全的普通數字。
 
-## Tooltip / C_TooltipInfo 降級策略
+## 工具提示 / C_TooltipInfo 降級策略
 
-Tooltip 解析只能作為低頻、保守、明確標記來源的 fallback：
-
-- 優先使用 `C_TooltipInfo` 或 Blizzard 支援的 display object。
+工具提示解析只能作為低頻、截圖、明確標記來源的後備：
+- 優先使用 `C_TooltipInfo` 或 Blizzard 支援的顯示項目。
 - 可解析靜態說明文字中的明確數值。
-- 不解析動態剩餘時間文字作為事實。
-- 不在熱路徑、戰鬥中或每 frame 執行 tooltip scraping。
-- 解析結果不得覆蓋安全 API facts，只能作為 derived 或 display-only 輔助。
-- 解析失敗時必須安靜降級，不得產生誤導 timer。
+- 不解析剩餘時間文字作為事實。
+- 不在熱路徑、戰鬥中或每幀執行工具提示抓取。
+- 解析結果無法覆寫安全性API事實，只能作為匯出或僅顯示輔助。
+- 解析失敗時安靜必須降級，無法產生昏暗計時器。
 
-## 事件與 Frame 規則
+## 事件與框架規則
+- 事件規定使用單一EventRouter。
+- 純事件監聽架構使用孤兒框架：`CreateFrame("Frame", nil, nil)`。
+- 不在UIParent-parented框架上承擔邏輯調度員職責。
+- 不在戰鬥中對UI父框架動態註冊或解除註冊事件。
+- 事件註冊變更應集中管理，避免重複供水。
 
-- 事件派發使用單一 EventRouter。
-- 純事件監聽 frame 使用孤兒 frame：`CreateFrame("Frame", nil, nil)`。
-- 不在 UIParent-parented frame 上承擔邏輯 dispatcher 職責。
-- 不在戰鬥中對 UI-parented frame 動態註冊或解除註冊事件。
-- 事件註冊變更應集中管理，避免反覆 churn。
+## 調度程序與全部規則
 
-## Scheduler 與效能規則
-
-- 優先事件驅動；排程 fallback 必須集中、低頻、可節流。
-- 只使用單一 Scheduler `OnUpdate`。
-- 禁止 timer-per-icon、timer-per-spell、熱路徑反覆 `C_Timer.After(function() ...)`。
-- `UNIT_AURA`、`SPELL_UPDATE_COOLDOWN`、`OnUpdate`、Renderer 更新屬於熱路徑。
-- 熱路徑不得配置臨時 table、closure 或不必要字串。
-- 熱路徑避免 `pairs` / `ipairs`；可用穩定數字索引時使用 numeric loop。
-- 熱路徑避免 `table.insert`；可用直接索引寫入時使用直接索引。
-- 迴圈中組字串使用 buffer 與 `table.concat`，避免連續 `..`。
-- 低 FPS 或戰鬥中應延後、縮減或停止非必要工作。
-- 大範圍 item 掃描不得在正常 runtime 執行；若需要 item-spell cache，必須 opt-in、idle-only、interruptible、FPS-aware、combat-aware。
+- 優先事件驅動；排程回退必須濃縮、低頻、可節流。
+- 只使用單一調度`OnUpdate`。
+- 禁止依附圖示計時器、應用術計時器、熱路徑重複`C_Timer.After(function() ...)`。
+- `UNIT_AURA`、`SPELL_UPDATE_COOLDOWN`、`OnUpdate`、渲染器更新屬於熱路徑。
+- 熱路徑不得配置臨時表、閉包或不必要的字串。
+- 熱路徑避免 `pairs` / `ipairs`；可用穩定數字索引時使用數位循環。
+- 熱路徑避免`table.insert`；可用直接索引寫入時使用直接索引。
+- 迴圈中群組字串使用buffer與`table.concat`，避免連續`..`。
+- 低FPS或戰鬥中應延後、縮減或停止非必要工作。
+- 大範圍物品掃描無法正常戰鬥時執行；若需要魔法存儲，選擇加入、僅閒置、可中斷、FPS釣魚、戰鬥釣魚。
 
 ## table.create / table.freeze 政策
+- `table.create`用於預期設定：圖表、圖表、流程圖、記錄清單、圖示池、預設範本。
+- 必須提供`table.create`、`table.freeze`、`table.isfrozen`後備。
+- `table.freeze` 只用於不可變靜態資料：、枚舉、模式、預設欄位設定檔、契約模組、原型、元表。
+- 穩定 API 別名表可凍結，例如 `EAM.API`，但僅在確認時不會造成載入順序或測試故障時使用。
+- 不得凍結SavedVariables、運行時快取、光環/冷卻狀態、圖示狀態、池項目、調度器佇列、debug/session記錄。
 
-- `table.create` 用於可預期配置：array、pool、ring buffer、record list、icon pool、default template。
-- 必須提供 `table.create`、`table.freeze`、`table.isfrozen` fallback。
-- `table.freeze` 只用於不可變靜態資料：constants、enum、schema、default field profile、module contract、prototype、metatable。
-- 可將穩定 API alias table 凍結，例如 `EAM.API`，但只在確認不會造成載入順序或測試困難時使用。
-- 不得 freeze SavedVariables、runtime cache、aura/cooldown state、icon state、pool object、scheduler queue、debug/session record。
+## UI / 渲染器規則
 
-## UI / Renderer 規則
-
-- Renderer 不直接查 API；資料由 service 層提供。
-- 圖示、button、FontString 使用 pool。
-- Renderer 不執行 secure action，不註冊 click-cast，不改 Blizzard protected frame，不污染 action bar / unit frame / nameplate 路徑。
-- 避免初始化後不必要的 frame 建立。
-- `SetText`、`SetPoint`、`SetSize`、`SetTexture`、layout 寫入前先比較前次值。
-- 批次 layout 時可先隱藏 parent，完成後再顯示。
-- 支援 timer、stack、spell name、aura value label，但只顯示安全資料。
-- UI 預設保持簡單，不能把 EAM 做成 WeakAuras 複雜系統。
-
+- 渲染器不直接檢查API；資料由服務層提供。
+- 圖示、按鈕、FontString使用池。
+- 渲染器不執行安全操作，不註冊點擊地圖，不修改暴雪保護框架，不操作污染列/單位框架/銘牌路徑。
+- 避免初始化後建立多餘的框架。
+- `SetText`、`SetPoint`、`SetSize`、`SetTexture`、layout 寫入前先比較後次值。
+- 批次佈局時可先隱藏父級，完成後再顯示。
+- 支援計時器、藥劑名稱、光環值標籤，但只顯示安全資料。
+- UI預設保持簡單，不能把 EAM 引入 WeakAuras 複雜系統。
 ## SavedVariables 規則
 
-- SavedVariables 必須有 schema version。
-- 提供舊資料 migration、defaults、validation。
-- 不 freeze SavedVariables。
-- 不寫入每 frame 或高頻 runtime state。
-- 無法安全 migration 的欄位要保留備份或標記為 legacy，不可靜默破壞使用者設定。
+- SavedVariables 必須有架構版本。
+- 提供舊資料遷移、預設、驗證。
+- 不凍結SavedVariables。
+- 不讀取每幀或高運行時狀態。
+- 無法安全遷移的欄位要保留備份或標記為遺傳，且不可靜默破壞使用者設定。
 
-## Debug / AI 交接規則
+## 調試/AI交接規則
 
-- Debug 預設關閉。
-- Debug export 必須 on-demand。
-- Snapshot 需拆分：
-  - facts
-  - derived
-  - human notes
+- 調試預設關閉。
+- 調試 調試必須達到。
+- 快照需分割：
+  - 事實
+  - 派生
+  ——人類筆記
   - boundaryWarnings
-  - environment
-- 不輸出巨大 log。
-- Export 字串只在使用者明確要求時建立。
+  - 環境
+- 不輸出巨大的日誌。
+- 匯出字符串僅在使用者明確要求時建立。
 
-## 程式風格
+## 課程風格
 
-- Identifier 使用英文。
-- 註解可使用繁體中文，重點放在 WoW API 邊界、效能理由與架構決策。
-- 所有正式載入的程式檔都必須有檔案層級註解，說明模組理念、責任邊界、資料所有權與日後維護注意事項；細節依 `Docs/12_CODE_COMMENTARY_GUIDE.md`。
-- 縮排使用 4 spaces。
+- 標識符使用中文。
+- 註解可使用繁體中文，重點放在 WoW API 邊界、原因與架構決策。
+-所有正式載入的方案檔都必須有檔案系統註解，說明模組、責任邊界、資料號碼與日後注意事項；細節依`Docs/12_CODE_COMMENTARY_GUIDE.md`。
+- 縮排使用4個空格。
 - 不使用行內分號。
-- Namespace / Module 使用 PascalCase。
-- Function / local variable 使用 camelCase。
-- Private function / private table 以 `_` 前綴。
-- Constant 使用 UPPER_SNAKE_CASE。
+- 命名空間/模組使用PascalCase。
+- 函數/局部變數使用camelCase。
+- 導管函數/導管表以 `_` 匯出。
+- 符號使用UPPER_SNAKE_CASE。
 
 ## 檔案備份規則
 
-- 任何檔案在刪除、搬移、覆寫或修改前，都必須先備份到專案根目錄的 `backup/` 資料夾。
-- 備份檔名格式為「原始檔名後綴 `__yyyyMMddHHmmss`」，例如 `AGENTS.md__20260526122904`。
-- 時間戳使用本機時間，格式為年月日時分秒，方便依時間排序與追溯。
-- 若要處理多個檔案，應在同一批操作開始前先逐一備份；備份完成後才可進行實際修改、搬移或刪除。
-- 備份資料夾只作為日後開發、誤刪與回溯參考來源，不得被打包進 CurseForge 發佈檔。
-- 若原始檔案不存在，需先回報原因，不得建立空備份冒充原始內容。
+- 任何檔案在刪除、移移、覆寫或修改前，都必須先備份到專案根目錄的`backup/`資料夾。
+- 備份檔案名稱格式為「原始檔案名稱後綴 `__yyyyMMddHHmmss`」，例如 `AGENTS.md__20260526122904`。
+- 使用計時器本機時間，格式為年月日時分秒，方便依排序時間與追溯。
+-處理多個文件，應在同一作業開始前逐一備份；備份完成後才可進行實際修改、移移或刪除。
+- 備份資料夾只作為日後開發、修改與回溯參考來源，不得壓縮進CurseForge發布檔案。
+- 若原始檔案不存在，需先回傳原因，無法建立空備份冒充原始內容。
 
-## 開發問題紀錄規則
+## 開發問題記錄規則
 
-- 開發過程遇到的瓶頸、限制、錯誤、工具失敗、API 不確定性與解決方式，都必須記錄到 `Docs/15_DEVELOPMENT_ISSUE_LOG.md`。
-- 紀錄目的為降低日後重複試錯、節省 AI context/token、保留決策脈絡。
-- 每筆紀錄至少包含日期、情境、症狀、原因判斷、已嘗試方法、有效解法、後續注意事項。
-- 若問題尚未解決，需標記為「未解決」並寫明下一步驗證方式。
-- 不記錄密碼、token、私人帳號資料或任何不應進入專案文件的敏感資訊。
+- 開發過程遇到的瓶頸、限制、錯誤、工具失敗、API必須性與解決方式，都記錄到`Docs/15_DEVELOPMENT_ISSUE_LOG.md`。
+- 極限目的為降低日後重複試誤、節省AI上下/token、保留決策脈絡。
+- 每筆記錄至少包含約會、症狀、原因判斷、已嘗試方法、有效解決方法、後續事項注意事項。
+- 若問題尚未解決，需標註為「未解決」並寫明下一步驗證方式。
+- 不記錄密碼、無法令牌、私人帳號資料或任何進入專案文件的敏感資訊。
 
-## 專案專屬 Skill 規則
+## 專案專屬技能規則
+- 開發過程若發現類似流程重複出現，且已具備穩定步驟、輸入條件、輸出結果與風險控制管，應整理成EventAlertMod專專用案SKILL。
+- 適合轉成SKILL的流程包含：壓縮發布、Lua靜態驗證、WoW API查詢、SavedVariables遷移檢查、秘密邊界審查、檔案同步、語檔同步。
+-目前已建立`eam-retail-p0-review`，位置為`.codex/skills/eam-retail-p0-review/SKILL.md`，用於EAM正式服重寫的P0 Secret/Taint/API/靜態驗證。
+- 建立SKILL前需先確認流程確實可重複，江蘇湖泊與解法記錄到`Docs/15_DEVELOPMENT_ISSUE_LOG.md`。
+- SKILL內容應包含觸發條件、必要前檢、禁止事項、備份規則、驗證方式和最終回傳格式。
+- 尚未驗證、尚需人工判斷或含敏感資訊的流程硬輔助技能。
+## 子代理程式計劃使用規則
 
-- 開發過程若發現同一類流程重複出現，且已具備穩定步驟、輸入條件、輸出結果與風險控管，應整理成 EventAlertMod 專案專屬 SKILL。
-- 適合轉成 SKILL 的流程包含：打包發佈、Lua 靜態驗證、WoW API 查證、SavedVariables migration 檢查、Secret boundary 審查、文件同步、語系檔同步。
-- 目前已建立 `eam-retail-p0-review`，位置為 `.codex/skills/eam-retail-p0-review/SKILL.md`，用於 EAM Retail rewrite 的 P0 Secret/Taint/API/靜態驗證流程。
-- 建立 SKILL 前需先確認流程確實可重複，並將既有瓶頸與解法記錄到 `Docs/15_DEVELOPMENT_ISSUE_LOG.md`。
-- SKILL 內容應包含觸發條件、必要前置檢查、禁止事項、備份規則、驗證方式與最終回報格式。
-- 不得把尚未驗證、仍需人工判斷或含敏感資訊的流程硬做成全自動 SKILL。
+- 使用者已授權：後續本專案若出現適合子代理人的角色，需主動規劃並使用。
+- 使用先判斷關鍵路徑；立即阻止主流程的工作，由主代理本地處理。
+- 子代理主要可任務、明確、可欣賞且不互相覆蓋邊車任務。
+- 適合模具包含：正式服API查證、Secret / taint審查、熱路徑掃描、文件一致性檢查、模組化替換的不重疊文件切片、發布檢查。
+- 不適合架構包含：小型單檔修改、需要即時授權的高風險操作、尚未遺失的卸載移動/刪除、寫入範圍高度重疊的高關聯性。
+- 派工時必須明確指定檔案責任範圍、禁止事項、備份規則、驗證輸出及最終返回格式。
+- 子代理程式結果需要由主代理程式整合；不得將子代理程式的API判定視為已實機驗證。
+- 詳細流程請參閱`Docs/17_SUBAGENT_WORKFLOW.md`。
+- 所有與PR審查的協作必須嚴格遵循 [Docs/21_RACI_EXPERTS_MATRIX.md](file:///d:/EventAlertMod/Docs/21_RACI_EXPERTS_MATRIX.md) 的 RACI 權責分工與審查原則。
+## 實施流程
+1.稽核：讀取完整原始碼樹、TOC、XML、SavedVariables、global、Classic/MOP分支、OnUpdate__EAMCODE_5_ _、光環/cooldownOnUpdate/C_Timer、auraEAMCODED__、ACODE_4_____、aCODE_3__、auraEAMCODEA__、A__uraEA__3__A__a☺
+2. 方案設計：首先模組責任與遷移策略，再開始大規模模組。
+3.重寫：建立核心、服務、UI、偵錯模組，取得可用的資料與使用者語意。
+4.靜態驗證：執行可用的Lua語法檢查、全域變數搜尋、`C_Timer.After`閉包搜尋、`table.freeze`錯誤搜尋。
+5. 報告：明確變更變更、未驗證項目、風險與下一步。
+## 快速指令
 
-## Subagent 使用規則
+- 當使用者只輸入「資源」兩個字時，直接執行`Tools/Build-CurseForgePackage.ps1`。
+- 當使用者輸入「壓縮開發版」時，直接執行`Tools/Build-CurseForgePackage.ps1 -DevMode`。
+- 資料夾前需確認`EventAlertMod.toc`的`##版本`符合`EventAlertMod_MN_yyyyMMdd`。
+- 預算檔名必須符合`EventAlertMod_MN_yyyyMMdd_HHmmss.zip`。
+- 壓縮後返回 zip 路徑、Lua 語法檢查結果、排除資料夾檢查結果。
+- 相關規則請參閱`Docs/14_PACKAGING_GUIDE.md`。
 
-- 使用者已授權：後續本專案若出現適合 subagent 的情境，需主動規劃並使用。
-- 使用前先判斷 critical path；立即阻塞主流程的工作由主代理本地處理。
-- Subagent 主要用於可並行、明確、可驗收且不互相覆蓋的 sidecar task。
-- 適合情境包含：Retail API 查證、Secret / taint 審查、熱路徑掃描、Docs 一致性檢查、模組化 rewrite 的不重疊檔案切片、打包發佈檢查。
-- 不適合情境包含：小型單檔修改、需要即時授權的高風險操作、尚未備份的大量搬移/刪除、寫入範圍高度重疊的高耦合改動。
-- 派工時必須明確指定檔案責任邊界、禁止事項、備份規則、驗證輸出與最終回報格式。
-- Subagent 結果需由主代理整合；不得把 subagent 的 API 判斷視為已實機驗證。
-- 詳細流程見 `Docs/17_SUBAGENT_WORKFLOW.md`。
-- 所有的協作與 PR 審查必須嚴格遵循 [Docs/21_RACI_EXPERTS_MATRIX.md](file:///d:/EventAlertMod/Docs/21_RACI_EXPERTS_MATRIX.md) 的 RACI 權責分工與審查原則。
+##回最終傳必須包含
 
-## 實作流程
+相關實踐的最終報告至少已上市：
 
-1. Audit：讀完整 source tree、TOC、XML、SavedVariables、global、Classic/MOP 分支、OnUpdate/C_Timer、aura/cooldown/item API。
-2. Plan：先界定模組責任與 migration 策略，再開始大規模改動。
-3. Rewrite：建立 Core、Services、UI、Debug 模組，保留可用資料與使用者語意。
-4. Static Validation：執行可用的 Lua syntax check、全域變數搜尋、`C_Timer.After` closure 搜尋、`table.freeze` 誤用搜尋。
-5. Report：清楚回報變更、未驗證項目、風險與下一步。
-
-## 快捷指令
-
-- 當使用者只輸入「打包」兩個字時，直接執行 `Tools/Build-CurseForgePackage.ps1`。
-- 當使用者輸入「打包開發版」時，直接執行 `Tools/Build-CurseForgePackage.ps1 -DevMode`。
-- 打包前需確認 `EventAlertMod.toc` 的 `## Version` 符合 `EventAlertMod_MN_yyyyMMdd`。
-- 打包輸出檔名必須符合 `EventAlertMod_MN_yyyyMMdd_HHmmss.zip`。
-- 打包後回報 zip 路徑、Lua 語法檢查結果、排除資料夾檢查結果。
-- 相關規則見 `Docs/14_PACKAGING_GUIDE.md`。
-
-## 最終回報必須包含
-
-每次實作 pass 的 final report 至少列出：
-
-1. 變更檔案。
-2. 主要架構變更。
-3. 保留的舊 EAM 行為。
-4. 移除的舊行為。
+1.更改檔案。
+2.主要架構變更。
+3.保留舊的EAM行為。
+4. 移除舊的行為。
 5. Lua / WoW API 假設。
 6. `table.create` / `table.freeze` 使用摘要。
-7. Secret / Protected Data 處理策略。
-8. 已執行的靜態驗證。
+7. 秘密/受保護資料處理策略。
+8. 已執行靜態驗證。
 9. 未執行的驗證。
-10. 必要的 WoW Retail 實機測試。
-11. 已知風險。
-12. 下一個建議任務。
+10.WoW正式服實機測試需要。
+11.已知風險。
+12.下一個建議任務。
 
 
-## 專案最新重構進度 (2026.06.06 更新)
+## 專案最新重構細節 (2026.06.06 更新)
 
-### 1. 已完成之核心重構 (Retail 12.0.7)
-*   **全代碼本地化清掃 (12.0.7 - 2026.06.06)**：
-    - 全檔案（包括 `Services` 與 `UI` 目錄下的所有邏輯）中所有硬編碼之中/英文提示名詞與 UI 顯示字串已完全提取為 `EAM.L` 中的 Key。
-    - 補齊並無縫支援 `zhTW` (繁中)、`zhCN` (簡中)、`enUS` (英文底層)、`koKR` (韓文) 與 `ruRU` (俄文) 五大語系，共計 144 個詞條。
-    - **動態專精本地化 API 重構**：在 `UI/Options.lua` 的篩選下拉選單中引入 `CLASS_TOKEN_TO_ID` 映射，優先調用官方原生 API `GetSpecializationInfoForClassID` 取得最準確的本地化專精名稱，並提供雙軌備份 fallback 防線。
-*   **ClassPower 核心資源安全與偵錯加強**：
-    - 為 `detectClassPower` 與 `updatePower` 部署全套 `pcall` 隔離與 `issecretvalue` 防衛機制，防止戰鬥中能量數值突變為 Secret Table 時大小比較造成的 Lua 崩潰。
-*   **EventRouter/Scheduler 故障隔離**：
-    - 為 `Core/EventRouter.lua` 的 OnEvent 核心循環與 `Core/Scheduler.lua` 的定時任務 callback 加上參數化 `pcall` 容錯，確保單一模組報錯時，不會干擾或中斷其他模組與定時器的執行。
-*   **雙軌 Native Binding 倒數與 Pandemic Glow**：
-    - 時間渲染優先啟用 `C_DurationUtil.CreateDurationTextBinding` 與 `SetCooldownFromDurationObject` 降級通道。
-    - 在 DoT 光環滿足 Pandemic 刷新時間時，為 Icon 啟用 Glow 亮框效果。
-*   **13 職業與 28 個英雄天賦資料庫擴展**：
-    - 更新 `Data/SpellArray.lua`，為所有 13 個職業與 28 個英雄天賦（如 Tempest, Sacred Weapon, Diabolic Ritual 等）配置了最新的法術 ID 預設監控。
-
-### 2. 後續維護與開發建議
-*   **安全防禦優先**：在與 any 光環、冷卻、能量、時間相關的數值進行大小比較或 table 索引時，必須先使用 `issecretvalue` 進行防禦性檢查。
-*   **語法靜態檢驗**：在對 any Lua 檔案進行修改後，必須執行 `luac -p` 檢查。
-*   **12.0.7 & 12.1.0 專家聯席會審與影子載體研究 (2026.06.07 更新)**：
-    - 召集全體專家 subagents 進行圓桌聯席會審。Lua VM 專家指出戰鬥熱路徑中匿名閉包 `pcall` 導致 LuaJIT Trace Compiler Abort 的底層開銷，並提供了 Module 級別 static local fallback 機制；AddOn Architect 起草了 `Docs/19_AURA_1210_REDUX_BLUEPRINT.md` 藍圖，全面規劃了 `AuraService` 零分配快取池 `AuraStatePool` 及 C++ Native Duration Binding 雙軌渲染管線。
-    - **影子載體技術 (Shadow Host) 實作**：針對利用原生 `CooldownViewer` (冷卻管理器/CDM) 作為影子載體以避讓戰鬥 Secret / Taint 限制完成實作。新建 `Services/ShadowHostService.lua` 實作官方 Pool Hook，並於 `UI/Renderer.lua` 中引入寄生渲染與級聯排版避讓，100% 避開戰鬥中 layout CPU 與 Taint 開銷。評估研究可參考 `Docs/20_CDM_BYPASS_FEASIBILITY_STUDY.md`。
-*   **12.1.0 零分配 & 事件驅動全模組重構 (2026.06.07 已完成)**：
-    - **完全數據-視圖解耦**：解耦 `AuraService`、`CooldownService`、`ItemCooldownService`、`GroundEffectService` 與 `TotemService`，五大數據服務全部改為事件驱动，不再與 `Renderer` 直接耦合，而是向 `EventRouter` 拋出對應的 `EAM_*_STATE_CHANGED` 事件。
-    - **中介控制器引入**：引入 `Managers/AlertManager.lua` 統一管理和調度這五類變更事件，使用 `Scheduler` 實作非同步節流與批次更新（`BeginBatch/EndBatch`），消除 Layout Churn。
-    - **多型零分配物件池**：在所有服務中配置專屬的 `StatePool`（例如 `GroundEffectStatePool` 與 `TotemStatePool` 等），在 `acquire` 狀態物件時綁定 `releaseFunc`，並由 `AlertManager` 在渲染隱藏後多型呼叫 `state.releaseFunc(state)` 安全回收物件，達成運行期 0-Allocation 極致低 GC 目標。
-    - **影子載體文字剪裁與遮擋修正**：針對吸附官方 CooldownViewer（CDM）時，因原生容器 `ClipsChildren` 裁切與 FrameLevel 遮擋導致技能名稱不顯示的問題，實作動態佈局調整。寄生模式下自動將技能名稱（`nameText`）移至圖示內側底部並設為 Highlight 顯色，同時提權 `FrameLevel`（相對於 `hostIcon` + 10），解決了「看不見技能名稱」的痛點。
-    - **靜態安全語法檢驗**：32 個 Lua 檔案 100% 通過語法安全性檢驗。
-*   **16 大全新與高頻事件整合 (2026.06.07 已完成)**：
-- 不使用 `forceinsecure`、不嘗試清除或繞過 taint、不以第三方 workaround 壓制 Blizzard blocked action。
-- 發現 taint、blocked action、combat lockdown 錯誤時，需記錄到 `Docs/15_DEVELOPMENT_ISSUE_LOG.md`，並標明觸發路徑、戰鬥狀態與可重現步驟。
-
+### 1.已完成核心重構(Retail 12.0.7)
+* **全程式碼局部化清掃 (12.0.7 - 2026.06.06)**：
+- 整個文件（包括 `Services` 和 `UI` 目錄下的所有邏輯）中所有編碼硬/英文提示術語與 UI 字符串已完全提取為 `EAM.L` 中的密鑰。
+- 補齊並無縫支持`zhTW` (繁中)、`zhCN` (簡中)、`enUS` (簡中)、`koKR` (韓文) 與 `ruRU` (俄文) 五大語系，共144個詞條。
+- **動態專精本地化API重構**：在`UI/Options.lua`的篩選選項中引入`CLASS_TOKEN_TO_ID`映射，優先調用官方嫁接API `GetSpecializationInfoForClassID`取得最準確的本地化專精名稱，並提供雙軌本地化備份。
+* **ClassPower核心資源安全偵查與錯案加強**：
+- 為 `detectClassPower` 與 `updatePower` 部署密切注意 `pcall` 隔離與 `issecretvalue` 防衛機制，防止戰鬥中能量數值差異為秘密表時大小比較造成的 Lua 崩潰。
+* **EventRouter/Scheduler 故障隔離**：
+- 為`Core/EventRouter.lua`的OnEvent核心循環與`Core/Scheduler.lua`的定時任務回調回調參數化`pcall`容錯，確保單一模組報錯時，不會幹擾或中斷其他模組與定時的執行。
+* **雙軌 Native Binding 倒數與 Pandemic Glow**：
+    - 時間渲染優先權實作 `C_DurationUtil.CreateDurationTextBinding` 與 `SetCooldownFromDurationObject` 降級通道。
+    - 在DoT光環滿足Pandemic刷新時間時，為 Icon 啟用發光亮框效果。
+* **13個職業與28個英雄天賦資料庫擴展**：
+    - 更新`Data/SpellArray.lua`，為所有13個職業與28個英雄天賦（如暴風雨、神聖、武器惡魔儀式等）配置了最新的武器ID預設監控。
+### 2.後續維護與開發建議
+* **安全防禦優先**：在與任何光環、冷卻、能量、時間相關的數值進行大小比較或表索引時，必須先使用 `issecretvalue` 進行防禦性檢查。
+* **修改語法靜態檢查**：在對任何Lua檔案進行後必須，執行 `luac -p` 檢查。
+* **12.0.7 & 12.1.0 專家聯合會與月亮載體研究（2026.06.07更新）**：
+- 召集全體專家分代理進行圓桌聯會審定。 Lua VM專家指出熱路中閉隱包`pcall`導致LuaJIT Trace編譯器中止的底層工資，並提供了模組級靜態本地回退機制；AddOn架構師建立了`Docs/19_AURA_1210_REDUX_BLUEPRINT.md`藍圖，全面規劃了__MEAM__CODE_4) 零點存儲
+- **影子載體技術(Shadow Host)實務**：針對利用橋樑`CooldownViewer` (冷卻管理器/CDM)作為影子載體以避戰秘密/污染限製完成實現。新建`Services/ShadowHostService.lua`實踐官方池Hook，並於`UI/Renderer.lua`中引入寄生渲染讓與級聯排版避讓，100%黑暗中配合架構CPU與Taint。評估研究可參考`Docs/20_CDM_BYPASS_FEASIBILITY_STUDY.md`。
+* **12.1.0 零分配 & 事件驅動全模組重構 (2026.06.07 已完成)**：
+- **資料視圖解關聯**：解關聯`AuraService`、__完全EAMCODE_1__、`ItemCooldownService`、`GroundEffectService`與__EAMCODE_全部__，五大資料服務改為驅動事件，不再與`Renderer`直接連接，而是向至EAM__CO8D__EAM1 86_DED__EAM__CODDE____EAM__CO8DDEA__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_0__EAM__CO8DDEA__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_%__EAMCODE___EAMCODE6%__ _EAMCODE_5__%__EAM__CODDE_%__EAM__CODDE_0__EAM__CO8DDEA__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_0__EAM__CO8DDEA__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_0__EAM__CO8DDEA__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CODDE_%__EAM__CODDE_%__。
+- **境內控制器引入**：引入`Managers/AlertManager.lua`統一管理和調度這五類變更事件，使用`Scheduler`實行同步節流與批量更新（`BeginBatch/EndBatch`），消除佈局本身。
+- **多型零分配物件池**：在所有服務中配置強調的 `StatePool` （如 `GroundEffectStatePool` 和 `TotemStatePool` 等），在 `acquire`狀態對象時綁定`releaseFunc`，並由`AlertManager`在渲染後識別多__A__EA__A__3__4D__EAMCO`fstate__EAMCO"__EA安全恢復對象，完成期運行0-分配最大限度降低GC目標。
+- **鏡像載體文字剪裁與遮蔽修改**：針對吸附官方CooldownViewer（CDM）時，因牽引容器`ClipsChildren`裁切與FrameLevel顯示導致技能名稱不顯示的問題，實施動態佈局調整。寄生模式下自動將技能名稱（`nameText`）移至圖示底部並設定高亮顯示圖示底部並設定高亮顯色，同時提權`FrameLevel`（相對於）`hostIcon` + 10），解決了「看不見的技能名稱」的痛點。
+- **靜態語法安全性偵測設定**：32個Lua檔案100%滲透語法安全性偵測設定。
+* **16完成全新與高階事件整合（2026.06.07已）**：
+- 不使用`forceinsecure`、不嘗試清除或繞過污染點、不以第三方變通方式壓制暴雪阻止行動。
+- 發現污點、被阻止的動作、戰鬥鎖定錯誤時，需記錄到`Docs/15_DEVELOPMENT_ISSUE_LOG.md`，並綁定觸發路徑、戰鬥狀態與可重置步驟。
 ## DurationObject 與時間顯示
-
-- Secret 或受保護時間資料不得用 `OnUpdate` 自行倒數。
-- 若 Retail 提供 DurationObject，優先交給原生 UI 處理，例如 `CooldownFrame:SetCooldownFromDurationObject()` 或 `FontString:SetDurationText()`。
+- 秘密或受保護時間資料不得使用`OnUpdate`手機倒數。
+- 若 Retail 提供 DurationObject，優先取代 UI 處理，例如 `CooldownFrame:SetCooldownFromDurationObject()` 或 `FontString:SetDurationText()`。
 - `Cooldown:SetCountdownFormatter()`、`Cooldown:SetCountdownMillisecondsThreshold()` 等 12.0.5 後相關能力需以文件與實機確認後使用。
-- 手動 timer 字串只能用於已確認安全的普通數值。
+- 手動定時器鍵盤僅用於確認安全的普通數字。
 
-## Tooltip / C_TooltipInfo 降級策略
+## 工具提示 / C_TooltipInfo 降級策略
+工具提示解析只能作為低頻、截圖、明確標記來源的後備：
 
-Tooltip 解析只能作為低頻、保守、明確標記來源的 fallback：
-
-- 優先使用 `C_TooltipInfo` 或 Blizzard 支援的 display object。
+- 優先使用 `C_TooltipInfo` 或 Blizzard 支援的顯示項目。
 - 可解析靜態說明文字中的明確數值。
-- 不解析動態剩餘時間文字作為事實。
-- 不在熱路徑、戰鬥中或每 frame 執行 tooltip scraping。
-- 解析結果不得覆蓋安全 API facts，只能作為 derived 或 display-only 輔助。
-- 解析失敗時必須安靜降級，不得產生誤導 timer。
+- 不解析剩餘時間文字作為事實。
+- 不在熱路徑、戰鬥中或每幀執行工具提示抓取。
+- 解析結果無法覆寫安全性API事實，只能作為匯出或僅顯示輔助。
+- 解析失敗時安靜必須降級，無法產生昏暗計時器。
 
-## 事件與 Frame 規則
+## 事件與框架規則
 
-- 事件派發使用單一 EventRouter。
-- 純事件監聽 frame 使用孤兒 frame：`CreateFrame("Frame", nil, nil)`。
-- 不在 UIParent-parented frame 上承擔邏輯 dispatcher 職責。
-- 不在戰鬥中對 UI-parented frame 動態註冊或解除註冊事件。
-- 事件註冊變更應集中管理，避免反覆 churn。
-
-## Scheduler 與效能規則
-
-- 優先事件驅動；排程 fallback 必須集中、低頻、可節流。
-- 只使用單一 Scheduler `OnUpdate`。
-- 禁止 timer-per-icon、timer-per-spell、熱路徑反覆 `C_Timer.After(function() ...)`。
-- `UNIT_AURA`、`SPELL_UPDATE_COOLDOWN`、`OnUpdate`、Renderer 更新屬於熱路徑。
-- 熱路徑不得配置臨時 table、closure 或不必要字串。
-- 熱路徑避免 `pairs` / `ipairs`；可用穩定數字索引時使用 numeric loop。
-- 熱路徑避免 `table.insert`；可用直接索引寫入時使用直接索引。
-- 迴圈中組字串使用 buffer 與 `table.concat`，避免連續 `..`。
-- 低 FPS 或戰鬥中應延後、縮減或停止非必要工作。
-- 大範圍 item 掃描不得在正常 runtime 執行；若需要 item-spell cache，必須 opt-in、idle-only、interruptible、FPS-aware、combat-aware。
+- 事件規定使用單一EventRouter。
+- 純事件監聽架構使用孤兒框架：`CreateFrame("Frame", nil, nil)`。
+- 不在UIParent-parented框架上承擔邏輯調度員職責。
+- 不在戰鬥中對UI父框架動態註冊或解除註冊事件。
+- 事件註冊變更應集中管理，避免重複供水。
+## 調度程序與全部規則
+- 優先事件驅動；排程回退必須濃縮、低頻、可節流。
+- 只使用單一調度`OnUpdate`。
+- 禁止依附圖示計時器、應用術計時器、熱路徑重複`C_Timer.After(function() ...)`。
+- `UNIT_AURA`、`SPELL_UPDATE_COOLDOWN`、`OnUpdate`、渲染器更新屬於熱路徑。
+- 熱路徑不得配置臨時表、閉包或不必要的字串。
+- 熱路徑避免 `pairs` / `ipairs`；可用穩定數字索引時使用數位循環。
+- 熱路徑避免`table.insert`；可用直接索引寫入時使用直接索引。
+- 迴圈中群組字串使用buffer與`table.concat`，避免連續`..`。
+- 低FPS或戰鬥中應延後、縮減或停止非必要工作。
+- 大範圍物品掃描無法正常戰鬥時執行；若需要魔法存儲，選擇加入、僅閒置、可中斷、FPS釣魚、戰鬥釣魚。
 
 ## table.create / table.freeze 政策
-
-- `table.create` 用於可預期配置：array、pool、ring buffer、record list、icon pool、default template。
-- 必須提供 `table.create`、`table.freeze`、`table.isfrozen` fallback。
-- `table.freeze` 只用於不可變靜態資料：constants、enum、schema、default field profile、module contract、prototype、metatable。
-- 可將穩定 API alias table 凍結，例如 `EAM.API`，但只在確認不會造成載入順序或測試困難時使用。
-- 不得 freeze SavedVariables、runtime cache、aura/cooldown state、icon state、pool object、scheduler queue、debug/session record。
-
-## UI / Renderer 規則
-
-- Renderer 不直接查 API；資料由 service 層提供。
-- 圖示、button、FontString 使用 pool。
-- Renderer 不執行 secure action，不註冊 click-cast，不改 Blizzard protected frame，不污染 action bar / unit frame / nameplate 路徑。
-- 避免初始化後不必要的 frame 建立。
-- `SetText`、`SetPoint`、`SetSize`、`SetTexture`、layout 寫入前先比較前次值。
-- 批次 layout 時可先隱藏 parent，完成後再顯示。
-- 支援 timer、stack、spell name、aura value label，但只顯示安全資料。
-- UI 預設保持簡單，不能把 EAM 做成 WeakAuras 複雜系統。
+- `table.create`用於預期設定：圖表、圖表、流程圖、記錄清單、圖示池、預設範本。
+- 必須提供`table.create`、`table.freeze`、`table.isfrozen`後備。
+- `table.freeze` 只用於不可變靜態資料：、枚舉、模式、預設欄位設定檔、模組合同、原型、元表。
+- 穩定 API 別名表可凍結，例如 `EAM.API`，但僅在確認時不會造成載入順序或測試故障時使用。
+- 不得凍結SavedVariables、運行時快取、光環/冷卻狀態、圖示狀態、池項目、調度器佇列、debug/session記錄。
+## UI / 渲染器規則
+- 渲染器不直接檢查API；資料由服務層提供。
+- 圖示、按鈕、FontString使用池。
+- 渲染器不執行安全操作，不註冊點擊地圖，不修改暴雪保護框架，不操作污染列/單位框架/銘牌路徑。
+- 避免初始化後建立多餘的框架。
+- `SetText`、`SetPoint`、`SetSize`、`SetTexture`、layout 寫入前先比較後次值。
+- 批次佈局時可先隱藏父級，完成後再顯示。
+- 支援計時器、藥劑名稱、光環值標籤，但只顯示安全資料。
+- UI預設保持簡單，不能把 EAM 引入 WeakAuras 複雜系統。
 
 ## SavedVariables 規則
 
-- SavedVariables 必須有 schema version。
-- 提供舊資料 migration、defaults、validation。
-- 不 freeze SavedVariables。
-- 不寫入每 frame 或高頻 runtime state。
-- 無法安全 migration 的欄位要保留備份或標記為 legacy，不可靜默破壞使用者設定。
+- SavedVariables 必須有 schema 版本。
+- 提供舊資料遷移、預設、驗證。
+- 不凍結SavedVariables。
+- 不讀取每幀或高運行時狀態。
+- 無法安全遷移的欄位要保留備份或標記為遺傳，且不可靜默破壞使用者設定。
+## 調試/AI交接規則
 
-## Debug / AI 交接規則
-
-- Debug 預設關閉。
-- Debug export 必須 on-demand。
-- Snapshot 需拆分：
-  - facts
-  - derived
-  - human notes
+- 調試預設關閉。
+- 調試 調試必須達到。
+- 快照需分割：
+  - 事實
+  - 派生
+  ——人類筆記
   - boundaryWarnings
-  - environment
-- 不輸出巨大 log。
-- Export 字串只在使用者明確要求時建立。
+  - 環境
+- 不輸出巨大的日誌。
+- 匯出字符串僅在使用者明確要求時建立。
 
-## 程式風格
+## 課程風格
 
-- Identifier 使用英文。
-- 註解可使用繁體中文，重點放在 WoW API 邊界、效能理由與架構決策。
-- 所有正式載入的程式檔都必須有檔案層級註解，說明模組理念、責任邊界、資料所有權與日後維護注意事項；細節依 `Docs/12_CODE_COMMENTARY_GUIDE.md`。
-- 縮排使用 4 spaces。
+- 標識符使用中文。
+- 註解可使用繁體中文，重點放在 WoW API 邊界、原因與架構決策。
+-所有正式載入的方案檔都必須有檔案系統註解，說明模組、責任邊界、資料號碼與日後注意事項；細節依`Docs/12_CODE_COMMENTARY_GUIDE.md`。
+- 縮排使用4個空格。
 - 不使用行內分號。
-- Namespace / Module 使用 PascalCase。
-- Function / local variable 使用 camelCase。
-- Private function / private table 以 `_` 前綴。
-- Constant 使用 UPPER_SNAKE_CASE。
+- 命名空間/模組使用PascalCase。
+- 函數/局部變數使用camelCase。
+- 導管函數/導管表以 `_` 匯出。
+- 符號使用UPPER_SNAKE_CASE。
 
 ## 檔案備份規則
-
-- 任何檔案在刪除、搬移、覆寫或修改前，都必須先備份到專案根目錄的 `backup/` 資料夾。
+- 任何檔案在刪除、移移、覆寫或修改前，都必須先備份到專案根目錄的`backup/`資料夾。
 - 備份檔名格式為「原始檔名後綴 `__yyyyMMddHHmmss`」，例如 `AGENTS.md__20260526122904`。
-- 時間戳使用本機時間，格式為年月日時分秒，方便依時間排序與追溯。
-- 若要處理多個檔案，應在同一批操作開始前先逐一備份；備份完成後才可進行實際修改、搬移或刪除。
-- 備份資料夾只作為日後開發、誤刪與回溯參考來源，不得被打包進 CurseForge 發佈檔。
-- 若原始檔案不存在，需先回報原因，不得建立空備份冒充原始內容。
+- 使用計時器本機時間，格式為年月日時分秒，方便依排序時間與追溯。
+-處理多個文件，應在同一作業開始前逐一備份；備份完成後才可進行實際修改、移移或刪除。
+- 備份資料夾只作為日後開發、修改與回溯參考來源，不得壓縮進CurseForge發布檔案。
+- 若原始檔案不存在，需先回傳原因，無法建立空備份冒充原始內容。
 
-## 開發問題紀錄規則
+## 開發問題記錄規則
+- 開發過程遇到的瓶頸、限制、錯誤、工具失敗、API必須性與解決方式，都記錄到`Docs/15_DEVELOPMENT_ISSUE_LOG.md`。
+- 極限目的為降低日後重複試誤、節省AI上下/token、保留決策脈絡。
+- 每筆記錄至少包含約會、症狀、原因判斷、已嘗試方法、有效解決方法、後續事項注意事項。
+- 若問題尚未解決，需標註為「未解決」並寫明下一步驗證方式。
+- 不記錄密碼、無法令牌、私人帳號資料或任何進入專案文件的敏感資訊。
 
-- 開發過程遇到的瓶頸、限制、錯誤、工具失敗、API 不確定性與解決方式，都必須記錄到 `Docs/15_DEVELOPMENT_ISSUE_LOG.md`。
-- 紀錄目的為降低日後重複試錯、節省 AI context/token、保留決策脈絡。
-- 每筆紀錄至少包含日期、情境、症狀、原因判斷、已嘗試方法、有效解法、後續注意事項。
-- 若問題尚未解決，需標記為「未解決」並寫明下一步驗證方式。
-- 不記錄密碼、token、私人帳號資料或任何不應進入專案文件的敏感資訊。
+## 專案專屬技能規則
 
-## 專案專屬 Skill 規則
+- 開發過程若發現類似流程重複出現，且已具備穩定步驟、輸入條件、輸出結果與風險控制管，應整理成EventAlertMod專專用案SKILL。
+- 適合轉換成SKILL的流程包含：壓縮發布、Lua靜態驗證、WoW API查證、SavedVariables遷移檢查、秘密邊界審查、檔案同步、語檔同步。
+- 目前已建立`eam-retail-p0-review`，位置為`.codex/skills/eam-retail-p0-review/SKILL.md`，用於EAM正式服重寫的P0 Secret/Taint/API/靜態驗證。
+- 建立SKILL前需先確認流程確實可重複，江蘇湖泊與解法記錄到`Docs/15_DEVELOPMENT_ISSUE_LOG.md`。
+- SKILL內容應包含觸發條件、必要前檢、禁止事項、備份規則、驗證方式和最終回傳格式。
+- 尚未驗證、尚需人工判斷或含敏感資訊的流程硬輔助技能。
 
-- 開發過程若發現同一類流程重複出現，且已具備穩定步驟、輸入條件、輸出結果與風險控管，應整理成 EventAlertMod 專案專屬 SKILL。
-- 適合轉成 SKILL 的流程包含：打包發佈、Lua 靜態驗證、WoW API 查證、SavedVariables migration 檢查、Secret boundary 審查、文件同步、語系檔同步。
-- 目前已建立 `eam-retail-p0-review`，位置為 `.codex/skills/eam-retail-p0-review/SKILL.md`，用於 EAM Retail rewrite 的 P0 Secret/Taint/API/靜態驗證流程。
-- 建立 SKILL 前需先確認流程確實可重複，並將既有瓶頸與解法記錄到 `Docs/15_DEVELOPMENT_ISSUE_LOG.md`。
-- SKILL 內容應包含觸發條件、必要前置檢查、禁止事項、備份規則、驗證方式與最終回報格式。
-- 不得把尚未驗證、仍需人工判斷或含敏感資訊的流程硬做成全自動 SKILL。
+## 子代理程式計劃使用規則
 
-## Subagent 使用規則
+- 使用者已授權：後續本專案若出現適合子代理人的角色，需主動規劃並使用。
+- 使用先判斷關鍵路徑；立即阻止主流程的工作，由主代理本地處理。
+- 子代理主要可任務、明確、可欣賞且不互相覆蓋邊車任務。
+- 適合模具包含：正式服API查證、Secret / taint審查、熱路徑掃描、文件一致性檢查、模組化替換的不重疊文件切片、發布檢查。
+- 不適合架構包含：小型單檔修改、需要即時授權的高風險操作、尚未遺失的卸載移動/刪除、寫入範圍高度重疊的高關聯性。
+- 派工時必須明確指定檔案責任範圍、禁止事項、備份規則、驗證輸出及最終返回格式。
+- 子代理程式結果需要由主代理程式整合；不得將子代理程式的API判定視為已實機驗證。
+- 詳細流程請參閱`Docs/17_SUBAGENT_WORKFLOW.md`。
 
-- 使用者已授權：後續本專案若出現適合 subagent 的情境，需主動規劃並使用。
-- 使用前先判斷 critical path；立即阻塞主流程的工作由主代理本地處理。
-- Subagent 主要用於可並行、明確、可驗收且不互相覆蓋的 sidecar task。
-- 適合情境包含：Retail API 查證、Secret / taint 審查、熱路徑掃描、Docs 一致性檢查、模組化 rewrite 的不重疊檔案切片、打包發佈檢查。
-- 不適合情境包含：小型單檔修改、需要即時授權的高風險操作、尚未備份的大量搬移/刪除、寫入範圍高度重疊的高耦合改動。
-- 派工時必須明確指定檔案責任邊界、禁止事項、備份規則、驗證輸出與最終回報格式。
-- Subagent 結果需由主代理整合；不得把 subagent 的 API 判斷視為已實機驗證。
-- 詳細流程見 `Docs/17_SUBAGENT_WORKFLOW.md`。
+## 實施流程
 
-## 實作流程
+1. 審核：讀取完整原始碼樹、TOC、XML、SavedVariables、global、Classic/MOP分支、OnUpdate/C_Timer、aura/cooldownOnUpdateOnUpdate/C_Timer、aura/cooldownOnUpdate__EAMCODE_6_EAMCODE_6__8、/cooldownOnUpdate__EAMCODE__8、__EAM__86_6%。
+2. 方案設計：首先​​模組責任與遷移策略，再開始大規模模組。
+3.重寫：建立核心、服務、UI、偵錯模組，取得可用的資料與使用者語意。
+4.靜態驗證：執行可用的Lua語法檢查、全域變數搜尋、`C_Timer.After`閉包搜尋、`table.freeze`錯誤搜尋。
+5. 報告：明確變更變更、未驗證項目、風險與下一步。
 
-1. Audit：讀完整 source tree、TOC、XML、SavedVariables、global、Classic/MOP 分支、OnUpdate/C_Timer、aura/cooldown/item API。
-2. Plan：先界定模組責任與 migration 策略，再開始大規模改動。
-3. Rewrite：建立 Core、Services、UI、Debug 模組，保留可用資料與使用者語意。
-4. Static Validation：執行可用的 Lua syntax check、全域變數搜尋、`C_Timer.After` closure 搜尋、`table.freeze` 誤用搜尋。
-5. Report：清楚回報變更、未驗證項目、風險與下一步。
+## 快速指令
 
-## 快捷指令
+- 當使用者只輸入「資源」兩個字時，直接執行`Tools/Build-CurseForgePackage.ps1`。
+- 資源前需確認 `EventAlertMod.toc` 且 `## Version` 符合 `EventAlertMod_MN_yyyyMMdd`（開發版本時，其將覆蓋寫入命名為 DEV 跳過日期校驗）。
+- 壓縮輸出檔名必須符合`EventAlertMod_MN_yyyyMMdd_HHmmss.zip`，開發版本則為`EventAlertMod_DEV_yyyyMMdd_HHmmss.zip`。
+- 壓縮後返回 zip 路徑、Lua 語法檢查結果、排除資料夾檢查結果。
+- 相關規則請參閱`Docs/14_PACKAGING_GUIDE.md`。
 
-- 當使用者只輸入「打包」兩個字時，直接執行 `Tools/Build-CurseForgePackage.ps1`。
-- 打包前需確認 `EventAlertMod.toc` 的 `## Version` 符合 `EventAlertMod_MN_yyyyMMdd`（開發版除外，其將覆寫命名為 DEV 且跳過日期校驗）。
-- 打包輸出檔名必須符合 `EventAlertMod_MN_yyyyMMdd_HHmmss.zip`，開發版則為 `EventAlertMod_DEV_yyyyMMdd_HHmmss.zip`。
-- 打包後回報 zip 路徑、Lua 語法檢查結果、排除資料夾檢查結果。
-- 相關規則見 `Docs/14_PACKAGING_GUIDE.md`。
+##回最終傳必須包含
+相關實踐的最終報告至少已上市：
 
-## 最終回報必須包含
-
-每次實作 pass 的 final report 至少列出：
-
-1. 變更檔案。
-2. 主要架構變更。
-3. 保留的舊 EAM 行為。
-4. 移除的舊行為。
+1.更改檔案。
+2.主要架構變更。
+3.保留舊的EAM行為。
+4. 移除舊的行為。
 5. Lua / WoW API 假設。
 6. `table.create` / `table.freeze` 使用摘要。
-7. Secret / Protected Data 處理策略。
-8. 已執行的靜態驗證。
+7. 秘密/受保護資料處理策略。
+8. 已執行靜態驗證。
 9. 未執行的驗證。
-10. 必要的 WoW Retail 實機測試。
-11. 已知風險。
-12. 下一個建議任務。
+10.WoW正式服實機測試需要。
+11.已知風險。
+12.下一個建議任務。
 
 
-## 專案最新重構進度 (2026.06.06 更新)
-
-### 1. 已完成之核心重構 (Retail 12.0.7)
-*   **全代碼本地化清掃 (12.0.7 - 2026.06.06)**：
-    - 全檔案（包括 `Services` 與 `UI` 目錄下的所有邏輯）中所有硬編碼之中/英文提示名詞與 UI 顯示字串已完全提取為 `EAM.L` 中的 Key。
-    - 補齊並無縫支援 `zhTW` (繁中)、`zhCN` (簡中)、`enUS` (英文底層)、`koKR` (韓文) 與 `ruRU` (俄文) 五大語系，共計 144 個詞條。
-    - **動態專精本地化 API 重構**：在 `UI/Options.lua` 的篩選下拉選單中引入 `CLASS_TOKEN_TO_ID` 映射，優先調用官方原生 API `GetSpecializationInfoForClassID` 取得最準確的本地化專精名稱，並提供雙軌備份 fallback 防線。
-*   **ClassPower 核心資源安全與偵錯加強**：
-    - 為 `detectClassPower` 與 `updatePower` 部署全套 `pcall` 隔離與 `issecretvalue` 防衛機制，防止戰鬥中能量數值突變為 Secret Table 時大小比較造成的 Lua 崩潰。
-*   **EventRouter/Scheduler 故障隔離**：
-    - 為 `Core/EventRouter.lua` 的 OnEvent 核心循環與 `Core/Scheduler.lua` 的定時任務 callback 加上參數化 `pcall` 容錯，確保單一模組報錯時，不會干擾或中斷其他模組與定時器的執行。
-*   **雙軌 Native Binding 倒數與 Pandemic Glow**：
-    - 時間渲染優先啟用 `C_DurationUtil.CreateDurationTextBinding` 與 `SetCooldownFromDurationObject` 降級通道。
-    - 在 DoT 光環滿足 Pandemic 刷新時間時，為 Icon 啟用 Glow 亮框效果。
-*   **13 職業與 28 個英雄天賦資料庫擴展**：
-    - 更新 `Data/SpellArray.lua`，為所有 13 個職業與 28 個英雄天賦（如 Tempest, Sacred Weapon, Diabolic Ritual 等）配置了最新的法術 ID 預設監控。
-
-### 2. 後續維護與開發建議
-*   **安全防禦優先**：在與 any 光環、冷卻、能量、時間相關的數值進行大小比較或 table 索引時，必須先使用 `issecretvalue` 進行防禦性檢查。
-*   **語法靜態檢驗**：在對 any Lua 檔案進行修改後，必須執行 `luac -p` 檢查。
-*   **12.0.7 & 12.1.0 專家聯席會審與影子載體研究 (2026.06.07 更新)**：
-    - 召集全體專家 subagents 進行圓桌聯席會審。Lua VM 專家指出戰鬥熱路徑中匿名閉包 `pcall` 導致 LuaJIT Trace Compiler Abort 的底層開銷，並提供了 Module 級別 static local fallback 機制；AddOn Architect 起草了 `Docs/19_AURA_1210_REDUX_BLUEPRINT.md` 藍圖，全面規劃了 `AuraService` 零分配快取池 `AuraStatePool` 及 C++ Native Duration Binding 雙軌渲染管線。
-    - **影子載體技術 (Shadow Host) 實作**：針對利用原生 `CooldownViewer` (冷卻管理器/CDM) 作為影子載體以避讓戰鬥 Secret / Taint 限制完成實作。新建 `Services/ShadowHostService.lua` 實作官方 Pool Hook，並於 `UI/Renderer.lua` 中引入寄生渲染與級聯排版避讓，100% 避開戰鬥中 layout CPU 與 Taint 開銷。評估研究可參考 `Docs/20_CDM_BYPASS_FEASIBILITY_STUDY.md`。
-*   **12.1.0 零分配 & 事件驅動全模組重構 (2026.06.07 已完成)**：
-    - **完全數據-視圖解耦**：解耦 `AuraService`、`CooldownService`、`ItemCooldownService`、`GroundEffectService` 與 `TotemService`，五大數據服務全部改為事件驱动，不再與 `Renderer` 直接耦合，而是向 `EventRouter` 拋出對應的 `EAM_*_STATE_CHANGED` 事件。
-    - **中介控制器引入**：引入 `Managers/AlertManager.lua` 統一管理和調度這五類變更事件，使用 `Scheduler` 實作非同步節流與批次更新（`BeginBatch/EndBatch`），消除 Layout Churn。
-    - **多型零分配物件池**：在所有服務中配置專屬的 `StatePool`（例如 `GroundEffectStatePool` 與 `TotemStatePool` 等），在 `acquire` 狀態物件時綁定 `releaseFunc`，並由 `AlertManager` 在渲染隱藏後多型呼叫 `state.releaseFunc(state)` 安全回收物件，達成運行期 0-Allocation 極致低 GC 目標。
-    - **影子載體文字剪裁與遮擋修正**：針對吸附官方 CooldownViewer（CDM）時，因原生容器 `ClipsChildren` 裁切與 FrameLevel 遮擋導致技能名稱不顯示的問題，實作動態佈局調整。寄生模式下自動將技能名稱（`nameText`）移至圖示內側底部並設為 Highlight 顯色，同時提權 `FrameLevel`（相對於 `hostIcon` + 10），解決了「看不見技能名稱」的痛點。
-    - **靜態安全語法檢驗**：32 個 Lua 檔案 100% 通過語法安全性檢驗。
-*   **16 大全新與高頻事件整合 (2026.06.07 已完成)**：
-    - **替代失效 CLEU**：在 `GroundEffectService` 中全面移除 `COMBAT_LOG_EVENT_UNFILTERED` 註冊，改為訂閱 `UNIT_SPELLCAST_SUCCEEDED` 且篩選 `unitTarget == "player"`，100% 規避 CLEU 在 12.x 中的封閉限制，完美重建暴風雪等地面技能計時。
-    - **高頻能量無延遲更新**：在 `ClassPowerService` 中追加註冊 `UNIT_POWER_FREQUENT` 事件，使聖能、連擊點更新反應速度達到 0ms 延遲。
-    - **技能 Override 動態跟隨**：在 `CooldownService` 註冊 `COOLDOWN_VIEWER_SPELL_OVERRIDE_UPDATED`，當法術因天賦/狀態 override 變更時，即時刷新被覆蓋或原始技能的冷卻，徹底消除 override 時計時失效/殘留 Bug。
-    - **原生快捷列金色發光同步**：在 `AlertManager` 中監聽 `SPELL_ACTIVATION_OVERLAY_GLOW_SHOW` 與 `SPELL_ACTIVATION_OVERLAY_GLOW_HIDE` 快捷列高亮事件，維護本地 `glowSpells` 表，以 Decorator（裝飾屬性）形式為 Aura / Cooldown 狀態添加 `state.overlayGlow` 標記；Renderer 動態支援 `pandemicReady` 與 `overlayGlow` 雙軌顯示金色發光，100% 同步官方 Proc 發光。
-    - **靜態安全語法檢驗**：修改之所有 5 個核心檔案 100% 通過 `luac -p` 的靜態語法檢查。
-*   **除錯診斷與統計工具修復與擴展 (2026.06.07 已完成)**：
-    - 修復 12.1.0 模組重構後，診斷日誌中 `visibleIcons` 恆為 `0` 與 `alertFrame.exists` 恆為 `false` 的統計 Bug。
-    - 擴展 `/eam debug` 輸出資訊，新增各數據服務的 `active` 監控 Spell ID 列表、記憶體佔用 `memoryKB`、`glowSpells` 發光快取列表、以及 7 大 Alert Frame 底下所有活躍 Icon 的座標與實體 `:IsShown()` 屬性，極大增強後續除錯與日誌分析穿透力。
-    - 靜態安全語法檢驗：修改之 2 個診斷模組檔案 100% 通過 `luac -p` 靜態語法檢查。
-*   **技能無冷卻時強行顯示空圖示 Bug 修復 (2026.06.07 已完成)**：
-    - 修復非 Charge 技能在完全沒有在冷卻中（`cooldownInfo` 為 `nil`）時，因 `infoSafe` 判定防衛過當而強行在畫面上顯示 15 個無倒數、無螺旋陰影的空圖示 Bug。
-    - 修正 `CooldownService.lua` 的 `shouldShow` 邏輯，增加 `cooldownInfo` 存在性 guard，無冷卻時直接保持不顯示，回歸精準監控。
-    - 靜態安全語法檢驗：修改之 `CooldownService.lua` 100% 通過 `luac -p` 靜態語法檢查。
-*   **戰鬥受限（Secret）光環時間倒數降級與自動到期回收機制 (2026.06.07 已完成)**：
-    - 當玩家在戰鬥中，光環時間與過期時間被標記為 Secret 時，實作優先透過 `C_TooltipInfo` 抓取說明中的持續時間（`scrapedDur`）來建立非 Secret 的普通 `DurationObject` 與數值型計時器（`TIMER_NUMERIC`），讓 Renderer 能正常渲染倒數。
-    - 在 `UI/Renderer.lua` 中維護 `activeDurationObjects`，在統一的 `onLegacyTimerUpdate` 系統中每幀對其進行原生 `:IsZero()` 判定。一旦到期，主動觸發隱藏與回收，徹底免除 Secret 光環殘留 Bug。
-    - 靜態安全語法檢驗：修改之 `AuraService.lua` 與 `UI/Renderer.lua` 100% 通過 `luac -p` 靜態語法檢查。
-*   **12.1.0 零分配 StatePool 回收與基於 Pool-Token 延時排程之 JIT 優化實作 (2026.06.09 已完成)**：
-    - **P0 記憶體洩漏修復**：在 `AuraService.lua`、`GroundEffectService.lua`、`TotemService.lua` 的 `StatePool.acquire` 內，統一安全地綁定 `state.releaseFunc = Pool.release`，並在 `release` 時將其設為 `nil`，100% 確保 `AlertManager` 在隱藏 icon 後能成功回收 state，解決了預分配物件池耗盡落入 GC Churn 的嚴重 P0 Bug。
-    - **消滅 JIT Trace Abort**：完全移除在 OnUpdate 中對 `durationObj:IsZero()` 的 `pairs` 輪詢與 `pcall` 檢查。改為在 `Renderer.render` 啟動計時器時，透過 `timerTokenPool` 零分配令牌池獲取 token，並以 `Scheduler.after` 註冊單次延期回收任務。
-    - **極限 0-Allocation 效能**：到期時由 `onDurationTimerExpired(token)` 判斷 token 活躍狀態以精確隱藏與回收。整個計時與回收流程完全達成 0-Allocation（零堆記憶體配置）與零輪詢 CPU 開銷，消除了戰鬥微卡頓，且熱路徑 100% 可被 LuaJIT 編譯，速度提升數百倍。
-    - **靜態安全語法檢驗**：修改之 4 個核心檔案全部 100% 通過 `luac -p` 靜態語法檢查。
-*   **12.1.0 專家矩陣擴展與新專家定義 (2026.06.09 已完成)**：
-    - **專家定義**：使用 `define_subagent` 定義了 `EAM_Mock_Sandbox_Expert` (MOCK)、`EAM_Data_Guard_Expert` (DATA)、`EAM_DevOps_Release_Expert` (DEVOPS) 與 `EAM_Combat_Scraper_Expert` (SCRAPER) 四大全新領域的專家，並在系統中完成註冊。
-    - **RACI 矩陣升級**：修改 `Docs/21_RACI_EXPERTS_MATRIX.md` 擴展專案的 RACI 職責矩陣，引入「沙盒測試」與「WTF 設定檔遷移」兩個全新的任務領域，確立了新增專家的 R/A/C 分工定位，理清了自動化測試、WTF 設定遷移防禦與 CI 發佈的權責邊界。
-
-
+## 專案最新重構細節 (2026.06.06 更新)
+### 1.已完成核心重構(Retail 12.0.7)
+* **全程式碼局部化清掃 (12.0.7 - 2026.06.06)**：
+    - 整個文件（包括 `Services` 和 `UI` 目錄下的所有邏輯）中所有編碼硬/英文提示術語與 UI 字符串已完全提取為 `EAM.L` 中的密鑰。
+- 補齊並無縫支持`zhTW` (繁中)、`zhCN` (簡中)、`enUS` (簡中)、`koKR` (韓文) 與 `ruRU` (俄文) 五大語系，共144個詞條。
+- **動態專精本地化API重構**：在`UI/Options.lua`的篩選選項中引入`CLASS_TOKEN_TO_ID`映射，優先調用官方嫁接API `GetSpecializationInfoForClassID`取得最準確的本地化專精名稱，並提供雙軌本地化備份。
+* **ClassPower核心資源安全偵查與錯案加強**：
+- 為 `detectClassPower` 與 `updatePower` 部署密切注意 `pcall` 隔離與 `issecretvalue` 防衛機制，防止戰鬥中能量數值差異為秘密表時大小比較造成的 Lua 崩潰。
+* **EventRouter/Scheduler 故障隔離**：
+- 為`Core/EventRouter.lua`的OnEvent核心循環與`Core/Scheduler.lua`的定時任務回調回調參數化`pcall`容錯，確保單一模組報錯時，不會幹擾或中斷其他模組與定時的執行。
+* **雙軌 Native Binding 倒數與 Pandemic Glow**：
+    - 時間渲染優先權實作 `C_DurationUtil.CreateDurationTextBinding` 與 `SetCooldownFromDurationObject` 降級通道。
+    - 在DoT光環滿足Pandemic刷新時間時，為 Icon 啟用發光亮框效果。
+* **13個職業與28個英雄天賦資料庫擴展**：
+    - 更新`Data/SpellArray.lua`，為所有13個職業與28個英雄天賦（如暴風雨、神聖、武器惡魔儀式等）配置了最新的武器ID預設監控。
+### 2.後續維護與開發建議
+* **安全防禦優先**：在與任何光環、冷卻、能量、時間相關的數值進行大小比較或表索引時，必須先使用 `issecretvalue` 進行防禦性檢查。
+* **修改語法靜態檢查**：在對任何Lua檔案進行後必須，執行 `luac -p` 檢查。
+* **12.0.7 & 12.1.0 專家聯合會與月亮載體研究（2026.06.07更新）**：
+- 召集全體專家分代理進行圓桌聯會審定。 Lua VM專家指出熱路中閉隱包`pcall`導致LuaJIT Trace編譯器中止的底層工資，並提供了模組級靜態本地回退機制；AddOn架構師建立了`Docs/19_AURA_1210_REDUX_BLUEPRINT.md`藍圖，全面規劃了__MEAM__CODE_4) 零點存儲
+- **影子載體技術(Shadow Host)實務**：針對利用橋樑`CooldownViewer` (冷卻管理器/CDM)作為影子載體以避戰秘密/污染限製完成實現。新建`Services/ShadowHostService.lua`實踐官方池Hook，並於`UI/Renderer.lua`中引入寄生渲染讓與級聯排版避讓，100%黑暗中配合架構CPU與Taint。評估研究可參考`Docs/20_CDM_BYPASS_FEASIBILITY_STUDY.md`。
+* **12.1.0 零分配 & 事件驅動全模組重構 (2026.06.07 已完成)**：
+- **資料視圖解關聯**：解關聯`AuraService`、__完全EAMCODE_1__、`ItemCooldownService`、`GroundEffectService`與__EAMCODE_全部__，五大資料服務改為驅動事件，不再與`Renderer`直接連接，而是向至EAM__CO8D__EAM1 86_DED__EAM__CODDE____EAM__CO8DDEA__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_0__EAM__CO8DDEA__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_%__EAMCODE___EAMCODE6%__ _EAMCODE_5__%__EAM__CODDE_%__EAM__CODDE_0__EAM__CO8DDEA__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_0__EAM__CO8DDEA__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_0__EAM__CO8DDEA__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CODDE_%__EAM__CODDE_%__。
+- **境內控制器引入**：引入`Managers/AlertManager.lua`統一管理和調度這五類變更事件，使用`Scheduler`實行同步節流與批量更新（`BeginBatch/EndBatch`），消除佈局本身。
+- **多型零分配物件池**：在所有服務中配置強調的 `StatePool` （如 `GroundEffectStatePool` 和 `TotemStatePool` 等），在 `acquire`狀態對象時綁定`releaseFunc`，並由`AlertManager`在渲染後識別多__A__EA__A__3__4D__EAMCO`fstate__EAMCO"__EA安全恢復對象，完成期運行0-分配最大限度降低GC目標。
+- **鏡像載體文字剪裁與遮蔽修改**：針對吸附官方CooldownViewer（CDM）時，因牽引容器`ClipsChildren`裁切與FrameLevel顯示導致技能名稱不顯示的問題，實施動態佈局調整。寄生模式下自動將技能名稱（`nameText`）移至圖示底部並設定高亮顯示圖示底部並設定高亮顯色，同時提權`FrameLevel`（相對於）`hostIcon` + 10），解決了「看不見的技能名稱」的痛點。
+- **靜態語法安全性偵測設定**：32個Lua檔案100%滲透語法安全性偵測設定。
+* **16完成全新與高階事件整合（2026.06.07已）**：
+    - **替代無效CLEU**：在 `GroundEffectService` 中全面刪除 `COMBAT_LOG_EVENT_UNFILTERED` 註冊，改為訂閱 `UNIT_SPELLCAST_SUCCEEDED` 並篩選 `unitTarget == "player"`，100% `unitTarget == "player"`，100% `unitTarget == __EAMCODE10%，CO __`EAMCODE_3__10%，100%，100%。 __EAMDE_0__ 在雪天等，
+- **高頻能量無延遲更新**：在 `ClassPowerService` 中追加註冊 `UNIT_POWER_FREQUENT` 事件，使聖能、連擊點更新反應速度達到 0ms 延遲。
+    - **技能覆蓋動態緊接在**：在`CooldownService`註冊`COOLDOWN_VIEWER_SPELL_OVERRIDE_UPDATED`，當法術因天賦/狀態覆蓋變更時，即時刷新被覆蓋或原始技能的冷卻，徹底消除覆蓋時消耗/殘留Bug。
+- **新年快速金色發光同步**：在 `AlertManager` 中監聽 `SPELL_ACTIVATION_OVERLAY_GLOW_SHOW` 與 `SPELL_ACTIVATION_OVERLAY_GLOW_HIDE` 快捷列高亮事件，維護本地 `glowSpells` 表，以 Decorator（裝飾屬性）為形式 Aura / Cooldown 狀態新增 `state.overlayGlow`_EA_EA__MCO_EA 動態標記。 `overlayGlow`雙軌顯示金色發光，100%同步官方Proc發光。
+- **修改靜態語法檢查**：對所有5個核心檔案100%通過 `luac -p` 的靜態語法檢查。
+* **調試完成診斷與統計工具修復與擴展 (2026.06.07 已)**：
+    - 12.1.0修改架構模組後，診斷日誌中 `visibleIcons` 恆為 `0` 和 `alertFrame.exists` 恆為 `false` 的統計 Bug。
+- 補充`/eam調試`資訊，新增各資料服務的`active`監控試劑ID清單、記憶體佔用`memoryKB`、`glowSpells`發光報表輸出清單、7大警報框底下所有活動圖示的座標與實體`:IsShown(5)，
+    -修改靜態語法檢驗：之 2 個診斷模組檔 100% 通過 `luac -p` 靜態語法檢查。
+* **技能無冷卻時強行顯示空白圖示Bug修復（2026.06.07已完成）**：
+- 修改非衝鋒技能在完全沒有在冷卻中（`cooldownInfo`為`nil`）時，因`infoSafe`排除防衛過當而強行在畫面上顯示15個無倒數、無螺旋幾何的空圖示Bug。
+    - 修改`CooldownService.lua`的`shouldShow`邏輯，增加`cooldownInfo`存在性防護，無冷卻時直接保持不顯示，恢復精確監控。
+- 修改靜態語法檢查：之 `CooldownService.lua` 100% 通過 `luac -p` 靜態語法檢查。
+* **戰鬥設定（秘密）光環時間倒數降級與自動回復恢復機制（2026.06.07已完成）**：
+- 當玩家在戰鬥中，光環時間與端點時間被標記為秘密時間，實施優先視角`C_TooltipInfo`抓取說明中的持續時間（`scrapedDur`）來建立非秘密的普通`DurationObject`與分數型計時器（`TIMER_NUMERIC`），讓器能夠正常渲染倒數。
+- 在`UI/Renderer.lua`中維護`activeDurationObjects`，在統一的`onLegacyTimerUpdate`系統中每一幀進行突破`:IsZero()`對抗。一旦爆發，主動觸發與恢復，徹底解決秘密光環殘留Bug。
+    - 靜態語法檢查：`AuraService.lua` 與 `UI/Renderer.lua` 100% 修改 `luac -p` 靜態語法檢查。
+* **12.1.0零分配StatePool恢復與基於Pool-Token延遲調度之JIT優化實踐（2026.06.09已完成）**：
+- **P0 記憶體洩漏修復**：在 `AuraService.lua`、`GroundEffectService.lua`、`TotemService.lua` 的 `StatePool.acquire` 內，統一安全地綁定`state.releaseFunc = Pool.release`，並在__EAMCODE_5%」時設定為__EAMCODE_5%」圖示後能成功恢復狀態，解決了隱藏了前期分配資產池網格GC流失的嚴重P0 Bug。
+- **刪除JIT Trace Abort**：完全移除在 OnUpdate 中對 `durationObj:IsZero()` 的 `pairs` 輪詢與 `pcall` 檢查。改為在 `Renderer.render` 啟動時脈時，穿越 `timerTokenPool` 零分配令牌池取得令牌，並以 `Scheduler.after` 註冊單次後續任務。
+- **極限0-分配發生**：代替時由`onDurationTimerExpired(token)`判斷token激活狀態以準確與恢復隱藏。整個計時與恢復流程完全完成0-分配（零堆記憶體配置）與零輪詢CPU幾十，消除了戰鬥微卡頓，且熱路徑100%可被LuaJIT編譯，速度提升數百倍。
+    - **修改靜態語法檢查**：之4個核心檔案全部100%通過 `luac -p` 靜態語法檢查。
+* **12.1.0專家矩陣擴展與新專家定義（2026.06.09已完成）**：
+    - **專家定義**：使用`define_subagent`定義了`EAM_Mock_Sandbox_Expert` (MOCK)、`EAM_Data_Guard_Expert` (DATA)、`EAM_DevOps_Release_Expert` (DEVOPS) 和 `EAM_Combat_Scraper_Expert` (`EAM_Combat_Scraper_Expert` (__EA)CODE7__完成一個全新的專家。
+- **修改RACI矩陣升級**：`Docs/21_RACI_EXPERTS_MATRIX.md`擴展專案的RACI職責矩陣，引入「沙盒測試」與「WTF設定檔遷移」兩個全新的任務領域，認識了新增專家的R/A__EAMCODE_4分機定位測試

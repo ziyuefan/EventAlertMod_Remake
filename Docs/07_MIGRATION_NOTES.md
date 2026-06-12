@@ -1,35 +1,34 @@
-# Migration Notes
+<!-- EAM_DOCUMENTATION_SOURCE: zh-TW -->
+# 遷移注意事項
 
-## Old Behavior Mapping
+## 舊行為映射
 
-Preserve where feasible:
+費用保留：
 
-- self buff/debuff alert icons;
-- target buff/debuff alert icons;
-- spell cooldown alert icons;
-- item cooldown alert icons by itemID;
-- easy spellID add/remove workflow;
-- `/eam opt` settings entry point;
-- `/eam show`, `/eam showt`, `/eam showc`, `/eam showa` detection workflows;
-- cooldown behavior toggles:
-  - remove when cooldown completes;
-  - keep cooldown icons out of combat;
-  - glow when usable;
-- icon display toggles:
-  - show frame;
-  - show name;
-  - show timer;
-  - show flash/glow;
-  - tooltip append spell/item ID;
-- font size controls for name, timer, and stacks;
-- minimap option button semantics;
-- localization strings, especially zhTW, enUS, koKR, zhCN where present;
-- useful default spell/item tables after Retail validation.
+- 取得自我/debuff警報圖示；
+- 目標增益/減益警報圖示；
+- 動動冷卻時間警報圖示；
+- itemID 的工件冷卻圖示；
+- 簡單的spellID加入/刪除工作流程；
+- `/eam opt` 設定入口點；
+- `/eam show`、`/eam showt`、`/eam showc`、`/eam showa`探測流程工作；
+- 冷卻行為切換：
+  - 冷卻完成後移除；
+  - 讓冷卻圖示遠離戰鬥；
+- 使用時發光；
+- 圖示顯示切換：
+  - 顯示框架；
+  - 顯示姓名；
+  - 顯示計時器；
+  - 顯示 flash/glow;
+  - 工具提示附加輔助/item ID；
+- 名稱、計時器和所在的字體大小控制；
+- 小地圖選項按鈕語意；
+- 本地化字串，特別是存在的 zhTW、enUS、koKR、zhCN；
+- 正式服驗證後可使用預設/物品表。
+## 舊 SavedVariables 遷移
 
-## Old SavedVariables Migration
-
-Legacy inputs:
-
+舊版輸入：
 ```lua
 EA_Config
 EA_Position
@@ -40,9 +39,7 @@ EA_ScdItems
 EA_GrpItems
 EA_Pos
 ```
-
-Target migration:
-
+目標遷移：
 ```js
 EventAlertModDB = {
   schemaVersion: 1,
@@ -65,50 +62,49 @@ EventAlertModDB = {
   }
 }
 ```
+確信的目標變數名稱被重寫決定。如果舊變數名稱
+為了相容性，它們仍然需要架構標記和遷移狀態。
 
-The exact target variable name is a rewrite decision. If the old variable names
-remain for compatibility, they still need schema markers and migration status.
+遷移規則：
 
-Migration rules:
+- 永遠不會凍結遷移的 SavedVariables；
+- 模組將運行時狀態儲存在 SavedVariables 中；
+- 在遷移安全性互補表下保留未知的遺傳欄位或
+  警告名單；
+- 驗證spellID/itemID數字欄位；
+- 將刪除的唯一經典的欄位記錄為遷移預警；
+- 在備份或遷移設定信件策略生效之前不要刪除舊字段
+  定義的。
 
-- never freeze migrated SavedVariables;
-- never store runtime state in SavedVariables;
-- preserve unknown legacy fields under a migration-safe extension table or
-  warning list;
-- validate spellID/itemID numeric fields;
-- record removed Classic-only fields as migration warnings;
-- do not delete old fields until a backup or migration confidence strategy is
-  defined.
+## 刪除舊行為
 
-## Removed Old Behaviors
+從Active的正式伺服器架構中刪除：
 
-Remove from active Retail architecture:
+- Classic、TBC、Wrath、Cata、Mists TOC 和負載根；
+- `G.WOW_VERSION` 分支的經典行為；
+- 經典API的舊解壓縮傳回相內容層；
+- 老獵人寵物幸福/焦點只存在於經典時代的分支
+  行為；
+- 大量正常運行時項目ID掃描；
+- 每個圖示計時器和每個繪圖計時器刷新鏈；
+- 工具提示掃描作為正常事實來源；
+- 核心操作的外部依賴要求。
 
-- Classic, TBC, Wrath, Cata, Mists TOCs and load roots;
-- `G.WOW_VERSION` branches for Classic behavior;
-- old unpacked return compatibility layers for Classic APIs;
-- old hunter pet happiness/focus branches that only exist for Classic-era
-  behavior;
-- huge normal-runtime item ID scans;
-- timer-per-icon and timer-per-spell refresh chains;
-- tooltip scanning as normal fact source;
-- external dependency requirement for core operation.
+## 相容性中斷
 
-## Compatibility Breaks
+預計休息時間：
 
-Expected breaks:
+- 舊的經典目錄不再載入；
+- 依賴傳統特定資源的使用者會忽略這些警告；
+- 事件腳本/配置可能需要簡化；
+- import/export 原型必須重新設計或刪除，除非是簡單的安全
+  需要路徑；
+- `Lib_ZYF` 助手應該被替換或隔離；不要假設它存在於
+  新的核心。
 
-- old Classic TOCs no longer load;
-- users relying on legacy Classic-specific resources lose those alerts;
-- group-event scripting/configuration may need simplification;
-- import/export prototype must be redesigned or removed unless a simple safe
-  path is needed;
-- `Lib_ZYF` helpers should be replaced or isolated; do not assume it exists in
-  the new core.
+## 本地化遷移
 
-## Localization Migration
-
-Existing locale files:
+現有的語言環境文件：
 
 - `locale/localization.comm.lua`
 - `locale/localization.en.lua`
@@ -116,17 +112,16 @@ Existing locale files:
 - `locale/localization.cn.lua`
 - `locale/localization.kr.lua`
 - `locale/localization.ru.lua`
+保持本地化隔離。不要將字串混合到邏輯模組中。請勿添加
+簡體中文字串為zhTW。
 
-Keep localization isolated. Do not mix strings into logic modules. Do not add
-Simplified Chinese strings to zhTW.
+## 繼承來源處理
 
-## Legacy Source Handling
-
-Current old source roots remain for audit/reference:
+目前的舊原始碼保留用於審計/reference：
 
 - `Classic/`
 - `TBC/`
 - `Wrath/`
 
-They should not be loaded by the Retail rewrite. If retained in the repository,
-mark them archived/unsupported.
+它們不應該由 Retail 重寫載入。如果保留在儲存庫中，
+將它們標記為已文檔/unsupported。

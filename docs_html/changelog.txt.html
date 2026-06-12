@@ -950,193 +950,193 @@
         <pre><code>--[Retail 12.1.0]2026.06.09
 	-- Zero allocation and event-driven full module architecture reconstruction (complete data and view decoupling):
 	   -- Completely reconstruct and decouple the five major data services AuraService, CooldownService, ItemCooldownService, GroundEffectService and TotemService.
-	   -- The five major services have been completely changed to event-driven, no longer directly coupled with the Renderer rendering engine, but throwing the `EAM_*_STATE_CHANGED` event to the EventRouter.
---Introducing a dedicated zero-allocation state buffer pool (such as AuraStatePool, etc.) into the data service, binding releaseFunc when obtaining the state object, completely eliminating runtime GC memory garbage.
-	--Introducing AlertManager mediation controller and Scheduler throttling:
-	   -- Introduce AlertManager to uniformly manage and process five types of change events, and recycle state objects into their respective Pools after the icon is hidden.
+	   -- The five major services have been completely changed to event-driven and are no longer directly coupled with the Renderer rendering engine. Instead, the `EAM_*_STATE_CHANGED` event is thrown to EventRouter.
+--Introducing an exclusive zero-allocation state buffer pool (such as AuraStatePool, etc.) into the data service, binding releaseFunc when obtaining the state object, completely eliminating runtime GC memory garbage.
+	--Introducing AlertManager intermediary controller and Scheduler throttling:
+	   --Introduced AlertManager to uniformly manage and process five types of change events. After the icon is hidden, the state objects are recycled into their respective Pools.
 -- Use Scheduler to implement asynchronous throttling and batch layout updates, effectively eliminating Layout Churn (typesetting jitter) and repeated calculations in high-frequency battles.
 	-- Shadow Host technology implementation and UI privilege escalation avoidance:
-	   -- Create a new ShadowHostService to perform transparency and level downgrade Hook on the official cooldown manager (CDM) icon when out of combat.
--- Implement parasitic rendering and cascade layout avoidance, EAM icons are automatically mounted to the official shadow carrier, and 100% avoid Taint Chain contamination risks caused by layout arithmetic and SetPoint in battle.
-	   -- Solve the problem of ClipsChildren clipping and Cooldown spiral black screen occlusion. In parasitic mode, the skill name is automatically placed at the bottom and the privilege is raised to FrameLevel + 10.
-	   --Support dynamic CDM shadow carrier enable/disable switch and provide complete setting panel buttons and multi-lingual entries.
+	   -- Create a new ShadowHostService to perform transparency and level downgrade Hook on the official cooling manager (CDM) icon when out of combat.
+-- Implement parasitic rendering and cascade layout avoidance, EAM icons are automatically mounted to the official Shadow Host, 100% avoiding the risk of Taint Chain contamination caused by layout arithmetic and SetPoint in combat.
+	   -- Solve the problem of ClipsChildren clipping and Cooldown spiral black screen occlusion. In parasitic mode, the skill name is automatically placed at the bottom and the privilege is elevated FrameLevel + 10.
+	   --Supports dynamic CDM Shadow Host enable/disable switch, providing complete setting panel buttons and multilingual entries.
 -- 16 major new and high-frequency Warcraft event integrations:
-	   -- Use UNIT_SPELLCAST_SUCCEEDED instead of COMBAT_LOG_EVENT_UNFILTERED (CLEU) to capture non-aura ground effects (e.g. orbs, blizzards).
-	   -- Replace high-frequency energy updates with the UNIT_POWER_FREQUENT event and overwrite it with the COOLDOWN_VIEWER_SPELL_OVERRIDE_UPDATED event reaction talent.
-	   -- Subscribe to SPELL_ACTIVATION_OVERLAY_GLOW_SHOW / HIDE native golden bright frame to synchronize EAM with shortcut column Proc glow.
-	-- Static JIT compilation performance optimization and fault isolation:
--- Completely removed the `pcall` predicate traversal in the OnUpdate core loop, and introduced the `timerTokenPool` zero-allocation delay schedule to ensure that hot path LuaJIT can be 100% compiled by Trace Compiler.
+	   -- Replace COMBAT_LOG_EVENT_UNFILTERED with UNIT_SPELLCAST_SUCCEEDED (CLEU) to capture non-Aura ground effects (e.g. orbs, blizzards).
+	   -- Replace high-frequency energy updates with UNIT_POWER_FREQUENT events and overwrite them with COOLDOWN_VIEWER_SPELL_OVERRIDE_UPDATED event reaction talents.
+	   -- Subscribe to SPELL_ACTIVATION_OVERLAY_GLOW_SHOW / HIDE native golden bright frame to synchronize EAM with the shortcut column Proc glow.
+	-- Static JIT Compilation performance optimization and fault isolation:
+-- Completely removed the `pcall` predicate traversal in the OnUpdate core loop, and introduced the `timerTokenPool` zero allocation delay schedule to ensure that the hot path LuaJIT can be 100% compiled by Trace Compiler.
 	   -- Configure parameterized isolation defense for EventRouter OnEvent distribution and Scheduler task callback, so that errors reported by a single sub-module will not affect the entire domain.
 	--Automated packaging and publishing tool (Build-CurseForgePackage.ps1) security upgrade:
--- Fixed the bug of missing `.blp` image files in allowedExtensions to ensure that custom UI buttons and texture resources are not missing.
-	   -- Optimize regular matching of sensitive information to prevent misjudgment of codes written to defend against Warcraft Secrecy restrictions in EAM code.
+-- Fixed the allowedExtensions missing `.blp` image file bug to ensure that custom UI buttons and texture resources are not missing.
+	   -- Optimize regular matching of sensitive information to prevent misjudgment. The EAM code is written to defend against World of Warcraft Secrecy restrictions.
 	   -- Use @() to force Get-Content to be an array type and fix the System.Char Trim crash bug caused by single-line files.
 
 --[Retail 12.0.7]2026.06.06
-	-- Specialization and occupation name dynamic API localization reconstruction:
--- Use the GetSpecializationInfoForClassID API to dynamically obtain the official localized specialization text of the current language client.
-	   -- Create a CLASS_TOKEN_TO_ID comparison table to support dynamic name loading for all 13 professions and specializations, remove the hard coding of specialization names, and provide a dual-track fallback.
+	-- Specialization and occupation name dynamics API Localization reconstruction:
+-- Use GetSpecializationInfoForClassID API to dynamically obtain the official localized specialization text of the current language client.
+	   -- Create a CLASS_TOKEN_TO_ID comparison table to support dynamic name loading of all 13 professions and specializations, remove the hard coding of specialization names, and provide dual-track fallback.
 	-- Cleaning of hard-coded strings in the entire project and completing dictionaries of five major language families:
-	   -- Extract the default prefix and fallback names of ClassPowerService, GroundEffectService, and ItemCooldownService.
+	   -- Extract ClassPowerService, GroundEffectService, ItemCooldownService default prefix and fallback names.
 -- Extract Options setting interface checkbox/slider, alignment and growth direction drop-down options, Slash console command instructions and print prompts.
-	   --Complete 144 entries of zhTW (Taiwan Traditional Chinese), zhCN (Simplified Chinese), enUS (English Bottom), koKR (Korean) and ruRU (Russian).
-	-- ClassPower core resource security and debugging enhancements:
+	   --Complete 144 entries of zhTW (Taiwan Traditional Chinese), zhCN (Simplified Chinese), enUS (English bottom level), koKR (Korean) and ruRU (Russian).
+	-- ClassPower Core resource security and debugging enhancements:
 	   -- Deploy pcall isolation and issecretvalue defense for detectClassPower and updatePower.
 -- Prevent Fatal Error crash caused by size comparison when energy value mutates to Secret Table during battle.
-	-- EventRouter/Scheduler fault isolation:
-	   --Add parameterized pcall fault isolation to OnEvent loop and Scheduler timed task callback.
+	-- EventRouter/Scheduler Fault isolation:
+	   -- Add parameterized pcall fault isolation for OnEvent loop and Scheduler timed task callback.
 	   -- Ensure that when a single module is abnormal or reports an error, it will not cause other modules to crash or interrupt scheduled cleanup.
 
 --[Retail 12.0.7]2026.05.30
--- Reconstruct the ground effect monitoring (GroundEffectService.lua) to implement the Tooltip parsing (Tooltip Scraping) mechanism in five major client language families and multiple languages:
-	   -- Support enUS/enGB, zhTW, zhCN, koKR, ruRU.
-	   -- Use numerically-indexed arrays with Util.tableFreeze to lock the regex matching mode, eliminating the GC and CPU consumption of Lua string hashing and table lookup.
+--Reconstruct the ground effect monitoring (GroundEffectService.lua) to implement the Tooltip Scraping mechanism in five major client language families and multiple languages:
+	   -- Supports enUS/enGB, zhTW, zhCN, koKR, ruRU.
+	   -- Use numerically-indexed arrays with Util.tableFreeze to lock the regex matching pattern, eliminating the GC and CPU consumption of Lua string hashing and table lookup.
 	   -- Automatically identify the `GetLocale()` language, and seamlessly downgrade to English if the match fails, or retain the manually set default safety time.
 -- Added multi-module alarm framework (Multi-Frame) architecture, completely splitting 7 independent alarm frames!
-	--Supports self-aura (selfAura), target aura (targetAura), skill cooldown (spellCooldown), item cooldown (itemCooldown), professional energy (classPower), ground effect (groundEffect), and totem (totem) framework.
--- Each frame has completely independent X/Y coordinates, and simultaneously displays the corresponding translucent label positioning background in the &quot;Mobile Reminder Frame&quot; mode, supporting individual independent mouse dragging and position storage.
+	-- Supports own Aura (selfAura), target Aura (targetAura), skill cooldown (spellCooldown), item cooldown (itemCooldown), professional energy (classPower), ground effect (groundEffect), and totem frame.
+-- Each frame has a completely independent X/Y coordinate, and simultaneously displays the corresponding translucent label positioning background in the &quot;Mobile Reminder Frame&quot; mode, supporting independent mouse dragging and position storage.
 	-- Implement continuous numeric index layout optimization policy for ultimate performance (use table.freeze to lock the LAYOUT_OFFSETS direction offset static array), use a single arithmetic multiplication to replace multiple If-Else conditional branches, and eliminate string hash search and CPU collision overhead!
--- Added &quot;Ground Skill Monitoring without Halo&quot; service (GroundEffectService.lua) [NEW]:
+-- Added &quot;No Halo Ground Skill Monitoring&quot; service (GroundEffectService.lua) [NEW]:
 	   -- Monitoring SPELL_CAST_SUCCESS, supports &quot;Tooltip dynamic analysis&quot; and &quot;manual time setting &amp; one-click capture and filling&quot; dual-track timing mode.
-	   -- Read once at the moment of release, no longer polling Tooltip in OnUpdate, 100% avoid CPU consumption, and use Scheduler for centralized delayed release.
--- Added &quot;Totem Monitoring&quot; service (TotemService.lua) [NEW]: Call 12.x native C_Totems.GetTotemInfo to directly read shaman and other totems, arrange them closely in real time and follow the growth direction vector.
-	-- Added &quot;Professional Special Energy Monitoring&quot; service (ClassPowerService.lua) [NEW]: Dynamically presents core energy (holy energy, combo points, fragments, infuriating energy, arcane charging, etc.) according to the profession, using classic Icon + central large layer digital font display, and automatically hides when reset to 0.
+	   -- Read once at the moment of casting, no longer polling Tooltip in OnUpdate, 100% avoid CPU loss, and use Scheduler for centralized delayed expiration release.
+-- Added &quot;Totem Monitoring&quot; service (TotemService.lua) [NEW]: Call 12.x native C_Totems.GetTotemInfo to directly read totems such as shamans, arrange them closely in real time and follow the growth direction vector.
+	-- Added &quot;Professional Special Energy Monitoring&quot; service (ClassPowerService.lua) [NEW]: Dynamically presents core energy (holy energy, combo points, fragments, infuriating energy, arcane charging, etc.) according to occupation, using Classic Icon + central large-scale digital font display, and automatically hides when it returns to 0.
 -- Reshape the Position &amp; Energy settings panel into a two-column Premium layout with a width of 560px: left Sliders &amp; 7 Alert Frame growth menus, right career energy Checkboxes, symmetrical and open.
-	-- Implemented the ground effect polymorphic switching panel in the Popup spell condition window, integrating the &quot;Enable dynamic Tooltip capture Checkbox&quot;, &quot;Manual setting time EditBox&quot; and &quot;One-click capture Button&quot; for easy operation.
--- Upgrade the /eam doctor (RuntimeProbe) diagnostic module to provide young people with detailed testing and debugging information on real-time multi-frame coordinates, growth direction, and new Service loading status.
+	-- Implemented the ground effect polymorphic switching panel in the Popup spell condition window, integrating &quot;Enable dynamic Tooltip capture Checkbox&quot;, &quot;Manually set time EditBox&quot; and &quot;One-click capture Button&quot; for easy operation.
+--Upgraded the /eam doctor (RuntimeProbe) diagnostic module to provide young people with detailed testing and debugging information on real-time multi-frame coordinates, growth direction, and new Service loading status.
 
 --[Retail 12.0.7]2026.05.29
-	-- Comprehensive remodeling and performance optimization for WoW Retail 12.0.7 official server!
+	-- Comprehensive remodeling and performance optimization for WoW Retail 12.0.7 Retail server!
 	-- Implementation 12.0.7 native `C_DurationUtil.CreateDurationTextBinding` time text countdown linked to `SetCooldownFromDurationObject` ring shadow.
--- CooldownService is the ultimate reconstruction of the service layer, introducing Service-Layer Write Gating throttle and IsZero judgment, eliminating pairs/ipairs iterators, and achieving completely zero GC memory allocation for hot path.
-	-- 100% Pure Lua dynamically reshapes the classic setting interface (EAM left main setting window, right position/slider and 20 special energy check boxes, right ScrollBox scrolling spell management list, independent spell condition Popup window).
+-- CooldownService The ultimate reconstruction of the service layer, introducing the Service-Layer Write Gating throttle and IsZero judgment, eliminating the pairs/ipairs iterator, and achieving completely zero GC memory allocation for the hot path.
+	-- 100% Pure Lua dynamically reshapes the Classic setting interface (EAM left main setting window, right position/slider and 20 special energy check boxes, right ScrollBox scrolling spell management list, independent spell condition Popup window).
 -- Implement the &quot;X&quot; one-click quick delete button at the end of the list line, support EditBox to directly add it by pressing the ENTER key, and click the spell to automatically bring the ID into the input box.
 	-- Introducing Combat Lockdown Guard and out-of-combat delayed response windowing, perfect isolation from Taint.
--- Added and optimized one-click &quot;Debug Diagnosis and Export UI Window&quot; to automatically collect detailed environment, missing APIs, settings, alerts and runtime stats into a compact JSON-like format, and equipped with a &quot;Copy to Clipboard&quot; function to facilitate teenagers to report directly to AI.
+-- Added and optimized one-click &quot;Debug Diagnosis and Export UI Window&quot;, automatically collects detailed environment, missing API, settings, alerts and runtime stats into compact JSON-like format, and is equipped with a &quot;Copy to Clipboard&quot; function to facilitate teenagers to report directly to AI.
 
---[Classic MOP]2025.11.26
---[Retail TWW]2025.11.26
+-- [Classic MOP ]2025.11.26
+-- [Retail TWW ]2025.11.26
 	-- Added Russian language, thanks to ZamestoTV for helping with the translation. (https://legacy.curseforge.com/members/zamestotv/projects)
 	
---[Classic MOP]2025.11.11
---[Retail TWW]2025.11.11
---Fine-tuning the decimal point display mode for displaying seconds: the classic server uses ceil(timeLeft,0); the official server uses floor(timeLeft,0)
+-- [Classic MOP ]2025.11.11
+-- [Retail TWW ]2025.11.11
+--Fine-tuning the decimal point display mode for displaying seconds: the Classic server uses ceil(timeLeft,0); the Retail server uses floor(timeLeft,0)
 		, we hope to be as close as possible to the official display logic.
 	--Correction: UnitAura in GetDebuffIndexOfSpellID and GetBuffIndexOfSpellID returned due to version
 		The difference in transmission methods causes MOP to be unable to read the value correctly, causing the halo to not disappear (it is regarded as a permanent halo)
 	--Correction: The GCD in the cooldown module still uses the old return method due to the MOP Halo API, causing the skill cooldown to not disappear.
---Amendment: The aura prompt on the target frame in MOP can now display the spell ID.
+--Amendment: The Aura prompt on the target frame in MOP can now display the spell ID.
 	--The halo value depends on the language. In Chinese, values above 10,000 will be displayed as &quot;ten thousand&quot; or &quot;ten thousand&quot;.
 		;In other languages, numbers above 1,000 are displayed as K, and numbers above one million are displayed as M.
 	
 	
---[Classic MOP]2025.11.05
---[Retail TWW]2025.11.05
+-- [Classic MOP ]2025.11.05
+-- [Retail TWW ]2025.11.05
 	--Increase and debuff halo detailed settings to increase the halo value display, and you can choose the demand index and setting label (such as absorption, retaliation)
-	  (The value set by /eam ShowAuraValueWhenOver is no longer referenced)
+	  (The value set in /eam ShowAuraValueWhenOver is no longer referenced)
 --The update frequency reference FPS is changed from 60FPS to 30FPS to avoid prematurely reducing the frequency and causing inaccurate seconds update
 	--Add icon name, countdown, and layer number font slider adjustment options, and display the adjustment numbers in green}
 	--If the countdown selection box is displayed and there are layers at this time, the lower right corner of the countdown will be aligned with the upper left corner of the layer to avoid occlusion.
 	
---[Classic MOP]2025.10.26
---[Retail TWW]2025.10.26
+-- [Classic MOP ]2025.10.26
+-- [Retail TWW ]2025.10.26
 	--Reduce the performance overhead when detecting items when cooling down.
 --Fixed the display of non-halo skill durations (Blizzard, Frost Ball, etc.).
 	--Remove GCD countdown.
 
---[Classic MOP]2025.10.22
---[Retail TWW]2025.10.22
-	-- Fixed the issue where aura detection in the MOP version fails due to the use of the new version 11.2.5 API: C_UnitAuras.GetUnitAuraBySpellID().
+-- [Classic MOP ]2025.10.22
+-- [Retail TWW ]2025.10.22
+	-- Fixed the problem that the halo detection of MOP version fails due to using the new version 11.2.5 API: C_UnitAuras.GetUnitAuraBySpellID().
 	--Fixed the issue that the scheduled refresh countdown event could not be triggered in the MOP version, and changed the event from ACTIONBAR_UPDATE_COOLDOWN to ACTIONBAR_UPDATE_STATE.
 
---[Retail TWW]2025.10.17
---[Classic MOP]2025.10.17
+-- [Retail TWW ]2025.10.17
+-- [Classic MOP ]2025.10.17
 
 	--Fixed halo prompt error
 --Fixed the problem that the halo with duration does not disappear after it ends
 	--Added item cooling detection switch, turning it off can improve performance.
 
---[Retail TWW]2025.10.03
---[Classic MOP]2025.10.03
-   -- Add function time-consuming record and use /tinspect _G.EventAlertMod.TEST to observe it in the game
+-- [Retail TWW ]2025.10.03
+-- [Classic MOP ]2025.10.03
+   -- Add function time-consuming records and observe them in the game using /tinspect _G.EventAlertMod.TEST
    -- Add DK rune column switch
    -- Continuous optimization and improvement
 
---[Retail TWW]2025.7.29
+-- [Retail TWW ]2025.7.29
 -- Try to further adjust performance to reduce performance consumption and GC pressure:
 	1. Change the scheduled update from OnUpdate to C_Timer
-2.PostionFrame update frequency changed to 1 second
+2.PostionFrame Update frequency changed to 1 second
 	3. Seconds monitoring is moved from PositionFrame to OnUpdate, and the decision is made whether to continue based on the remaining seconds of each spell to avoid a large number of repeated calls.
 	4. Add reentrancy prevention mechanism
 	
---[Retail TWW]2025.3.16
+-- [Retail TWW ]2025.3.16
 -- Move cooling-related options to the settings window and check them directly
 -- Add /eam ExportClassToDef (can be shortened to /eam ECTD)
-   Export the spell setting lua table of each module of this profession so that it can be later put into SpellArray.lua as the default value.
+   Export the spell setting lua table of each module of this profession, 以便後續放到SpellArray.lua as the default value
 -- No longer create a spell cache table. It is recommended to install HeroDBC instead of the spell item correspondence table.
 -- Increase the number of spell ID digits to 7 digits
 
---[Retail TWW]2025.1.29
+-- [Retail TWW ]2025.1.29
 -- Further reduce CPU usage
---EventAlertMod.lua is split into several modules for easy maintenance
+-- EventAlertMod.lua Split into several modules for easy maintenance
 --Fix some bugs
 
---[Retail TWW]2025.1.10
---[Classic CATA]2025.1.10
+-- [Retail TWW ]2025.1.10
+-- [Classic CATA ]2025.1.10
 -- Continuous optimization
 --
 
---[Retail TWW]2025.1.9
---[Classic CATA]2025.1.9
+-- [Retail TWW ]2025.1.9
+-- [Classic CATA ]2025.1.9
 -- Update API to support TWW and CATA
 --Adjust the update frequency to 0.75 seconds. Only when the remaining time is less than 1 second, change the update frequency to 0.09 seconds to reduce the excessive CPU time occupied by triggering ONUPDATE events.
 --
 
 --[Retail DF]2023.03.23
---[Classic WOTLKC]2023.03.23
+-- [Classic WOTLKC]2023.03.23
 -- DF: Update version number to 10.0.7
 -- Significantly move functions and variables from the global space (_G) to the plugin-specific space level (_G.EventAlertMod) to reduce mutual interference
 -- Fixed some minor bugs
 
 --[Retail DF]2023.02.24
---[Classic WOTLKC]2023.02.24
+-- [Classic WOTLKC]2023.02.24
 -- DF: Tips for increasing vitality (Vigor)
 -- DF: Fixed the issue where the mouse prompt cannot display MACRO&#x27;s spell ID.
 
 --[Retail DF]2023.02.18
---[Classic WOTLKC]2023.02.18
+-- [Classic WOTLKC]2023.02.18
 -- The establishment of the item spell cache table is changed to a coroutine method to avoid lagging.
 -- DF: Supports Evoker profession, supports Essence display
 
 
 --[Retail DF]2022.12.22
---[Classic WOTLKC]2022.12.22
+-- [Classic WOTLKC]2022.12.22
 -- Fix proportion sorting
 
 --[Retail DF]2022.11.18
---[Classic WOTLKC]2022.11.18
+-- [Classic WOTLKC]2022.11.18
 -- DF: Fixed mouse prompt spell ID and item ID display
 -- DF: Remove /eam basefontsize directive
--- DF: Add /eam StackFontSize nSize command to change the stack layer size (not case sensitive, you can also use /eam sfs nSize instead)
+-- DF: Add /eam StackFontSize nSize instructions to change the stacking layer size (case-insensitive, you can also use /eam sfs nSize instead)
 -- DF: Add /eam TimerFontSize nSize to change the timing number size (not case sensitive, you can also use /eam tfs nSize instead)
--- DF: Add /eam SNameFontSize nSize to change the spell name size (case-insensitive, you can also use /eam nfs nSize instead)
+-- DF: Add /eam SNameFontSize nSize to change the spell name size (not case sensitive, you can also use /eam nfs nSize instead)
 -- WOTLKC: Test compatibility OK
 
---[Classic WOTLKC]2022.10.28
+-- [Classic WOTLKC]2022.10.28
 --[Retail DF]2022.10.28
 -- DF: Change Button and CheckButton use templates to display normally
 -- DF: Remove unused attributes in XML to avoid WARNING errors
 -- WOTLKC: Compatibility test OK
 ----------------------------
---[Classic WOTLKC]2022.10.18
+-- [Classic WOTLKC]2022.10.18
 --[Retail SL]2022.10.18
 -- The cooling module will temporarily no longer detect the cooling of backpack items to improve performance (the cooling of backpack items will not be detected)
 ----------------------------
---[Classic WOTLKC]2022.10.01
+-- [Classic WOTLKC]2022.10.01
 ----------------------------
 --Fixed the errors caused by related specialization functions in the WLK version and made them compatible with the SL version
 ----------------------------
---[Classic WOTLKC]2022.09.27
+-- [Classic WOTLKC]2022.09.27
 ----------------------------
 --Fix BUFF display
 ----------------------------
@@ -1148,7 +1148,7 @@
 ----------------------------
 -- [Classic WOTLKC] 2022.08.22
 ----------------------------
--- TOC architecture update, version update
+-- TOC Architecture update, version update
 ----------------------------
 -- [Classic TBC] 2021.06.25
 ----------------------------
@@ -1164,7 +1164,7 @@
 ----------------------------
 -- [Classic TBC] 2021.05.22
 ----------------------------
---Remove event:ACTIVE_GROUP_TALENT
+-- Remove event:ACTIVE_GROUP_TALENT
 -- Add event: UNIT_SPELLCAST_SUCCEEDED, and change the parameter order to comply with version regulations
 
 ----------------------------
@@ -1217,7 +1217,7 @@
 --The basic font size value is changed to custom, and it no longer scales with the icon size.
    You can enter /eam BaseFontSize nSize to customize the size
    The timing, stacking, and name will be scaled equally outside or inside the box using this basic value.
-   Those who are interested can go to EventAlert_IconOptions.lua to find the function
+   有興趣者可以到EventAlert_IconOptions.lua Find function
 EventAlert_Icon_Options_Frame_AdjustTimerFontSize can be modified by yourself
    The default value for first execution is 26
 -- Killing animation... adjusted, and can be played by /eam play
@@ -1229,10 +1229,10 @@ EventAlert_Icon_Options_Frame_AdjustTimerFontSize can be modified by yourself
 --Fix combo point highlighting and always highlight it at the maximum value (may differ depending on specialization and talent)
 --Fixed the focus value highlighting of hunter pets, and set the highlight to 50 by default.
    It can be used in conjunction with manually casting pet damage skills to maximize damage.
--- FontObject(EA_FONT_OBJECT) should be based on &quot;TextStatusBarText&quot; as much as possible,
-   Otherwise, &quot;ChatFontNoramal&quot; will be the main one.
+-- FontObject(EA_FONT_OBJECT) Try to use &quot;TextStatusBarText&quot; as the main one,
+   Otherwise, &quot;ChatFontNoramal&quot; is the main one
 -- Font (EA_Fonts) pulls the system default value STANDARD_TEXT_FONT,
-   Use /dump STANDARD_TEXT_FONT. Different standard font files may appear depending on the language.
+   With /dump STANDARD_TEXT_FONT there may be different standard font files depending on the language.
 -- The above two items can be modified in EventAlertMod_InitVar.lua
 -- Reduce the level of most frames from HIGH to MEDIUM to try to reduce occlusion with other frames
 --The icon size adjustment value for each slide is changed from 5 to 1
@@ -1245,7 +1245,7 @@ EventAlert_Icon_Options_Frame_AdjustTimerFontSize can be modified by yourself
 -- Change the arcane charging pattern
 --Fixed Warlock error
 -- DK increases the display of the number of available runes, and highlights it if there are 6 available runes.
--- DK can switch the display of runes bar through /eam ShowRunesBar
+-- DK can switch the display of runes through /eam ShowRunesBar
 
 ----------------------------
 -- [SL] 2020.10.17
@@ -1261,7 +1261,7 @@ EventAlert_Icon_Options_Frame_AdjustTimerFontSize can be modified by yourself
 ----------------------------
 -- [SL] 2020.10.04
 ----------------------------
--- Wrap GetSpellDurationByDesc() into Lib_ZYF
+-- wrap GetSpellDurationByDesc() into Lib_ZYF
 
 ----------------------------
 -- [SL] 2020.08.23
@@ -1301,7 +1301,7 @@ EventAlert_Icon_Options_Frame_AdjustTimerFontSize can be modified by yourself
 ----------------------------
 -- [BFA] 2018.11.24
 ----------------------------
--- Fixed: /eam iconappespelltip option function, so that it can switch the mouse tip on and off normally, and also allows the mouse click to penetrate
+-- Correction: /eam iconappespelltip option function, so that the mouse prompt can be turned on and off normally, and the mouse click can also be penetrated
 
 ----------------------------
 -- [BFA] 2018.11.05
@@ -1331,19 +1331,19 @@ EventAlert_Icon_Options_Frame_AdjustTimerFontSize can be modified by yourself
 ----------------------------
 -- [BFA] 2018.09.29
 ----------------------------
--- PositionFrame(), TarPositionFrame(0, ScdPositionFrame() no longer update whenever an event occurs
+-- PositionFrame(), TarPositionFrame(0, ScdPositionFrame() are no longer updated as soon as there is an event
    Changed to regularly updating icons every 0.1 seconds in order to significantly reduce CPU usage and avoid a large number of events during team battles.
    LAG
 
 ----------------------------
 -- [BFA] 2018.09.03
 ----------------------------
--- Improved the accuracy of non-aura continuous effects
+-- Improved the accuracy of non-Aura continuous effects
 
 ----------------------------
 -- [BFA] 2018.08.29
 ----------------------------
--- To support the duration of skills without aura, please enter the &quot;Skill Spell ID&quot; in the prompt module of this profession.
+-- To support the duration of skills without Aura, please enter the &quot;Skill Spell ID&quot; in the prompt module of this profession.
    The program will automatically capture the duration in the skill prompt. If it cannot be captured, please check and modify localization.tw.lua.
    Regular expression of EA_XCMD_SPELL_DURATION_PATTERN1, EA_XCMD_SPELL_DURATION_PATTERN2
    
@@ -1353,9 +1353,9 @@ EventAlert_Icon_Options_Frame_AdjustTimerFontSize can be modified by yourself
 ----------------------------
 -- [BFA] 2018.08.25
 ----------------------------
--- New command /eam NewLineByIconCount (2~n)
+-- New instructions /eam NewLineByIconCount (2~n)
 	In the cooling module section, every icon automatically jumps to the next column.
--- New command /eam UpdateInterval
+-- New instructions /eam UpdateInterval
    Control the OnUpdate frequency. If it exceeds 0.1 seconds, the decimal point display will be abnormal, but there will be less delay.
 -- Some special commands will be displayed in the mouse prompts of the settings icon
 
@@ -1371,7 +1371,7 @@ EventAlert_Icon_Options_Frame_AdjustTimerFontSize can be modified by yourself
 ----------------------------
 -- Add summoning totem spell monitoring, enter the summoning spell ID in your own BUFF
    For example, runes of power, shamanic totems, mind-benders, etc.
---/eam showc If enabled, add display of summoning spell ID
+-- /eam showc If enabled, add display summoning spell ID
 
 ----------------------------
 -- [LEG] 2017.07.01
@@ -1392,7 +1392,7 @@ EventAlert_Icon_Options_Frame_AdjustTimerFontSize can be modified by yourself
 ----------------------------
 -- Adjust again the order in which UIDropDownMenu related files are referenced in the .toc file (XML must be referenced earlier than the LUA file, and LibStub must be referenced earlier)
 
--- BUFF, DEBUFF additional values (value1~3) if it exceeds 10,000, it will be displayed in units of 10,000
+-- BUFF,DEBUFF Additional values (value1~3) If it exceeds 10,000, it will be displayed in units of 10,000
 
 ----------------------------
 -- [LEG] 2017.06.23
@@ -1404,9 +1404,9 @@ EventAlert_Icon_Options_Frame_AdjustTimerFontSize can be modified by yourself
 ----------------------------
 -- [LEG] 2017.06.21
 ----------------------------
--- For the taint problem, call UIDropDownMenu to correct the use of the function library and the new version of LibButtonGlow1.0 function library to reduce the generation of taint
+-- For the taint problem, call UIDropDownMenu to correct the use of the function library and the new version of the LibButtonGlow1.0 function library to reduce the generation of taint
 
--- The skill cooldown increases the item cooldown, but you cannot enter the item ID (Item ID). You can only enter the cast spell ID to create it. You can use /eam showc to query it.
+-- The skill cooldown increases the item cooldown, but you cannot enter the item ID (Item ID). You can only enter the cast spell ID to create it. You can use /eam showc to query.
    However, if the item&#x27;s CD is &quot;usable&quot;, it can be queried through GetSpellBaseCooldown (spell ID), and the program will automatically identify it.
 However, if it is triggered by specific conditions and has a built-in CD, the player needs to manually enter a fixed value. Currently, the more inconvenient method is to use the input format of the spell ID.
    Enter the cooling seconds separated by a semicolon (;). For example
@@ -1454,9 +1454,9 @@ If the spell ID has been created before but the seconds have not been entered or
    EA_Config is archived and used as the source for next loading.
 Simply put, every time the version is updated, the player&#x27;s own settings will be retained.
    In the game, you can enter the format of EA_Config.Variable name=specified content to change and save.
--- The control variable OPTION_ICON is added to the setting icon, and the variable is also changed when /eam minimap switches the display.
+-- The control variable OPTION_ICON is added to the setting icon, and the variable is also changed when the /eam minimap switches the display.
    Use it as a basis for next loading.   
--- Add parameters /eam showeaconfig, /eam showeaposition to display player settings
+--Added parameters /eam showeaconfig, /eam showeaposition to display player settings
 -- Fixed an error in the localization file content of the Simplified and English versions that caused the astral energy to be unable to be displayed.
 -- Change the hunter pet focus value to a check switch in the graphical interface, and remove the HUNTER_ShowPetFocus variable
 --Fixed the error that even if the option to only display player casts is checked, the buffs and debuffs of others will still be displayed (the self variable is not stored correctly)
@@ -1470,17 +1470,17 @@ Simply put, every time the version is updated, the player&#x27;s own settings wi
 ----------------------------
 -- [LEG] 2016.08.22
 ----------------------------
--- Settings icon available /eam minimap switch enable/disable
+-- Setting icon available /eam minimap switch enable/disable
 
 -- The setting icon can be moved with the right click
-(The new position after dragging will be automatically saved by Blizzard to layout-local.txt under each character, and will be automatically restored to the last position when online)
+(The new position after dragging will be automatically saved by Blizzard to the layout-local.txt under each character, and will be automatically restored to the last position when online)
    
 -- New: Enter /eam scdremovewhencooldown to directly switch the EA_Config2.SCD_RemoveWhenCooldown variable to control
    Cooling frame behavior (true means that a single skill will disappear when the cooling is completed, false means that it will not disappear even if it is completed)
-   (It will not be archived, and the settings in Addons\EventAlertMod\EventAlertMod.lua will still be followed the next time you log in)
+   (It will not be archived, and the settings in AddOn\EventAlertMod\EventAlertMod.lua will still be followed the next time you log in)
 -- New: Enter /eam scdnocombatstillkeep to directly switch the EA_Config2.SCD_NocombatStillKeep variable to control
    Cooling frame behavior (true means the frame will still be maintained after leaving combat, false means the cooling frame will disappear after leaving combat)
-   (It will not be archived, and the settings in Addons\EventAlertMod\EventAlertMod.lua will still be followed the next time you log in)
+   (It will not be archived, and the settings in AddOn\EventAlertMod\EventAlertMod.lua will still be followed the next time you log in)
    
 -- If the timer is outside the frame (0.65 times the frame size), increase the stacking number (0.45 times the frame size)
 ;If the timer is inside the frame (0.5 times the frame size), reduce the stacking number size (0.3 times the frame size)
@@ -1523,7 +1523,7 @@ Simply put, every time the version is updated, the player&#x27;s own settings wi
 -- [LEG] 2016.08.01
 ---------------
 --Adjust the display size of DK runes to solve the lag problem
---The mouse prompts for BUFF and DEBUFF are no longer just skill descriptions, but the current status values.
+-- BUFF and DEBUFF mouse prompts are no longer just skill descriptions, but current status values.
    , the spell cooling framework maintains the skill description
    
 -- If the number of stacks is less than 2, the count value will not be displayed to avoid the situation of 1.
@@ -1562,11 +1562,11 @@ Simply put, every time the version is updated, the player&#x27;s own settings wi
 		SCD_NocombatStillKeep = true,
 	--Highlighted when the skill of the cooling frame reaches the conditions for casting
 		SCD_GlowWhenUsable = true ,
-	--Single skill will be removed after cooling down (true: to be removed/false: not to be removed)
+	--Single skill will be removed after cooling down (true: to be removed /false: not to be removed)
 		SCD_RemoveWhenCooldown = true,
 	--The remaining seconds will be displayed with one decimal point (using 0 means there will be no decimal point at all)
 		UseFloatSec = 1,
-	--Whether to display the death knight runes (true: display/false: not display)
+	--Whether to display death knight runes (true: display /false: do not display)
 		DK_ShowRunes = false,
 --Whether to display the hunter pet concentration value
 		HUNTER_ShowPetFocus = true,
@@ -1586,13 +1586,13 @@ Simply put, every time the version is updated, the player&#x27;s own settings wi
 ---------------
 
 -- Warrior/Bear will not trigger UNIT_POWER when its anger returns to zero, resulting in the inability to disappear after its anger frame returns to zero.
-, so add UNIT_FRUQUENT event to refresh the rage frame.
+, so add the UNIT_FRUQUENT event to refresh the anger frame.
 
 --The death knight rune display is 6. Due to a judgment error in CreateFrames_SpecialFrames_Show
   Resulting in no refresh. Corrected. Rune colors change with specialization.
 
--- Add a variable: DK_ShowRunes to EA_Config2 in EventAlertMod.lua to decide
-  Whether to display runes. (true: display/false: not display)
+-- Add a variable to EA_Config2 in EventAlertMod.lua: DK_ShowRunes to decide
+  Whether to display runes. (true:display/false:not display)
 
 -- The corresponding monk currently only has energy when brewing wine, Fengxing has energy/qi, and Mistweaver only has mana but no energy or qi.
 Make corresponding adjustments.

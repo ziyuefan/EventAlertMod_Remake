@@ -415,17 +415,18 @@
 
     <div id="doc-content-zh" class="lang-content active">
         <a href="AGENTS.md.html" class="back-btn">← 返回 AI 入口指導檔 (AGENTS)</a>
+<!-- EAM_DOCUMENTATION_SOURCE: zh-TW -->
 <h1 id="_1">遷移注意事項</h1>
 <h2 id="_2">舊行為映射</h2>
-<p>盡可能保留：</p>
+<p>費用保留：</p>
 <ul>
-<li>自我增益/減益警報圖示；</li>
+<li>取得自我/debuff警報圖示；</li>
 <li>目標增益/減益警報圖示；</li>
-<li>法術冷卻時間警報圖示；</li>
-<li>按 itemID 排列的物品冷卻警報圖示；</li>
-<li>簡單的spellID新增/刪除工作流程；</li>
+<li>動動冷卻時間警報圖示；</li>
+<li>itemID 的工件冷卻圖示；</li>
+<li>簡單的spellID加入/刪除工作流程；</li>
 <li><code>/eam opt</code> 設定入口點；</li>
-<li><code>/eam show</code>、<code>/eam showt</code>、<code>/eam showc</code>、<code>/eam showa</code> 偵測工作流程；</li>
+<li><code>/eam show</code>、<code>/eam showt</code>、<code>/eam showc</code>、<code>/eam showa</code>探測流程工作；</li>
 <li>冷卻行為切換：</li>
 <li>冷卻完成後移除；</li>
 <li>讓冷卻圖示遠離戰鬥；</li>
@@ -434,12 +435,12 @@
 <li>顯示框架；</li>
 <li>顯示姓名；</li>
 <li>顯示計時器；</li>
-<li>顯示閃光/發光；</li>
-<li>工具提示附加法術/物品 ID；</li>
-<li>名稱、計時器和堆疊的字體大小控制；</li>
+<li>顯示 flash/glow;</li>
+<li>工具提示附加輔助/item ID；</li>
+<li>名稱、計時器和所在的字體大小控制；</li>
 <li>小地圖選項按鈕語意；</li>
-<li>本地化字串，尤其是存在的 zhTW、enUS、koKR、zhCN；</li>
-<li>正式服驗證後有用的預設法術/物品表。</li>
+<li>本地化字串，特別是存在的 zhTW、enUS、koKR、zhCN；</li>
+<li>正式服驗證後可使用預設/物品表。</li>
 </ul>
 <h2 id="savedvariables">舊 SavedVariables 遷移</h2>
 <p>舊版輸入：</p>
@@ -476,29 +477,29 @@ EA_Pos
 }
 </code></pre>
 
-<p>確切的目標變數名稱是重寫決定。如果舊變數名
+<p>確信的目標變數名稱被重寫決定。如果舊變數名稱
 為了相容性，它們仍然需要架構標記和遷移狀態。</p>
 <p>遷移規則：</p>
 <ul>
-<li>絕不凍結遷移的 SavedVariables；</li>
-<li>絕不將運行時狀態儲存在 SavedVariables 中；</li>
-<li>在遷移安全性擴充表下保留未知的遺留欄位或
+<li>永遠不會凍結遷移的 SavedVariables；</li>
+<li>模組將運行時狀態儲存在 SavedVariables 中；</li>
+<li>在遷移安全性互補表下保留未知的遺傳欄位或
   警告名單；</li>
 <li>驗證spellID/itemID數字欄位；</li>
-<li>將刪除的僅限 Classic 的欄位記錄為遷移警告；</li>
-<li>在備份或遷移置信策略生效之前不要刪除舊字段
+<li>將刪除的唯一經典的欄位記錄為遷移預警；</li>
+<li>在備份或遷移設定信件策略生效之前不要刪除舊字段
   定義的。</li>
 </ul>
 <h2 id="_3">刪除舊行為</h2>
-<p>從活躍的正式服架構中刪除：</p>
+<p>從Active的正式伺服器架構中刪除：</p>
 <ul>
 <li>Classic、TBC、Wrath、Cata、Mists TOC 和負載根；</li>
-<li>經典行為的「G.WOW_VERSION」分支；</li>
-<li>經典 API 的舊解壓縮傳回相容層；</li>
-<li>老獵人寵物幸福/焦點分支只存在於經典時代
+<li><code>G.WOW_VERSION</code> 分支的經典行為；</li>
+<li>經典API的舊解壓縮傳回相內容層；</li>
+<li>老獵人寵物幸福/焦點只存在於經典時代的分支
   行為；</li>
-<li>大量正常運作時項目 ID 掃描；</li>
-<li>每個圖示計時器和每個法術計時器刷新鏈；</li>
+<li>大量正常運行時項目ID掃描；</li>
+<li>每個圖示計時器和每個繪圖計時器刷新鏈；</li>
 <li>工具提示掃描作為正常事實來源；</li>
 <li>核心操作的外部依賴要求。</li>
 </ul>
@@ -506,9 +507,9 @@ EA_Pos
 <p>預計休息時間：</p>
 <ul>
 <li>舊的經典目錄不再載入；</li>
-<li>依賴傳統 Classic 特定資源的使用者會遺失這些警報；</li>
-<li>團體事件腳本/配置可能需要簡化；</li>
-<li>匯入/匯出原型必須重新設計或刪除，除非是簡單的安全
+<li>依賴傳統特定資源的使用者會忽略這些警告；</li>
+<li>事件腳本/配置可能需要簡化；</li>
+<li>import/export 原型必須重新設計或刪除，除非是簡單的安全
   需要路徑；</li>
 <li><code>Lib_ZYF</code> 助手應該被替換或隔離；不要假設它存在於
   新的核心。</li>
@@ -523,48 +524,49 @@ EA_Pos
 <li><code>locale/localization.kr.lua</code></li>
 <li><code>locale/localization.ru.lua</code>
 保持本地化隔離。不要將字串混合到邏輯模組中。請勿添加
-簡體中文字串轉換為 zhTW。</li>
+簡體中文字串為zhTW。</li>
 </ul>
-<h2 id="_6">遺留來源處理</h2>
-<p>目前的舊原始碼保留供審核/參考：</p>
+<h2 id="_6">繼承來源處理</h2>
+<p>目前的舊原始碼保留用於審計/reference：</p>
 <ul>
-<li><code>經典/</code></li>
-<li><code>待定/</code>
--<code>憤怒/</code></li>
+<li><code>Classic/</code></li>
+<li><code>TBC/</code></li>
+<li><code>Wrath/</code></li>
 </ul>
-<p>它們不應由 Retail 重寫載入。如果保留在儲存庫中，
-將它們標記為已存檔/不受支援。</p>
+<p>它們不應該由 Retail 重寫載入。如果保留在儲存庫中，
+將它們標記為已文檔/unsupported。</p>
     </div>
     <div id="doc-content-en" class="lang-content">
         <a href="AGENTS.md.html" class="back-btn">← Back to AI Entrance (AGENTS)</a>
-<h1 id="migration-notes">Migration Notes</h1>
-<h2 id="old-behavior-mapping">Old Behavior Mapping</h2>
-<p>Preserve where feasible:</p>
+<!-- EAM_DOCUMENTATION_SOURCE: zh-TW -->
+<h1 id="migration-considerations">Migration considerations</h1>
+<h2 id="old-behavior-mapping">Old behavior mapping</h2>
+<p>Fee retention:</p>
 <ul>
-<li>self buff/debuff alert icons;</li>
-<li>target buff/debuff alert icons;</li>
-<li>spell cooldown alert icons;</li>
-<li>item cooldown alert icons by itemID;</li>
-<li>easy spellID add/remove workflow;</li>
-<li><code>/eam opt</code> settings entry point;</li>
-<li><code>/eam show</code>, <code>/eam showt</code>, <code>/eam showc</code>, <code>/eam showa</code> detection workflows;</li>
-<li>cooldown behavior toggles:</li>
-<li>remove when cooldown completes;</li>
-<li>keep cooldown icons out of combat;</li>
-<li>glow when usable;</li>
-<li>icon display toggles:</li>
-<li>show frame;</li>
-<li>show name;</li>
-<li>show timer;</li>
+<li>Get self/debuff alert icon;</li>
+<li>Target buff/debuff alert icon;</li>
+<li>Move the cooling time alarm icon;</li>
+<li>Workpiece cooling diagram of itemID;</li>
+<li>Simple spellID addition/removal workflow;</li>
+<li><code>/eam opt</code> sets the entry point;</li>
+<li><code>/eam show</code>, <code>/eam showt</code>, <code>/eam showc</code>, <code>/eam showa</code> detection process work;</li>
+<li>Cooling behavior switch:</li>
+<li>Remove after cooling is complete;</li>
+<li>Keep cooldown icons away from combat;</li>
+<li>Glows when in use;</li>
+<li>Icon display switching:</li>
+<li>display frame;</li>
+<li>display name;</li>
+<li>Display timer;</li>
 <li>show flash/glow;</li>
-<li>tooltip append spell/item ID;</li>
-<li>font size controls for name, timer, and stacks;</li>
-<li>minimap option button semantics;</li>
-<li>localization strings, especially zhTW, enUS, koKR, zhCN where present;</li>
-<li>useful default spell/item tables after Retail validation.</li>
+<li>Tooltip additional auxiliary /item ID;</li>
+<li>Name, timer and font size control;</li>
+<li>Minimap option button semantics;</li>
+<li>Localized strings, especially the presence of zhTW, enUS, koKR, zhCN;</li>
+<li>The default/item table can be used after verification on the Retail server.</li>
 </ul>
-<h2 id="old-savedvariables-migration">Old SavedVariables Migration</h2>
-<p>Legacy inputs:</p>
+<h2 id="old-savedvariables-migration">OLD SavedVariables Migration</h2>
+<p>Old version input:</p>
 <pre class="codehilite"><code class="language-lua">EA_Config
 EA_Position
 EA_Items
@@ -598,44 +600,44 @@ EA_Pos
 }
 </code></pre>
 
-<p>The exact target variable name is a rewrite decision. If the old variable names
-remain for compatibility, they still need schema markers and migration status.</p>
+<p>Make sure the target variable name is determined by overwriting. if old variable name
+For compatibility, they still require schema marking and migration state.</p>
 <p>Migration rules:</p>
 <ul>
-<li>never freeze migrated SavedVariables;</li>
-<li>never store runtime state in SavedVariables;</li>
-<li>preserve unknown legacy fields under a migration-safe extension table or
+<li>SavedVariables that never freezes migrations;</li>
+<li>The module stores runtime state in SavedVariables;</li>
+<li>Keep unknown genetic fields under migration safety complementation table or
   warning list;</li>
-<li>validate spellID/itemID numeric fields;</li>
-<li>record removed Classic-only fields as migration warnings;</li>
-<li>do not delete old fields until a backup or migration confidence strategy is
+<li>Verify spellID/itemID numeric fields;</li>
+<li>Record the only deleted Classic field as a migration warning;</li>
+<li>Do not delete old fields until the backup or migration settings mail policy has taken effect
   defined.</li>
 </ul>
-<h2 id="removed-old-behaviors">Removed Old Behaviors</h2>
-<p>Remove from active Retail architecture:</p>
+<h2 id="remove-old-behavior">Remove old behavior</h2>
+<p>Removed from Active's Retail server architecture:</p>
 <ul>
-<li>Classic, TBC, Wrath, Cata, Mists TOCs and load roots;</li>
-<li><code>G.WOW_VERSION</code> branches for Classic behavior;</li>
-<li>old unpacked return compatibility layers for Classic APIs;</li>
-<li>old hunter pet happiness/focus branches that only exist for Classic-era
-  behavior;</li>
-<li>huge normal-runtime item ID scans;</li>
-<li>timer-per-icon and timer-per-spell refresh chains;</li>
-<li>tooltip scanning as normal fact source;</li>
-<li>external dependency requirement for core operation.</li>
+<li>Classic, TBC, Wrath, Cata, Mists TOC and load root;</li>
+<li>Classic behavior of <code>G.WOW_VERSION</code> branches;</li>
+<li>The old decompression of the Classic API returns the phase content layer;</li>
+<li>Old hunter pet happiness/focus only exists in the Classic era branch
+behavior;</li>
+<li>A large number of project ID scans during normal operation;</li>
+<li>Per-diagram timer and per-draw timer refresh chain;</li>
+<li>Tooltip scan as normal source of truth;</li>
+<li>External dependency requirements for core operations.</li>
 </ul>
-<h2 id="compatibility-breaks">Compatibility Breaks</h2>
-<p>Expected breaks:</p>
+<h2 id="compatibility-break">Compatibility Break</h2>
+<p>Estimated rest time:</p>
 <ul>
-<li>old Classic TOCs no longer load;</li>
-<li>users relying on legacy Classic-specific resources lose those alerts;</li>
-<li>group-event scripting/configuration may need simplification;</li>
-<li>import/export prototype must be redesigned or removed unless a simple safe
-  path is needed;</li>
-<li><code>Lib_ZYF</code> helpers should be replaced or isolated; do not assume it exists in
-  the new core.</li>
+<li>The old Classic directory is no longer loaded;</li>
+<li>Users relying on legacy specific resources will ignore these warnings;</li>
+<li>Event scripts/configuration may need to be simplified;</li>
+<li>import/export prototype must be redesigned or removed unless it is simply safe
+  path required;</li>
+<li><code>Lib_ZYF</code> helper should be replaced or isolated; do not assume it exists in
+  New core.</li>
 </ul>
-<h2 id="localization-migration">Localization Migration</h2>
+<h2 id="localization-migration">Localization migration</h2>
 <p>Existing locale files:</p>
 <ul>
 <li><code>locale/localization.comm.lua</code></li>
@@ -643,19 +645,19 @@ remain for compatibility, they still need schema markers and migration status.</
 <li><code>locale/localization.tw.lua</code></li>
 <li><code>locale/localization.cn.lua</code></li>
 <li><code>locale/localization.kr.lua</code></li>
-<li><code>locale/localization.ru.lua</code></li>
+<li><code>locale/localization.ru.lua</code>
+Keep localization isolated. Don't mix strings into logic modules. Do not add
+The simplified Chinese character string is zhTW.</li>
 </ul>
-<p>Keep localization isolated. Do not mix strings into logic modules. Do not add
-Simplified Chinese strings to zhTW.</p>
-<h2 id="legacy-source-handling">Legacy Source Handling</h2>
-<p>Current old source roots remain for audit/reference:</p>
+<h2 id="inheritance-source-processing">Inheritance source processing</h2>
+<p>The current old source code is retained for auditing /reference:</p>
 <ul>
 <li><code>Classic/</code></li>
 <li><code>TBC/</code></li>
 <li><code>Wrath/</code></li>
 </ul>
-<p>They should not be loaded by the Retail rewrite. If retained in the repository,
-mark them archived/unsupported.</p>
+<p>They should not be loaded by Retail overrides. If retained in the repository,
+Mark them as documented /unsupported.</p>
     </div>
     
     <!-- Mermaid Dynamic Render Script -->

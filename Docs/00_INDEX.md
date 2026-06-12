@@ -1,3 +1,4 @@
+<!-- EAM_DOCUMENTATION_SOURCE: zh-TW -->
 # EventAlertMod Remake 說明文件導航中心 / Documentation Hub
 
 歡迎使用 EventAlertMod (EAM) 正式服重構版本說明文件中心。本中心為**插件使用者 (Players & Users)** 以及**代理開發者 (AI & Human Developers)** 提供了專屬的資訊入口。

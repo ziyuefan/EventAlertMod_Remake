@@ -26,7 +26,7 @@ TRANSLATION_CACHE = {}
 
 def post_process_translation(text, src_lang, dest_lang):
     if dest_lang == "zh-TW":
-        # 1. 替換零售相關
+        # 1. 替換零售與正式服相關
         text = re.sub(r'零售業?', '正式服', text)
         text = re.sub(r'零售版', '正式版', text)
         text = re.sub(r'魔獸世界零售', '魔獸世界正式服', text)
@@ -40,9 +40,14 @@ def post_process_translation(text, src_lang, dest_lang):
         
         # 3. 替換 ticker / 股票
         text = re.sub(r'股票', '計時器', text)
+        text = re.sub(r'股票代號', '定時器', text)
+        text = re.sub(r'時間小組', '定時器', text)
+        text = re.sub(r'自動更新器', '計時器', text)
+        text = re.sub(r'定時處理', '定時器處理', text)
         
         # 4. 修正一些常見專有名詞的硬翻
         text = re.sub(r'奧術費用', '奧術充能', text)
+        text = re.sub(r'充電', '充能', text)
         text = re.sub(r'卡塔經典', '浩劫與重生經典服', text)
         text = re.sub(r'卡塔經典賽', '浩劫與重生經典服', text)
         text = re.sub(r'憤怒經典', '巫妖王之怒經典服', text)
@@ -57,6 +62,59 @@ def post_process_translation(text, src_lang, dest_lang):
         text = re.sub(r'本文件通行證', '本文件', text)
         text = re.sub(r'這個文件通行證', '本文件', text)
         text = re.sub(r'這份文件通行證', '本文件', text)
+        
+        # 5. 強制還原一些被硬翻的專案路徑與資料夾片段
+        text = re.sub(r'\b主/EventAlert', 'Main/EventAlert', text)
+        text = re.sub(r'\b主線/Main', 'Mainline/Main', text)
+        text = re.sub(r'圖像/、音樂/', 'Images/、Sounds/', text)
+        text = re.sub(r'圖像/ 和 音樂/', 'Images/ 和 Sounds/', text)
+        text = re.sub(r'\b主/', 'Main/', text)
+        text = re.sub(r'\b圖像/', 'Images/', text)
+        text = re.sub(r'\b音樂/', 'Sounds/', text)
+        
+        # 6. 強制還原暴雪 XML 範本和字體物件的錯翻
+        text = re.sub(r'選項滑桿模板', 'OptionsSliderTemplate', text)
+        text = re.sub(r'輸入框模板', 'InputBoxTemplate', text)
+        text = re.sub(r'背景模板', 'BackdropTemplate', text)
+        text = re.sub(r'遊戲字體正常', 'GameFontNormal', text)
+        text = re.sub(r'遊戲字體突出顯示', 'GameFontHighlight', text)
+        
+        # 7. 強制還原常數、性能、選項這幾個在清單對照中被錯翻的檔案名稱
+        text = re.sub(r'\b常數\s*[：:]', 'Constants: ', text)
+        text = re.sub(r'\b性能\s*[：:]', 'Performance: ', text)
+        text = re.sub(r'\b選項\s*[：:]', 'Options: ', text)
+    elif dest_lang == "en":
+        # 1. 修正中翻英時正式服的硬翻
+        text = re.sub(r'\b(?:formal|official|retail)\s+server\b', 'Retail server', text, flags=re.IGNORECASE)
+        text = re.sub(r'\b(?:formal|official|retail)\s+servers\b', 'Retail servers', text, flags=re.IGNORECASE)
+        text = re.sub(r'\bretail\s+edition\b', 'Retail edition', text, flags=re.IGNORECASE)
+        text = re.sub(r'\bretail\s+version\b', 'Retail version', text, flags=re.IGNORECASE)
+        text = re.sub(r'\bretail\s+client\b', 'Retail client', text, flags=re.IGNORECASE)
+        text = re.sub(r'\b(?:formal|official|retail)\s+branch\b', 'Retail branch', text, flags=re.IGNORECASE)
+        # 確保 Retail 是大寫
+        text = re.sub(r'\bretail\b', 'Retail', text)
+        
+        # 2. 修正中翻英時經典服的翻譯
+        text = re.sub(r'\bclassic\s+server\b', 'Classic server', text, flags=re.IGNORECASE)
+        text = re.sub(r'\bclassic\s+servers\b', 'Classic servers', text, flags=re.IGNORECASE)
+        text = re.sub(r'\bclassic\b', 'Classic', text)
+        text = re.sub(r'\b(?:Cataclysm|Cata)\s+Classic\b', 'Cataclysm Classic', text, flags=re.IGNORECASE)
+        text = re.sub(r'\bWrath\s+Classic\b', 'Wrath of the Lich King Classic', text, flags=re.IGNORECASE)
+        text = re.sub(r'\bTBC\s+Classic\b', 'The Burning Crusade Classic', text, flags=re.IGNORECASE)
+        text = re.sub(r'\bMists\s+of\s+Pandaria\s+Classic\b', 'Mists of Pandaria Classic', text, flags=re.IGNORECASE)
+        
+        # 3. 修正中翻英時魔獸專用詞彙與程式代碼
+        text = re.sub(r'\b(?:charms?|conjurations?|spellings?)\b', 'Spell', text, flags=re.IGNORECASE)
+        text = re.sub(r'\b(?:stocks?|stock\s+tickers?)\b', 'Ticker', text, flags=re.IGNORECASE)
+        text = re.sub(r'\b(?:tainted?|dye|coloration)\b', 'Taint', text, flags=re.IGNORECASE)
+        text = re.sub(r'\bcombat\s+(?:locking|locked)\b', 'Combat Lockdown', text, flags=re.IGNORECASE)
+        text = re.sub(r'\bshadow\s+carrier\b', 'Shadow Host', text, flags=re.IGNORECASE)
+        text = re.sub(r'\bzero\s+distribution\b', 'zero-allocation', text, flags=re.IGNORECASE)
+        text = re.sub(r'\b(?:object\s+pool|entity\s+pool)\b', 'Object Pool', text, flags=re.IGNORECASE)
+        text = re.sub(r'\bcooldown\s+manager\b', 'CooldownViewer', text, flags=re.IGNORECASE)
+        text = re.sub(r'\badd-ons?\b', 'AddOn', text, flags=re.IGNORECASE)
+        text = re.sub(r'\baddons?\b', 'AddOn', text, flags=re.IGNORECASE)
+        text = re.sub(r'\bauras?\b', 'Aura', text, flags=re.IGNORECASE)
     return text
 
 def protect_symbols(text):
@@ -65,12 +123,20 @@ def protect_symbols(text):
     # 匹配魔獸 API、檔案路徑、小駝峰/大駝峰、大寫底線、括號函數呼叫等
     pattern = re.compile(
         r'('
-        r'\b[\w/\\]+\.(?:lua|toc|xml|md|html|txt|json|yml|yaml|png|jpg|gif|blp)\b'
-        r'|\bC_[a-zA-Z0-9_]+(?:\.[a-zA-Z0-9_]+)*\b'
-        r'|\b[a-zA-Z0-9_]+_[a-zA-Z0-9_]+\b'
+        r'`[a-zA-Z0-9_./-]+`' # 反單引號包裹的程式碼（必須在最前面，優先匹配，防止被拆開）
+        r'|\b[\w/\\]+\.(?:lua|toc|xml|md|html|txt|json|yml|yaml|png|jpg|gif|blp)\b' # 有副檔名的路徑，如 Main/EventAlert_Options.xml
+        r'|\b(?i:Main|Images|Sounds|Classic|TBC|Wrath|libs|locale|DevDocument|Core|Services|UI|Data|Managers|Debug|Tools|Music|Image)/[a-zA-Z0-9_/-]*' # 帶斜線的目錄路徑，不分大小寫，如 Main/、Images/、libs/、image/、music/ 等
+        r'|\bC_[a-zA-Z0-9_]+(?:\.[a-zA-Z0-9_]+)*\b' # C_ 開頭 API
+        r'|/[a-zA-Z0-9_-]+\b' # Slash commands 如 /run, /dump, /eventtrace, /eam
+        r'|\b[a-zA-Z0-9_]*Template\b' # 以 Template 結尾的 XML 模板名稱，如 UIPanelButtonTemplate, BackdropTemplate
+        r'|\bGameFont[a-zA-Z0-9_]*\b' # 暴雪字體範本，如 GameFontNormal, GameFontHighlight
+        r'|\b[A-Z_][A-Z0-9_]{2,}\b' # 全大寫單字或事件，如 UNIT_AURA, COMBAT_LOG_EVENT_UNFILTERED, API, GC
+        r'|\b[a-zA-Z0-9_]+_[a-zA-Z0-9_]+\b' # 底線變數/事件如 UNIT_AURA, EventAlertMod
+        r'|\bEAM(?:\.[a-zA-Z0-9_]+)*\b' # EAM.API, EAM.L 命名空間
         r'|\b[a-z]+[A-Z][a-zA-Z0-9]*\b'  # 小駝峰如 classID, specIndex, timerTokenPool
         r'|\b[A-Z][a-z]+[A-Z][a-zA-Z0-9]*\b' # 大駝峰如 GetSpellCooldown, InCombatLockdown, CooldownFrame
         r'|\b[a-zA-Z0-9_]+(?:\.[a-zA-Z0-9_]+)*\(\)\b' # 函數呼叫如 IsZero()
+        r'|[\'"][a-zA-Z0-9_.-]+[\'"]' # 引號包裹的代碼字串，例如 'spellId', "timerTokenPool"
         r')'
     )
     

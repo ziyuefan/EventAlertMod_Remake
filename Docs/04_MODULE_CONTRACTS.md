@@ -1,399 +1,394 @@
-# Module Contracts
+<!-- EAM_DOCUMENTATION_SOURCE: zh-TW -->
+# 模組合約
 
-## Ownership Rules
+## 所有權規則
 
-- `SavedVariables` owns persistent config tables and migration.
-- Services own runtime facts.
-- `Renderer` owns rendered UI state.
-- `IconPool` owns frame objects.
-- `Scheduler` owns due jobs.
-- `DebugState` owns debug/session snapshots.
-- Static constants may be frozen. Runtime state and SavedVariables must never
-  be frozen.
-- Every actively loaded source file must begin with a module commentary block
-  that records purpose, design philosophy, ownership, mutation boundary, and
-  maintenance notes. Keep this commentary current when module contracts change.
-  See `Docs/12_CODE_COMMENTARY_GUIDE.md`.
+- `SavedVariables` 擁有持久配置表和遷移。
+- 服務擁有運行時事實。
+- `Renderer` 擁有渲染的 UI 狀態。
+- `IconPool` 擁有框架物件。
+- `Scheduler` 擁有應有的工作。
+- `DebugState` 擁有 debug/session 快照。
+- 靜態常數可能會被凍結。運行時狀態和 SavedVariables 絕不能
+  被凍結。
+- 每個主動載入的來源檔案必須以模組註解區塊開頭
+  記錄目的、設計理念、所有權、突變邊界，以及
+  保養注意事項。當模組合約發生變化時，請保持此評論最新。
+  請參閱“Docs/12_CODE_COMMENTARY_GUIDE.md”。
 
 ## Core/Env
 
-Inputs:
+輸入：
 
-- addon name and namespace
-- Retail build/flavor APIs
+- 外掛名稱和命名空間
+- 正式服建置/flavor API
 
-Outputs:
+輸出：
 
-- addon namespace
-- local API alias table
-- Retail-only guard result
+- 外掛程式命名空間
+- 本地 API 別名表
+- 僅限正式服的防護結果
 
-Mutation:
-
-- may initialize the addon namespace once
-- must not mutate SavedVariables
+突變：
+- 可以初始化外掛名稱空間一次
+- 不得改變 SavedVariables
 
 ## Core/Util
 
-Inputs:
+輸入：
 
-- raw Lua/WoW table APIs
+- 原始 Lua/WoW 表 API
 
-Outputs:
+輸出：
 
-- `CreateTable`, `FreezeTable`, `IsFrozen`, pool helpers, safe wipe/release,
-  stable enum helpers, debug assertions
-- secret/protected value safe-read helpers:
+- `CreateTable`、`FreezeTable`、`IsFrozen`、泳池助手、安全擦除/release、
+  穩定的枚舉助手，調試斷言
+- Secret/protected 值安全讀取助手：
   - `readSafeField`
   - `readSafeScalar`
   - `markBoundary`
   - `appendBoundaryWarning`
   - `clearTimer`
 
-Mutation:
+突變：
 
-- owns helper-local pools only
+- 僅擁有輔助本地池
 
 ## Core/Constants
 
-Inputs:
+輸入：
 
-- none after module load
+- 模組載入後無
 
-Outputs:
+輸出：
 
-- frozen enum tables, module names, event names, status constants, schema
-  versions, sentinel constants such as `UNKNOWN` and `EMPTY`
+- 凍結枚舉表、模組名稱、事件名稱、狀態常數、模式
+  版本、哨兵常數，例如 `UNKNOWN` 和 `EMPTY`
 
-Mutation:
+突變：
 
-- none after freeze
+- 凍結後沒有
 
 ## Core/EventRouter
 
-Inputs:
+輸入：
 
-- module event subscriptions
-- Blizzard events
+- 模組事件註冊
+- 暴雪事件
 
-Outputs:
+輸出：
+- 透過參數化 `pcall` 錯誤隔離來分派對已註冊模組處理程序的調用，確保一個模組處理程序中的故障不會阻止其他註冊者
 
-- dispatch calls to registered module handlers with parameterized `pcall` error isolation, ensuring a failure in one module's handler does not block other subscribers
+突變：
 
-Mutation:
-
-- owns event frame and event subscription table
-- no closure allocation per event registration
+- 擁有事件框架與事件註冊表
+- 每個活動報名沒有關閉分配
 
 ## Core/Scheduler
 
-Inputs:
+輸入：
 
-- due jobs requested by modules
+- 模組請求的到期作業
 
-Outputs:
+輸出：
 
-- due callback dispatch under protective `pcall` isolation, ensuring job runtime failures are caught and don't break the global ticker frame
-- safe queue cleanup and task record recycling regardless of callback success
+- 在保護性 `pcall` 隔離下進行回調度調度，確保捕獲作業運行時故障並且不會破壞全域程式碼框架
+- 無論回調成功與否，安全佇列清理和任務記錄回收
 
-Mutation:
+突變：
 
-- owns one OnUpdate frame, due queue, reusable job records, and task pool
-- no per-icon scheduler tables
+- 擁有一個 OnUpdate 框架、到期佇列、可重複使用作業記錄和任務池
+- 沒有每個圖示的調度表
 
 ## Core/SavedVariables
 
-Inputs:
+輸入：
 
-- legacy globals: `EA_Config`, `EA_Position`, `EA_Items`, `EA_AltItems`,
-  `EA_TarItems`, `EA_ScdItems`, `EA_GrpItems`, `EA_Pos`
+- 舊版全域變數：`EA_Config`、`EA_Position`、`EA_Items`、`EA_AltItems`、
+  `EA_TarItems`、`EA_ScdItems`、`EA_GrpItems`、`EA_Pos`
+輸出：
 
-Outputs:
+- 版本化的活動設定文件
+- 遷移報告
+- 驗證警告
+- 使用者觸發的警報添加/remove光環、法術冷卻和物品冷卻的API
 
-- versioned active profile
-- migration report
-- validation warnings
-- user-triggered alert add/remove APIs for aura, spell cooldown, and item cooldown
+突變：
 
-Mutation:
-
-- may mutate SavedVariables during load/migration/config changes
-- must not write high-frequency runtime state
-- must not freeze SavedVariables
-- increments `EAM_DB.revision` after user-triggered config mutation
+- 在載入/migration/config變更期間可能會改變SavedVariables
+- 不得寫入高頻運轉時狀態
+- 不得結凍 SavedVariables
+- 在使用者觸發的配置突變後增加 `EAM_DB.revision`
 
 ## Core/Performance
 
-Inputs:
+輸入：
 
-- `GetFramerate`, combat lockdown state, optional `debugprofilestop`
+- `GetFramerate`，戰鬥鎖定狀態，選用`debugprofilestop`
 
-Outputs:
+輸出：
 
-- throttle decisions, profiling samples, shared table pools
+- 節流決策、分析樣本、共享表池
 
-Mutation:
+突變：
 
-- owns profiling/session counters only
+- 僅擁有分析/session 計數器
 
 ## Services/AuraService
 
-Inputs:
+輸入：
 
-- configured player/target aura alerts
-- `UNIT_AURA`, `PLAYER_TARGET_CHANGED`, login/world events
+- 設定玩家/target光環警報
+- `UNIT_AURA`、`PLAYER_TARGET_CHANGED`、登入/world 事件
 
-Outputs:
+輸出：
 
-- `EAM_AURA_STATE_CHANGED` events fired to EventRouter with parameterized state and frameName
-- normalized `AuraState` and `AlertState` allocated from `AuraStatePool`
-- boundary warnings
-- delta-aware aura cache keyed by unit and `auraInstanceID`
-- config revision aware alert index keyed by unit and configured spellID
-- full update fallback scans each tracked unit/filter once, rebuilds the unit aura cache, and marks unmatched configured alerts inactive
+- `EAM_AURA_STATE_CHANGED` 事件透過參數化狀態和 frameName 觸發到 EventRouter
+- 從 `AuraStatePool` 分配的標準化 `AuraState` 和 `AlertState`
+- 邊界警告
+- 由單位和 `auraInstanceID` 鍵入的增量感知光環緩存
+- 配置修訂感知警報索引，按單元鍵入並配置 spellID
+- 完整更新回退掃描每個追蹤單元/filter一次，重建單元光環緩存，並將不匹配的配置警報標記為非活動狀態
 
-Mutation:
+突變：
 
-- owns aura runtime cache and `AuraStatePool` only
-- must not create UI frames
-- must not write SavedVariables
-- may rebuild alert index when SavedVariables revision changes
+- 僅擁有 aura 運行時快取和 `AuraStatePool`
+- 不得創建 UI 框架
+- 不得寫入 SavedVariables
+- 當 SavedVariables 版本變更時可能會重建警報索引
 
 ## Managers/AlertManager
 
-Inputs:
+輸入：
 
-- `EAM_AURA_STATE_CHANGED`, `EAM_COOLDOWN_STATE_CHANGED`, `EAM_ITEM_COOLDOWN_STATE_CHANGED`, `EAM_GROUND_EFFECT_STATE_CHANGED`, and `EAM_TOTEM_STATE_CHANGED` events from EventRouter
-- configured alert lists
+- 來自 EventRouter 的 `EAM_AURA_STATE_CHANGED`、`EAM_COOLDOWN_STATE_CHANGED`、`EAM_ITEM_COOLDOWN_STATE_CHANGED`、`EAM_GROUND_EFFECT_STATE_CHANGED` 和 `EAM_TOTEM_STATE_CHANGED` 事件
+- 配置警報列表
 
-Outputs:
+輸出：
+-batch/throttled 呼叫包裝在佈局批次控制中的 `Renderer.render` (`Renderer.BeginBatch` / `Renderer.EndBatch`)
+- 在 UI 隱藏渲染完成後，透過 `state.releaseFunc(state)` 回收多類型狀態表以回收非活動狀態（Aura、Cooldown、Item、GroundEffect、Totem）
 
-- batch/throttled calls to `Renderer.render` wrapped in layout batch control (`Renderer.BeginBatch` / `Renderer.EndBatch`)
-- multi-type state table recycling via `state.releaseFunc(state)` to recycle inactive states (Aura, Cooldown, Item, GroundEffect, Totem) after UI hide rendering completes
+突變：
 
-Mutation:
-
-- owns pending updates queue and throttle scheduler status
-- does not own AlertState, SavedVariables, or UI icons
+- 擁有掛起的更新佇列和節流調度程序狀態
+- 不擁有 AlertState、SavedVariables 或 UI 圖標
 
 ## Services/CooldownService
 
-Inputs:
+輸入：
 
-- configured spell cooldown alerts
-- cooldown-related events and scheduler fallback ticks
+- 配置法術冷卻時間警報
+- 與冷卻相關的事件和調度程序後備刻度
 
-Outputs:
+輸出：
 
-- normalized `CooldownState` and `AlertState`
-- dirty alert IDs
+- 標準化 `CooldownState` 和 `AlertState`
+- 髒警報 ID
 
-Mutation:
+突變：
 
-- owns spell cooldown cache only
+- 僅擁有法術冷卻緩存
 
 ## Services/ShadowHostService
 
-Inputs:
+輸入：
 
-- Blizzard's native `EssentialCooldownViewer` and `Utility` frame pool states
-- dynamic frame `Acquire` and `Release` hooks
-- World entering and regeneration state events
+- 暴風雪的原生 `EssentialCooldownViewer` 和 `Utility` 幀池狀態
+- 動態框架 `Acquire` 和 `Release` 掛鉤
+- 世界進入與再生狀態事件
 
-Outputs:
+輸出：
 
-- mapped active host icon frames per spellID
-- zero-taint invisible setting (Alpha=0) to native frames in non-combat
+- 每個 spellID 映射活動主機圖示幀
+- 非戰鬥中本機幀的零污染不可見設定（Alpha = 0）
 
-Mutation:
+突變：
 
-- owns internal spellID-to-frame mapping registry only
-- must not modify secure properties in combat
+- 僅擁有內部 spellID 到框架映射註冊表
+- 不得在戰鬥中修改安全屬性
 
 ## Services/ItemCooldownService
 
-Inputs:
+輸入：
 
-- configured itemID alerts
-- item cooldown events
-- optional explicit cache-build command
+- 設定 itemID 警報
+- 物品冷卻事件
+- 可選的顯式快取建置命令
 
-Outputs:
+輸出：
 
-- normalized `ItemCooldownState` and `AlertState`
-- cache status
+- 標準化 `ItemCooldownState` 和 `AlertState`
+- 快取狀態
 
-Mutation:
+突變：
 
-- owns item cooldown runtime cache
-- any item-spell mapping cache must be incremental and interruptible
+- 擁有物品冷卻運轉時緩存
+- 任何物品-法術映射快取都必須是增量且可中斷的
 
 ## Services/SpellInfoService
 
-Inputs:
+輸入：
 
-- spellID/itemID lookup requests
+- spellID/itemID 尋找請求
 
-Outputs:
+輸出：
 
-- safe name/icon/link facts where available
-- bounded lookup cache that stores only safe fields and boundary warnings
+- 安全名稱/icon/link 可用事實
+- 有界查找緩存，僅儲存安全欄位和邊界警告
 
-Mutation:
+突變：
 
-- owns lookup cache
-- must avoid heavy combat query loops
-
+- 擁有查找緩存
+- 必須避免激烈的戰鬥查詢循環
 ## Services/ClassPowerService
 
-Inputs:
+輸入：
 
-- configured class resource options
-- player power events (UNIT_POWER_UPDATE, UNIT_MAXPOWER, PLAYER_TALENT_UPDATE)
+- 配置類別資源選項
+- 玩家電源事件（UNIT_POWER_UPDATE、UNIT_MAXPOWER、PLAYER_TALENT_UPDATE）
 
-Outputs:
+輸出：
 
-- dynamic central stack numbers and AlertState for current class power type, protected by `pcall` isolation and `issecretvalue` checks during power updates to bypass restricted value/table runtime exceptions in combat
-- direct layout rendering to classPower frame
+- 當前等級功率類型的動態中央堆疊編號和 AlertState，在功率更新期間受到 `pcall` 隔離和 `issecretvalue` 檢查的保護，以繞過戰鬥中的限制值 /table 運行時異常
+- 直接佈局渲染到 classPower 框架
 
-Mutation:
+突變：
 
-- none except dispatching event state updates and defensive boundary logging
+- 除了調度事件狀態更新和防禦邊界記錄之外，沒有其他操作
 
 ## Services/GroundEffectService
 
-Inputs:
+輸入：
 
-- configured ground effect items (dynamic/manual modes)
-- combat log event unfiltered (SPELL_CAST_SUCCESS)
-- low-frequency C_TooltipInfo.GetSpellByID lookups during spell cast successes
+- 配置的地面效應項目（動態/manual模式）
+- 未過濾的戰鬥日誌事件（SPELL_CAST_SUCCESS）
+- 施法成功期間低頻 C_TooltipInfo.GetSpellByID 查找
 
-Outputs:
+輸出：
 
-- `EAM_GROUND_EFFECT_STATE_CHANGED` events fired to EventRouter with state and frameName
-- normalized `GroundEffectState` and `AlertState` allocated from `GroundEffectStatePool`
-- scheduled release timers via Scheduler.after
+- `EAM_GROUND_EFFECT_STATE_CHANGED` 事件觸發到 EventRouter 並帶有狀態和 frameName
+- 從 `GroundEffectStatePool` 分配的標準化 `GroundEffectState` 和 `AlertState`
+- 透過 Scheduler.after 安排發布計時器
 
-Mutation:
+突變：
 
-- owns ground effect active timer table, activeStates cache, and `GroundEffectStatePool` only
+- 僅擁有地面效應活動計時器表、activeStates 快取和 `GroundEffectStatePool`
 
 ## Services/TotemService
 
-Inputs:
+輸入：
 
-- Shaman totem events (PLAYER_TOTEM_UPDATE)
-- native C_Totems.GetTotemInfo API updates
+- 薩滿圖騰事件 (PLAYER_TOTEM_UPDATE)
+- 本機 C_Totems.GetTotemInfo API 更新
 
-Outputs:
+輸出：
 
-- `EAM_TOTEM_STATE_CHANGED` events fired to EventRouter with state and frameName
-- normalized `TotemState` and `AlertState` allocated from `TotemStatePool`
+- `EAM_TOTEM_STATE_CHANGED` 事件觸發到 EventRouter 並帶有狀態和 frameName
+- 從 `TotemStatePool` 分配的標準化 `TotemState` 和 `AlertState`
 
-Mutation:
+突變：
 
-- owns activeStates cache and `TotemStatePool` only
+- 僅擁有 activeStates 快取和 `TotemStatePool`
 
 ## UI/IconPool
 
-Inputs:
+輸入：
 
-- desired icon count/class
+- 所需的圖示數量/class
 
-Outputs:
+輸出：
 
-- acquired/released icon frame records
-- prewarmed inactive icons to avoid combat-time frame creation
+- 取得/released圖示框記錄
+- 預熱非活動圖示以避免創建戰鬥中框架
 
-Mutation:
+突變：
 
-- owns frames, textures, cooldown regions, FontStrings
-- frame creation should happen during initialization or controlled growth only
-- must not create new icon frames in combat when pool is empty
+- 擁有框架、紋理、冷卻區域、FontStrings
+- 框架創建應該在初始化期間或僅在受控增長期間發生
+- 當池為空時，不得在戰鬥中創建新的圖標框架
 
 ## UI/Renderer
 
-Inputs:
+輸入：
 
 - `IconRenderState`
 
-Outputs:
+輸出：
 
-- visible UI state
-- layout batch control endpoints (`Renderer.BeginBatch` / `Renderer.EndBatch`) to defer expensive X/Y layout calculations
+- 可見的UI狀態
+- 佈局批次控制端點 (`Renderer.BeginBatch` / `Renderer.EndBatch`) 以延遲昂貴的 X/Y 佈局計算
 
-Mutation:
+突變：
 
-- mutates UI frames only
-- never fetches aura/cooldown data
-- gates all expensive UI writes
-- defers structural layout changes and first-time icon acquisition while in combat
+- 僅改變 UI 框架
+- 從不取得aura/cooldown數據
+- 控制所有昂貴的 UI 寫入
+- 推遲戰鬥中的結構佈局變化和首次圖標獲取
 
 ## UI/Options
 
-Inputs:
+輸入：
 
-- active profile
-- class token to class ID mapping table (`CLASS_TOKEN_TO_ID`)
+- 活躍的個人資料
+- 類別標記到類別 ID 映射表 (`CLASS_TOKEN_TO_ID`)
 
-Outputs:
+輸出：
 
-- config mutations through `SavedVariables`
-- dynamic, localized specialization drop-down filtering using native `GetSpecializationInfoForClassID(classID, specIndex)` with robust static fallback tables, ensuring 100% localized class/spec UI texts without hardcoding
-- a minimal in-game panel for explicit add/remove actions:
-  - player aura spellID
-  - target aura spellID
-  - spell cooldown spellID
-  - item cooldown itemID
-- immediate service refresh after successful user-triggered mutation
+- 透過 `SavedVariables` 配置突變
+- 使用本機「GetSpecializationInfoForClassID(classID, specIndex)」和強大的靜態後備表進行動態、本地化專業化下拉過濾，確保 100% 本地化類別 /spec UI 文本，無需硬編碼
+- 用於明確 add/remove 操作的最小遊戲內面板：
+  - 玩家光環spellID
+  - 目標光環spellID
+  - 法術冷卻時間spellID
+  - 物品冷卻時間itemID
+- 用戶觸發突變成功後立即刷新服務
 
-Mutation:
+突變：
 
-- UI widgets and explicit config values only
-- first-time frame creation must be delayed in combat if Retail blocks or risks protected UI mutation
+- 僅 UI 小部件和明確配置值
+- 如果正式服阻止或面臨受保護的 UI 突變的風險，則必須在戰鬥中延遲首次框架創建
 
 ## UI/Slash
 
-Inputs:
+輸入：
 
-- `/eam` command text
+- `/eam` 指令文本
 
-Outputs:
+輸出：
 
-- config actions, status text, debug export requests
-- simple `/eam add` and `/eam remove` commands for player aura, target aura, spell cooldown, and item cooldown
+- 設定操作、狀態文字、偵錯匯出請求
+- 針對玩家光環、目標光環、法術冷卻時間和物品冷卻時間的簡單“/eam添加”和“/eam刪除”命令
 
-Mutation:
-
-- may call module APIs; must not directly edit service internals
-- writes persistent alert config only through `Core/SavedVariables`
+突變：
+- 可呼叫模組API；不得直接編輯服務內部
+- 僅透過「Core/SavedVariables」寫入持久警報配置
 
 ## Debug/DebugState
 
-Inputs:
+輸入：
 
-- module state snapshots
+- 模組狀態快照
 
-Outputs:
+輸出：
 
-- compact `DebugSnapshot`
-- aggregated boundary warnings from service state
+- 緊湊的`DebugSnapshot`
+- 來自服務狀態的聚合邊界警告
 
-Mutation:
+突變：
 
-- owns transient debug records only
+- 僅擁有瞬時調試記錄
 
 ## Debug/PromptExport
 
-Inputs:
+輸入：
 
 - `DebugSnapshot`
-- export mode: `debug-min`, `analysis-full`, `github-issue`
+- 匯出模式：`debug-min`、`analysis-full`、`github-issue`
 
-Outputs:
+輸出：
 
-- compact JSON-like text
+- 類似 JSON 的緊湊文本
 
-Mutation:
+突變：
 
-- none except transient string builder buffers
+- 除了瞬態字串產生器緩衝區之外沒有任何其他

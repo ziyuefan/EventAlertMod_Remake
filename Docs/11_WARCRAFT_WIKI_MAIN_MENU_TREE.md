@@ -1,34 +1,34 @@
-# Warcraft Wiki Main Menu 三層遍歷筆記
+<!-- EAM_DOCUMENTATION_SOURCE: zh-TW -->
+# 魔獸爭霸 Wiki 主選單 三層遍歷筆記
 
-本文件補足 `API_change_summaries` 頁面左側 `Main Menu` 的樹狀遍歷。
+本文件補足 `API_change_summaries` 頁面左側 `Main Menu` 的樹狀瀏覽。
 
-目標不是複製整站內容，而是建立 EAM Retail rewrite 需要的導覽索引：
+目標不是複製整站內容，而是建立EAM正式服重寫所需的導覽索引：
 
 - 第一層：`Main Menu` 入口。
-- 第二層：入口頁的主要分類或索引方向。
-- 第三層：代表性 API / 文件頁。
-- 第四層：與 EAM rewrite 的實作結論。
+- 第二層：入口頁面的主要分類或索引方向。
+- 第三層：代表API /檔案頁。
+- 第四層：與 EAM rewrite 的實踐結論。
 
 ## 來源入口
 
-- https://warcraft.wiki.gg/wiki/WoW_API
-- https://warcraft.wiki.gg/wiki/Lua_functions
-- https://warcraft.wiki.gg/wiki/FrameXML_functions
-- https://warcraft.wiki.gg/wiki/Widget_API
-- https://warcraft.wiki.gg/wiki/Widget_script_handlers
-- https://warcraft.wiki.gg/wiki/XML_schema
-- https://warcraft.wiki.gg/wiki/Events
-- https://warcraft.wiki.gg/wiki/Console_variables
-- https://warcraft.wiki.gg/wiki/Macro_commands
-- https://warcraft.wiki.gg/wiki/Combat_Log
-- https://warcraft.wiki.gg/wiki/COMBAT_LOG_EVENT_UNFILTERED
-- https://warcraft.wiki.gg/wiki/UI_escape_sequences
-- https://warcraft.wiki.gg/wiki/Hyperlinks
-- https://warcraft.wiki.gg/wiki/API_change_summaries
-- https://warcraft.wiki.gg/wiki/HOWTOs
+- https://EAMCODE_3__.wiki.gg/wiki/WoW_API
+- https://EAMCODE_3__.wiki.gg/wiki/Lua_functions
+- https://EAMCODE_0__.wiki.gg/wiki/FrameXML_functions
+- https://EAMCODE_0__.wiki.gg/wiki/Widget_API
+- https://EAMCODE_0__.wiki.gg/wiki/Widget_script_handlers
+- https://EAMCODE_0__.wiki.gg/wiki/XML_schema
+- https://EAMCODE_0__.wiki.gg/wiki/Events
+- https://EAMCODE_0__.wiki.gg/wiki/Console_variables
+- https://EAMCODE_0__.wiki.gg/wiki/Macro_commands
+- https://EAMCODE_0__.wiki.gg/wiki/Combat_Log
+- https://EAMCODE_0__.wiki.gg/wiki/COMBAT_LOG_EVENT_UNFILTERED
+- https://EAMCODE_0__.wiki.gg/wiki/UI_escape_sequences
+- https://EAMCODE_0__.wiki.gg/wiki/Hyperlinks
+- https://EAMCODE_0__.wiki.gg/wiki/API_change_summaries
+- https://EAMCODE_0__.wiki.gg/wiki/HOWTOs
 
-## Tree Overview
-
+## 樹概述
 ```text
 Warcraft Wiki Main Menu
 ├─ WoW API
@@ -222,15 +222,13 @@ Warcraft Wiki Main Menu
       ├─ useful as background only
       └─ not an authoritative Retail 12.x runtime contract
 ```
-
-## EAM 實作導向摘要
+## EAM 實施導向摘要
 
 ### WoW API
 
-`WoW API` 是主要 runtime API 入口。EAM rewrite 應優先從 API system 找到對應 namespace，而不是保留舊 global wrapper。
+`WoW API` 是主要運行時 API 入口。 EAM rewrite 應優先從 API 系統找到對應的命名空間，而不是保留舊的全域包裝器。
 
 重要三層：
-
 ```text
 WoW API
 ├─ API systems
@@ -245,19 +243,17 @@ WoW API
 │  └─ C_Secrets
 │     └─ boundary checks
 ```
-
 結論：
 
-- 12.x 只用 Retail `C_*` namespace。
-- `C_Secrets` 應集中封裝，不要散落在每個 UI function。
-- `C_TooltipInfo` 是 fallback 資料來源，不是 hot path 事實來源。
+- 12.x 只用於正式服 `C_*` 命名空間。
+- `C_Secrets`應集中封裝，不要散去每個UI功能。
+- `C_TooltipInfo` 是後備資料來源，而非熱路徑事實來源。
 
 ### Lua API
 
-`Lua API` 說明 WoW 使用 Lua 5.1 子集，且缺少 OS / file I/O library。
+`Lua API` 說明 WoW 使用 Lua 5.1 子集，且缺少作業系統/檔案 I/O 函式庫。
 
 重要三層：
-
 ```text
 Lua API
 ├─ basic functions
@@ -272,19 +268,17 @@ Lua API
 │  ├─ table.freeze
 │  └─ table.isfrozen
 ```
-
 結論：
 
-- `string.match` 不可用在未確認安全的 secret-derived tooltip text。
-- hot path 避免 transient table、`table.insert`、大量 `pairs`。
-- `table.freeze` 只用於 immutable constants。
+- `string.match` 在未確認安全性的秘密衍生性工具提示文字時不可用。
+- 熱路徑避免瞬態表、`table.insert`、大量`pairs`。
+- `table.freeze` 只用於不可變常數。
 
 ### FrameXML API
 
-`FrameXML functions` 包含 UI helper、pool、EventUtil、TooltipUtil、LinkUtil 等。
+`FrameXML 函數` 包含 UI helper、pool、EventUtil、TooltipUtil、LinkUtil 等。
 
 重要三層：
-
 ```text
 FrameXML API
 ├─ Mixins / pools
@@ -299,19 +293,17 @@ FrameXML API
    ├─ ShowUIPanel
    └─ Toggle*Frame
 ```
-
 結論：
 
-- EAM 的 `UI/IconPool.lua` 可以參考 Blizzard pool pattern。
-- 不要在 combat 中呼叫會開關 protected panel 的函式。
-- TooltipUtil 可作參考，但 tooltip parsing 必須低頻且 secret-safe。
+- EAM 的 `UI/IconPool.lua` 可以參考暴雪礦池模式。
+- 請勿在戰鬥中呼叫會切換受保護面板的函數。
+- TooltipUtil 可作參考，但工具提示解析必須低頻且秘密安全。
 
-### Widget API / Widget Scripts
+### 小工具 API / 小工具腳本
 
-`Widget API` 與 `Widget script handlers` 是 EAM Renderer、EventRouter、Scheduler 的基礎。
+`Widget API` 和 `Widget script handlers` 是 EAM 渲染器、EventRouter、調度器的基礎。
 
 重要三層：
-
 ```text
 Widget API
 ├─ Frame
@@ -339,20 +331,18 @@ Widget scripts
    ├─ OnTextChanged
    └─ OnEnterPressed / OnEscapePressed
 ```
-
 結論：
 
-- `RegisterAllEvents` 只適合 debug/datamining，不適合 EAM runtime。
+- `RegisterAllEvents` 只適合 debug/datamining，不適合 EAM 運行時。
 - EAM 只應有一個 EventRouter `OnEvent`。
-- EAM 只應有一個 Scheduler `OnUpdate`。
-- `Cooldown` 應承接 `DurationObject`，不要讓 Lua 每幀算秒。
+- EAM 只應有一個排程器 `OnUpdate`。
+- `Cooldown`應承接`DurationObject`，不要讓Lua每幀算秒。
 
-### XML schema
+### XML 架構
 
-`XML schema` 說明 XML 可以建立 UI，但 Lua Widget API 也能做多數事情。
+`XML schema` 說明 XML 可以建立 UI，但 Lua Widget API 也可以做大部分事情。
 
 重要三層：
-
 ```text
 XML schema
 ├─ Ui
@@ -367,19 +357,17 @@ XML schema
    ├─ Frames
    └─ Scripts
 ```
-
 結論：
 
-- 新架構可保留簡單 XML loader，但 runtime icons 應交給 `IconPool`。
-- 避免 XML 內建立大量 global frame name。
-- 避免 XML `OnUpdate`。
+- 新架構可保留簡單的 XML 載入程序，但執行時間圖示應破解 `IconPool`。
+- 避免在XML內建立大量全域框架名稱。
+- 避免XML `OnUpdate`。
 
-### Events
+### 活動
 
 `Events` / `Category:API events` 是 EventRouter 的事件來源。
 
 重要三層：
-
 ```text
 Events
 ├─ UNIT_AURA
@@ -395,19 +383,17 @@ Events
    ├─ PLAYER_REGEN_DISABLED
    └─ PLAYER_REGEN_ENABLED
 ```
-
 結論：
 
-- `UNIT_AURA` 增量資料是 AuraService 核心入口。
-- removed aura instance ID 無法再查完整 aura，服務要先 cache 安全摘要。
-- 脫戰刷新是 boundary-limited state 的校準點。
+- `UNIT_AURA`增量資料是AuraService核心入口。
+- 刪除了光環實例ID無法再查出完整的光環，服務要先快取安全摘要。
+- 脫戰刷新是邊界限制狀態的安排點。
 
-### CVars
+### CVar
 
-`Console variables` 說明 CVar 可以用 `GetCVar` / `SetCVar` / `/console` 管理，部分 secure CVar 不能在 combat 改。
+`控制台變數` 說明 CVar 可以用 `GetCVar` / `SetCVar` / `/console` 管理，部分安全 CVar 不能在戰鬥中修改。
 
 重要三層：
-
 ```text
 CVars
 ├─ query
@@ -421,19 +407,17 @@ CVars
    ├─ cvar_default
    └─ cvar_reset
 ```
-
 結論：
 
-- EAM 不應依賴改 CVar 達成功能。
-- secret forced CVars 只應放 live validation checklist。
-- 不在 combat 中修改 secure CVar。
+- EAM 無法依賴改 CVar 完成功能。
+- 秘密強制CVars只應放即時驗證清單。
+-不在戰鬥中修改安全CVar。
 
-### Macro Commands
+### 巨集命令
 
-`Macro commands` 分為 character、combat 等指令。
+`巨集指令`分為字元、戰鬥等指令。
 
 重要三層：
-
 ```text
 Macro commands
 ├─ character commands
@@ -446,19 +430,17 @@ Macro commands
    ├─ /eam debug
    └─ /eam export
 ```
-
 結論：
 
-- EAM slash commands 只能做設定、偵測、debug、匯出。
-- 不新增 combat automation。
-- 不產生 cast/use/cancelaura 類行為。
+- EAM 斜線指令只能進行設定、探測、偵錯、匯出。
+- 不增加戰鬥自動化。
+- 不產生cast/use/cancelaura類行為。
 
-### Combat Log
+### 戰鬥日誌
 
-`Combat Log` / `COMBAT_LOG_EVENT_UNFILTERED` 是歷史上常見 AddOn 資料來源，但 12.x 目標與 EAM rewrite 不應依賴盲掃。
+`Combat Log` / `COMBAT_LOG_EVENT_UNFILTERED` 是歷史上常見的 AddOn 資料來源，但 12.x 目標與 EAM 重寫無法依賴盲掃。
 
 重要三層：
-
 ```text
 Combat Log
 ├─ Combat Log window / file
@@ -472,19 +454,17 @@ Combat Log
    ├─ no heavy parsing
    └─ use event services instead
 ```
-
 結論：
 
-- 12.x 的 EAM 不以 CLEU 作為 aura/cooldown 主要來源。
-- 只在必要 debug 或非 hot path 檢查時參考。
-- 不建立 WeakAura-like combat parser。
+- 12.x 的 EAM 不以 CLEU 作為光環/cooldown 主要來源。
+- 僅在必要時調試或非熱路徑檢查時參考。
+- 未建立類似WeakAura的戰鬥解析器。
 
-### Escape Sequences / Hyperlinks
+### 轉義序列/超鏈接
 
-`UI escape sequences` 和 `Hyperlinks` 是 debug text、tooltip、import/export 的風險區。
+`UI escape strings` 和 `Hyperlinks` 是偵錯文字、工具提示、匯入/export 的風險區。
 
 重要三層：
-
 ```text
 Escape sequences
 ├─ color
@@ -506,19 +486,17 @@ Hyperlinks
    ├─ item link display
    └─ debug-safe export
 ```
-
 結論：
 
-- import/export 不應解析 secret-derived hyperlink text。
-- tooltip spellID/itemID 顯示可以保留，但必須和 runtime facts 分開。
-- debug export 要 escape pipe / hyperlink 類文字。
+- import/export 不宜解析秘密匯出的超連結文字。
+- 工具提示 spellID/itemID 顯示可以保留，但必須和執行時間事實分開。
+- 偵錯匯出要轉義管道/超連結類文字。
 
-### API Changes
+### API 更改
 
-`API change summaries` 是版本追蹤入口。
+`API變更摘要`是版本追蹤入口。
 
 重要三層：
-
 ```text
 API changes
 ├─ Retail
@@ -537,19 +515,17 @@ API changes
    ├─ C_* migration
    └─ live validation targets
 ```
-
 結論：
 
-- 每次 Retail patch 都要重新檢查 12.x API changes。
-- 12.0.7 API summary 已發布；仍需以實機驗證確認 EAM 行為。
-- 12.0.5 的 formatter / duration / table.freeze 已寫入 `Docs/10_WARCRAFT_WIKI_12X_API_NOTES.md`。
+- 正式服補丁要重新檢查 12.x API 變更。
+- 12.0.7 API 摘要已發佈；仍需以實機驗證確認 EAM 行為。
+- 12.0.5 的 formatter/duration/table.freeze 已寫入 `Docs/10_WARCRAFT_WIKI_12X_API_NOTES.md`。
 
-### HOWTOs
+### 操作指南
 
-`HOWTOs` 是教學頁索引，適合作為 UI 操作參考，但不是 Retail 12.x API contract。
+`HOWTOs` 是教學頁面索引，適合作為 UI 操作參考，但不是 Retail 12.x API 合約。
 
 重要三層：
-
 ```text
 HOWTOs
 ├─ Getting Started
@@ -563,22 +539,20 @@ HOWTOs
    ├─ anchor movement
    └─ avoid example-grade hot path code
 ```
-
 結論：
 
-- 可參考拖曳 frame 實作。
-- 不要直接複製 closure-heavy example 到 runtime hot path。
-- Options UI 可以保留簡單，避免 WeakAura-like system。
+- 可參考拖曳框實作。
+- 不要直接複製閉包重的範例到運行時熱路徑。
+- 選項 UI 可以保留簡單，避免 WeakAura 之類的系統。
 
 ## 對 EAM Docs 的後續建議
 
-- `Docs/01_ARCHITECTURE.md` 可加入本文件作為 API 導覽。
-- `Docs/02_RETAIL_API_BOUNDARIES.md` 應引用 `WoW API`、`C_Secrets`、`Events`、`Widget API`。
-- `Docs/05_PERFORMANCE_GUIDE.md` 應引用 `Widget scripts`、`Lua API`、`Frame:RegisterAllEvents`。
-- `Docs/06_TEST_PLAN_RETAIL.md` 應加入 `CVar` forced-secret 測試與 `API changes` 版本追蹤。
-
+- `Docs/01_ARCHITECTURE.md`可加入本文件作為API導覽。
+- `Docs/02_RETAIL_API_BOUNDARIES.md`應引用`WoW API`、`C_Secrets`、`Events`、`Widget API`。
+- `Docs/05_PERFORMANCE_GUIDE.md`應引用`Widget腳本`、`Lua API`、`Frame:RegisterAllEvents`。
+- `Docs/06_TEST_PLAN_RETAIL.md`應加入`CVar`強制保密測試與`API變更`版本追蹤。
 ## 遍歷限制
 
-- 本次是靜態文件遍歷，不是全站鏡像。
-- `wowuidev` 在 Main Menu 中作為入口出現，但本次查詢未找到獨立、可作為 Retail 12.x runtime contract 的新版頁面；只保留為背景入口。
-- `12.0.7/API_changes` 已找到；本文件只作導覽索引，不取代 `Docs/10_WARCRAFT_WIKI_12X_API_NOTES.md` 的詳細整理。
+- 本次是靜態文件瀏覽，不是全站鏡像。
+- `wowuidev` 在主選單中以入口出現，但本查詢未找到獨立、可作為 Retail 12.x 執行時間合約的新版頁面；只保留為背景入口。
+- `12.0.7/API_changes` 已找到；本文件僅作導覽索引，不取代 `Docs/10_WARCRAFT_WIKI_12X_API_NOTES.md` 的詳細整理。

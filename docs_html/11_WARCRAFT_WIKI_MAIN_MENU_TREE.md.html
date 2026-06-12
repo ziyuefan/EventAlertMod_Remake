@@ -415,34 +415,35 @@
 
     <div id="doc-content-zh" class="lang-content active">
         <a href="AGENTS.md.html" class="back-btn">← 返回 AI 入口指導檔 (AGENTS)</a>
-<h1 id="warcraft-wiki-main-menu">Warcraft Wiki Main Menu 三層遍歷筆記</h1>
-<p>本文件補足 <code>API_change_summaries</code> 頁面左側 <code>Main Menu</code> 的樹狀遍歷。</p>
-<p>目標不是複製整站內容，而是建立 EAM Retail rewrite 需要的導覽索引：</p>
+<!-- EAM_DOCUMENTATION_SOURCE: zh-TW -->
+<h1 id="wiki">魔獸爭霸 Wiki 主選單 三層遍歷筆記</h1>
+<p>本文件補足 <code>API_change_summaries</code> 頁面左側 <code>Main Menu</code> 的樹狀瀏覽。</p>
+<p>目標不是複製整站內容，而是建立EAM正式服重寫所需的導覽索引：</p>
 <ul>
 <li>第一層：<code>Main Menu</code> 入口。</li>
-<li>第二層：入口頁的主要分類或索引方向。</li>
-<li>第三層：代表性 API / 文件頁。</li>
-<li>第四層：與 EAM rewrite 的實作結論。</li>
+<li>第二層：入口頁面的主要分類或索引方向。</li>
+<li>第三層：代表API /檔案頁。</li>
+<li>第四層：與 EAM rewrite 的實踐結論。</li>
 </ul>
 <h2 id="_1">來源入口</h2>
 <ul>
-<li>https://warcraft.wiki.gg/wiki/WoW_API</li>
-<li>https://warcraft.wiki.gg/wiki/Lua_functions</li>
-<li>https://warcraft.wiki.gg/wiki/FrameXML_functions</li>
-<li>https://warcraft.wiki.gg/wiki/Widget_API</li>
-<li>https://warcraft.wiki.gg/wiki/Widget_script_handlers</li>
-<li>https://warcraft.wiki.gg/wiki/XML_schema</li>
-<li>https://warcraft.wiki.gg/wiki/Events</li>
-<li>https://warcraft.wiki.gg/wiki/Console_variables</li>
-<li>https://warcraft.wiki.gg/wiki/Macro_commands</li>
-<li>https://warcraft.wiki.gg/wiki/Combat_Log</li>
-<li>https://warcraft.wiki.gg/wiki/COMBAT_LOG_EVENT_UNFILTERED</li>
-<li>https://warcraft.wiki.gg/wiki/UI_escape_sequences</li>
-<li>https://warcraft.wiki.gg/wiki/Hyperlinks</li>
-<li>https://warcraft.wiki.gg/wiki/API_change_summaries</li>
-<li>https://warcraft.wiki.gg/wiki/HOWTOs</li>
+<li>https://EAMCODE_3__.wiki.gg/wiki/WoW_API</li>
+<li>https://EAMCODE_3__.wiki.gg/wiki/Lua_functions</li>
+<li>https://EAMCODE_0__.wiki.gg/wiki/FrameXML_functions</li>
+<li>https://EAMCODE_0__.wiki.gg/wiki/Widget_API</li>
+<li>https://EAMCODE_0__.wiki.gg/wiki/Widget_script_handlers</li>
+<li>https://EAMCODE_0__.wiki.gg/wiki/XML_schema</li>
+<li>https://EAMCODE_0__.wiki.gg/wiki/Events</li>
+<li>https://EAMCODE_0__.wiki.gg/wiki/Console_variables</li>
+<li>https://EAMCODE_0__.wiki.gg/wiki/Macro_commands</li>
+<li>https://EAMCODE_0__.wiki.gg/wiki/Combat_Log</li>
+<li>https://EAMCODE_0__.wiki.gg/wiki/COMBAT_LOG_EVENT_UNFILTERED</li>
+<li>https://EAMCODE_0__.wiki.gg/wiki/UI_escape_sequences</li>
+<li>https://EAMCODE_0__.wiki.gg/wiki/Hyperlinks</li>
+<li>https://EAMCODE_0__.wiki.gg/wiki/API_change_summaries</li>
+<li>https://EAMCODE_0__.wiki.gg/wiki/HOWTOs</li>
 </ul>
-<h2 id="tree-overview">Tree Overview</h2>
+<h2 id="_2">樹概述</h2>
 <pre class="codehilite"><code class="language-text">Warcraft Wiki Main Menu
 ├─ WoW API
 │  ├─ API systems
@@ -636,9 +637,9 @@
       └─ not an authoritative Retail 12.x runtime contract
 </code></pre>
 
-<h2 id="eam">EAM 實作導向摘要</h2>
+<h2 id="eam">EAM 實施導向摘要</h2>
 <h3 id="wow-api">WoW API</h3>
-<p><code>WoW API</code> 是主要 runtime API 入口。EAM rewrite 應優先從 API system 找到對應 namespace，而不是保留舊 global wrapper。</p>
+<p><code>WoW API</code> 是主要運行時 API 入口。 EAM rewrite 應優先從 API 系統找到對應的命名空間，而不是保留舊的全域包裝器。</p>
 <p>重要三層：</p>
 <pre class="codehilite"><code class="language-text">WoW API
 ├─ API systems
@@ -656,12 +657,12 @@
 
 <p>結論：</p>
 <ul>
-<li>12.x 只用 Retail <code>C_*</code> namespace。</li>
-<li><code>C_Secrets</code> 應集中封裝，不要散落在每個 UI function。</li>
-<li><code>C_TooltipInfo</code> 是 fallback 資料來源，不是 hot path 事實來源。</li>
+<li>12.x 只用於正式服 <code>C_*</code> 命名空間。</li>
+<li><code>C_Secrets</code>應集中封裝，不要散去每個UI功能。</li>
+<li><code>C_TooltipInfo</code> 是後備資料來源，而非熱路徑事實來源。</li>
 </ul>
 <h3 id="lua-api">Lua API</h3>
-<p><code>Lua API</code> 說明 WoW 使用 Lua 5.1 子集，且缺少 OS / file I/O library。</p>
+<p><code>Lua API</code> 說明 WoW 使用 Lua 5.1 子集，且缺少作業系統/檔案 I/O 函式庫。</p>
 <p>重要三層：</p>
 <pre class="codehilite"><code class="language-text">Lua API
 ├─ basic functions
@@ -679,12 +680,12 @@
 
 <p>結論：</p>
 <ul>
-<li><code>string.match</code> 不可用在未確認安全的 secret-derived tooltip text。</li>
-<li>hot path 避免 transient table、<code>table.insert</code>、大量 <code>pairs</code>。</li>
-<li><code>table.freeze</code> 只用於 immutable constants。</li>
+<li><code>string.match</code> 在未確認安全性的秘密衍生性工具提示文字時不可用。</li>
+<li>熱路徑避免瞬態表、<code>table.insert</code>、大量<code>pairs</code>。</li>
+<li><code>table.freeze</code> 只用於不可變常數。</li>
 </ul>
 <h3 id="framexml-api">FrameXML API</h3>
-<p><code>FrameXML functions</code> 包含 UI helper、pool、EventUtil、TooltipUtil、LinkUtil 等。</p>
+<p><code>FrameXML 函數</code> 包含 UI helper、pool、EventUtil、TooltipUtil、LinkUtil 等。</p>
 <p>重要三層：</p>
 <pre class="codehilite"><code class="language-text">FrameXML API
 ├─ Mixins / pools
@@ -702,12 +703,12 @@
 
 <p>結論：</p>
 <ul>
-<li>EAM 的 <code>UI/IconPool.lua</code> 可以參考 Blizzard pool pattern。</li>
-<li>不要在 combat 中呼叫會開關 protected panel 的函式。</li>
-<li>TooltipUtil 可作參考，但 tooltip parsing 必須低頻且 secret-safe。</li>
+<li>EAM 的 <code>UI/IconPool.lua</code> 可以參考暴雪礦池模式。</li>
+<li>請勿在戰鬥中呼叫會切換受保護面板的函數。</li>
+<li>TooltipUtil 可作參考，但工具提示解析必須低頻且秘密安全。</li>
 </ul>
-<h3 id="widget-api-widget-scripts">Widget API / Widget Scripts</h3>
-<p><code>Widget API</code> 與 <code>Widget script handlers</code> 是 EAM Renderer、EventRouter、Scheduler 的基礎。</p>
+<h3 id="api">小工具 API / 小工具腳本</h3>
+<p><code>Widget API</code> 和 <code>Widget script handlers</code> 是 EAM 渲染器、EventRouter、調度器的基礎。</p>
 <p>重要三層：</p>
 <pre class="codehilite"><code class="language-text">Widget API
 ├─ Frame
@@ -737,13 +738,13 @@
 
 <p>結論：</p>
 <ul>
-<li><code>RegisterAllEvents</code> 只適合 debug/datamining，不適合 EAM runtime。</li>
+<li><code>RegisterAllEvents</code> 只適合 debug/datamining，不適合 EAM 運行時。</li>
 <li>EAM 只應有一個 EventRouter <code>OnEvent</code>。</li>
-<li>EAM 只應有一個 Scheduler <code>OnUpdate</code>。</li>
-<li><code>Cooldown</code> 應承接 <code>DurationObject</code>，不要讓 Lua 每幀算秒。</li>
+<li>EAM 只應有一個排程器 <code>OnUpdate</code>。</li>
+<li><code>Cooldown</code>應承接<code>DurationObject</code>，不要讓Lua每幀算秒。</li>
 </ul>
-<h3 id="xml-schema">XML schema</h3>
-<p><code>XML schema</code> 說明 XML 可以建立 UI，但 Lua Widget API 也能做多數事情。</p>
+<h3 id="xml">XML 架構</h3>
+<p><code>XML schema</code> 說明 XML 可以建立 UI，但 Lua Widget API 也可以做大部分事情。</p>
 <p>重要三層：</p>
 <pre class="codehilite"><code class="language-text">XML schema
 ├─ Ui
@@ -761,11 +762,11 @@
 
 <p>結論：</p>
 <ul>
-<li>新架構可保留簡單 XML loader，但 runtime icons 應交給 <code>IconPool</code>。</li>
-<li>避免 XML 內建立大量 global frame name。</li>
-<li>避免 XML <code>OnUpdate</code>。</li>
+<li>新架構可保留簡單的 XML 載入程序，但執行時間圖示應破解 <code>IconPool</code>。</li>
+<li>避免在XML內建立大量全域框架名稱。</li>
+<li>避免XML <code>OnUpdate</code>。</li>
 </ul>
-<h3 id="events">Events</h3>
+<h3 id="_3">活動</h3>
 <p><code>Events</code> / <code>Category:API events</code> 是 EventRouter 的事件來源。</p>
 <p>重要三層：</p>
 <pre class="codehilite"><code class="language-text">Events
@@ -785,12 +786,12 @@
 
 <p>結論：</p>
 <ul>
-<li><code>UNIT_AURA</code> 增量資料是 AuraService 核心入口。</li>
-<li>removed aura instance ID 無法再查完整 aura，服務要先 cache 安全摘要。</li>
-<li>脫戰刷新是 boundary-limited state 的校準點。</li>
+<li><code>UNIT_AURA</code>增量資料是AuraService核心入口。</li>
+<li>刪除了光環實例ID無法再查出完整的光環，服務要先快取安全摘要。</li>
+<li>脫戰刷新是邊界限制狀態的安排點。</li>
 </ul>
-<h3 id="cvars">CVars</h3>
-<p><code>Console variables</code> 說明 CVar 可以用 <code>GetCVar</code> / <code>SetCVar</code> / <code>/console</code> 管理，部分 secure CVar 不能在 combat 改。</p>
+<h3 id="cvar">CVar</h3>
+<p><code>控制台變數</code> 說明 CVar 可以用 <code>GetCVar</code> / <code>SetCVar</code> / <code>/console</code> 管理，部分安全 CVar 不能在戰鬥中修改。</p>
 <p>重要三層：</p>
 <pre class="codehilite"><code class="language-text">CVars
 ├─ query
@@ -807,12 +808,12 @@
 
 <p>結論：</p>
 <ul>
-<li>EAM 不應依賴改 CVar 達成功能。</li>
-<li>secret forced CVars 只應放 live validation checklist。</li>
-<li>不在 combat 中修改 secure CVar。</li>
+<li>EAM 無法依賴改 CVar 完成功能。</li>
+<li>秘密強制CVars只應放即時驗證清單。
+-不在戰鬥中修改安全CVar。</li>
 </ul>
-<h3 id="macro-commands">Macro Commands</h3>
-<p><code>Macro commands</code> 分為 character、combat 等指令。</p>
+<h3 id="_4">巨集命令</h3>
+<p><code>巨集指令</code>分為字元、戰鬥等指令。</p>
 <p>重要三層：</p>
 <pre class="codehilite"><code class="language-text">Macro commands
 ├─ character commands
@@ -828,12 +829,12 @@
 
 <p>結論：</p>
 <ul>
-<li>EAM slash commands 只能做設定、偵測、debug、匯出。</li>
-<li>不新增 combat automation。</li>
-<li>不產生 cast/use/cancelaura 類行為。</li>
+<li>EAM 斜線指令只能進行設定、探測、偵錯、匯出。</li>
+<li>不增加戰鬥自動化。</li>
+<li>不產生cast/use/cancelaura類行為。</li>
 </ul>
-<h3 id="combat-log">Combat Log</h3>
-<p><code>Combat Log</code> / <code>COMBAT_LOG_EVENT_UNFILTERED</code> 是歷史上常見 AddOn 資料來源，但 12.x 目標與 EAM rewrite 不應依賴盲掃。</p>
+<h3 id="_5">戰鬥日誌</h3>
+<p><code>Combat Log</code> / <code>COMBAT_LOG_EVENT_UNFILTERED</code> 是歷史上常見的 AddOn 資料來源，但 12.x 目標與 EAM 重寫無法依賴盲掃。</p>
 <p>重要三層：</p>
 <pre class="codehilite"><code class="language-text">Combat Log
 ├─ Combat Log window / file
@@ -850,12 +851,12 @@
 
 <p>結論：</p>
 <ul>
-<li>12.x 的 EAM 不以 CLEU 作為 aura/cooldown 主要來源。</li>
-<li>只在必要 debug 或非 hot path 檢查時參考。</li>
-<li>不建立 WeakAura-like combat parser。</li>
+<li>12.x 的 EAM 不以 CLEU 作為光環/cooldown 主要來源。</li>
+<li>僅在必要時調試或非熱路徑檢查時參考。</li>
+<li>未建立類似WeakAura的戰鬥解析器。</li>
 </ul>
-<h3 id="escape-sequences-hyperlinks">Escape Sequences / Hyperlinks</h3>
-<p><code>UI escape sequences</code> 和 <code>Hyperlinks</code> 是 debug text、tooltip、import/export 的風險區。</p>
+<h3 id="_6">轉義序列/超鏈接</h3>
+<p><code>UI escape strings</code> 和 <code>Hyperlinks</code> 是偵錯文字、工具提示、匯入/export 的風險區。</p>
 <p>重要三層：</p>
 <pre class="codehilite"><code class="language-text">Escape sequences
 ├─ color
@@ -879,12 +880,12 @@
 
 <p>結論：</p>
 <ul>
-<li>import/export 不應解析 secret-derived hyperlink text。</li>
-<li>tooltip spellID/itemID 顯示可以保留，但必須和 runtime facts 分開。</li>
-<li>debug export 要 escape pipe / hyperlink 類文字。</li>
+<li>import/export 不宜解析秘密匯出的超連結文字。</li>
+<li>工具提示 spellID/itemID 顯示可以保留，但必須和執行時間事實分開。</li>
+<li>偵錯匯出要轉義管道/超連結類文字。</li>
 </ul>
-<h3 id="api-changes">API Changes</h3>
-<p><code>API change summaries</code> 是版本追蹤入口。</p>
+<h3 id="api_1">API 更改</h3>
+<p><code>API變更摘要</code>是版本追蹤入口。</p>
 <p>重要三層：</p>
 <pre class="codehilite"><code class="language-text">API changes
 ├─ Retail
@@ -906,12 +907,12 @@
 
 <p>結論：</p>
 <ul>
-<li>每次 Retail patch 都要重新檢查 12.x API changes。</li>
-<li>12.0.7 API summary 已發布；仍需以實機驗證確認 EAM 行為。</li>
-<li>12.0.5 的 formatter / duration / table.freeze 已寫入 <code>Docs/10_WARCRAFT_WIKI_12X_API_NOTES.md</code>。</li>
+<li>正式服補丁要重新檢查 12.x API 變更。</li>
+<li>12.0.7 API 摘要已發佈；仍需以實機驗證確認 EAM 行為。</li>
+<li>12.0.5 的 formatter/duration/table.freeze 已寫入 <code>Docs/10_WARCRAFT_WIKI_12X_API_NOTES.md</code>。</li>
 </ul>
-<h3 id="howtos">HOWTOs</h3>
-<p><code>HOWTOs</code> 是教學頁索引，適合作為 UI 操作參考，但不是 Retail 12.x API contract。</p>
+<h3 id="_7">操作指南</h3>
+<p><code>HOWTOs</code> 是教學頁面索引，適合作為 UI 操作參考，但不是 Retail 12.x API 合約。</p>
 <p>重要三層：</p>
 <pre class="codehilite"><code class="language-text">HOWTOs
 ├─ Getting Started
@@ -928,54 +929,55 @@
 
 <p>結論：</p>
 <ul>
-<li>可參考拖曳 frame 實作。</li>
-<li>不要直接複製 closure-heavy example 到 runtime hot path。</li>
-<li>Options UI 可以保留簡單，避免 WeakAura-like system。</li>
+<li>可參考拖曳框實作。</li>
+<li>不要直接複製閉包重的範例到運行時熱路徑。</li>
+<li>選項 UI 可以保留簡單，避免 WeakAura 之類的系統。</li>
 </ul>
 <h2 id="eam-docs">對 EAM Docs 的後續建議</h2>
 <ul>
-<li><code>Docs/01_ARCHITECTURE.md</code> 可加入本文件作為 API 導覽。</li>
-<li><code>Docs/02_RETAIL_API_BOUNDARIES.md</code> 應引用 <code>WoW API</code>、<code>C_Secrets</code>、<code>Events</code>、<code>Widget API</code>。</li>
-<li><code>Docs/05_PERFORMANCE_GUIDE.md</code> 應引用 <code>Widget scripts</code>、<code>Lua API</code>、<code>Frame:RegisterAllEvents</code>。</li>
-<li><code>Docs/06_TEST_PLAN_RETAIL.md</code> 應加入 <code>CVar</code> forced-secret 測試與 <code>API changes</code> 版本追蹤。</li>
+<li><code>Docs/01_ARCHITECTURE.md</code>可加入本文件作為API導覽。</li>
+<li><code>Docs/02_RETAIL_API_BOUNDARIES.md</code>應引用<code>WoW API</code>、<code>C_Secrets</code>、<code>Events</code>、<code>Widget API</code>。</li>
+<li><code>Docs/05_PERFORMANCE_GUIDE.md</code>應引用<code>Widget腳本</code>、<code>Lua API</code>、<code>Frame:RegisterAllEvents</code>。</li>
+<li><code>Docs/06_TEST_PLAN_RETAIL.md</code>應加入<code>CVar</code>強制保密測試與<code>API變更</code>版本追蹤。</li>
 </ul>
-<h2 id="_2">遍歷限制</h2>
+<h2 id="_8">遍歷限制</h2>
 <ul>
-<li>本次是靜態文件遍歷，不是全站鏡像。</li>
-<li><code>wowuidev</code> 在 Main Menu 中作為入口出現，但本次查詢未找到獨立、可作為 Retail 12.x runtime contract 的新版頁面；只保留為背景入口。</li>
-<li><code>12.0.7/API_changes</code> 已找到；本文件只作導覽索引，不取代 <code>Docs/10_WARCRAFT_WIKI_12X_API_NOTES.md</code> 的詳細整理。</li>
+<li>本次是靜態文件瀏覽，不是全站鏡像。</li>
+<li><code>wowuidev</code> 在主選單中以入口出現，但本查詢未找到獨立、可作為 Retail 12.x 執行時間合約的新版頁面；只保留為背景入口。</li>
+<li><code>12.0.7/API_changes</code> 已找到；本文件僅作導覽索引，不取代 <code>Docs/10_WARCRAFT_WIKI_12X_API_NOTES.md</code> 的詳細整理。</li>
 </ul>
     </div>
     <div id="doc-content-en" class="lang-content">
         <a href="AGENTS.md.html" class="back-btn">← Back to AI Entrance (AGENTS)</a>
-<h1 id="warcraft-wiki-main-menu-three-level-traversal-notes">Warcraft Wiki Main Menu Three-level traversal notes</h1>
-<p>This file complements the tree traversal of the <code>Main Menu</code> on the left side of the <code>API_change_summaries</code> page.</p>
-<p>The goal is not to copy the entire site content, but to build the navigation index required by EAM Retail rewrite:</p>
+<!-- EAM_DOCUMENTATION_SOURCE: zh-TW -->
+<h1 id="warcraft-wiki-main-menu-three-level-traversal-notes">Warcraft Wiki Main Menu Three-Level Traversal Notes</h1>
+<p>This file complements the tree view of the <code>Main Menu</code> on the left side of the <code>API_change_summaries</code> page.</p>
+<p>The goal is not to copy the entire site content, but to establish the navigation index required for EAM Retail server rewriting:</p>
 <ul>
 <li>First level: <code>Main Menu</code> entrance.</li>
-<li>Second level: the main classification or index direction of the entry page.</li>
-<li>Third layer: representative API/documentation page.</li>
-<li>Level 4: Implementation conclusion with EAM rewrite.</li>
+<li>Second level: the main classification or index direction of the entrance page.</li>
+<li>The third layer: represents the API/archive page.</li>
+<li>Level 4: Practical conclusion with EAM rewrite.</li>
 </ul>
 <h2 id="source-entry">Source entry</h2>
 <ul>
-<li>https://warcraft.wiki.gg/wiki/WoW_API</li>
-<li>https://warcraft.wiki.gg/wiki/Lua_functions</li>
-<li>https://warcraft.wiki.gg/wiki/FrameXML_functions</li>
-<li>https://warcraft.wiki.gg/wiki/Widget_API</li>
-<li>https://warcraft.wiki.gg/wiki/Widget_script_handlers</li>
-<li>https://warcraft.wiki.gg/wiki/XML_schema</li>
-<li>https://warcraft.wiki.gg/wiki/Events</li>
-<li>https://warcraft.wiki.gg/wiki/Console_variables</li>
-<li>https://warcraft.wiki.gg/wiki/Macro_commands</li>
-<li>https://warcraft.wiki.gg/wiki/Combat_Log</li>
-<li>https://warcraft.wiki.gg/wiki/COMBAT_LOG_EVENT_UNFILTERED</li>
-<li>https://warcraft.wiki.gg/wiki/UI_escape_sequences</li>
-<li>https://warcraft.wiki.gg/wiki/Hyperlinks</li>
-<li>https://warcraft.wiki.gg/wiki/API_change_summaries</li>
-<li>https://warcraft.wiki.gg/wiki/HOWTOs</li>
+<li>https://EAMCODE_0__.wiki.gg/wiki/WoW_API</li>
+<li>https://EAMCODE_0__.wiki.gg/wiki/Lua_functions</li>
+<li>https://EAMCODE_4__.wiki.gg/wiki/FrameXML_functions</li>
+<li>https://EAMCODE_4__.wiki.gg/wiki/Widget_API</li>
+<li>https://EAMCODE_4__.wiki.gg/wiki/Widget_script_handlers</li>
+<li>https://EAMCODE_4__.wiki.gg/wiki/XML_schema</li>
+<li>https://EAMCODE_4__.wiki.gg/wiki/Events</li>
+<li>https://EAMCODE_4__.wiki.gg/wiki/Console_variables</li>
+<li>https://EAMCODE_4__.wiki.gg/wiki/Macro_commands</li>
+<li>https://EAMCODE_4__.wiki.gg/wiki/Combat_Log</li>
+<li>https://EAMCODE_4__.wiki.gg/wiki/COMBAT_LOG_EVENT_UNFILTERED</li>
+<li>https://EAMCODE_4__.wiki.gg/wiki/UI_escape_sequences</li>
+<li>https://EAMCODE_4__.wiki.gg/wiki/Hyperlinks</li>
+<li>https://EAMCODE_4__.wiki.gg/wiki/API_change_summaries</li>
+<li>https://EAMCODE_4__.wiki.gg/wiki/HOWTOs</li>
 </ul>
-<h2 id="tree-overview">Tree Overview</h2>
+<h2 id="tree-overview">Tree overview</h2>
 <pre class="codehilite"><code class="language-text">Warcraft Wiki Main Menu
 ├─ WoW API
 │  ├─ API systems
@@ -1169,9 +1171,9 @@
       └─ not an authoritative Retail 12.x runtime contract
 </code></pre>
 
-<h2 id="eam-implementation-guide-summary">EAM Implementation Guide Summary</h2>
+<h2 id="eam-implementation-orientation-summary">EAM Implementation Orientation Summary</h2>
 <h3 id="wow-api">WoW API</h3>
-<p><code>WoW API</code> is the main runtime API entry. EAM rewrite should give priority to finding the corresponding namespace from the API system instead of retaining the old global wrapper.</p>
+<p><code>WoW API</code> is the main runtime API entry. EAM rewrite should preferentially find the corresponding namespace from the API system instead of retaining the old global wrapper.</p>
 <p>Three important layers:</p>
 <pre class="codehilite"><code class="language-text">WoW API
 ├─ API systems
@@ -1189,12 +1191,12 @@
 
 <p>Conclusion:</p>
 <ul>
-<li>12.x only uses the Retail <code>C_*</code> namespace.</li>
-<li><code>C_Secrets</code> should be encapsulated centrally and not scattered in each UI function.</li>
-<li><code>C_TooltipInfo</code> is a fallback source, not a hot path fact source.</li>
+<li>12.x is only used in the Retail server <code>C_*</code> namespace.</li>
+<li><code>C_Secrets</code> should be encapsulated centrally and do not scatter each UI function.</li>
+<li><code>C_TooltipInfo</code> is a fallback source, not a hot path source of truth.</li>
 </ul>
 <h3 id="lua-api">Lua API</h3>
-<p><code>Lua API</code> Description WoW uses a Lua 5.1 subset and lacks the OS/file I/O library.</p>
+<p><code>Lua API</code> Description WoW uses a Lua 5.1 subset and lacks the operating system/archive I/O library.</p>
 <p>Three important layers:</p>
 <pre class="codehilite"><code class="language-text">Lua API
 ├─ basic functions
@@ -1212,12 +1214,12 @@
 
 <p>Conclusion:</p>
 <ul>
-<li><code>string.match</code> cannot be used with unsecured secret-derived tooltip text.</li>
-<li>hot path avoids transient tables, <code>table.insert</code>, and large numbers of <code>pairs</code>.</li>
-<li><code>table.freeze</code> only works with immutable constants.</li>
+<li><code>string.match</code> is not available when using secret derivative tooltip text for which security has not been confirmed.</li>
+<li>Hot path avoidance of transient tables, <code>table.insert</code>, massive <code>pairs</code>.</li>
+<li><code>table.freeze</code> is only used for immutable constants.</li>
 </ul>
 <h3 id="framexml-api">FrameXML API</h3>
-<p><code>FrameXML functions</code> include UI helper, pool, EventUtil, TooltipUtil, LinkUtil, etc.</p>
+<p><code>FrameXML function</code> contains UI helper, pool, EventUtil, TooltipUtil, LinkUtil, etc.</p>
 <p>Three important layers:</p>
 <pre class="codehilite"><code class="language-text">FrameXML API
 ├─ Mixins / pools
@@ -1235,12 +1237,12 @@
 
 <p>Conclusion:</p>
 <ul>
-<li>EAM's <code>UI/IconPool.lua</code> can refer to the Blizzard pool pattern.</li>
-<li>Do not call functions that open or close the protected panel in combat.</li>
-<li>TooltipUtil can be used as a reference, but tooltip parsing must be low-frequency and secret-safe.</li>
+<li>EAM's <code>UI/IconPool.lua</code> can refer to the Blizzard mining pool mode.</li>
+<li>Do not call functions that toggle protected panels during combat.</li>
+<li>TooltipUtil can be used as a reference, but tooltip parsing must be low-frequency and secretly secure.</li>
 </ul>
-<h3 id="widget-api-widget-scripts">Widget API / Widget Scripts</h3>
-<p><code>Widget API</code> and <code>Widget script handlers</code> are the basis of EAM Renderer, EventRouter, and Scheduler.</p>
+<h3 id="gadget-api-gadget-script">Gadget API / Gadget Script</h3>
+<p><code>Widget API</code> and <code>Widget script handlers</code> are the basis of the EAM renderer, EventRouter, and scheduler.</p>
 <p>Three important layers:</p>
 <pre class="codehilite"><code class="language-text">Widget API
 ├─ Frame
@@ -1270,13 +1272,13 @@
 
 <p>Conclusion:</p>
 <ul>
-<li><code>RegisterAllEvents</code> is only suitable for debug/datamining, not EAM runtime.</li>
+<li><code>RegisterAllEvents</code> only applies to debug/datamining, not the EAM runtime.</li>
 <li>EAM should have only one EventRouter <code>OnEvent</code>.</li>
-<li>EAM should only have one Scheduler <code>OnUpdate</code>.</li>
-<li><code>Cooldown</code> should inherit <code>DurationObject</code>, do not let Lua count seconds every frame.</li>
+<li>EAM should have only one scheduler <code>OnUpdate</code>.</li>
+<li><code>Cooldown</code> should inherit <code>DurationObject</code> and don't let Lua count seconds per frame.</li>
 </ul>
-<h3 id="xml-schema">XML schema</h3>
-<p><code>XML schema</code> Description XML can be used to build UIs, but the Lua Widget API can also do most things.</p>
+<h3 id="xml-architecture">XML Architecture</h3>
+<p><code>XML schema</code> Description XML can build UI, but the Lua Widget API can also do most things.</p>
 <p>Three important layers:</p>
 <pre class="codehilite"><code class="language-text">XML schema
 ├─ Ui
@@ -1294,11 +1296,11 @@
 
 <p>Conclusion:</p>
 <ul>
-<li>The new architecture can keep the simple XML loader, but runtime icons should be given to <code>IconPool</code>.</li>
+<li>The new architecture can retain the simple XML loader, but the execution time graph should break <code>IconPool</code>.</li>
 <li>Avoid creating a large number of global frame names in XML.</li>
 <li>Avoid XML <code>OnUpdate</code>.</li>
 </ul>
-<h3 id="events">Events</h3>
+<h3 id="activities">Activities</h3>
 <p><code>Events</code> / <code>Category:API events</code> is the event source for EventRouter.</p>
 <p>Three important layers:</p>
 <pre class="codehilite"><code class="language-text">Events
@@ -1319,11 +1321,11 @@
 <p>Conclusion:</p>
 <ul>
 <li><code>UNIT_AURA</code> incremental data is the core entry of AuraService.</li>
-<li>Removed aura instance ID can no longer check the complete aura, the service must first cache the security summary.</li>
-<li>Out-of-combat refresh is the calibration point for boundary-limited state.</li>
+<li>After deleting the Halo instance ID, the complete Halo cannot be found anymore. The service must first cache the security summary.</li>
+<li>Out-of-combat refresh is the arrangement point for border restriction status.</li>
 </ul>
-<h3 id="cvars">CVars</h3>
-<p><code>Console variables</code> Description CVar can be managed using <code>GetCVar</code> / <code>SetCVar</code> / <code>/console</code>. Some secure CVar cannot be changed in combat.</p>
+<h3 id="cvar">CVar</h3>
+<p><code>Console Variables</code> Description CVar can be managed using <code>GetCVar</code> / <code>SetCVar</code> / <code>/console</code>. Some safe CVars cannot be modified in combat.</p>
 <p>Three important layers:</p>
 <pre class="codehilite"><code class="language-text">CVars
 ├─ query
@@ -1340,11 +1342,11 @@
 
 <p>Conclusion:</p>
 <ul>
-<li>EAM should not rely on changing CVar to achieve functionality.</li>
-<li>secret forced CVars should only be placed in live validation checklist.</li>
-<li>Do not modify secure CVar in combat.</li>
+<li>EAM cannot rely on CVar to complete the function.</li>
+<li>Secret mandatory CVars should only be placed on instant verification lists.
+-Do not modify safety CVar in combat.</li>
 </ul>
-<h3 id="macro-commands">Macro Commands</h3>
+<h3 id="macro-command">Macro command</h3>
 <p><code>Macro commands</code> are divided into character, combat and other commands.</p>
 <p>Three important layers:</p>
 <pre class="codehilite"><code class="language-text">Macro commands
@@ -1362,11 +1364,11 @@
 <p>Conclusion:</p>
 <ul>
 <li>EAM slash commands can only be used for setting, detecting, debugging, and exporting.</li>
-<li>No new combat automation is added.</li>
-<li>Does not produce cast/use/cancelaura-like behavior.</li>
+<li>No added combat automation.</li>
+<li>Does not produce cast/use/cancelaura type behavior.</li>
 </ul>
-<h3 id="combat-log">Combat Log</h3>
-<p><code>Combat Log</code> / <code>COMBAT_LOG_EVENT_UNFILTERED</code> are historically common AddOn sources, but 12.x targets with EAM rewrite should not rely on blind scanning.</p>
+<h3 id="battle-log">Battle Log</h3>
+<p><code>Combat Log</code> / <code>COMBAT_LOG_EVENT_UNFILTERED</code> was historically a common source of AddOn, but 12.x targets with the EAM rewrite cannot rely on blind scanning.</p>
 <p>Three important layers:</p>
 <pre class="codehilite"><code class="language-text">Combat Log
 ├─ Combat Log window / file
@@ -1383,12 +1385,12 @@
 
 <p>Conclusion:</p>
 <ul>
-<li>EAM for 12.x does not use CLEU as aura/cooldown primary source.</li>
-<li>Only refer to it when necessary for debugging or non-hot path inspection.</li>
-<li>Does not build WeakAura-like combat parser.</li>
+<li>EAM in 12.x does not use CLEU as the primary source for the Aura /cooldown.</li>
+<li>Only reference when necessary for debugging or non-hot path checking.</li>
+<li>No WeakAura-like combat parser built.</li>
 </ul>
-<h3 id="escape-sequences-hyperlinks">Escape Sequences / Hyperlinks</h3>
-<p><code>UI escape sequences</code> and <code>Hyperlinks</code> are risk areas for debug text, tooltips, and import/export.</p>
+<h3 id="escape-sequenceshyperlinks">Escape sequences/hyperlinks</h3>
+<p><code>UI escape strings</code> and <code>Hyperlinks</code> are risk areas for debug text, tooltips, and imported /export.</p>
 <p>Three important layers:</p>
 <pre class="codehilite"><code class="language-text">Escape sequences
 ├─ color
@@ -1412,12 +1414,12 @@
 
 <p>Conclusion:</p>
 <ul>
-<li>import/export should not parse secret-derived hyperlink text.</li>
-<li>tooltip spellID/itemID display can be retained, but must be separated from runtime facts.</li>
-<li>debug export to escape pipe / hyperlink class literals.</li>
+<li>import/export is not suitable for parsing secretly exported hyperlink text.</li>
+<li>Tooltip spellID/itemID Display may be preserved, but must be separated from execution time facts.</li>
+<li>Debugging the need to escape pipe/hyperlink text when exporting.</li>
 </ul>
-<h3 id="api-changes">API Changes</h3>
-<p><code>API change summaries</code> is the version tracking entry.</p>
+<h3 id="api-change">API Change</h3>
+<p><code>API Change Summary</code> is the version tracking entry.</p>
 <p>Three important layers:</p>
 <pre class="codehilite"><code class="language-text">API changes
 ├─ Retail
@@ -1439,12 +1441,12 @@
 
 <p>Conclusion:</p>
 <ul>
-<li>Every Retail patch needs to be rechecked for 12.x API changes.</li>
-<li>12.0.7 API summary has been released; actual machine verification is still required to confirm EAM behavior.</li>
-<li>Formatter/duration/table.freeze for 12.0.5 has been written to <code>Docs/10_WARCRAFT_WIKI_12X_API_NOTES.md</code>.</li>
+<li>The Retail server patch needs to recheck the 12.x API changes.</li>
+<li>12.0.7 API abstract has been released; still needs to be verified with real machine verification to confirm EAM behavior.</li>
+<li>formatter/duration/table.freeze for 12.0.5 has been written to <code>Docs/10_WARCRAFT_WIKI_12X_API_NOTES.md</code>.</li>
 </ul>
-<h3 id="howtos">HOWTOs</h3>
-<p><code>HOWTOs</code> are tutorial page indexes, suitable as references for UI operations, but are not Retail 12.x API contracts.</p>
+<h3 id="operation-guide">Operation Guide</h3>
+<p><code>HOWTOs</code> is a tutorial page index, suitable as a reference for UI operations, but is not the Retail 12.x API contract.</p>
 <p>Three important layers:</p>
 <pre class="codehilite"><code class="language-text">HOWTOs
 ├─ Getting Started
@@ -1461,22 +1463,22 @@
 
 <p>Conclusion:</p>
 <ul>
-<li>Please refer to drag frame implementation.</li>
-<li>Do not copy closure-heavy examples directly to the runtime hot path.</li>
-<li>Options UI can be kept simple and avoid WeakAura-like system.</li>
+<li>Please refer to the drag box implementation.</li>
+<li>Do not copy closure-heavy examples directly into the runtime hot path.</li>
+<li>Options UI can be kept simple and avoid WeakAura like systems.</li>
 </ul>
 <h2 id="follow-up-suggestions-for-eam-docs">Follow-up suggestions for EAM Docs</h2>
 <ul>
-<li><code>Docs/01_ARCHITECTURE.md</code> can be included as a tour guide for the API.</li>
-<li><code>Docs/02_RETAIL_API_BOUNDARIES.md</code> should reference <code>WoW API</code>, <code>C_Secrets</code>, <code>Events</code>, <code>Widget API</code>.</li>
-<li><code>Docs/05_PERFORMANCE_GUIDE.md</code> should reference <code>Widget scripts</code>, <code>Lua API</code>, <code>Frame:RegisterAllEvents</code>.</li>
-<li><code>Docs/06_TEST_PLAN_RETAIL.md</code> should add <code>CVar</code> forced-secret tests and <code>API changes</code> version tracking.</li>
+<li><code>Docs/01_ARCHITECTURE.md</code> can be added to this file as an API tour.</li>
+<li><code>Docs/02_RETAIL_API_BOUNDARIES.md</code> should refer to <code>WoW API</code>, <code>C_Secrets</code>, <code>Events</code>, <code>Widget API</code>.</li>
+<li><code>Docs/05_PERFORMANCE_GUIDE.md</code> should refer to <code>WidgetScript</code>, <code>Lua API</code>, <code>Frame:RegisterAllEvents</code>.</li>
+<li><code>Docs/06_TEST_PLAN_RETAIL.md</code> should be added to <code>CVar</code> to enforce confidentiality testing and <code>API change</code> version tracking.</li>
 </ul>
 <h2 id="traversal-restrictions">Traversal restrictions</h2>
 <ul>
-<li>This time it is a static file traversal, not a full site mirror.</li>
-<li><code>wowuidev</code> appears as an entrance in the Main Menu, but this query did not find a new page that is independent and can be used as a Retail 12.x runtime contract; it is only kept as a background entrance.</li>
-<li><code>12.0.7/API_changes</code> has been found; this document is only used as a navigation index and does not replace the detailed organization of <code>Docs/10_WARCRAFT_WIKI_12X_API_NOTES.md</code>.</li>
+<li>This time is static file browsing, not full site mirroring.</li>
+<li><code>wowuidev</code> appears as a portal in the main menu, but this query did not find a new page that is independent and can be used as a Retail 12.x execution time contract; it is only kept as a background portal.</li>
+<li><code>12.0.7/API_changes</code> found; this file is only for navigation index and does not replace the detailed organization of <code>Docs/10_WARCRAFT_WIKI_12X_API_NOTES.md</code>.</li>
 </ul>
     </div>
     

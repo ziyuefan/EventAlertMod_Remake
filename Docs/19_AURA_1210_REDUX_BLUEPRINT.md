@@ -1,20 +1,20 @@
-# 12.1.0 Aura 重構：AuraService 解耦、AuraStatePool 設計與雙軌渲染藍圖
+<!-- EAM_DOCUMENTATION_SOURCE: zh-TW -->
+# 12.1.0 Aura重構：AuraService解耦合、AuraStatePool設計與雙軌渲染藍圖
 
-本文件定義了 EventAlertMod (EAM) 進入 12.1.0 世代的核心重構規劃，旨在徹底解耦數據源與 UI 渲染、降低 Lua VM 戰鬥記憶體抖動 (GC Churn)，並完整適配 Retail 12.x C++ Native Duration Binding 通道。
+本檔案定義了 EventAlertMod (EAM) 進入 12.1.0 世代的核心重構規劃，旨在徹底解耦資料來源與 UI 渲染、減輕 Lua VM 戰鬥記憶體疼痛 (GC Churn)，並完整正式服 12.x C++ Native Duration Binding 通道。
 
-## 一、 架構演進：從 Push 耦合走向 Event-Driven Pull
+## 一、架構演進：從 Push 連線到 Event-Driven Pull
 
-### 1. 現狀痛點
-在 12.0.7 中，`AuraService.lua` 直接調用了 `UI/Renderer.lua` 的 `Renderer.render` 與 `Renderer.requestLayout`。這導致了以下弊端：
-*   **高耦合性**：`AuraService` 必須知道 `Renderer` 的接口，這使得無法在無 UI 的環境下對數據庫與事件適配層進行獨立的單元測試 (Unit Test)。
-*   **Layout Churn (排版抖動)**：在 `UNIT_AURA` 增量更新中，多個光環同時變更會觸發多次 `render`，導致 Renderer 重複計算 UI 坐標 (Layout)，浪費 CPU 時間。
+### 1.目前狀況痛點
+在 12.0.7 中，`AuraService.lua` 直接呼叫了 `UI/Renderer.lua` 的 `Renderer.render` 和 `Renderer.requestLayout`。這導致了以下弊端：
+* **高耦合性**：`AuraService` 必須知道 `Renderer` 的接口，這使得無法在無 UI 的環境下對資料庫與事件車輛層進行獨立的單元測試（測試單元）。
+* **Layout Churn（排版迭代）**：在 `UNIT_AURA` 增量更新中，多個光環同時變更會觸發多次 `render`，導致渲染器重複計算 UI 座標（Layout），浪費 CPU 時間。
 
-### 2. 解耦目標
-引進 **AlertManager**（控制器層）作為中介。
-*   `AuraService`：純數據服務，只負責監聽並適配 `UNIT_AURA` 事件，將光環的物理 facts 寫入 `AuraStatePool`。數據變更後，僅向 `EventRouter` 拋出 `EAM_AURA_STATE_CHANGED` 事件。
-*   `AlertManager`：監聽此事件，負責依據用戶設定 (alerts 列表、enabled 標記) 做過濾與渲染決策，並以節流 (Throttle) 或批次 (Batch) 的方式請求 `Renderer` 更新。
-*   `Renderer` : 純渲染視圖層，只接收包裝好的 Render States，透過 IconPool 刷寫到畫面上。
-
+### 2.解耦目標
+引入**AlertManager**（控制器層）作為加入。
+* `AuraService`：純資料服務，只監聽並承載 `UNIT_AURA` 事件，將光環的實體事實寫入 `AuraStatePool`。資料變更後，僅向 `EventRouter` 主動 `EAM_AURA_STATE_CHANGED` 事件。
+* `AlertManager`：此監聽事件，使用者負責設定（警報清單、啟用標記）做過濾與渲染決策，並以節流（Throttle）或批次（Batch）的方式請求`Renderer`更新。
+* `Renderer` : 純視圖渲染層，只接收包裝好的渲染狀態，透過 IconPool 刷寫到畫面上。
 ```mermaid
 graph TD
     A[Wow UNIT_AURA Event] --> B[AuraService]
@@ -25,20 +25,19 @@ graph TD
     E -->|Throttle & Batch| F[Renderer]
     F -->|Draw| G[UI / Icons]
 ```
-
 ---
 
-## 二、 AuraStatePool：低 GC 快取池設計
+## 二、 AuraStatePool：低GC儲存池設計
 
-為消滅戰鬥熱路徑中反覆分配與回收 Lua Table 造成的 GC 壓力和卡頓，12.1.0 將引進專有的 **AuraStatePool**。
+為消除戰鬥熱路徑中分配與恢復Lua表的GC壓力和卡頓，12.1.0將推廣母公司的**AuraStatePool**。
 
-### 1. 結構設計
-*   使用 `table.create(preallocatedSize, 0)` 預先分配指定大小的陣列空間，主要分配給 `player` 與 `target` 的 active states。
-*   **Recycle Queue (回收佇列)**：
-    *   光環消失時，狀態 Table 不會被 `nil` 掉，而是調用 `resetState()` 抹除其動態內容，並放入 `AuraStatePool.recycleBin` 中。
-    *   新光環被觸發時，優先從 `recycleBin` 中 `acquire` 舊 Table 複用，唯有在 Pool 乾涸時才創建新對象。
+### 1.結構設計
+* 使用 `table.create(preallocatedSize, 0)` 預先指派指定連線空間的大小，主要指派給 `player` 和 `target` 的活動狀態。
+* **恢復佇列(恢復佇列)**：
+* 當光環消失時，狀態表不會被 `nil` 掉，而是呼叫 `resetState()` 抹除其動態內容，並放入 `AuraStatePool.recycleBin` 中。
+    * 新光環觸發時，優先從 `recycleBin` 中 `acquire` 舊表復用，只有在 Pool 乾涸時才建立新物件。
 
-### 2. 核心代碼設計
+### 2.核心程式碼設計
 ```lua
 local AuraStatePool = {
     active = {},
@@ -92,44 +91,42 @@ function AuraStatePool.release(state)
     AuraStatePool.recycleBin[AuraStatePool.binSize] = state
 end
 ```
-
-### 3. Secret Value 索引安全防禦
-在戰鬥中，如果用未經驗證的 Key 對 custom table 進行 index，一旦該 Key 是秘密值，Lua 將會發生致命崩潰。
-*   **規則**：在將 `spellID`、`auraInstanceID` 等欄位寫入任何 hash 索引（例如 `cache.byInstance[id]` 或 `alertIndex[spellID]`）前，必須先以 `issecretvalue(id)` 進行防禦。
-*   **降級**：若 Key 為 Secret，該光環直接寫入固定的 `EAM.Constants.FALLBACK_SECRET_KEY`，不進行動態 hash 映射。
-
----
-
-## 三、 雙軌渲染機制：C++ Native Binding 與 Lua OnUpdate 降級通道
-
-為最大化發揮 WoW 12.x 的引擎性能，Renderer 將採用**雙軌化時間顯示渲染管線**。
-
-### 1. 軌道 A：Native Duration Binding (首選，0-Lua-CPU)
-*   **原理**：
-    透過 `C_UnitAuras.GetAuraDuration(unit, auraInstanceID)` 獲取底層的 `DurationObject`。
-*   **執行步驟**：
-    1.  Renderer 取得 `timer.durationObject`。
-    2.  調用 `C_DurationUtil.CreateDurationTextBinding(durationObject, icon.timerText)`。
-    3.  調用 `icon.cooldown:SetCooldownFromDurationObject(durationObject)`。
-*   **優勢**：
-    圖示上的秒數倒數與轉圈渲染完全由遊戲客戶端 C++ 底層的定時器驅動，**完全不需要註冊 Lua OnUpdate 腳本**，達成 0 運算開銷與 0 記憶體抖動。
-
-### 2. 軌道 B：Lua OnUpdate Central Scheduler (降級通道)
-*   **原理**：
-    當 `DurationObject` 不可用（例如非戰鬥技能冷卻、手動設定的地面效果時間、或 PTR API 降級時），回退到傳統的 Lua 倒數。
-*   **執行步驟**：
-    1.  取消 `icon.timerText` 的 native binding。
-    2.  將該圖示註冊到 `EAM.Core.Scheduler` 集中式排程器。
-    3.  Scheduler 使用單一的 `OnUpdate` 以 0.1 秒的間隔（節流）計算 `timeLeft`，並更新文字。
-*   **安全防禦**：
-    在 Scheduler 內更新文字前，必須先使用 `issecretvalue(timeLeft)` 確保時間數字可安全訪問，否則將文字顯示為 `"unknown"`，徹底杜絕 Indexing/Arithmetic with Secret 報錯。
+### 3.秘密價值指數安全防禦
+在戰鬥中，如果未用驗證的Key對自訂表進行索引，一旦該Key為秘密值，Lua就會發生致命的崩潰。
+* **規則**：在將 `spellID`、`auraInstanceID` 等欄位寫入任何雜補索引（如 `cache.byInstance[id]` 或 `alertIndex[spellID]`）之前，必須先以 `issecretvalue 進行防禦。
+* **降級**：若Key為Secret，此光環直接寫入固定的`EAM.Constants.FALLBACK_SECRET_KEY`，不進行動態雜湊映射。
 
 ---
 
-## 四、 12.1.0 模組化目錄結構預期
+## 三、雙軌渲染：C++ Native Binding 與 Lua OnUpdate 降級通道通道
 
-12.1.0 的重構將進一步優化模組結構，如下所示：
+為了最大化發揮 WoW 12.x 的引擎完成，渲染器將採用**雙軌化時間顯示渲染托盤**。
 
+### 1. 軌道A：原生持續時間綁定（首選，0-Lua-CPU）
+* **原理**：
+    `C_UnitAuras.GetAuraDuration(unit, auraInstanceID)` 取得底層的 `DurationObject`。
+* **執行步驟**：
+    1.渲染器取得`timer.durationObject`。
+    2.呼叫`C_DurationUtil.CreateDurationTextBinding(durationObject,圖示.timerText)`。
+    3.呼叫`icon.cooldown:SetCooldownFromDurationObject(durationObject)`。
+* **優勢**：
+    圖示上的秒數倒數與轉圈渲染完全由遊戲客戶端 C++ 高階的計時器驅動，**完全不需要註冊 Lua OnUpdate 腳本**，達成 0 頭顱與 0 記憶體。
+
+### 2.軌道B：Lua OnUpdate Central Scheduler (降級通道)
+* **原理**：
+當`DurationObject`不可用時（例如非戰鬥技能冷卻、手動設定的地面效果時間、或PTR API降級時），返回傳統的Lua倒數。
+* **執行步驟**：
+    1. 取消 `icon.timerText` 的臨時綁定。
+    2. 提示圖示註冊到 `EAM.Core.Scheduler` 集中式排程器。
+    3.調度器使用單一的`OnUpdate`以0.1秒的間隔（節流）計算`timeLeft`，並更新文字。
+* **安全防禦**：
+在 Scheduler 內更新文字前，必須先使用 `issecretvalue(timeLeft)` 保證數字可安全存取的時間，否則將文字顯示為 `"unknown"`，徹底杜絕 Indexing/Arithmetic with Secret 報錯。
+
+---
+
+##四、12.1.0模組化目錄結構預期
+
+12.1.0的重構將進一步優化模組結構，如下所示：
 ```text
 EventAlertMod/
 ├── Core/

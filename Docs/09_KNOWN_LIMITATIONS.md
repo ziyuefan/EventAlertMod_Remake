@@ -1,74 +1,74 @@
-# Known Limitations
+<!-- EAM_DOCUMENTATION_SOURCE: zh-TW -->
+# 已知限制
 
-## Live Validation Gap
+## 即時驗證差距
 
-This audit was static. No WoW Retail 12.x client was available, so API names,
-return shapes, secret/protected behavior, and XML runtime behavior still require
-in-game validation.
+這次審計是靜態的。沒有 WoW Retail 12.x 用戶端可用，因此 API 名稱，
+傳回形狀、secret/protected 行為和 XML 運行時行為仍然需要
+遊戲內驗證。
 
-## Secret / Protected Values
+## 秘密/受保護的值
 
-Retail may return secret, protected, display-only, or unavailable data for aura
-and cooldown state. The rewrite must degrade safely:
+正式服可能會返回秘密、受保護、僅供顯示或不可用的光環數據
+和冷卻狀態。重寫必須安全降級：
 
-- icon-only display;
-- known-safe name/icon/stacks only;
-- timer mode `protected`, `displayOnly`, or `unknown`;
-- no fabricated duration/expiration/cooldown facts;
-- debug boundary warning only when debug/export is requested.
+- 僅圖示顯示；
+- 僅已知安全名稱/icon/stacks；
+- 定時模式 `protected`、`displayOnly` 或 `unknown`；
+- 沒有捏造持續時間/expiration/cooldown事實；
+- 僅當請求 debug/export 時偵錯邊界警告。
 
-## Combat Restrictions
+## 戰鬥限制
 
-Some UI or data updates may be unsafe or unavailable in combat. Heavy work,
-cache building, layout rebuilding, and migration-like operations must be delayed
-or throttled.
+某些 UI 或資料更新可能不安全或在戰鬥中不可用。繁重的工作，
+快取建置、佈局重建和類似遷移的操作必須延遲
+或節流。
+## 不支援的分支
 
-## Unsupported Branches
+重寫不支援：
 
-The rewrite does not support:
+- 經典
+- 熊貓人之謎經典服
+- 浩劫與重生經典服賽
+- 巫妖王之怒經典服
+- TBC 經典
+- 時代
+- 特定於區域的經典相容性分支
 
-- Classic
-- Mists Classic
-- Cata Classic
-- Wrath Classic
-- TBC Classic
-- Era
-- region-specific Classic compatibility branches
+舊目錄可能保留在儲存庫中，僅供參考。
 
-Legacy directories may remain in the repository as reference only.
+## 目前來源風險
 
-## Current Source Risks
+首次透過審核發現以下風險：
 
-First-pass audit found these risks:
-
-- mixed Retail and legacy compatibility branches in Mainline;
-- legacy TOCs still present at root;
-- `Lib_ZYF` required by current TOC and many runtime modules;
-- large spell/item data tables;
-- item range scans in `EventAlert_ItemSpellCache.lua`;
-- recursive timer scheduling and per-resource OnUpdate scripts;
-- broad global variable usage and accidental globals;
-- tooltip and aura API assumptions that may conflict with protected data;
-- duplicated/archived files with garbled names under `Main/` and
+- 主線中混合正式服和遺留相容性分支；
+- 遺留的 TOC 仍然存在於根部；
+- 目前 TOC 和許多運行時模組所需的 `Lib_ZYF` ；
+- 大型法術/item資料表；
+- `EventAlert_ItemSpellCache.lua` 中的項目範圍掃描；
+- 遞歸計時器調度和每個資源 OnUpdate 腳本；
+- 廣泛的全域變數使用和意外全域變數；
+- 可能與受保護資料衝突的工具提示和光環 API 假設；
+- `Main/` 下有重複的 /archived 文件，其名稱為亂碼，且
   `DevDocument/ChatGPT/`;
-- `EventAlert_ImportExport.lua` has prototype globals and is commented out of
-  load order.
+- `EventAlert_ImportExport.lua` 具有原型全域變數並被註解掉
+  載入順序。
 
-## UI Limitations
+## 使用者介面限制
 
-Current XML creates large static option panels and many global frame names. The
-rewrite should prefer a smaller options surface and pooled runtime icons, but
-existing UI behavior must be mapped before removal.
+目前 XML 建立大型靜態選項面板和許多全域框架名稱。的
+重寫應該更喜歡較小的選項表面和池化運行時圖標，但是
+刪除之前必須先映射現有的 UI 行為。
 
-## Areas Requiring Retail Validation
+## 需要正式服驗證的領域
 
-- exact `C_UnitAuras` safe access behavior;
-- exact `C_Spell.GetSpellCooldown` structured return behavior;
-- exact `C_Item.GetItemCooldown` direct itemID behavior;
-- `C_Secrets` availability and return behavior;
-- cooldown charge behavior;
-- target aura update payloads;
-- combat restrictions for all planned UI operations;
-- tooltip APIs if tooltip display is preserved;
-- localization rendering in zhTW/enUS/koKR/zhCN;
-- SavedVariables migration with real legacy user data.
+- 準確的 `C_UnitAuras` 安全存取行為；
+- 精確的 `C_Spell.GetSpellCooldown` 結構化回傳行為；
+- 精確的 `C_Item.GetItemCooldown` 直接 itemID 行為；
+- `C_Secrets` 可用性和退貨行為；
+- 冷卻充能行為；
+- 目標光環更新有效負載；
+- 對所有計劃中的 UI 操作的戰鬥限制；
+- 工具提示 API（如果保留工具提示顯示）；
+- zhTW/enUS/koKR/zhCN 中的局部渲染；
+- SavedVariables 遷移真實的舊用戶資料。

@@ -415,27 +415,26 @@
 
     <div id="doc-content-zh" class="lang-content active">
         <a href="AGENTS.md.html" class="back-btn">← 返回 AI 入口指導檔 (AGENTS)</a>
+<!-- EAM_DOCUMENTATION_SOURCE: zh-TW -->
 <h1 id="ai">AI提示匯出架構</h1>
 <h2 id="_1">目的</h2>
-<p>僅按需進行調試導出。它的存在是為了幫助用戶或人工智慧代理進行檢查
-EAM 狀態，無需轉儲大量日誌。</p>
-<p>模式：</p>
+<p>主要是進行調試導出。它的存在是為了幫助用戶或人工智慧代理進行檢查
+EAM 狀態，消耗轉儲大量日誌。</p>
+<p>型號：</p>
 <ul>
-<li><code>debug-min</code>：緊湊狀態以提供快速支援。</li>
-<li><code>analysis-full</code>：用於架構/調試分析的詳細但有限的狀態。</li>
-<li><code>github-issue</code>：使用者可讀的問題負載。</li>
+<li><code>debug-min</code>：結構緊湊，可快速支援。</li>
+<li><code>analysis-full</code>：用於架構/debug 分析的詳細但有限的狀態。</li>
+<li><code>github-issue</code>：使用者可讀取的問題負載。</li>
 </ul>
 <h2 id="_2">需要分離</h2>
-<p>導出必須分開：</p>
-<ul>
-<li>事實：直接、安全的API資料；</li>
-<li>派生：計算出的 UI/渲染狀態；</li>
-<li>人工註釋：使用者可讀的註釋；</li>
-<li>邊界警告：秘密/受保護/不安全資料限制；</li>
-<li>環境：建置、區域設定、戰鬥狀態、FPS、外掛程式版本。</li>
-</ul>
+<p>導出必須分開：
+- 事實：直接、安全的 API 資料；
+- 匯出：計算UI/渲染狀態；
+- 人工註記：使用者最重要的註解；
+- boundaryWarnings：秘密/protected/不安全資料限制；
+- 環境：建造、區域設定、戰鬥狀態、FPS、外掛程式版本。</p>
 <p>不要將猜測值與事實混為一談。</p>
-<h2 id="_3">緊湊模式</h2>
+<h2 id="_3">簡潔模式</h2>
 <pre class="codehilite"><code class="language-js">{
   schema: 1,
   mode: &quot;debug-min|analysis-full|github-issue&quot;,
@@ -479,7 +478,7 @@ EAM 狀態，無需轉儲大量日誌。</p>
 }
 </code></pre>
 
-<p>＃＃ 例子</p>
+<p>＃＃例子</p>
 <pre class="codehilite"><code class="language-js">{
   schema: 1,
   mode: &quot;debug-min&quot;,
@@ -536,33 +535,32 @@ EAM 狀態，無需轉儲大量日誌。</p>
 <li>沒有無限制的光環列表。</li>
 <li>預設沒有完整的 SavedVariables 轉儲。</li>
 <li>沒有戰鬥日誌垃圾郵件。</li>
-<li>沒有大型專案快取轉儲。</li>
-<li>字串建置僅在明確匯出命令期間發生。</li>
+<li>沒有大型專案倉儲轉儲。</li>
+<li>字串僅在發生時建構明確的匯出指令。</li>
 </ul>
     </div>
     <div id="doc-content-en" class="lang-content">
         <a href="AGENTS.md.html" class="back-btn">← Back to AI Entrance (AGENTS)</a>
-<h1 id="ai-prompt-export-schema">AI Prompt Export Schema</h1>
+<!-- EAM_DOCUMENTATION_SOURCE: zh-TW -->
+<h1 id="ai-prompt-export-structure">AI prompt export structure</h1>
 <h2 id="purpose">Purpose</h2>
-<p>Debug export is on demand only. It exists to help a user or AI agent inspect
-EAM state without dumping huge logs.</p>
-<p>Modes:</p>
+<p>Mainly for debugging and exporting. It exists to aid users or artificial intelligence agents in checking
+EAM status, which consumes a large amount of log dumps.</p>
+<p>Model:</p>
 <ul>
-<li><code>debug-min</code>: compact state for quick support.</li>
-<li><code>analysis-full</code>: detailed but bounded state for architecture/debug analysis.</li>
-<li><code>github-issue</code>: user-readable issue payload.</li>
+<li><code>debug-min</code>: Compact structure and fast support.</li>
+<li><code>analysis-full</code>: Detailed but limited status for architectural /debug analysis.</li>
+<li><code>github-issue</code>: User-readable problem payload.</li>
 </ul>
-<h2 id="required-separation">Required Separation</h2>
-<p>Export must separate:</p>
-<ul>
-<li>facts: direct, safe API data;</li>
-<li>derived: calculated UI/render state;</li>
-<li>human notes: user-readable comments;</li>
-<li>boundaryWarnings: secret/protected/unsafe data limitations;</li>
-<li>environment: build, locale, combat state, FPS, addon version.</li>
-</ul>
-<p>Do not mix guessed values into facts.</p>
-<h2 id="compact-schema">Compact Schema</h2>
+<h2 id="need-to-separate">Need to separate</h2>
+<p>Exports must be separated:
+- Facts: direct, safe API information;
+- Export: calculate UI/rendering status;
+- Manual annotations: the most important annotations from users;
+- boundaryWarnings: secret /protected/unsafe data restriction;
+- Environment: Construction, area settings, combat status, FPS, plug-in version.</p>
+<p>Don't confuse guesswork with facts.</p>
+<h2 id="simple-mode">Simple mode</h2>
 <pre class="codehilite"><code class="language-js">{
   schema: 1,
   mode: &quot;debug-min|analysis-full|github-issue&quot;,
@@ -606,7 +604,7 @@ EAM state without dumping huge logs.</p>
 }
 </code></pre>
 
-<h2 id="example">Example</h2>
+<h2 id="example">example</h2>
 <pre class="codehilite"><code class="language-js">{
   schema: 1,
   mode: &quot;debug-min&quot;,
@@ -657,14 +655,14 @@ EAM state without dumping huge logs.</p>
 }
 </code></pre>
 
-<h2 id="export-limits">Export Limits</h2>
+<h2 id="export-restrictions">Export restrictions</h2>
 <ul>
 <li>No automatic export.</li>
-<li>No unbounded aura lists.</li>
-<li>No full SavedVariables dumps by default.</li>
-<li>No combat-log spam.</li>
-<li>No large item cache dumps.</li>
-<li>String building happens only during explicit export command.</li>
+<li>No unlimited halo list.</li>
+<li>Default does not have a complete SavedVariables dump.</li>
+<li>No battle log spam.</li>
+<li>No large project warehouse dumps.</li>
+<li>Strings only construct explicit export instructions when they occur.</li>
 </ul>
     </div>
     

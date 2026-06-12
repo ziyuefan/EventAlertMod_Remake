@@ -1,30 +1,29 @@
-# AI Prompt Export Schema
+<!-- EAM_DOCUMENTATION_SOURCE: zh-TW -->
+# AI提示匯出架構
 
-## Purpose
+## 目的
 
-Debug export is on demand only. It exists to help a user or AI agent inspect
-EAM state without dumping huge logs.
+主要是進行調試導出。它的存在是為了幫助用戶或人工智慧代理進行檢查
+EAM 狀態，消耗轉儲大量日誌。
 
-Modes:
+型號：
 
-- `debug-min`: compact state for quick support.
-- `analysis-full`: detailed but bounded state for architecture/debug analysis.
-- `github-issue`: user-readable issue payload.
+- `debug-min`：結構緊湊，可快速支援。
+- `analysis-full`：用於架構/debug 分析的詳細但有限的狀態。
+- `github-issue`：使用者可讀取的問題負載。
 
-## Required Separation
+## 需要分離
 
-Export must separate:
+導出必須分開：
+- 事實：直接、安全的 API 資料；
+- 匯出：計算UI/渲染狀態；
+- 人工註記：使用者最重要的註解；
+- boundaryWarnings：秘密/protected/不安全資料限制；
+- 環境：建造、區域設定、戰鬥狀態、FPS、外掛程式版本。
 
-- facts: direct, safe API data;
-- derived: calculated UI/render state;
-- human notes: user-readable comments;
-- boundaryWarnings: secret/protected/unsafe data limitations;
-- environment: build, locale, combat state, FPS, addon version.
+不要將猜測值與事實混為一談。
 
-Do not mix guessed values into facts.
-
-## Compact Schema
-
+## 簡潔模式
 ```js
 {
   schema: 1,
@@ -68,9 +67,7 @@ Do not mix guessed values into facts.
   humanNotes: ["string"]
 }
 ```
-
-## Example
-
+＃＃例子
 ```js
 {
   schema: 1,
@@ -121,12 +118,11 @@ Do not mix guessed values into facts.
   humanNotes: []
 }
 ```
+## 出口限制
 
-## Export Limits
-
-- No automatic export.
-- No unbounded aura lists.
-- No full SavedVariables dumps by default.
-- No combat-log spam.
-- No large item cache dumps.
-- String building happens only during explicit export command.
+- 沒有自動導出。
+- 沒有無限制的光環列表。
+- 預設沒有完整的 SavedVariables 轉儲。
+- 沒有戰鬥日誌垃圾郵件。
+- 沒有大型專案倉儲轉儲。
+- 字串僅在發生時建構明確的匯出指令。

@@ -1,11 +1,12 @@
-# Performance Guide
+<!-- EAM_DOCUMENTATION_SOURCE: zh-TW -->
+# 效能指南
 
-## Hot Path Candidates
+## 熱路徑候選者
 
-Current Mainline hot path candidates:
+目前主線熱路徑候選人：
 
 - `Main/EventAlert_Core.lua`
-  - event dispatch and handlers
+  - 事件調度和處理程序
   - `COMBAT_LOG_EVENT_UNFILTERED`
   - `UNIT_AURA`
   - `BAG_UPDATE_COOLDOWN`
@@ -13,7 +14,7 @@ Current Mainline hot path candidates:
   - `SPELL_UPDATE_CHARGES`
   - `SPELL_UPDATE_USABLE`
   - `ACTIONBAR_UPDATE_COOLDOWN`
-  - lookup scanning with ticker/coroutine
+  - 使用代碼/coroutine 進行查找掃描
 - `Main/EventAlert_Aura_Self.lua`
   - `Buffs_Update`
   - `OnUpdate`
@@ -28,90 +29,89 @@ Current Mainline hot path candidates:
   - `UpdateScdFrame`
   - `ScdPositionFrames`
 - `Main/EventAlert_ItemSpellCache.lua`
-  - item range scan builders
+  - 物品範圍掃描建構器
 - `Main/EventAlert_SpecialPower.lua`
-  - resource/power updates
-  - rune OnUpdate scripts
+- 資源/power 更新
+  - 符文 OnUpdate 腳本
 - `Main/EventAlert_CreateFrames.lua`
-  - frame creation and scroll-list generation
+  - 框架創建和滾動列表生成
 - `Main/EventAlert_EAFun.lua`
-  - layout, tooltip, timer text, debug label helpers
+  - 版面配置、工具提示、計時器文字、偵錯標籤助手
 
-## Current OnUpdate / C_Timer Usage
+## 目前 OnUpdate / C_Timer 用法
 
-Observed Mainline usage:
+觀察到的主線使用情況：
 
 - `EventAlert_Core.lua`
-  - recursive `C_Timer.After(tempInterval, RecurringFrameUpdate)`
-  - FPS-adjusted cadence for position/special frame updates
-  - `C_Timer.NewTicker(1 / GetFramerate(), function() ...)` for lookup
+  - 遞歸 `C_Timer.After(tempInterval, RecurringFrameUpdate)`
+  - FPS-調整了位置 /special 幀更新的節奏
+  - `C_Timer.NewTicker(1 / GetFramerate(), function() ...)` 用來查找
 - `EventAlert_Aura_Self.lua`
-  - `G:OnUpdate(spellId)` for aura timer refresh
-  - allocates `tempFunc = function() G.OnUpdate(spellId) end` before
-    `C_Timer.After(delay, tempFunc)`
+  - `G:OnUpdate(spellId)` 用於光環計時器刷新
+  - 在先前指派 `tempFunc = function() G.OnUpdate(spellId) end`
+    `C_Timer.After（延遲，tempFunc）`
 - `EventAlert_Aura_Target.lua`
-  - `C_Timer.After(delay, G.OnTarUpdate, G, spellId)`
+  - `C_Timer.After（延遲，G.OnTarUpdate，G，spellId）`
 - `EventAlert_Cooldown.lua`
-  - `C_Timer.After(nextInterval, G.OnSCDUpdate, G, sid)`
+- `C_Timer.After(nextInterval, G.OnSCDUpdate, G, sid)`
 - `EventAlert_ItemSpellCache.lua`
   - `C_Timer.NewTicker(0.01, function() ...)`
-  - `C_Timer.After(1, ProcessBatch)` for batch scan continuation
+  - `C_Timer.After(1, ProcessBatch)` 用於批次掃描繼續
 - `EventAlert_SpecialPower.lua`
-  - per-rune `SetScript("OnUpdate", function(self, elapsedTime) ...)`
-  - `C_Timer.After` for lifebloom refresh
+  - 每個符文 `SetScript("OnUpdate", function(self, elapsedTime) ...)`
+  - `C_Timer.After` 用於生命綻放刷新
 - `EventAlert_Util.lua`
-  - `Lib_ZYF:StopOnUpdate(eaf)` calls in frame cleanup
+  - 幀清理中呼叫 `Lib_ZYF:StopOnUpdate(eaf)`
 
-Rewrite rule:
+重寫規則：
 
-- Replace these with one central scheduler.
-- Scheduler callback records should be reusable and keyed by alert/service ID.
-- No per-icon timers and no closure allocation in repeated refresh paths.
+- 用一個中央調度程式取代它們。
+- 調度程序回呼記錄應可重複使用，並由alert/service ID 鍵入。
+- 重複刷新路徑中沒有每個圖示計時器和閉包分配。
 
-## Allocation Policy
+## 分配政策
 
-Use `table.create` for:
+使用 `table.create` 用於：
 
-- configured alert arrays
-- active state arrays
-- dirty queues
-- icon pool records
-- scheduler job records
-- debug ring buffers
-- default profile templates
+- 配置警報陣列
+- 活動狀態數組
+- 骯髒的隊列
+- 圖示池記錄
+- 排程程式作業記錄
+- 調試環形緩衝區
+- 預設設定檔模板
+避免在熱路徑中：
 
-Avoid in hot paths:
+- 每個光環的瞬態表
+- `table.insert` 當直接數字索引分配就足夠了
+- `pairs`/`ipairs` 其中確定性數字循環可用
+- 臨時字串構建
+- 匿名回呼函數
 
-- transient tables per aura
-- `table.insert` when direct numeric index assignment is enough
-- `pairs`/`ipairs` where a deterministic numeric loop is available
-- ad hoc string building
-- anonymous callback functions
+## 表.freeze 策略
 
-## table.freeze Policy
+僅凍結：
 
-Freeze only:
+- 常數
+- 列舉
+- 狀態名稱
+- 模式描述
+- 不可變的預設欄位設定文件
+- 靜態模組合約
 
-- constants
-- enums
-- status names
-- schema descriptions
-- immutable default field profiles
-- static module contracts
-
-Never freeze:
+切勿凍結：
 
 - SavedVariables
-- runtime aura/cooldown state
-- icon render state
-- UI frame records
-- scheduler queues
-- pool objects
-- debug snapshots
+- 運行時光環/cooldown狀態
+- 圖示渲染狀態
+- UI框架記錄
+- 調度程序佇列
+- 池對象
+- 調試快照
 
-## UI Write Policy
+## UI 寫入策略
 
-Renderer must cache last-rendered values and skip no-op writes:
+渲染器必須快取最後渲染的值並跳過無操作寫入：
 
 - `SetText`
 - `SetTexture`
@@ -121,38 +121,38 @@ Renderer must cache last-rendered values and skip no-op writes:
 - `SetSize`
 - `Show` / `Hide`
 
-Layout should be batched:
+佈局應該是批量的：
 
-1. Collect dirty layout keys.
-2. Hide parent frame.
-3. Apply only changed positions/sizes.
-4. Show parent frame once.
+1. 收集髒佈局鍵。
+2. 隱藏父框架。
+3. 僅套用變更的位置/sizes。
+4. 顯示一次父框架。
 
-## Combat / Low-FPS Throttling
+## 戰鬥/低-FPS 節流
 
-Heavy work must be blocked, delayed, or degraded when:
+在以下情況下，繁重的工作必須被阻止、延遲或降級：
 
-- `InCombatLockdown()` is true;
-- FPS is below the configured threshold;
-- the work requires large scans;
-- a protected/secret boundary is reached.
+- `InCombatLockdown()` 為 true；
+- FPS 低於配置的閾值；
+- 工作需要大掃描；
+- 達到受保護的/secret 邊界。
 
-Allowed degraded behavior:
+允許的降級行為：
 
-- show safe icon/name only;
-- mark timer as `unknown`, `protected`, or `displayOnly`;
-- skip optional item cache progression;
-- schedule out-of-combat refresh.
+- 僅顯示安全性圖示/name；
+- 將計時器標記為 `unknown`、`protected` 或 `displayOnly`；
+- 跳過可選項目快取進程；
+- 安排非戰鬥刷新。
 
-## Current Allocation Risks
+## 目前配置風險
 
-First-pass audit found these likely sources:
+首次透過審核發現了這些可能的來源：
 
-- repeated aura scan loops over 1..40 helpful and harmful indices;
-- `AuraUtil.ForEachAura` callback use;
-- tooltip post-call hooks and tooltip parsing paths;
-- `C_Timer.After(function() ...)` closure allocation in aura update;
-- dynamic frame creation in cooldown update fallback;
-- item range scanning with ticker callbacks;
-- string formatting in debug labels and lookup output;
-- global accidental variables causing unclear lifetime and GC behavior.
+- 重複光環掃描循環超過 1..40 個有用且有害的指數；
+- `AuraUtil.ForEachAura` 回呼使用；
+- 工具提示呼叫後掛鉤和工具提示解析路徑；
+- aura 更新中的 `C_Timer.After(function() ...)` 閉包分配；
+- 冷卻更新後備中的動態影格建立；
+- 具有計時器回調的項目範圍掃描；
+- 調試標籤和查找輸出中的字串格式；
+- 全域意外變數導致生命週期和 GC 行為不明確。

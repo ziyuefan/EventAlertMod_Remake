@@ -415,10 +415,11 @@
 
     <div id="doc-content-zh" class="lang-content active">
         <a href="AGENTS.md.html" class="back-btn">← 返回 AI 入口指導檔 (AGENTS)</a>
-<h1 id="curseforge">CurseForge 打包指南</h1>
-<p>本文件定義 EventAlertMod Retail rewrite 的發佈打包規則。</p>
-<h2 id="_1">快捷指令</h2>
-<p>日後使用者只要輸入：</p>
+<!-- EAM_DOCUMENTATION_SOURCE: zh-TW -->
+<h1 id="curseforge">CurseForge 預算指南</h1>
+<p>本文件定義 EventAlertMod Retail rewrite 的發佈資源規則。</p>
+<h2 id="_1">快速指令</h2>
+<p>日後用戶只需輸入：</p>
 <pre class="codehilite"><code class="language-text">打包
 </code></pre>
 
@@ -426,7 +427,7 @@
 <pre class="codehilite"><code class="language-powershell">powershell -ExecutionPolicy Bypass -File .\Tools\Build-CurseForgePackage.ps1
 </code></pre>
 
-<p>或者使用者只要輸入：</p>
+<p>或使用者只需輸入：</p>
 <pre class="codehilite"><code class="language-text">打包開發版
 </code></pre>
 
@@ -434,13 +435,13 @@
 <pre class="codehilite"><code class="language-powershell">powershell -ExecutionPolicy Bypass -File .\Tools\Build-CurseForgePackage.ps1 -DevMode
 </code></pre>
 
-<p>除非使用者另外指定參數，否則不需要再次詢問。</p>
+<p>除非使用者附加指定參數，否則不需要再次詢問。</p>
 <h2 id="_2">版本命名</h2>
 <p>TOC 版本名稱必須符合：</p>
 <pre class="codehilite"><code class="language-text">EventAlertMod_資料片簡稱_打包年月日
 </code></pre>
 
-<p>目前資料片簡稱固定為：</p>
+<p>目前資料片名稱固定為：</p>
 <pre class="codehilite"><code class="language-text">MN
 </code></pre>
 
@@ -448,8 +449,8 @@
 <pre class="codehilite"><code class="language-text">## Version: EventAlertMod_MN_20260504
 </code></pre>
 
-<h2 id="_3">打包檔名</h2>
-<p>zip 檔名必須符合：</p>
+<h2 id="_3">備用檔名</h2>
+<p>zip檔名必須符合：</p>
 <pre class="codehilite"><code class="language-text">EventAlertMod_資料片簡稱_打包年月日_打包時分秒.zip
 </code></pre>
 
@@ -457,7 +458,7 @@
 <pre class="codehilite"><code class="language-text">EventAlertMod_MN_20260504_205216.zip
 </code></pre>
 
-<h2 id="_4">預設打包內容</h2>
+<h2 id="_4">預設預設內容</h2>
 <ul>
 <li><code>EventAlertMod.toc</code></li>
 <li><code>README.md</code></li>
@@ -469,56 +470,57 @@
 <li><code>Debug/</code></li>
 <li><code>Data/</code></li>
 <li><code>Locale/</code></li>
-<li><code>Media/</code></li>
+<li><code>媒體/</code></li>
 </ul>
 <h2 id="_5">預設排除內容</h2>
 <ul>
 <li><code>LegacyReference/</code></li>
 <li><code>ReferenceLibs/</code></li>
 <li><code>Tools/</code></li>
-<li><code>backup/</code></li>
+<li><code>備份/</code></li>
 <li><code>.github/</code></li>
 <li><code>.vscode/</code></li>
-<li><code>Docs/</code></li>
+<li><code>文檔/</code></li>
 <li><code>Dist/_stage/</code></li>
 </ul>
 <h2 id="_6">可選參數</h2>
-<p>包含 Docs 與 AGENTS：</p>
+<p>包含文件與 AGENTS：</p>
 <pre class="codehilite"><code class="language-powershell">powershell -ExecutionPolicy Bypass -File .\Tools\Build-CurseForgePackage.ps1 -IncludeDocs
 </code></pre>
 
-<p>跳過 Lua 語法檢查：</p>
+<p>跳過Lua語法檢查：</p>
 <pre class="codehilite"><code class="language-powershell">powershell -ExecutionPolicy Bypass -File .\Tools\Build-CurseForgePackage.ps1 -SkipLuaCheck
 </code></pre>
 
-<p>開發版打包（將整個專案資料夾打包，不過濾，排除 .git/ 與 Dist/）：</p>
+<p>開發版本壓縮（將整個專案資料壓縮，不過濾，排除 .git/ 和 Dist/）：</p>
 <pre class="codehilite"><code class="language-powershell">powershell -ExecutionPolicy Bypass -File .\Tools\Build-CurseForgePackage.ps1 -DevMode
 </code></pre>
 
 <h2 id="_7">驗證要求</h2>
-<p>打包流程必須完成：</p>
+<p>預算流程必須完成：</p>
 <ul>
 <li>TOC 路徑驗證。</li>
 <li>Lua 語法檢查，除非明確使用 <code>-SkipLuaCheck</code>。</li>
-<li>zip 排除檢查，確認沒有 legacy/reference/tools/backup/dev folders。</li>
+<li>zip排除檢查，確認沒有legacy/reference/tools/backup/dev資料夾。</li>
 </ul>
-<h2 id="html">HTML 說明文件轉換</h2>
+<h2 id="html">HTML 說明檔案轉換</h2>
 <ul>
-<li>對於 <code>Docs/</code> 下或根目錄 <code>AGENTS.md</code> 涉及表格、圖像、心智圖與流程圖的 Markdown 檔案，應執行 HTML 轉換工具，在 <code>docs_html/</code> 底下生成一份同名的 <code>.html</code> 檔案（例如 <code>filename.md.html</code>）。</li>
-<li>開發與 AI 自動協作時，一律以 <code>.md</code> 檔案為絕對的 Facts-of-Truth 參考。<code>.html</code> 版本僅供人類好讀與預覽使用，不可被用作 AI 開發的配置或程式碼邏輯之依據。</li>
+<li>對於 <code>Docs/</code> 下或根目錄 <code>AGENTS.md</code> 涉及表格、圖像、心智圖與流程圖的 Markdown 文件，應執行 HTML 轉換工具，在 <code>docs_html/</code> 底下產生一個同名的 <code>.html</code> 文件（如 __10）。</li>
+<li>開發與AI自動協作時，一律以<code>.md</code>檔案為絕對的Facts-of-Truth參考。 <code>.html</code>版本供人類好讀與預覽使用，不可被自動化AI開發的配置或方案碼邏輯之引用。</li>
 </ul>
 <h2 id="_8">注意事項</h2>
 <ul>
-<li>打包成功不代表 WoW Retail 實機驗證完成。</li>
-<li>若 TOC <code>## Version</code> 與當日日期不一致，打包工具會停止。</li>
-<li>發佈前仍需依 <code>Docs/06_TEST_PLAN_RETAIL.md</code> 做 Retail 實機測試。</li>
+<li>資源成功不代表WoW正式服實機驗證完成。</li>
+<li>若 TOC <code>## Version</code> 與當日日期不一致，壓縮工具會停止。</li>
+<li>發布前仍需依<code>Docs/06_TEST_PLAN_RETAIL.md</code>做正式服實機測試。</li>
 </ul>
     </div>
     <div id="doc-content-en" class="lang-content">
         <a href="AGENTS.md.html" class="back-btn">← Back to AI Entrance (AGENTS)</a>
-<h1 id="curseforge-packaging-guide">CurseForge Packaging Guide</h1>
-<p>This file defines the release packaging rules for EventAlertMod Retail rewrite.</p>
-<h2 id="shortcut-commands">Shortcut commands</h2>
+<!-- EAM_DOCUMENTATION_SOURCE: zh-TW -->
+<h1 id="curseforge-budget-guide">CurseForge Budget Guide</h1>
+<p>This file defines publishing resource rules for EventAlertMod Retail rewrite.</p>
+<h2 id="quick-instructions">Quick instructions</h2>
 <p>In the future, users only need to enter:</p>
 <pre class="codehilite"><code class="language-text">打包
 </code></pre>
@@ -535,13 +537,13 @@
 <pre class="codehilite"><code class="language-powershell">powershell -ExecutionPolicy Bypass -File .\Tools\Build-CurseForgePackage.ps1 -DevMode
 </code></pre>
 
-<p>Unless the user specifies additional parameters, there is no need to ask again.</p>
+<p>Unless the user appends specific parameters, there is no need to ask again.</p>
 <h2 id="version-naming">Version naming</h2>
-<p>TOC version names must match:</p>
+<p>TOC version name must match:</p>
 <pre class="codehilite"><code class="language-text">EventAlertMod_資料片簡稱_打包年月日
 </code></pre>
 
-<p>The current abbreviation of the expansion pack is fixed at:</p>
+<p>The current expansion pack name is fixed at:</p>
 <pre class="codehilite"><code class="language-text">MN
 </code></pre>
 
@@ -549,7 +551,7 @@
 <pre class="codehilite"><code class="language-text">## Version: EventAlertMod_MN_20260504
 </code></pre>
 
-<h2 id="package-file-name">Package file name</h2>
+<h2 id="alternate-file-name">Alternate file name</h2>
 <p>The zip file name must match:</p>
 <pre class="codehilite"><code class="language-text">EventAlertMod_資料片簡稱_打包年月日_打包時分秒.zip
 </code></pre>
@@ -558,7 +560,7 @@
 <pre class="codehilite"><code class="language-text">EventAlertMod_MN_20260504_205216.zip
 </code></pre>
 
-<h2 id="default-packaging-content">Default packaging content</h2>
+<h2 id="default-default-content">Default default content</h2>
 <ul>
 <li><code>EventAlertMod.toc</code></li>
 <li><code>README.md</code></li>
@@ -570,21 +572,21 @@
 <li><code>Debug/</code></li>
 <li><code>Data/</code></li>
 <li><code>Locale/</code></li>
-<li><code>Media/</code></li>
+<li><code>media/</code></li>
 </ul>
 <h2 id="default-excluded-content">Default excluded content</h2>
 <ul>
 <li><code>LegacyReference/</code></li>
 <li><code>ReferenceLibs/</code></li>
 <li><code>Tools/</code></li>
-<li><code>backup/</code></li>
+<li><code>Backup/</code></li>
 <li><code>.github/</code></li>
 <li><code>.vscode/</code></li>
-<li><code>Docs/</code></li>
+<li><code>documents/</code></li>
 <li><code>Dist/_stage/</code></li>
 </ul>
 <h2 id="optional-parameters">Optional parameters</h2>
-<p>Contains Docs and AGENTS:</p>
+<p>Include files with AGENTS:</p>
 <pre class="codehilite"><code class="language-powershell">powershell -ExecutionPolicy Bypass -File .\Tools\Build-CurseForgePackage.ps1 -IncludeDocs
 </code></pre>
 
@@ -592,27 +594,27 @@
 <pre class="codehilite"><code class="language-powershell">powershell -ExecutionPolicy Bypass -File .\Tools\Build-CurseForgePackage.ps1 -SkipLuaCheck
 </code></pre>
 
-<p>Development version packaging (package the entire project folder, without filtering, excluding .git/ and Dist/):</p>
+<p>Development version compression (compresses the entire project data, does not filter, excludes .git/ and Dist/):</p>
 <pre class="codehilite"><code class="language-powershell">powershell -ExecutionPolicy Bypass -File .\Tools\Build-CurseForgePackage.ps1 -DevMode
 </code></pre>
 
 <h2 id="verification-requirements">Verification requirements</h2>
-<p>The packaging process must be completed:</p>
+<p>The budget process must be completed:</p>
 <ul>
 <li>TOC path verification.</li>
 <li>Lua syntax checking unless <code>-SkipLuaCheck</code> is used explicitly.</li>
-<li>zip exclusion check to confirm there are no legacy/reference/tools/backup/dev folders.</li>
+<li>zip exclusion check to confirm that there is no legacy/reference/tools/backup/dev folder.</li>
 </ul>
-<h2 id="html-description-file-conversion">HTML description file conversion</h2>
+<h2 id="html-description-file-conversion">HTML Description file conversion</h2>
 <ul>
-<li>For Markdown files under <code>Docs/</code> or in the root directory <code>AGENTS.md</code> that involve tables, images, mind maps and flowcharts, the HTML conversion tool should be executed to generate a <code>.html</code> file with the same name (such as <code>filename.md.html</code>) under <code>docs_html/</code>.</li>
-<li>When developing automatic collaboration with AI, always use the <code>.md</code> file as the absolute Facts-of-Truth reference. The <code>.html</code> version is for human readability and preview only and cannot be used as a basis for configuration or program code logic in AI development.</li>
+<li>For Markdown files under <code>Docs/</code> or the root directory <code>AGENTS.md</code> involving tables, images, mind maps and flow charts, the HTML conversion tool should be executed to generate a <code>.html</code> file with the same name (such as __10) under <code>docs_html/</code>.</li>
+<li>When developing automatic collaboration with AI, always use the <code>.md</code> file as the absolute Facts-of-Truth reference. The <code>.html</code> version is for human reading and preview use and cannot be referenced by the configuration or program code logic of automated AI development.</li>
 </ul>
 <h2 id="notes">Notes</h2>
 <ul>
-<li>Successful packaging does not mean that WoW Retail actual verification is completed.</li>
-<li>If the TOC <code>## Version</code> is inconsistent with the current date, the packaging tool will stop.</li>
-<li>Before publishing, you still need to do Retail actual testing according to <code>Docs/06_TEST_PLAN_RETAIL.md</code>.</li>
+<li>The successful resource does not mean that the official WoW server verification is completed.</li>
+<li>If TOC <code>## Version</code> is inconsistent with the current date, the compression tool will stop.</li>
+<li>Retail server testing still needs to be done in accordance with <code>Docs/06_TEST_PLAN_RETAIL.md</code> before release.</li>
 </ul>
     </div>
     

@@ -415,134 +415,138 @@
 
     <div id="doc-content-zh" class="lang-content active">
         <a href="AGENTS.md.html" class="back-btn">← 返回 AI 入口指導檔 (AGENTS)</a>
+<!-- EAM_DOCUMENTATION_SOURCE: zh-TW -->
 <h1 id="_1">已知限制</h1>
 <h2 id="_2">即時驗證差距</h2>
-<p>這次審計是靜態的。沒有可用的 WoW Retail 12.x 用戶端，因此 API 名稱，
-傳回形狀、秘密/受保護的行為和 XML 運行時行為仍然需要
+<p>這次審計是靜態的。沒有 WoW Retail 12.x 用戶端可用，因此 API 名稱，
+傳回形狀、secret/protected 行為和 XML 運行時行為仍然需要
 遊戲內驗證。</p>
 <h2 id="_3">秘密/受保護的值</h2>
 <p>正式服可能會返回秘密、受保護、僅供顯示或不可用的光環數據
 和冷卻狀態。重寫必須安全降級：</p>
 <ul>
 <li>僅圖示顯示；</li>
-<li>僅已知安全的名稱/圖示/堆疊；</li>
-<li>計時器模式「受保護」、「僅顯示」或「未知」；</li>
-<li>沒有捏造的持續時間/到期時間/冷卻時間事實；</li>
-<li>僅當請求調試/導出時調試邊界警告。</li>
+<li>僅已知安全名稱/icon/stacks；</li>
+<li>定時模式 <code>protected</code>、<code>displayOnly</code> 或 <code>unknown</code>；</li>
+<li>沒有捏造持續時間/expiration/cooldown事實；</li>
+<li>僅當請求 debug/export 時偵錯邊界警告。</li>
 </ul>
 <h2 id="_4">戰鬥限制</h2>
 <p>某些 UI 或資料更新可能不安全或在戰鬥中不可用。繁重的工作，
 快取建置、佈局重建和類似遷移的操作必須延遲
 或節流。</p>
 <h2 id="_5">不支援的分支</h2>
-<p>重寫不支援：
-- 經典
-- 熊貓人之謎經典服
-- 浩劫與重生經典服賽
-- 巫妖王之怒經典服
-- 燃燒的遠征經典服
-- 時代
-- 特定於區域的經典相容性分支</p>
+<p>重寫不支援：</p>
+<ul>
+<li>經典</li>
+<li>熊貓人之謎經典服</li>
+<li>浩劫與重生經典服賽</li>
+<li>巫妖王之怒經典服</li>
+<li>TBC 經典</li>
+<li>時代</li>
+<li>特定於區域的經典相容性分支</li>
+</ul>
 <p>舊目錄可能保留在儲存庫中，僅供參考。</p>
 <h2 id="_6">目前來源風險</h2>
 <p>首次透過審核發現以下風險：</p>
 <ul>
 <li>主線中混合正式服和遺留相容性分支；</li>
 <li>遺留的 TOC 仍然存在於根部；</li>
-<li>目前目錄和許多運行時模組所需的“Lib_ZYF”；</li>
-<li>大型法術/物品資料表；</li>
+<li>目前 TOC 和許多運行時模組所需的 <code>Lib_ZYF</code> ；</li>
+<li>大型法術/item資料表；</li>
 <li><code>EventAlert_ItemSpellCache.lua</code> 中的項目範圍掃描；</li>
-<li>遞歸計時器調度和每個資源的 OnUpdate 腳本；</li>
+<li>遞歸計時器調度和每個資源 OnUpdate 腳本；</li>
 <li>廣泛的全域變數使用和意外全域變數；</li>
-<li>工具提示和 aura API 假設可能與受保護的資料衝突；</li>
-<li>「Main/」下的重複/存檔檔案名稱有亂碼，且
+<li>可能與受保護資料衝突的工具提示和光環 API 假設；</li>
+<li><code>Main/</code> 下有重複的 /archived 文件，其名稱為亂碼，且
   <code>DevDocument/ChatGPT/</code>;</li>
-<li><code>EventAlert_ImportExport.lua</code> 具有原型全域變量，並被註解掉
+<li><code>EventAlert_ImportExport.lua</code> 具有原型全域變數並被註解掉
   載入順序。</li>
 </ul>
 <h2 id="_7">使用者介面限制</h2>
-<p>目前的 XML 會建立大型靜態選項面板和許多全域框架名稱。的
+<p>目前 XML 建立大型靜態選項面板和許多全域框架名稱。的
 重寫應該更喜歡較小的選項表面和池化運行時圖標，但是
 刪除之前必須先映射現有的 UI 行為。</p>
 <h2 id="_8">需要正式服驗證的領域</h2>
 <ul>
-<li>精確的「C_UnitAuras」安全存取行為；</li>
-<li>精確的「C_Spell.GetSpellCooldown」結構化回傳行為；</li>
-<li>精確的「C_Item.GetItemCooldown」直接 itemID 行為；</li>
-<li><code>C_Secrets</code> 可用性和返回行為；</li>
-<li>冷卻充電行為；</li>
+<li>準確的 <code>C_UnitAuras</code> 安全存取行為；</li>
+<li>精確的 <code>C_Spell.GetSpellCooldown</code> 結構化回傳行為；</li>
+<li>精確的 <code>C_Item.GetItemCooldown</code> 直接 itemID 行為；</li>
+<li><code>C_Secrets</code> 可用性和退貨行為；</li>
+<li>冷卻充能行為；</li>
 <li>目標光環更新有效負載；</li>
 <li>對所有計劃中的 UI 操作的戰鬥限制；</li>
 <li>工具提示 API（如果保留工具提示顯示）；</li>
-<li>zhTW/enUS/koKR/zhCN 中的本地化渲染；</li>
-<li>使用真實的舊用戶資料遷移 SavedVariables。</li>
+<li>zhTW/enUS/koKR/zhCN 中的局部渲染；</li>
+<li>SavedVariables 遷移真實的舊用戶資料。</li>
 </ul>
     </div>
     <div id="doc-content-en" class="lang-content">
         <a href="AGENTS.md.html" class="back-btn">← Back to AI Entrance (AGENTS)</a>
-<h1 id="known-limitations">Known Limitations</h1>
-<h2 id="live-validation-gap">Live Validation Gap</h2>
-<p>This audit was static. No WoW Retail 12.x client was available, so API names,
-return shapes, secret/protected behavior, and XML runtime behavior still require
-in-game validation.</p>
-<h2 id="secret-protected-values">Secret / Protected Values</h2>
-<p>Retail may return secret, protected, display-only, or unavailable data for aura
-and cooldown state. The rewrite must degrade safely:</p>
+<!-- EAM_DOCUMENTATION_SOURCE: zh-TW -->
+<h1 id="known-limitations">Known limitations</h1>
+<h2 id="instant-verification-gap">Instant verification gap</h2>
+<p>This audit is static. There is no WoW Retail 12.x client available, hence the API name,
+Return shape, secret/protected behavior and XML runtime behavior are still required
+In-game verification.</p>
+<h2 id="secretprotected-value">Secret/protected value</h2>
+<p>Live servers may return secret, protected, display-only, or unavailable Halo data
+and cooling status. Rewrites must be downgraded safely:</p>
 <ul>
-<li>icon-only display;</li>
-<li>known-safe name/icon/stacks only;</li>
-<li>timer mode <code>protected</code>, <code>displayOnly</code>, or <code>unknown</code>;</li>
-<li>no fabricated duration/expiration/cooldown facts;</li>
-<li>debug boundary warning only when debug/export is requested.</li>
+<li>Only the icons are displayed;</li>
+<li>Only the safe name /icon/stacks is known;</li>
+<li>Timing mode <code>protected</code>, <code>displayOnly</code> or <code>unknown</code>;</li>
+<li>No fabrication of duration/expiration/cooldown fact;</li>
+<li>Debug boundary warning only when requesting debug/export.</li>
 </ul>
-<h2 id="combat-restrictions">Combat Restrictions</h2>
-<p>Some UI or data updates may be unsafe or unavailable in combat. Heavy work,
-cache building, layout rebuilding, and migration-like operations must be delayed
-or throttled.</p>
-<h2 id="unsupported-branches">Unsupported Branches</h2>
-<p>The rewrite does not support:</p>
+<h2 id="combat-restrictions">Combat restrictions</h2>
+<p>Some UI or profile updates may be unsafe or unavailable during combat. heavy work,
+Cache creation, layout rebuilding, and migration-like operations must be delayed
+Or throttling.</p>
+<h2 id="unsupported-branches">Unsupported branches</h2>
+<p>Rewriting is not supported:</p>
 <ul>
 <li>Classic</li>
-<li>Mists Classic</li>
-<li>Cata Classic</li>
-<li>Wrath Classic</li>
-<li>TBC Classic</li>
-<li>Era</li>
-<li>region-specific Classic compatibility branches</li>
+<li>Mists of Pandaria Classic server</li>
+<li>Catastrophe and Rebirth Classic server Competition</li>
+<li>Wrath of the Lich King Classic server</li>
+<li>The Burning Crusade Classic</li>
+<li>era</li>
+<li>Region-specific Classic compatibility branches</li>
 </ul>
-<p>Legacy directories may remain in the repository as reference only.</p>
-<h2 id="current-source-risks">Current Source Risks</h2>
-<p>First-pass audit found these risks:</p>
+<p>Old catalogs may remain in the repository for reference only.</p>
+<h2 id="current-source-risk">Current source risk</h2>
+<p>The following risks were discovered through the audit for the first time:</p>
 <ul>
-<li>mixed Retail and legacy compatibility branches in Mainline;</li>
-<li>legacy TOCs still present at root;</li>
-<li><code>Lib_ZYF</code> required by current TOC and many runtime modules;</li>
-<li>large spell/item data tables;</li>
-<li>item range scans in <code>EventAlert_ItemSpellCache.lua</code>;</li>
-<li>recursive timer scheduling and per-resource OnUpdate scripts;</li>
-<li>broad global variable usage and accidental globals;</li>
-<li>tooltip and aura API assumptions that may conflict with protected data;</li>
-<li>duplicated/archived files with garbled names under <code>Main/</code> and
+<li>Mixing Retail servers and legacy compatibility branches in the main line;</li>
+<li>Legacy TOC still exists at the root;</li>
+<li>Currently TOC and <code>Lib_ZYF</code> which are required by many runtime mods;</li>
+<li>Large spell/item data table;</li>
+<li>Project-wide scan in <code>EventAlert_ItemSpellCache.lua</code>;</li>
+<li>Recursive timer scheduling and per-resource OnUpdate scripts;</li>
+<li>Extensive use of global variables and unexpected global variables;</li>
+<li>Tooltips and Aura that may conflict with protected material API assumptions;</li>
+<li>There is a duplicate /archived file under <code>Main/</code>, its name is garbled, and
   <code>DevDocument/ChatGPT/</code>;</li>
-<li><code>EventAlert_ImportExport.lua</code> has prototype globals and is commented out of
-  load order.</li>
+<li><code>EventAlert_ImportExport.lua</code> has prototype global variables and is annotated
+  Loading order.</li>
 </ul>
-<h2 id="ui-limitations">UI Limitations</h2>
-<p>Current XML creates large static option panels and many global frame names. The
-rewrite should prefer a smaller options surface and pooled runtime icons, but
-existing UI behavior must be mapped before removal.</p>
-<h2 id="areas-requiring-retail-validation">Areas Requiring Retail Validation</h2>
+<h2 id="user-interface-restrictions">User interface restrictions</h2>
+<p>Currently XML builds a large static options panel and many global frame names. of
+The rewrite should prefer a smaller options surface and pooled runtime icons, but
+Existing UI behavior must be mapped before removal.</p>
+<h2 id="areas-that-require-retail-server-verification">Areas that require Retail server verification</h2>
 <ul>
-<li>exact <code>C_UnitAuras</code> safe access behavior;</li>
-<li>exact <code>C_Spell.GetSpellCooldown</code> structured return behavior;</li>
+<li>Accurate <code>C_UnitAuras</code> secure access behavior;</li>
+<li>Exact <code>C_Spell.GetSpellCooldown</code> structured postback behavior;</li>
 <li>exact <code>C_Item.GetItemCooldown</code> direct itemID behavior;</li>
-<li><code>C_Secrets</code> availability and return behavior;</li>
-<li>cooldown charge behavior;</li>
-<li>target aura update payloads;</li>
-<li>combat restrictions for all planned UI operations;</li>
-<li>tooltip APIs if tooltip display is preserved;</li>
-<li>localization rendering in zhTW/enUS/koKR/zhCN;</li>
-<li>SavedVariables migration with real legacy user data.</li>
+<li><code>C_Secrets</code> Availability and return behavior;</li>
+<li>Cooling charging behavior;</li>
+<li>Target Aura update payload;</li>
+<li>Combat restrictions on all planned UI operations;</li>
+<li>tooltip API (if the tooltip is left displayed);</li>
+<li>Partial rendering in zhTW/enUS/koKR/zhCN;</li>
+<li>SavedVariables Migrate real old user profiles.</li>
 </ul>
     </div>
     

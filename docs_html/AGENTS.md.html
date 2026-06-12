@@ -415,24 +415,25 @@
 
     <div id="doc-content-zh" class="lang-content active">
         <a href="AGENTS.md.html" class="back-btn">← 返回 AI 入口指導檔 (AGENTS)</a>
+<!-- EAM_DOCUMENTATION_SOURCE: zh-TW -->
 <h1 id="eventalertmod-ai">EventAlertMod AI 入口指導檔</h1>
-<p>本專案正在進行 EventAlertMod（EAM）正式服重寫。現有程式碼只作為「行為參考」，不得直接沿用舊架構作為新架構基礎。</p>
+<p>本專案發布EventAlertMod（EAM）正式服重寫。現有方案代碼作為「行為參考」，只能直接沿用舊架構作為新的架構基礎。</p>
 <h2 id="_1">對話與文件原則</h2>
 <ul>
-<li>預設使用台灣慣用繁體中文。</li>
-<li>使用者稱呼為「少年欸」。</li>
-<li>回覆直接切入任務，保持技術判斷清楚、結構明確。</li>
+<li>使用預設台灣慣用繁體中文。</li>
+<li>用戶名為「少年欸」。</li>
+<li>回覆直接切入任務，保持技術清晰、結構清晰。</li>
 <li>WoW AddOn 相關任務必須先確認正式服與經典服差異；本專案只處理正式服。</li>
-<li>涉及 12.x API、Secret Values、C_* 命名空間或 Widget 行為時，需優先參考 <code>Docs</code> 與最新 Warcraft Wiki API change 資訊。</li>
-<li>不得宣稱已完成 WoW 正式服實機驗證，除非確實在 WoW Retail 中載入並測試過。</li>
-<li>每次開發時，Docs/ 內相關文件必須主動一併同步更新，保持文檔與代碼一致性，不得被動等待使用者指示（不要一動才一動）。</li>
-<li><strong>文件與 HTML 轉換規則</strong>：</li>
-<li>後續開發與 AI 協作的絕對指導檔案，一律以 <code>AGENTS.md</code> 以及其內文指名之 <code>.md</code> 檔案為唯一事實與 Facts-of-Truth 參考。</li>
-<li>HTML 版本僅供人類（少年欸）在瀏覽器中好看易讀使用，AI 在讀寫與參考時，必須一律以 <code>.md</code> 原檔為唯一基準，不得以 HTML 作為開發事實參考。</li>
-<li>當 <code>./Docs/*.md</code> 或 <code>./AGENTS.md</code> 修改且包含心智圖（Mermaid）、表格、流程圖、圖像時，必須執行轉換工具（<code>batch_convert_docs.py</code>），於 <code>./docs_html</code> 內多生成一份同名的 <code>.html</code> 檔案（例如 <code>00_AI_CONTEXT.md.html</code>）。</li>
+<li>涉及 12.x API、Secret Values、C_* 命名空間或 Widget 行為時，需優先參考 <code>Docs</code> 與最新魔獸爭霸 Wiki API 變更資訊。</li>
+<li>尚未完成WoW正式實用機驗證，除非確實在WoW Retail中加載並測試過。</li>
+<li>消耗開發時，文件/內相關文件必須主動一併同步更新，保持文件與程式碼的一致性，不得等待使用者指示（不要一動才一動）。</li>
+<li><strong>檔案與HTML轉換規則</strong>：</li>
+<li>後續開發與 AI 協作的絕對指導文件，一律以 <code>AGENTS.md</code> 以及其內文指名之 <code>.md</code> 文件為唯一事實與 Facts-of-Truth 參考。</li>
+<li>HTML版本成人人類（少年欸）在瀏覽器中觀看易讀使用，AI在讀寫器與參考時，必須一律以<code>.md</code>原檔為唯一基準，不得以HTML作為開發事實參考。</li>
+<li>當<code>./Docs/*.md</code>或<code>./AGENTS.md</code>修改時包含心智圖（Mermaid）、表格、流程圖、映像時，必須執行轉換工具（<code>batch_convert_docs.py</code>），在<code>./docs_html</code>內多產生一個同名的__EAMCODE___檔（例如檔案）。</li>
 </ul>
 <h2 id="_2">必讀文件</h2>
-<p>變更程式碼前，先閱讀下列文件：</p>
+<p>在更改程式碼之前，請先閱讀以下文件：</p>
 <ul>
 <li><code>Docs/00_AI_CONTEXT.md</code></li>
 <li><code>Docs/01_ARCHITECTURE.md</code></li>
@@ -455,541 +456,522 @@
 <li><code>Docs/19_AURA_1210_REDUX_BLUEPRINT.md</code></li>
 <li><code>Docs/20_CDM_BYPASS_FEASIBILITY_STUDY.md</code></li>
 <li><code>Docs/21_RACI_EXPERTS_MATRIX.md</code></li>
-<li><code>Docs/22_QC_ROOT_CAUSE_ANALYSIS_GUIDE.md</code></li>
-</ul>
-<p>舊討論脈絡可參考：</p>
-<ul>
-<li><code>DevDocument/ChatGPT/EventAlertMod_ChatGPT_Discussion_Context.md</code></li>
+<li>
+<p><code>Docs/22_QC_ROOT_CAUSE_ANALYSIS_GUIDE.md</code>
+舊討論脈絡可參考：</p>
+</li>
+<li>
+<p><code>DevDocument/ChatGPT/EventAlertMod_ChatGPT_Discussion_Context.md</code></p>
+</li>
 </ul>
 <h2 id="_3">專案目標</h2>
 <ul>
-<li>目標遊戲：World of Warcraft Retail only。</li>
-<li>目標 API 世代：Retail 12.x / Midnight-era AddOn API。</li>
-<li>架構方向：事件驅動、低 GC、模組化、可維護。</li>
-<li>使用者體驗：保留 EAM「比 WeakAuras 簡單、輕量、專注光環與冷卻提醒」的定位。</li>
-<li>現有資料表、在地化字串、Slash Command 語意與使用者可見行為可保留；內部架構應重新設計。</li>
+<li>目標遊戲：僅限魔獸世界正式服版。</li>
+<li>目標 API 世代：正式服 12.x / 午夜時代 AddOn API。</li>
+<li>架構方向：事件驅動、低GC、模組化、可維護。</li>
+<li>使用者體驗：保留EAM「比WeakAuras簡單、輕量、專注光環與冷卻提醒」的定位。</li>
+<li>現有資料表、地化字符串、斜線命令語意與使用者行為視覺化可保留；內部架構應重新設計。</li>
 </ul>
 <h2 id="_4">硬性限制</h2>
 <ul>
-<li>不支援 Classi## Secret / Protected Data 規則與安全檢查</li>
-</ul>
-<p>Retail 12.x 可能將光環、冷卻、法術、時間、單位或字串資料標記為 Secret / Protected / Display-only。為防範在戰鬥中因 Secret/Protected 限制引發 Lua 崩潰或阻擋錯誤，必須實施四大核心檢查 API 規範與 Table 索引防禦機制：</p>
-<ul>
-<li><strong>四大核心檢查 Function</strong>：</li>
-<li><code>issecretvalue(value)</code>：判斷特定值是否為受保護之秘密值（Secret Value）。</li>
-<li><code>canaccessvalue(value)</code>：判斷目前是否有權限存取與讀取該值。</li>
-<li><code>canaccesstable(table)</code>：判斷整個 table 物件是否可被安全讀取（非 Restricted）。</li>
-<li><code>issecrettable(table)</code> / <code>hasanysecretvalues(table)</code>：檢查 table 物件結構是否本身已被限制或含有秘密值。</li>
-<li><strong>Table 索引防範 (Critical)</strong>：嚴禁使用可能為秘密值（例如未經驗證的 <code>spellId</code> 或 <code>text</code> 等）的 key 去對任何非 secure 的自訂 table 進行 index 操作，否則將立即觸發 <code>attempted to index a table that cannot be indexed with secret keys</code> 嚴重錯誤。在對自訂 config table 進行索引前，必須先以 <code>issecretvalue(key)</code> 確保該 key 不是受保護的秘密值，並以 <code>canaccesstable(targetTable)</code> 檢查 table 安全。</li>
-<li>先確認來源 table 是否可讀（<code>canaccesstable</code>），再讀取欄位，再確認欄位值是否為 Secret（<code>issecretvalue</code>）。</li>
-<li>未確認安全前，不得對 duration、expirationTime、spellID、timeLeft 等值做算術、比較、字串化、table key、序列化或任意函式傳遞。</li>
-<li>不得捏造 duration、expiration、cooldown 或 stack 值。</li>
-<li>不得把猜測值混入 facts；推導值必須標記為 derived。</li>
-<li>資料不可安全取得時，保留可安全顯示的 icon、name、active 狀態，timer 顯示為 protected、displayOnly 或 unknown。</li>
-<li>Debug 狀態需記錄 boundaryWarnings。</li>
 <li>
-<p>若可行，排程離開戰鬥後 refresh。能將光環、冷卻、法術、時間、單位或字串資料標記為 Secret / Protected / Display-only。為防範在戰鬥中因 Secret/Protected 限制引發 Lua 崩潰或阻擋錯誤，必須實施四大核心檢查 API 規範與 Table 索引防禦機制：</p>
+<p>不支援Classi##秘密/受保護資料規則與安全檢查
+Retail 12.x 可能將光環、冷卻、作用、時間、單位或字串資料標記為 Secret / Protected / Display-only。為戰鬥中防禦 Secret/Protected 限制引發 Lua 碰撞或頭部錯誤，實施四大核心檢定 API 規範因數表索引防禦機制：</p>
 </li>
 <li>
-<p><strong>三大核心檢查 Function</strong>：</p>
+<p><strong>四大核心檢查功能</strong>：</p>
 </li>
-<li><code>issecretvalue(value)</code>：判斷特定值是否為受保護之秘密值（Secret Value）。</li>
+<li><code>issecretvalue(value)</code>：判斷特定值是否受保護之秘密值（Secret Value）。</li>
 <li><code>canaccessvalue(value)</code>：判斷目前是否有權限存取與讀取該值。</li>
-<li><code>canaccesstable(table)</code>：判斷整個 table 物件是否可被安全讀取（非 Restricted）。</li>
-<li><strong>Table 特殊檢查與索引防禦</strong>：</li>
-<li><code>issecrettable(table)</code>：檢查目標 table 是否本身已被標記為 Secret Table。</li>
-<li><code>hasanysecretvalues(table)</code>：檢查 table 中是否包含任何秘密值（Secret Values）。</li>
-<li><strong>Table 索引防範 (Critical)</strong>：嚴禁使用可能為秘密值（例如未經驗證的 <code>spellId</code> 或 <code>text</code> 等）的 key 去對任何非 secure 的自訂 table 進行 index 操作，否則將立即觸發 <code>attempted to index a table that cannot be indexed with secret keys</code> 嚴重錯誤。在對自訂 config table 進行索引前，必須先以 <code>issecretvalue(key)</code> 確保該 key 不是受保護的秘密值，並以 <code>canaccesstable(targetTable)</code> 檢查 table 安全。</li>
-<li>先確認來源 table 是否可讀（<code>canaccesstable</code>），再讀取欄位，再確認欄位值是否為 Secret（<code>issecretvalue</code>）。</li>
-<li>未確認安全前，不得對 duration、expirationTime、spellID、timeLeft 等值做算術、比較、字串化、table key、序列化或任意函式傳遞。</li>
-<li>不得捏造 duration、expiration、cooldown 或 stack 值。</li>
-<li>不得把猜測值混入 facts；推導值必須標記為 derived。</li>
-<li>資料不可安全取得時，保留可安全顯示的 icon、name、active 狀態，timer 顯示為 protected、displayOnly 或 unknown。</li>
-<li>Debug 狀態需記錄 boundaryWarnings。</li>
-<li>若可行，排程離開戰鬥後 refresh。</li>
+<li><code>canaccesstable(table)</code>：判斷整個表格物件可是否被安全讀取（非架構）。</li>
+<li><code>issecrettable(table)</code> / <code>hasanysecretvalues(table)</code>：檢查表格物件結構本身是否被限製或包含秘密值已。</li>
+<li><strong>表格索引防護（關鍵）</strong>：嚴禁使用為秘密值（如保證驗證的 <code>spellId</code> 或 <code>text</code> 等）的密鑰去對任何非安全的嚴重自訂表進行索引操作，否則會立即觸發<code>attempted to index a table that cannot beindexed with Key Secrets</code>錯誤。在自訂表索引進行之前，必須先<code>issecretvalue(key)</code>確認該金鑰匙不是受保護的秘密值，並以<code>canaccesstable(targetTable)</code>檢查表安全性。</li>
+<li>先確認來源表是否為秘密（<code>canaccesstable</code>），再讀取欄位，再確認欄位值是否為秘密（<code>issecretvalue</code>）。</li>
+<li>未確認安全前，不得對duration、expirationTime、spellID、timeLeft等值做算術、比較、字串化、表鍵、序列化或任何函數輸入。</li>
+<li>不得擠壓創造持續時間、過渡時間、冷卻時間或所需價值。</li>
+<li>不得把猜測值混入事實；推導值標記必須為推導值。</li>
+<li>資料無法安全取得時，保留可安全顯示的圖示、名稱、活動狀態，計時器顯示為受保護、displayOnly 或未知。</li>
+<li>錯偵狀態需記錄boundaryWarnings。</li>
+<li>
+<p>若裝備，排程離開戰鬥後刷新。能將光環、冷卻、法術、時間、單位或字串資料標記為秘密/受保護/僅顯示。為防禦戰鬥中因秘密/受保護限制引發Lua崩潰或潰決錯誤，必須四大核心檢驗API規範與表索引防禦機制：</p>
+</li>
+<li>
+<p><strong>三大核心檢查功能</strong>：</p>
+</li>
+<li><code>issecretvalue(value)</code>：判斷特定值是否受保護之秘密值（Secret Value）。</li>
+<li><code>canaccessvalue(value)</code>：判斷目前是否有權限存取與讀取該值。</li>
+<li><code>canaccesstable(table)</code>：判斷整個表格物件可是否被安全讀取（非架構）。</li>
+<li><strong>表格特殊檢查與索引防禦</strong>：</li>
+<li><code>issecrettable(table)</code>：檢查目標表本身是否已被標記為 Secret Table。</li>
+<li><code>hasanysecretvalues(table)</code>：檢查表中是否包含任何秘密值（Secret Values）。</li>
+<li><strong>表格索引防護（關鍵）</strong>：嚴禁使用為秘密值（如保證驗證的 <code>spellId</code> 或 <code>text</code> 等）的密鑰去對任何非安全的嚴重自訂表進行索引操作，否則會立即觸發<code>attempted to index a table that cannot beindexed with Key Secrets</code>錯誤。在自訂表索引進行之前，必須先<code>issecretvalue(key)</code>確認該金鑰匙不是受保護的秘密值，並以<code>canaccesstable(targetTable)</code>檢查表安全性。</li>
+<li>先確認來源表是否為秘密（<code>canaccesstable</code>），再讀取欄位，再確認欄位值是否為秘密（<code>issecretvalue</code>）。</li>
+<li>未確認安全前，不得對duration、expirationTime、spellID、timeLeft等值做算術、比較、字串化、表鍵、序列化或任何函數輸入。</li>
+<li>不得擠壓創造持續時間、過渡時間、冷卻時間或所需價值。</li>
+<li>不得把猜測值混入事實；推導值標記必須為推導值。</li>
+<li>資料無法安全取得時，保留可安全顯示的圖示、名稱、活動狀態，計時器顯示為受保護、displayOnly 或未知。</li>
+<li>錯偵狀態需記錄boundaryWarnings。</li>
+<li>如果可行，排程將在不久後離開戰鬥。</li>
 </ul>
-<h2 id="taint">Taint 控制規則</h2>
+<h2 id="_5">污點控制規則</h2>
 <ul>
-<li>不 hook、覆寫、重定義或 monkey patch Blizzard secure/protected 函式、FrameXML 核心函式、action button、unit frame、nameplate、spell cast、targeting、item use 相關路徑。</li>
-<li>不在戰鬥中修改 protected frame 的 attribute、parent、anchor、size、visibility、template 或 click 行為。</li>
-<li>不把 EAM runtime state、secret/protected value、debug object 或 addon callback 傳入可能污染 secure chain 的 Blizzard frame。</li>
-<li>EventRouter 使用孤兒 frame；Renderer frame 只負責顯示，不承擔 secure action 或 protected interaction。</li>
-<li>若需要操作 UIParent 下的 frame，必須限制在非 protected 顯示用途，並在 <code>InCombatLockdown()</code> 時延後可能造成 taint 的結構性變更。</li>
-<li>不使用 <code>forceinsecure</code>、不嘗試清除或繞過 taint、不以第三方 workaround 壓制 Blizzard blocked action。</li>
-<li>發現 taint、blocked action、combat lockdown 錯誤時，需記錄到 <code>Docs/15_DEVELOPMENT_ISSUE_LOG.md</code>，並標明觸發路徑、戰鬥狀態與可重現步驟。</li>
+<li>不鉤、覆寫、重新定義或猴子補丁 Blizzard secure/protected 函數、FrameXML 核心函數、動作按鈕、單位框架、銘牌、法術施法、定位、物品使用相關路徑。</li>
+<li>不在戰鬥中修改受保護框架的屬性、父級、規則點、大小、可見性、範本或點擊行為。</li>
+<li>不把EAM運行時狀態、秘密/保護值、偵錯物件或外掛程式回呼形成可能污染安全鏈的暴雪框架。</li>
+<li>使用EventRouter孤兒框架；渲染框架只負責顯示，不承擔安全操作或受保護的互動。</li>
+<li>如果需要限制操作 UIParent 下方的框架，則必須在非受保護的顯示用途，並在 <code>InCombatLockdown()</code> 時延遲可能會導致 taint 的結構性變化。</li>
+<li>不使用<code>forceinsecure</code>、不嘗試清除或繞過污染點、不以第三方變通方式壓制暴雪阻止行動。</li>
+<li>發現污點、被阻止的動作、戰鬥鎖定錯誤時，需記錄到<code>Docs/15_DEVELOPMENT_ISSUE_LOG.md</code>，並綁定觸發路徑、戰鬥狀態與可重置步驟。</li>
 </ul>
 <h2 id="durationobject">DurationObject 與時間顯示</h2>
 <ul>
-<li>Secret 或受保護時間資料不得用 <code>OnUpdate</code> 自行倒數。</li>
-<li>若 Retail 提供 DurationObject，優先交給原生 UI 處理，例如 <code>CooldownFrame:SetCooldownFromDurationObject()</code> 或 <code>FontString:SetDurationText()</code>。</li>
+<li>秘密或受保護時間資料不得使用<code>OnUpdate</code>手機倒數。</li>
+<li>若 Retail 提供 DurationObject，優先取代 UI 處理，例如 <code>CooldownFrame:SetCooldownFromDurationObject()</code> 或 <code>FontString:SetDurationText()</code>。</li>
 <li><code>Cooldown:SetCountdownFormatter()</code>、<code>Cooldown:SetCountdownMillisecondsThreshold()</code> 等 12.0.5 後相關能力需以文件與實機確認後使用。</li>
-<li>手動 timer 字串只能用於已確認安全的普通數值。</li>
+<li>手動定時器鍵盤僅用於確認安全的普通數字。</li>
 </ul>
-<h2 id="tooltip-c_tooltipinfo">Tooltip / C_TooltipInfo 降級策略</h2>
-<p>Tooltip 解析只能作為低頻、保守、明確標記來源的 fallback：</p>
+<h2 id="c_tooltipinfo">工具提示 / C_TooltipInfo 降級策略</h2>
+<p>工具提示解析只能作為低頻、截圖、明確標記來源的後備：
+- 優先使用 <code>C_TooltipInfo</code> 或 Blizzard 支援的顯示項目。
+- 可解析靜態說明文字中的明確數值。
+- 不解析剩餘時間文字作為事實。
+- 不在熱路徑、戰鬥中或每幀執行工具提示抓取。
+- 解析結果無法覆寫安全性API事實，只能作為匯出或僅顯示輔助。
+- 解析失敗時安靜必須降級，無法產生昏暗計時器。</p>
+<h2 id="_6">事件與框架規則</h2>
 <ul>
-<li>優先使用 <code>C_TooltipInfo</code> 或 Blizzard 支援的 display object。</li>
-<li>可解析靜態說明文字中的明確數值。</li>
-<li>不解析動態剩餘時間文字作為事實。</li>
-<li>不在熱路徑、戰鬥中或每 frame 執行 tooltip scraping。</li>
-<li>解析結果不得覆蓋安全 API facts，只能作為 derived 或 display-only 輔助。</li>
-<li>解析失敗時必須安靜降級，不得產生誤導 timer。</li>
+<li>事件規定使用單一EventRouter。</li>
+<li>純事件監聽架構使用孤兒框架：<code>CreateFrame("Frame", nil, nil)</code>。</li>
+<li>不在UIParent-parented框架上承擔邏輯調度員職責。</li>
+<li>不在戰鬥中對UI父框架動態註冊或解除註冊事件。</li>
+<li>事件註冊變更應集中管理，避免重複供水。</li>
 </ul>
-<h2 id="frame">事件與 Frame 規則</h2>
+<h2 id="_7">調度程序與全部規則</h2>
 <ul>
-<li>事件派發使用單一 EventRouter。</li>
-<li>純事件監聽 frame 使用孤兒 frame：<code>CreateFrame("Frame", nil, nil)</code>。</li>
-<li>不在 UIParent-parented frame 上承擔邏輯 dispatcher 職責。</li>
-<li>不在戰鬥中對 UI-parented frame 動態註冊或解除註冊事件。</li>
-<li>事件註冊變更應集中管理，避免反覆 churn。</li>
-</ul>
-<h2 id="scheduler">Scheduler 與效能規則</h2>
-<ul>
-<li>優先事件驅動；排程 fallback 必須集中、低頻、可節流。</li>
-<li>只使用單一 Scheduler <code>OnUpdate</code>。</li>
-<li>禁止 timer-per-icon、timer-per-spell、熱路徑反覆 <code>C_Timer.After(function() ...)</code>。</li>
-<li><code>UNIT_AURA</code>、<code>SPELL_UPDATE_COOLDOWN</code>、<code>OnUpdate</code>、Renderer 更新屬於熱路徑。</li>
-<li>熱路徑不得配置臨時 table、closure 或不必要字串。</li>
-<li>熱路徑避免 <code>pairs</code> / <code>ipairs</code>；可用穩定數字索引時使用 numeric loop。</li>
-<li>熱路徑避免 <code>table.insert</code>；可用直接索引寫入時使用直接索引。</li>
-<li>迴圈中組字串使用 buffer 與 <code>table.concat</code>，避免連續 <code>..</code>。</li>
-<li>低 FPS 或戰鬥中應延後、縮減或停止非必要工作。</li>
-<li>大範圍 item 掃描不得在正常 runtime 執行；若需要 item-spell cache，必須 opt-in、idle-only、interruptible、FPS-aware、combat-aware。</li>
+<li>優先事件驅動；排程回退必須濃縮、低頻、可節流。</li>
+<li>只使用單一調度<code>OnUpdate</code>。</li>
+<li>禁止依附圖示計時器、應用術計時器、熱路徑重複<code>C_Timer.After(function() ...)</code>。</li>
+<li><code>UNIT_AURA</code>、<code>SPELL_UPDATE_COOLDOWN</code>、<code>OnUpdate</code>、渲染器更新屬於熱路徑。</li>
+<li>熱路徑不得配置臨時表、閉包或不必要的字串。</li>
+<li>熱路徑避免 <code>pairs</code> / <code>ipairs</code>；可用穩定數字索引時使用數位循環。</li>
+<li>熱路徑避免<code>table.insert</code>；可用直接索引寫入時使用直接索引。</li>
+<li>迴圈中群組字串使用buffer與<code>table.concat</code>，避免連續<code>..</code>。</li>
+<li>低FPS或戰鬥中應延後、縮減或停止非必要工作。</li>
+<li>大範圍物品掃描無法正常戰鬥時執行；若需要魔法存儲，選擇加入、僅閒置、可中斷、FPS釣魚、戰鬥釣魚。</li>
 </ul>
 <h2 id="tablecreate-tablefreeze">table.create / table.freeze 政策</h2>
 <ul>
-<li><code>table.create</code> 用於可預期配置：array、pool、ring buffer、record list、icon pool、default template。</li>
-<li>必須提供 <code>table.create</code>、<code>table.freeze</code>、<code>table.isfrozen</code> fallback。</li>
-<li><code>table.freeze</code> 只用於不可變靜態資料：constants、enum、schema、default field profile、module contract、prototype、metatable。</li>
-<li>可將穩定 API alias table 凍結，例如 <code>EAM.API</code>，但只在確認不會造成載入順序或測試困難時使用。</li>
-<li>不得 freeze SavedVariables、runtime cache、aura/cooldown state、icon state、pool object、scheduler queue、debug/session record。</li>
+<li><code>table.create</code>用於預期設定：圖表、圖表、流程圖、記錄清單、圖示池、預設範本。</li>
+<li>必須提供<code>table.create</code>、<code>table.freeze</code>、<code>table.isfrozen</code>後備。</li>
+<li><code>table.freeze</code> 只用於不可變靜態資料：、枚舉、模式、預設欄位設定檔、契約模組、原型、元表。</li>
+<li>穩定 API 別名表可凍結，例如 <code>EAM.API</code>，但僅在確認時不會造成載入順序或測試故障時使用。</li>
+<li>不得凍結SavedVariables、運行時快取、光環/冷卻狀態、圖示狀態、池項目、調度器佇列、debug/session記錄。</li>
 </ul>
-<h2 id="ui-renderer">UI / Renderer 規則</h2>
+<h2 id="ui">UI / 渲染器規則</h2>
 <ul>
-<li>Renderer 不直接查 API；資料由 service 層提供。</li>
-<li>圖示、button、FontString 使用 pool。</li>
-<li>Renderer 不執行 secure action，不註冊 click-cast，不改 Blizzard protected frame，不污染 action bar / unit frame / nameplate 路徑。</li>
-<li>避免初始化後不必要的 frame 建立。</li>
-<li><code>SetText</code>、<code>SetPoint</code>、<code>SetSize</code>、<code>SetTexture</code>、layout 寫入前先比較前次值。</li>
-<li>批次 layout 時可先隱藏 parent，完成後再顯示。</li>
-<li>支援 timer、stack、spell name、aura value label，但只顯示安全資料。</li>
-<li>UI 預設保持簡單，不能把 EAM 做成 WeakAuras 複雜系統。</li>
+<li>渲染器不直接檢查API；資料由服務層提供。</li>
+<li>圖示、按鈕、FontString使用池。</li>
+<li>渲染器不執行安全操作，不註冊點擊地圖，不修改暴雪保護框架，不操作污染列/單位框架/銘牌路徑。</li>
+<li>避免初始化後建立多餘的框架。</li>
+<li><code>SetText</code>、<code>SetPoint</code>、<code>SetSize</code>、<code>SetTexture</code>、layout 寫入前先比較後次值。</li>
+<li>批次佈局時可先隱藏父級，完成後再顯示。</li>
+<li>支援計時器、藥劑名稱、光環值標籤，但只顯示安全資料。</li>
+<li>UI預設保持簡單，不能把 EAM 引入 WeakAuras 複雜系統。</li>
 </ul>
 <h2 id="savedvariables">SavedVariables 規則</h2>
 <ul>
-<li>SavedVariables 必須有 schema version。</li>
-<li>提供舊資料 migration、defaults、validation。</li>
-<li>不 freeze SavedVariables。</li>
-<li>不寫入每 frame 或高頻 runtime state。</li>
-<li>無法安全 migration 的欄位要保留備份或標記為 legacy，不可靜默破壞使用者設定。</li>
+<li>SavedVariables 必須有架構版本。</li>
+<li>提供舊資料遷移、預設、驗證。</li>
+<li>不凍結SavedVariables。</li>
+<li>不讀取每幀或高運行時狀態。</li>
+<li>無法安全遷移的欄位要保留備份或標記為遺傳，且不可靜默破壞使用者設定。</li>
 </ul>
-<h2 id="debug-ai">Debug / AI 交接規則</h2>
+<h2 id="ai">調試/AI交接規則</h2>
 <ul>
-<li>Debug 預設關閉。</li>
-<li>Debug export 必須 on-demand。</li>
-<li>Snapshot 需拆分：</li>
-<li>facts</li>
-<li>derived</li>
-<li>human notes</li>
+<li>調試預設關閉。</li>
+<li>調試 調試必須達到。</li>
+<li>快照需分割：</li>
+<li>事實</li>
+<li>派生
+  ——人類筆記</li>
 <li>boundaryWarnings</li>
-<li>environment</li>
-<li>不輸出巨大 log。</li>
-<li>Export 字串只在使用者明確要求時建立。</li>
+<li>環境</li>
+<li>不輸出巨大的日誌。</li>
+<li>匯出字符串僅在使用者明確要求時建立。</li>
 </ul>
-<h2 id="_5">程式風格</h2>
+<h2 id="_8">課程風格</h2>
 <ul>
-<li>Identifier 使用英文。</li>
-<li>註解可使用繁體中文，重點放在 WoW API 邊界、效能理由與架構決策。</li>
-<li>所有正式載入的程式檔都必須有檔案層級註解，說明模組理念、責任邊界、資料所有權與日後維護注意事項；細節依 <code>Docs/12_CODE_COMMENTARY_GUIDE.md</code>。</li>
-<li>縮排使用 4 spaces。</li>
+<li>標識符使用中文。</li>
+<li>註解可使用繁體中文，重點放在 WoW API 邊界、原因與架構決策。
+-所有正式載入的方案檔都必須有檔案系統註解，說明模組、責任邊界、資料號碼與日後注意事項；細節依<code>Docs/12_CODE_COMMENTARY_GUIDE.md</code>。</li>
+<li>縮排使用4個空格。</li>
 <li>不使用行內分號。</li>
-<li>Namespace / Module 使用 PascalCase。</li>
-<li>Function / local variable 使用 camelCase。</li>
-<li>Private function / private table 以 <code>_</code> 前綴。</li>
-<li>Constant 使用 UPPER_SNAKE_CASE。</li>
+<li>命名空間/模組使用PascalCase。</li>
+<li>函數/局部變數使用camelCase。</li>
+<li>導管函數/導管表以 <code>_</code> 匯出。</li>
+<li>符號使用UPPER_SNAKE_CASE。</li>
 </ul>
-<h2 id="_6">檔案備份規則</h2>
+<h2 id="_9">檔案備份規則</h2>
 <ul>
-<li>任何檔案在刪除、搬移、覆寫或修改前，都必須先備份到專案根目錄的 <code>backup/</code> 資料夾。</li>
-<li>備份檔名格式為「原始檔名後綴 <code>__yyyyMMddHHmmss</code>」，例如 <code>AGENTS.md__20260526122904</code>。</li>
-<li>時間戳使用本機時間，格式為年月日時分秒，方便依時間排序與追溯。</li>
-<li>若要處理多個檔案，應在同一批操作開始前先逐一備份；備份完成後才可進行實際修改、搬移或刪除。</li>
-<li>備份資料夾只作為日後開發、誤刪與回溯參考來源，不得被打包進 CurseForge 發佈檔。</li>
-<li>若原始檔案不存在，需先回報原因，不得建立空備份冒充原始內容。</li>
+<li>任何檔案在刪除、移移、覆寫或修改前，都必須先備份到專案根目錄的<code>backup/</code>資料夾。</li>
+<li>備份檔案名稱格式為「原始檔案名稱後綴 <code>__yyyyMMddHHmmss</code>」，例如 <code>AGENTS.md__20260526122904</code>。</li>
+<li>使用計時器本機時間，格式為年月日時分秒，方便依排序時間與追溯。
+-處理多個文件，應在同一作業開始前逐一備份；備份完成後才可進行實際修改、移移或刪除。</li>
+<li>備份資料夾只作為日後開發、修改與回溯參考來源，不得壓縮進CurseForge發布檔案。</li>
+<li>若原始檔案不存在，需先回傳原因，無法建立空備份冒充原始內容。</li>
 </ul>
-<h2 id="_7">開發問題紀錄規則</h2>
+<h2 id="_10">開發問題記錄規則</h2>
 <ul>
-<li>開發過程遇到的瓶頸、限制、錯誤、工具失敗、API 不確定性與解決方式，都必須記錄到 <code>Docs/15_DEVELOPMENT_ISSUE_LOG.md</code>。</li>
-<li>紀錄目的為降低日後重複試錯、節省 AI context/token、保留決策脈絡。</li>
-<li>每筆紀錄至少包含日期、情境、症狀、原因判斷、已嘗試方法、有效解法、後續注意事項。</li>
-<li>若問題尚未解決，需標記為「未解決」並寫明下一步驗證方式。</li>
-<li>不記錄密碼、token、私人帳號資料或任何不應進入專案文件的敏感資訊。</li>
+<li>開發過程遇到的瓶頸、限制、錯誤、工具失敗、API必須性與解決方式，都記錄到<code>Docs/15_DEVELOPMENT_ISSUE_LOG.md</code>。</li>
+<li>極限目的為降低日後重複試誤、節省AI上下/token、保留決策脈絡。</li>
+<li>每筆記錄至少包含約會、症狀、原因判斷、已嘗試方法、有效解決方法、後續事項注意事項。</li>
+<li>若問題尚未解決，需標註為「未解決」並寫明下一步驗證方式。</li>
+<li>不記錄密碼、無法令牌、私人帳號資料或任何進入專案文件的敏感資訊。</li>
 </ul>
-<h2 id="skill">專案專屬 Skill 規則</h2>
+<h2 id="_11">專案專屬技能規則</h2>
 <ul>
-<li>開發過程若發現同一類流程重複出現，且已具備穩定步驟、輸入條件、輸出結果與風險控管，應整理成 EventAlertMod 專案專屬 SKILL。</li>
-<li>適合轉成 SKILL 的流程包含：打包發佈、Lua 靜態驗證、WoW API 查證、SavedVariables migration 檢查、Secret boundary 審查、文件同步、語系檔同步。</li>
-<li>目前已建立 <code>eam-retail-p0-review</code>，位置為 <code>.codex/skills/eam-retail-p0-review/SKILL.md</code>，用於 EAM Retail rewrite 的 P0 Secret/Taint/API/靜態驗證流程。</li>
-<li>建立 SKILL 前需先確認流程確實可重複，並將既有瓶頸與解法記錄到 <code>Docs/15_DEVELOPMENT_ISSUE_LOG.md</code>。</li>
-<li>SKILL 內容應包含觸發條件、必要前置檢查、禁止事項、備份規則、驗證方式與最終回報格式。</li>
-<li>不得把尚未驗證、仍需人工判斷或含敏感資訊的流程硬做成全自動 SKILL。</li>
+<li>開發過程若發現類似流程重複出現，且已具備穩定步驟、輸入條件、輸出結果與風險控制管，應整理成EventAlertMod專專用案SKILL。</li>
+<li>適合轉成SKILL的流程包含：壓縮發布、Lua靜態驗證、WoW API查詢、SavedVariables遷移檢查、秘密邊界審查、檔案同步、語檔同步。
+-目前已建立<code>eam-retail-p0-review</code>，位置為<code>.codex/skills/eam-retail-p0-review/SKILL.md</code>，用於EAM正式服重寫的P0 Secret/Taint/API/靜態驗證。</li>
+<li>建立SKILL前需先確認流程確實可重複，江蘇湖泊與解法記錄到<code>Docs/15_DEVELOPMENT_ISSUE_LOG.md</code>。</li>
+<li>SKILL內容應包含觸發條件、必要前檢、禁止事項、備份規則、驗證方式和最終回傳格式。</li>
+<li>尚未驗證、尚需人工判斷或含敏感資訊的流程硬輔助技能。</li>
 </ul>
-<h2 id="subagent">Subagent 使用規則</h2>
+<h2 id="_12">子代理程式計劃使用規則</h2>
 <ul>
-<li>使用者已授權：後續本專案若出現適合 subagent 的情境，需主動規劃並使用。</li>
-<li>使用前先判斷 critical path；立即阻塞主流程的工作由主代理本地處理。</li>
-<li>Subagent 主要用於可並行、明確、可驗收且不互相覆蓋的 sidecar task。</li>
-<li>適合情境包含：Retail API 查證、Secret / taint 審查、熱路徑掃描、Docs 一致性檢查、模組化 rewrite 的不重疊檔案切片、打包發佈檢查。</li>
-<li>不適合情境包含：小型單檔修改、需要即時授權的高風險操作、尚未備份的大量搬移/刪除、寫入範圍高度重疊的高耦合改動。</li>
-<li>派工時必須明確指定檔案責任邊界、禁止事項、備份規則、驗證輸出與最終回報格式。</li>
-<li>Subagent 結果需由主代理整合；不得把 subagent 的 API 判斷視為已實機驗證。</li>
-<li>詳細流程見 <code>Docs/17_SUBAGENT_WORKFLOW.md</code>。</li>
-<li>所有的協作與 PR 審查必須嚴格遵循 <a href="file:///d:/EventAlertMod/Docs/21_RACI_EXPERTS_MATRIX.md.html">Docs/21_RACI_EXPERTS_MATRIX.md</a> 的 RACI 權責分工與審查原則。</li>
+<li>使用者已授權：後續本專案若出現適合子代理人的角色，需主動規劃並使用。</li>
+<li>使用先判斷關鍵路徑；立即阻止主流程的工作，由主代理本地處理。</li>
+<li>子代理主要可任務、明確、可欣賞且不互相覆蓋邊車任務。</li>
+<li>適合模具包含：正式服API查證、Secret / taint審查、熱路徑掃描、文件一致性檢查、模組化替換的不重疊文件切片、發布檢查。</li>
+<li>不適合架構包含：小型單檔修改、需要即時授權的高風險操作、尚未遺失的卸載移動/刪除、寫入範圍高度重疊的高關聯性。</li>
+<li>派工時必須明確指定檔案責任範圍、禁止事項、備份規則、驗證輸出及最終返回格式。</li>
+<li>子代理程式結果需要由主代理程式整合；不得將子代理程式的API判定視為已實機驗證。</li>
+<li>詳細流程請參閱<code>Docs/17_SUBAGENT_WORKFLOW.md</code>。</li>
+<li>所有與PR審查的協作必須嚴格遵循 <a href="file:///d:/EventAlertMod/Docs/21_RACI_EXPERTS_MATRIX.md.html">Docs/21_RACI_EXPERTS_MATRIX.md</a> 的 RACI 權責分工與審查原則。</li>
 </ul>
-<h2 id="_8">實作流程</h2>
-<ol>
-<li>Audit：讀完整 source tree、TOC、XML、SavedVariables、global、Classic/MOP 分支、OnUpdate/C_Timer、aura/cooldown/item API。</li>
-<li>Plan：先界定模組責任與 migration 策略，再開始大規模改動。</li>
-<li>Rewrite：建立 Core、Services、UI、Debug 模組，保留可用資料與使用者語意。</li>
-<li>Static Validation：執行可用的 Lua syntax check、全域變數搜尋、<code>C_Timer.After</code> closure 搜尋、<code>table.freeze</code> 誤用搜尋。</li>
-<li>Report：清楚回報變更、未驗證項目、風險與下一步。</li>
-</ol>
-<h2 id="_9">快捷指令</h2>
+<h2 id="_13">實施流程</h2>
+<p>1.稽核：讀取完整原始碼樹、TOC、XML、SavedVariables、global、Classic/MOP分支、OnUpdate__EAMCODE_5_ _、光環/cooldownOnUpdate/C_Timer、auraEAMCODED__、ACODE_4<strong><em>_</em>、aCODE_3</strong>、auraEAMCODEA__、A__uraEA__3__A__a☺
+2. 方案設計：首先模組責任與遷移策略，再開始大規模模組。
+3.重寫：建立核心、服務、UI、偵錯模組，取得可用的資料與使用者語意。
+4.靜態驗證：執行可用的Lua語法檢查、全域變數搜尋、<code>C_Timer.After</code>閉包搜尋、<code>table.freeze</code>錯誤搜尋。
+5. 報告：明確變更變更、未驗證項目、風險與下一步。</p>
+<h2 id="_14">快速指令</h2>
 <ul>
-<li>當使用者只輸入「打包」兩個字時，直接執行 <code>Tools/Build-CurseForgePackage.ps1</code>。</li>
-<li>當使用者輸入「打包開發版」時，直接執行 <code>Tools/Build-CurseForgePackage.ps1 -DevMode</code>。</li>
-<li>打包前需確認 <code>EventAlertMod.toc</code> 的 <code>## Version</code> 符合 <code>EventAlertMod_MN_yyyyMMdd</code>。</li>
-<li>打包輸出檔名必須符合 <code>EventAlertMod_MN_yyyyMMdd_HHmmss.zip</code>。</li>
-<li>打包後回報 zip 路徑、Lua 語法檢查結果、排除資料夾檢查結果。</li>
-<li>相關規則見 <code>Docs/14_PACKAGING_GUIDE.md</code>。</li>
+<li>當使用者只輸入「資源」兩個字時，直接執行<code>Tools/Build-CurseForgePackage.ps1</code>。</li>
+<li>當使用者輸入「壓縮開發版」時，直接執行<code>Tools/Build-CurseForgePackage.ps1 -DevMode</code>。</li>
+<li>資料夾前需確認<code>EventAlertMod.toc</code>的<code>##版本</code>符合<code>EventAlertMod_MN_yyyyMMdd</code>。</li>
+<li>預算檔名必須符合<code>EventAlertMod_MN_yyyyMMdd_HHmmss.zip</code>。</li>
+<li>壓縮後返回 zip 路徑、Lua 語法檢查結果、排除資料夾檢查結果。</li>
+<li>相關規則請參閱<code>Docs/14_PACKAGING_GUIDE.md</code>。</li>
 </ul>
-<h2 id="_10">最終回報必須包含</h2>
-<p>每次實作 pass 的 final report 至少列出：</p>
-<ol>
-<li>變更檔案。</li>
-<li>主要架構變更。</li>
-<li>保留的舊 EAM 行為。</li>
-<li>移除的舊行為。</li>
-<li>Lua / WoW API 假設。</li>
-<li><code>table.create</code> / <code>table.freeze</code> 使用摘要。</li>
-<li>Secret / Protected Data 處理策略。</li>
-<li>已執行的靜態驗證。</li>
-<li>未執行的驗證。</li>
-<li>必要的 WoW Retail 實機測試。</li>
-<li>已知風險。</li>
-<li>下一個建議任務。</li>
-</ol>
-<h2 id="20260606">專案最新重構進度 (2026.06.06 更新)</h2>
-<h3 id="1-retail-1207">1. 已完成之核心重構 (Retail 12.0.7)</h3>
+<h2 id="_15">回最終傳必須包含</h2>
+<p>相關實踐的最終報告至少已上市：</p>
+<p>1.更改檔案。
+2.主要架構變更。
+3.保留舊的EAM行為。
+4. 移除舊的行為。
+5. Lua / WoW API 假設。
+6. <code>table.create</code> / <code>table.freeze</code> 使用摘要。
+7. 秘密/受保護資料處理策略。
+8. 已執行靜態驗證。
+9. 未執行的驗證。
+10.WoW正式服實機測試需要。
+11.已知風險。
+12.下一個建議任務。</p>
+<h2 id="20260606">專案最新重構細節 (2026.06.06 更新)</h2>
+<h3 id="1retail-1207">1.已完成核心重構(Retail 12.0.7)</h3>
 <ul>
-<li><strong>全代碼本地化清掃 (12.0.7 - 2026.06.06)</strong>：<ul>
-<li>全檔案（包括 <code>Services</code> 與 <code>UI</code> 目錄下的所有邏輯）中所有硬編碼之中/英文提示名詞與 UI 顯示字串已完全提取為 <code>EAM.L</code> 中的 Key。</li>
-<li>補齊並無縫支援 <code>zhTW</code> (繁中)、<code>zhCN</code> (簡中)、<code>enUS</code> (英文底層)、<code>koKR</code> (韓文) 與 <code>ruRU</code> (俄文) 五大語系，共計 144 個詞條。</li>
-<li><strong>動態專精本地化 API 重構</strong>：在 <code>UI/Options.lua</code> 的篩選下拉選單中引入 <code>CLASS_TOKEN_TO_ID</code> 映射，優先調用官方原生 API <code>GetSpecializationInfoForClassID</code> 取得最準確的本地化專精名稱，並提供雙軌備份 fallback 防線。</li>
-</ul>
-</li>
-<li><strong>ClassPower 核心資源安全與偵錯加強</strong>：<ul>
-<li>為 <code>detectClassPower</code> 與 <code>updatePower</code> 部署全套 <code>pcall</code> 隔離與 <code>issecretvalue</code> 防衛機制，防止戰鬥中能量數值突變為 Secret Table 時大小比較造成的 Lua 崩潰。</li>
-</ul>
-</li>
-<li><strong>EventRouter/Scheduler 故障隔離</strong>：<ul>
-<li>為 <code>Core/EventRouter.lua</code> 的 OnEvent 核心循環與 <code>Core/Scheduler.lua</code> 的定時任務 callback 加上參數化 <code>pcall</code> 容錯，確保單一模組報錯時，不會干擾或中斷其他模組與定時器的執行。</li>
-</ul>
-</li>
+<li><strong>全程式碼局部化清掃 (12.0.7 - 2026.06.06)</strong>：</li>
+<li>整個文件（包括 <code>Services</code> 和 <code>UI</code> 目錄下的所有邏輯）中所有編碼硬/英文提示術語與 UI 字符串已完全提取為 <code>EAM.L</code> 中的密鑰。</li>
+<li>補齊並無縫支持<code>zhTW</code> (繁中)、<code>zhCN</code> (簡中)、<code>enUS</code> (簡中)、<code>koKR</code> (韓文) 與 <code>ruRU</code> (俄文) 五大語系，共144個詞條。</li>
+<li><strong>動態專精本地化API重構</strong>：在<code>UI/Options.lua</code>的篩選選項中引入<code>CLASS_TOKEN_TO_ID</code>映射，優先調用官方嫁接API <code>GetSpecializationInfoForClassID</code>取得最準確的本地化專精名稱，並提供雙軌本地化備份。</li>
+<li><strong>ClassPower核心資源安全偵查與錯案加強</strong>：</li>
+<li>為 <code>detectClassPower</code> 與 <code>updatePower</code> 部署密切注意 <code>pcall</code> 隔離與 <code>issecretvalue</code> 防衛機制，防止戰鬥中能量數值差異為秘密表時大小比較造成的 Lua 崩潰。</li>
+<li><strong>EventRouter/Scheduler 故障隔離</strong>：</li>
+<li>為<code>Core/EventRouter.lua</code>的OnEvent核心循環與<code>Core/Scheduler.lua</code>的定時任務回調回調參數化<code>pcall</code>容錯，確保單一模組報錯時，不會幹擾或中斷其他模組與定時的執行。</li>
 <li><strong>雙軌 Native Binding 倒數與 Pandemic Glow</strong>：<ul>
-<li>時間渲染優先啟用 <code>C_DurationUtil.CreateDurationTextBinding</code> 與 <code>SetCooldownFromDurationObject</code> 降級通道。</li>
-<li>在 DoT 光環滿足 Pandemic 刷新時間時，為 Icon 啟用 Glow 亮框效果。</li>
+<li>時間渲染優先權實作 <code>C_DurationUtil.CreateDurationTextBinding</code> 與 <code>SetCooldownFromDurationObject</code> 降級通道。</li>
+<li>在DoT光環滿足Pandemic刷新時間時，為 Icon 啟用發光亮框效果。</li>
 </ul>
 </li>
-<li><strong>13 職業與 28 個英雄天賦資料庫擴展</strong>：<ul>
-<li>更新 <code>Data/SpellArray.lua</code>，為所有 13 個職業與 28 個英雄天賦（如 Tempest, Sacred Weapon, Diabolic Ritual 等）配置了最新的法術 ID 預設監控。</li>
+<li><strong>13個職業與28個英雄天賦資料庫擴展</strong>：<ul>
+<li>更新<code>Data/SpellArray.lua</code>，為所有13個職業與28個英雄天賦（如暴風雨、神聖、武器惡魔儀式等）配置了最新的武器ID預設監控。</li>
 </ul>
 </li>
 </ul>
-<h3 id="2">2. 後續維護與開發建議</h3>
+<h3 id="2">2.後續維護與開發建議</h3>
 <ul>
-<li><strong>安全防禦優先</strong>：在與 any 光環、冷卻、能量、時間相關的數值進行大小比較或 table 索引時，必須先使用 <code>issecretvalue</code> 進行防禦性檢查。</li>
-<li><strong>語法靜態檢驗</strong>：在對 any Lua 檔案進行修改後，必須執行 <code>luac -p</code> 檢查。</li>
-<li><strong>12.0.7 &amp; 12.1.0 專家聯席會審與影子載體研究 (2026.06.07 更新)</strong>：<ul>
-<li>召集全體專家 subagents 進行圓桌聯席會審。Lua VM 專家指出戰鬥熱路徑中匿名閉包 <code>pcall</code> 導致 LuaJIT Trace Compiler Abort 的底層開銷，並提供了 Module 級別 static local fallback 機制；AddOn Architect 起草了 <code>Docs/19_AURA_1210_REDUX_BLUEPRINT.md</code> 藍圖，全面規劃了 <code>AuraService</code> 零分配快取池 <code>AuraStatePool</code> 及 C++ Native Duration Binding 雙軌渲染管線。</li>
-<li><strong>影子載體技術 (Shadow Host) 實作</strong>：針對利用原生 <code>CooldownViewer</code> (冷卻管理器/CDM) 作為影子載體以避讓戰鬥 Secret / Taint 限制完成實作。新建 <code>Services/ShadowHostService.lua</code> 實作官方 Pool Hook，並於 <code>UI/Renderer.lua</code> 中引入寄生渲染與級聯排版避讓，100% 避開戰鬥中 layout CPU 與 Taint 開銷。評估研究可參考 <code>Docs/20_CDM_BYPASS_FEASIBILITY_STUDY.md</code>。</li>
-</ul>
-</li>
-<li><strong>12.1.0 零分配 &amp; 事件驅動全模組重構 (2026.06.07 已完成)</strong>：<ul>
-<li><strong>完全數據-視圖解耦</strong>：解耦 <code>AuraService</code>、<code>CooldownService</code>、<code>ItemCooldownService</code>、<code>GroundEffectService</code> 與 <code>TotemService</code>，五大數據服務全部改為事件驱动，不再與 <code>Renderer</code> 直接耦合，而是向 <code>EventRouter</code> 拋出對應的 <code>EAM_*_STATE_CHANGED</code> 事件。</li>
-<li><strong>中介控制器引入</strong>：引入 <code>Managers/AlertManager.lua</code> 統一管理和調度這五類變更事件，使用 <code>Scheduler</code> 實作非同步節流與批次更新（<code>BeginBatch/EndBatch</code>），消除 Layout Churn。</li>
-<li><strong>多型零分配物件池</strong>：在所有服務中配置專屬的 <code>StatePool</code>（例如 <code>GroundEffectStatePool</code> 與 <code>TotemStatePool</code> 等），在 <code>acquire</code> 狀態物件時綁定 <code>releaseFunc</code>，並由 <code>AlertManager</code> 在渲染隱藏後多型呼叫 <code>state.releaseFunc(state)</code> 安全回收物件，達成運行期 0-Allocation 極致低 GC 目標。</li>
-<li><strong>影子載體文字剪裁與遮擋修正</strong>：針對吸附官方 CooldownViewer（CDM）時，因原生容器 <code>ClipsChildren</code> 裁切與 FrameLevel 遮擋導致技能名稱不顯示的問題，實作動態佈局調整。寄生模式下自動將技能名稱（<code>nameText</code>）移至圖示內側底部並設為 Highlight 顯色，同時提權 <code>FrameLevel</code>（相對於 <code>hostIcon</code> + 10），解決了「看不見技能名稱」的痛點。</li>
-<li><strong>靜態安全語法檢驗</strong>：32 個 Lua 檔案 100% 通過語法安全性檢驗。</li>
-</ul>
-</li>
-<li><strong>16 大全新與高頻事件整合 (2026.06.07 已完成)</strong>：</li>
-<li>不使用 <code>forceinsecure</code>、不嘗試清除或繞過 taint、不以第三方 workaround 壓制 Blizzard blocked action。</li>
-<li>發現 taint、blocked action、combat lockdown 錯誤時，需記錄到 <code>Docs/15_DEVELOPMENT_ISSUE_LOG.md</code>，並標明觸發路徑、戰鬥狀態與可重現步驟。</li>
+<li><strong>安全防禦優先</strong>：在與任何光環、冷卻、能量、時間相關的數值進行大小比較或表索引時，必須先使用 <code>issecretvalue</code> 進行防禦性檢查。</li>
+<li><strong>修改語法靜態檢查</strong>：在對任何Lua檔案進行後必須，執行 <code>luac -p</code> 檢查。</li>
+<li><strong>12.0.7 &amp; 12.1.0 專家聯合會與月亮載體研究（2026.06.07更新）</strong>：</li>
+<li>召集全體專家分代理進行圓桌聯會審定。 Lua VM專家指出熱路中閉隱包<code>pcall</code>導致LuaJIT Trace編譯器中止的底層工資，並提供了模組級靜態本地回退機制；AddOn架構師建立了<code>Docs/19_AURA_1210_REDUX_BLUEPRINT.md</code>藍圖，全面規劃了__MEAM__CODE_4) 零點存儲</li>
+<li><strong>影子載體技術(Shadow Host)實務</strong>：針對利用橋樑<code>CooldownViewer</code> (冷卻管理器/CDM)作為影子載體以避戰秘密/污染限製完成實現。新建<code>Services/ShadowHostService.lua</code>實踐官方池Hook，並於<code>UI/Renderer.lua</code>中引入寄生渲染讓與級聯排版避讓，100%黑暗中配合架構CPU與Taint。評估研究可參考<code>Docs/20_CDM_BYPASS_FEASIBILITY_STUDY.md</code>。</li>
+<li><strong>12.1.0 零分配 &amp; 事件驅動全模組重構 (2026.06.07 已完成)</strong>：</li>
+<li><strong>資料視圖解關聯</strong>：解關聯<code>AuraService</code>、<strong>完全EAMCODE_1</strong>、<code>ItemCooldownService</code>、<code>GroundEffectService</code>與__EAMCODE_全部__，五大資料服務改為驅動事件，不再與<code>Renderer</code>直接連接，而是向至EAM__CO8D__EAM1 86_DED__EAM__CODDE<strong><em>_EAM</em>_CO8DDEA</strong>EAM__CODDE_%<strong>EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_0__EAM__CO8DDEA__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_%__EAMCODE___EAMCODE6%</strong> <em>EAMCODE_5__%__EAM__CODDE</em>%<strong>EAM__CODDE_0__EAM__CO8DDEA__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_0__EAM__CO8DDEA__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_0__EAM__CO8DDEA__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CODDE_%__EAM__CODDE_%</strong>。</li>
+<li><strong>境內控制器引入</strong>：引入<code>Managers/AlertManager.lua</code>統一管理和調度這五類變更事件，使用<code>Scheduler</code>實行同步節流與批量更新（<code>BeginBatch/EndBatch</code>），消除佈局本身。</li>
+<li><strong>多型零分配物件池</strong>：在所有服務中配置強調的 <code>StatePool</code> （如 <code>GroundEffectStatePool</code> 和 <code>TotemStatePool</code> 等），在 <code>acquire</code>狀態對象時綁定<code>releaseFunc</code>，並由<code>AlertManager</code>在渲染後識別多__A__EA__A__3__4D__EAMCO`fstate__EAMCO"__EA安全恢復對象，完成期運行0-分配最大限度降低GC目標。</li>
+<li><strong>鏡像載體文字剪裁與遮蔽修改</strong>：針對吸附官方CooldownViewer（CDM）時，因牽引容器<code>ClipsChildren</code>裁切與FrameLevel顯示導致技能名稱不顯示的問題，實施動態佈局調整。寄生模式下自動將技能名稱（<code>nameText</code>）移至圖示底部並設定高亮顯示圖示底部並設定高亮顯色，同時提權<code>FrameLevel</code>（相對於）<code>hostIcon</code> + 10），解決了「看不見的技能名稱」的痛點。</li>
+<li><strong>靜態語法安全性偵測設定</strong>：32個Lua檔案100%滲透語法安全性偵測設定。</li>
+<li><strong>16完成全新與高階事件整合（2026.06.07已）</strong>：</li>
+<li>不使用<code>forceinsecure</code>、不嘗試清除或繞過污染點、不以第三方變通方式壓制暴雪阻止行動。</li>
+<li>發現污點、被阻止的動作、戰鬥鎖定錯誤時，需記錄到<code>Docs/15_DEVELOPMENT_ISSUE_LOG.md</code>，並綁定觸發路徑、戰鬥狀態與可重置步驟。</li>
 </ul>
 <h2 id="durationobject_1">DurationObject 與時間顯示</h2>
 <ul>
-<li>Secret 或受保護時間資料不得用 <code>OnUpdate</code> 自行倒數。</li>
-<li>若 Retail 提供 DurationObject，優先交給原生 UI 處理，例如 <code>CooldownFrame:SetCooldownFromDurationObject()</code> 或 <code>FontString:SetDurationText()</code>。</li>
+<li>秘密或受保護時間資料不得使用<code>OnUpdate</code>手機倒數。</li>
+<li>若 Retail 提供 DurationObject，優先取代 UI 處理，例如 <code>CooldownFrame:SetCooldownFromDurationObject()</code> 或 <code>FontString:SetDurationText()</code>。</li>
 <li><code>Cooldown:SetCountdownFormatter()</code>、<code>Cooldown:SetCountdownMillisecondsThreshold()</code> 等 12.0.5 後相關能力需以文件與實機確認後使用。</li>
-<li>手動 timer 字串只能用於已確認安全的普通數值。</li>
+<li>手動定時器鍵盤僅用於確認安全的普通數字。</li>
 </ul>
-<h2 id="tooltip-c_tooltipinfo_1">Tooltip / C_TooltipInfo 降級策略</h2>
-<p>Tooltip 解析只能作為低頻、保守、明確標記來源的 fallback：</p>
+<h2 id="c_tooltipinfo_1">工具提示 / C_TooltipInfo 降級策略</h2>
+<p>工具提示解析只能作為低頻、截圖、明確標記來源的後備：</p>
 <ul>
-<li>優先使用 <code>C_TooltipInfo</code> 或 Blizzard 支援的 display object。</li>
+<li>優先使用 <code>C_TooltipInfo</code> 或 Blizzard 支援的顯示項目。</li>
 <li>可解析靜態說明文字中的明確數值。</li>
-<li>不解析動態剩餘時間文字作為事實。</li>
-<li>不在熱路徑、戰鬥中或每 frame 執行 tooltip scraping。</li>
-<li>解析結果不得覆蓋安全 API facts，只能作為 derived 或 display-only 輔助。</li>
-<li>解析失敗時必須安靜降級，不得產生誤導 timer。</li>
+<li>不解析剩餘時間文字作為事實。</li>
+<li>不在熱路徑、戰鬥中或每幀執行工具提示抓取。</li>
+<li>解析結果無法覆寫安全性API事實，只能作為匯出或僅顯示輔助。</li>
+<li>解析失敗時安靜必須降級，無法產生昏暗計時器。</li>
 </ul>
-<h2 id="frame_1">事件與 Frame 規則</h2>
+<h2 id="_16">事件與框架規則</h2>
 <ul>
-<li>事件派發使用單一 EventRouter。</li>
-<li>純事件監聽 frame 使用孤兒 frame：<code>CreateFrame("Frame", nil, nil)</code>。</li>
-<li>不在 UIParent-parented frame 上承擔邏輯 dispatcher 職責。</li>
-<li>不在戰鬥中對 UI-parented frame 動態註冊或解除註冊事件。</li>
-<li>事件註冊變更應集中管理，避免反覆 churn。</li>
+<li>事件規定使用單一EventRouter。</li>
+<li>純事件監聽架構使用孤兒框架：<code>CreateFrame("Frame", nil, nil)</code>。</li>
+<li>不在UIParent-parented框架上承擔邏輯調度員職責。</li>
+<li>不在戰鬥中對UI父框架動態註冊或解除註冊事件。</li>
+<li>事件註冊變更應集中管理，避免重複供水。</li>
 </ul>
-<h2 id="scheduler_1">Scheduler 與效能規則</h2>
+<h2 id="_17">調度程序與全部規則</h2>
 <ul>
-<li>優先事件驅動；排程 fallback 必須集中、低頻、可節流。</li>
-<li>只使用單一 Scheduler <code>OnUpdate</code>。</li>
-<li>禁止 timer-per-icon、timer-per-spell、熱路徑反覆 <code>C_Timer.After(function() ...)</code>。</li>
-<li><code>UNIT_AURA</code>、<code>SPELL_UPDATE_COOLDOWN</code>、<code>OnUpdate</code>、Renderer 更新屬於熱路徑。</li>
-<li>熱路徑不得配置臨時 table、closure 或不必要字串。</li>
-<li>熱路徑避免 <code>pairs</code> / <code>ipairs</code>；可用穩定數字索引時使用 numeric loop。</li>
-<li>熱路徑避免 <code>table.insert</code>；可用直接索引寫入時使用直接索引。</li>
-<li>迴圈中組字串使用 buffer 與 <code>table.concat</code>，避免連續 <code>..</code>。</li>
-<li>低 FPS 或戰鬥中應延後、縮減或停止非必要工作。</li>
-<li>大範圍 item 掃描不得在正常 runtime 執行；若需要 item-spell cache，必須 opt-in、idle-only、interruptible、FPS-aware、combat-aware。</li>
+<li>優先事件驅動；排程回退必須濃縮、低頻、可節流。</li>
+<li>只使用單一調度<code>OnUpdate</code>。</li>
+<li>禁止依附圖示計時器、應用術計時器、熱路徑重複<code>C_Timer.After(function() ...)</code>。</li>
+<li><code>UNIT_AURA</code>、<code>SPELL_UPDATE_COOLDOWN</code>、<code>OnUpdate</code>、渲染器更新屬於熱路徑。</li>
+<li>熱路徑不得配置臨時表、閉包或不必要的字串。</li>
+<li>熱路徑避免 <code>pairs</code> / <code>ipairs</code>；可用穩定數字索引時使用數位循環。</li>
+<li>熱路徑避免<code>table.insert</code>；可用直接索引寫入時使用直接索引。</li>
+<li>迴圈中群組字串使用buffer與<code>table.concat</code>，避免連續<code>..</code>。</li>
+<li>低FPS或戰鬥中應延後、縮減或停止非必要工作。</li>
+<li>大範圍物品掃描無法正常戰鬥時執行；若需要魔法存儲，選擇加入、僅閒置、可中斷、FPS釣魚、戰鬥釣魚。</li>
 </ul>
 <h2 id="tablecreate-tablefreeze_1">table.create / table.freeze 政策</h2>
 <ul>
-<li><code>table.create</code> 用於可預期配置：array、pool、ring buffer、record list、icon pool、default template。</li>
-<li>必須提供 <code>table.create</code>、<code>table.freeze</code>、<code>table.isfrozen</code> fallback。</li>
-<li><code>table.freeze</code> 只用於不可變靜態資料：constants、enum、schema、default field profile、module contract、prototype、metatable。</li>
-<li>可將穩定 API alias table 凍結，例如 <code>EAM.API</code>，但只在確認不會造成載入順序或測試困難時使用。</li>
-<li>不得 freeze SavedVariables、runtime cache、aura/cooldown state、icon state、pool object、scheduler queue、debug/session record。</li>
+<li><code>table.create</code>用於預期設定：圖表、圖表、流程圖、記錄清單、圖示池、預設範本。</li>
+<li>必須提供<code>table.create</code>、<code>table.freeze</code>、<code>table.isfrozen</code>後備。</li>
+<li><code>table.freeze</code> 只用於不可變靜態資料：、枚舉、模式、預設欄位設定檔、模組合同、原型、元表。</li>
+<li>穩定 API 別名表可凍結，例如 <code>EAM.API</code>，但僅在確認時不會造成載入順序或測試故障時使用。</li>
+<li>不得凍結SavedVariables、運行時快取、光環/冷卻狀態、圖示狀態、池項目、調度器佇列、debug/session記錄。</li>
 </ul>
-<h2 id="ui-renderer_1">UI / Renderer 規則</h2>
+<h2 id="ui_1">UI / 渲染器規則</h2>
 <ul>
-<li>Renderer 不直接查 API；資料由 service 層提供。</li>
-<li>圖示、button、FontString 使用 pool。</li>
-<li>Renderer 不執行 secure action，不註冊 click-cast，不改 Blizzard protected frame，不污染 action bar / unit frame / nameplate 路徑。</li>
-<li>避免初始化後不必要的 frame 建立。</li>
-<li><code>SetText</code>、<code>SetPoint</code>、<code>SetSize</code>、<code>SetTexture</code>、layout 寫入前先比較前次值。</li>
-<li>批次 layout 時可先隱藏 parent，完成後再顯示。</li>
-<li>支援 timer、stack、spell name、aura value label，但只顯示安全資料。</li>
-<li>UI 預設保持簡單，不能把 EAM 做成 WeakAuras 複雜系統。</li>
+<li>渲染器不直接檢查API；資料由服務層提供。</li>
+<li>圖示、按鈕、FontString使用池。</li>
+<li>渲染器不執行安全操作，不註冊點擊地圖，不修改暴雪保護框架，不操作污染列/單位框架/銘牌路徑。</li>
+<li>避免初始化後建立多餘的框架。</li>
+<li><code>SetText</code>、<code>SetPoint</code>、<code>SetSize</code>、<code>SetTexture</code>、layout 寫入前先比較後次值。</li>
+<li>批次佈局時可先隱藏父級，完成後再顯示。</li>
+<li>支援計時器、藥劑名稱、光環值標籤，但只顯示安全資料。</li>
+<li>UI預設保持簡單，不能把 EAM 引入 WeakAuras 複雜系統。</li>
 </ul>
 <h2 id="savedvariables_1">SavedVariables 規則</h2>
 <ul>
-<li>SavedVariables 必須有 schema version。</li>
-<li>提供舊資料 migration、defaults、validation。</li>
-<li>不 freeze SavedVariables。</li>
-<li>不寫入每 frame 或高頻 runtime state。</li>
-<li>無法安全 migration 的欄位要保留備份或標記為 legacy，不可靜默破壞使用者設定。</li>
+<li>SavedVariables 必須有 schema 版本。</li>
+<li>提供舊資料遷移、預設、驗證。</li>
+<li>不凍結SavedVariables。</li>
+<li>不讀取每幀或高運行時狀態。</li>
+<li>無法安全遷移的欄位要保留備份或標記為遺傳，且不可靜默破壞使用者設定。</li>
 </ul>
-<h2 id="debug-ai_1">Debug / AI 交接規則</h2>
+<h2 id="ai_1">調試/AI交接規則</h2>
 <ul>
-<li>Debug 預設關閉。</li>
-<li>Debug export 必須 on-demand。</li>
-<li>Snapshot 需拆分：</li>
-<li>facts</li>
-<li>derived</li>
-<li>human notes</li>
+<li>調試預設關閉。</li>
+<li>調試 調試必須達到。</li>
+<li>快照需分割：</li>
+<li>事實</li>
+<li>派生
+  ——人類筆記</li>
 <li>boundaryWarnings</li>
-<li>environment</li>
-<li>不輸出巨大 log。</li>
-<li>Export 字串只在使用者明確要求時建立。</li>
+<li>環境</li>
+<li>不輸出巨大的日誌。</li>
+<li>匯出字符串僅在使用者明確要求時建立。</li>
 </ul>
-<h2 id="_11">程式風格</h2>
+<h2 id="_18">課程風格</h2>
 <ul>
-<li>Identifier 使用英文。</li>
-<li>註解可使用繁體中文，重點放在 WoW API 邊界、效能理由與架構決策。</li>
-<li>所有正式載入的程式檔都必須有檔案層級註解，說明模組理念、責任邊界、資料所有權與日後維護注意事項；細節依 <code>Docs/12_CODE_COMMENTARY_GUIDE.md</code>。</li>
-<li>縮排使用 4 spaces。</li>
+<li>標識符使用中文。</li>
+<li>註解可使用繁體中文，重點放在 WoW API 邊界、原因與架構決策。
+-所有正式載入的方案檔都必須有檔案系統註解，說明模組、責任邊界、資料號碼與日後注意事項；細節依<code>Docs/12_CODE_COMMENTARY_GUIDE.md</code>。</li>
+<li>縮排使用4個空格。</li>
 <li>不使用行內分號。</li>
-<li>Namespace / Module 使用 PascalCase。</li>
-<li>Function / local variable 使用 camelCase。</li>
-<li>Private function / private table 以 <code>_</code> 前綴。</li>
-<li>Constant 使用 UPPER_SNAKE_CASE。</li>
+<li>命名空間/模組使用PascalCase。</li>
+<li>函數/局部變數使用camelCase。</li>
+<li>導管函數/導管表以 <code>_</code> 匯出。</li>
+<li>符號使用UPPER_SNAKE_CASE。</li>
 </ul>
-<h2 id="_12">檔案備份規則</h2>
+<h2 id="_19">檔案備份規則</h2>
 <ul>
-<li>任何檔案在刪除、搬移、覆寫或修改前，都必須先備份到專案根目錄的 <code>backup/</code> 資料夾。</li>
+<li>任何檔案在刪除、移移、覆寫或修改前，都必須先備份到專案根目錄的<code>backup/</code>資料夾。</li>
 <li>備份檔名格式為「原始檔名後綴 <code>__yyyyMMddHHmmss</code>」，例如 <code>AGENTS.md__20260526122904</code>。</li>
-<li>時間戳使用本機時間，格式為年月日時分秒，方便依時間排序與追溯。</li>
-<li>若要處理多個檔案，應在同一批操作開始前先逐一備份；備份完成後才可進行實際修改、搬移或刪除。</li>
-<li>備份資料夾只作為日後開發、誤刪與回溯參考來源，不得被打包進 CurseForge 發佈檔。</li>
-<li>若原始檔案不存在，需先回報原因，不得建立空備份冒充原始內容。</li>
+<li>使用計時器本機時間，格式為年月日時分秒，方便依排序時間與追溯。
+-處理多個文件，應在同一作業開始前逐一備份；備份完成後才可進行實際修改、移移或刪除。</li>
+<li>備份資料夾只作為日後開發、修改與回溯參考來源，不得壓縮進CurseForge發布檔案。</li>
+<li>若原始檔案不存在，需先回傳原因，無法建立空備份冒充原始內容。</li>
 </ul>
-<h2 id="_13">開發問題紀錄規則</h2>
+<h2 id="_20">開發問題記錄規則</h2>
 <ul>
-<li>開發過程遇到的瓶頸、限制、錯誤、工具失敗、API 不確定性與解決方式，都必須記錄到 <code>Docs/15_DEVELOPMENT_ISSUE_LOG.md</code>。</li>
-<li>紀錄目的為降低日後重複試錯、節省 AI context/token、保留決策脈絡。</li>
-<li>每筆紀錄至少包含日期、情境、症狀、原因判斷、已嘗試方法、有效解法、後續注意事項。</li>
-<li>若問題尚未解決，需標記為「未解決」並寫明下一步驗證方式。</li>
-<li>不記錄密碼、token、私人帳號資料或任何不應進入專案文件的敏感資訊。</li>
+<li>開發過程遇到的瓶頸、限制、錯誤、工具失敗、API必須性與解決方式，都記錄到<code>Docs/15_DEVELOPMENT_ISSUE_LOG.md</code>。</li>
+<li>極限目的為降低日後重複試誤、節省AI上下/token、保留決策脈絡。</li>
+<li>每筆記錄至少包含約會、症狀、原因判斷、已嘗試方法、有效解決方法、後續事項注意事項。</li>
+<li>若問題尚未解決，需標註為「未解決」並寫明下一步驗證方式。</li>
+<li>不記錄密碼、無法令牌、私人帳號資料或任何進入專案文件的敏感資訊。</li>
 </ul>
-<h2 id="skill_1">專案專屬 Skill 規則</h2>
+<h2 id="_21">專案專屬技能規則</h2>
 <ul>
-<li>開發過程若發現同一類流程重複出現，且已具備穩定步驟、輸入條件、輸出結果與風險控管，應整理成 EventAlertMod 專案專屬 SKILL。</li>
-<li>適合轉成 SKILL 的流程包含：打包發佈、Lua 靜態驗證、WoW API 查證、SavedVariables migration 檢查、Secret boundary 審查、文件同步、語系檔同步。</li>
-<li>目前已建立 <code>eam-retail-p0-review</code>，位置為 <code>.codex/skills/eam-retail-p0-review/SKILL.md</code>，用於 EAM Retail rewrite 的 P0 Secret/Taint/API/靜態驗證流程。</li>
-<li>建立 SKILL 前需先確認流程確實可重複，並將既有瓶頸與解法記錄到 <code>Docs/15_DEVELOPMENT_ISSUE_LOG.md</code>。</li>
-<li>SKILL 內容應包含觸發條件、必要前置檢查、禁止事項、備份規則、驗證方式與最終回報格式。</li>
-<li>不得把尚未驗證、仍需人工判斷或含敏感資訊的流程硬做成全自動 SKILL。</li>
+<li>開發過程若發現類似流程重複出現，且已具備穩定步驟、輸入條件、輸出結果與風險控制管，應整理成EventAlertMod專專用案SKILL。</li>
+<li>適合轉換成SKILL的流程包含：壓縮發布、Lua靜態驗證、WoW API查證、SavedVariables遷移檢查、秘密邊界審查、檔案同步、語檔同步。</li>
+<li>目前已建立<code>eam-retail-p0-review</code>，位置為<code>.codex/skills/eam-retail-p0-review/SKILL.md</code>，用於EAM正式服重寫的P0 Secret/Taint/API/靜態驗證。</li>
+<li>建立SKILL前需先確認流程確實可重複，江蘇湖泊與解法記錄到<code>Docs/15_DEVELOPMENT_ISSUE_LOG.md</code>。</li>
+<li>SKILL內容應包含觸發條件、必要前檢、禁止事項、備份規則、驗證方式和最終回傳格式。</li>
+<li>尚未驗證、尚需人工判斷或含敏感資訊的流程硬輔助技能。</li>
 </ul>
-<h2 id="subagent_1">Subagent 使用規則</h2>
+<h2 id="_22">子代理程式計劃使用規則</h2>
 <ul>
-<li>使用者已授權：後續本專案若出現適合 subagent 的情境，需主動規劃並使用。</li>
-<li>使用前先判斷 critical path；立即阻塞主流程的工作由主代理本地處理。</li>
-<li>Subagent 主要用於可並行、明確、可驗收且不互相覆蓋的 sidecar task。</li>
-<li>適合情境包含：Retail API 查證、Secret / taint 審查、熱路徑掃描、Docs 一致性檢查、模組化 rewrite 的不重疊檔案切片、打包發佈檢查。</li>
-<li>不適合情境包含：小型單檔修改、需要即時授權的高風險操作、尚未備份的大量搬移/刪除、寫入範圍高度重疊的高耦合改動。</li>
-<li>派工時必須明確指定檔案責任邊界、禁止事項、備份規則、驗證輸出與最終回報格式。</li>
-<li>Subagent 結果需由主代理整合；不得把 subagent 的 API 判斷視為已實機驗證。</li>
-<li>詳細流程見 <code>Docs/17_SUBAGENT_WORKFLOW.md</code>。</li>
+<li>使用者已授權：後續本專案若出現適合子代理人的角色，需主動規劃並使用。</li>
+<li>使用先判斷關鍵路徑；立即阻止主流程的工作，由主代理本地處理。</li>
+<li>子代理主要可任務、明確、可欣賞且不互相覆蓋邊車任務。</li>
+<li>適合模具包含：正式服API查證、Secret / taint審查、熱路徑掃描、文件一致性檢查、模組化替換的不重疊文件切片、發布檢查。</li>
+<li>不適合架構包含：小型單檔修改、需要即時授權的高風險操作、尚未遺失的卸載移動/刪除、寫入範圍高度重疊的高關聯性。</li>
+<li>派工時必須明確指定檔案責任範圍、禁止事項、備份規則、驗證輸出及最終返回格式。</li>
+<li>子代理程式結果需要由主代理程式整合；不得將子代理程式的API判定視為已實機驗證。</li>
+<li>詳細流程請參閱<code>Docs/17_SUBAGENT_WORKFLOW.md</code>。</li>
 </ul>
-<h2 id="_14">實作流程</h2>
+<h2 id="_23">實施流程</h2>
 <ol>
-<li>Audit：讀完整 source tree、TOC、XML、SavedVariables、global、Classic/MOP 分支、OnUpdate/C_Timer、aura/cooldown/item API。</li>
-<li>Plan：先界定模組責任與 migration 策略，再開始大規模改動。</li>
-<li>Rewrite：建立 Core、Services、UI、Debug 模組，保留可用資料與使用者語意。</li>
-<li>Static Validation：執行可用的 Lua syntax check、全域變數搜尋、<code>C_Timer.After</code> closure 搜尋、<code>table.freeze</code> 誤用搜尋。</li>
-<li>Report：清楚回報變更、未驗證項目、風險與下一步。</li>
+<li>審核：讀取完整原始碼樹、TOC、XML、SavedVariables、global、Classic/MOP分支、OnUpdate/C_Timer、aura/cooldownOnUpdateOnUpdate/C_Timer、aura/cooldownOnUpdate__EAMCODE_6_EAMCODE_6__8、/cooldownOnUpdate__EAMCODE__8、__EAM__86_6%。</li>
+<li>方案設計：首先​​模組責任與遷移策略，再開始大規模模組。
+3.重寫：建立核心、服務、UI、偵錯模組，取得可用的資料與使用者語意。
+4.靜態驗證：執行可用的Lua語法檢查、全域變數搜尋、<code>C_Timer.After</code>閉包搜尋、<code>table.freeze</code>錯誤搜尋。</li>
+<li>報告：明確變更變更、未驗證項目、風險與下一步。</li>
 </ol>
-<h2 id="_15">快捷指令</h2>
+<h2 id="_24">快速指令</h2>
 <ul>
-<li>當使用者只輸入「打包」兩個字時，直接執行 <code>Tools/Build-CurseForgePackage.ps1</code>。</li>
-<li>打包前需確認 <code>EventAlertMod.toc</code> 的 <code>## Version</code> 符合 <code>EventAlertMod_MN_yyyyMMdd</code>（開發版除外，其將覆寫命名為 DEV 且跳過日期校驗）。</li>
-<li>打包輸出檔名必須符合 <code>EventAlertMod_MN_yyyyMMdd_HHmmss.zip</code>，開發版則為 <code>EventAlertMod_DEV_yyyyMMdd_HHmmss.zip</code>。</li>
-<li>打包後回報 zip 路徑、Lua 語法檢查結果、排除資料夾檢查結果。</li>
-<li>相關規則見 <code>Docs/14_PACKAGING_GUIDE.md</code>。</li>
+<li>當使用者只輸入「資源」兩個字時，直接執行<code>Tools/Build-CurseForgePackage.ps1</code>。</li>
+<li>資源前需確認 <code>EventAlertMod.toc</code> 且 <code>## Version</code> 符合 <code>EventAlertMod_MN_yyyyMMdd</code>（開發版本時，其將覆蓋寫入命名為 DEV 跳過日期校驗）。</li>
+<li>壓縮輸出檔名必須符合<code>EventAlertMod_MN_yyyyMMdd_HHmmss.zip</code>，開發版本則為<code>EventAlertMod_DEV_yyyyMMdd_HHmmss.zip</code>。</li>
+<li>壓縮後返回 zip 路徑、Lua 語法檢查結果、排除資料夾檢查結果。</li>
+<li>相關規則請參閱<code>Docs/14_PACKAGING_GUIDE.md</code>。</li>
 </ul>
-<h2 id="_16">最終回報必須包含</h2>
-<p>每次實作 pass 的 final report 至少列出：</p>
-<ol>
-<li>變更檔案。</li>
-<li>主要架構變更。</li>
-<li>保留的舊 EAM 行為。</li>
-<li>移除的舊行為。</li>
-<li>Lua / WoW API 假設。</li>
-<li><code>table.create</code> / <code>table.freeze</code> 使用摘要。</li>
-<li>Secret / Protected Data 處理策略。</li>
-<li>已執行的靜態驗證。</li>
-<li>未執行的驗證。</li>
-<li>必要的 WoW Retail 實機測試。</li>
-<li>已知風險。</li>
-<li>下一個建議任務。</li>
-</ol>
-<h2 id="20260606_1">專案最新重構進度 (2026.06.06 更新)</h2>
-<h3 id="1-retail-1207_1">1. 已完成之核心重構 (Retail 12.0.7)</h3>
+<h2 id="_25">回最終傳必須包含</h2>
+<p>相關實踐的最終報告至少已上市：</p>
+<p>1.更改檔案。
+2.主要架構變更。
+3.保留舊的EAM行為。
+4. 移除舊的行為。
+5. Lua / WoW API 假設。
+6. <code>table.create</code> / <code>table.freeze</code> 使用摘要。
+7. 秘密/受保護資料處理策略。
+8. 已執行靜態驗證。
+9. 未執行的驗證。
+10.WoW正式服實機測試需要。
+11.已知風險。
+12.下一個建議任務。</p>
+<h2 id="20260606_1">專案最新重構細節 (2026.06.06 更新)</h2>
+<h3 id="1retail-1207_1">1.已完成核心重構(Retail 12.0.7)</h3>
 <ul>
-<li><strong>全代碼本地化清掃 (12.0.7 - 2026.06.06)</strong>：<ul>
-<li>全檔案（包括 <code>Services</code> 與 <code>UI</code> 目錄下的所有邏輯）中所有硬編碼之中/英文提示名詞與 UI 顯示字串已完全提取為 <code>EAM.L</code> 中的 Key。</li>
-<li>補齊並無縫支援 <code>zhTW</code> (繁中)、<code>zhCN</code> (簡中)、<code>enUS</code> (英文底層)、<code>koKR</code> (韓文) 與 <code>ruRU</code> (俄文) 五大語系，共計 144 個詞條。</li>
-<li><strong>動態專精本地化 API 重構</strong>：在 <code>UI/Options.lua</code> 的篩選下拉選單中引入 <code>CLASS_TOKEN_TO_ID</code> 映射，優先調用官方原生 API <code>GetSpecializationInfoForClassID</code> 取得最準確的本地化專精名稱，並提供雙軌備份 fallback 防線。</li>
+<li><strong>全程式碼局部化清掃 (12.0.7 - 2026.06.06)</strong>：<ul>
+<li>整個文件（包括 <code>Services</code> 和 <code>UI</code> 目錄下的所有邏輯）中所有編碼硬/英文提示術語與 UI 字符串已完全提取為 <code>EAM.L</code> 中的密鑰。</li>
 </ul>
 </li>
-<li><strong>ClassPower 核心資源安全與偵錯加強</strong>：<ul>
-<li>為 <code>detectClassPower</code> 與 <code>updatePower</code> 部署全套 <code>pcall</code> 隔離與 <code>issecretvalue</code> 防衛機制，防止戰鬥中能量數值突變為 Secret Table 時大小比較造成的 Lua 崩潰。</li>
-</ul>
-</li>
-<li><strong>EventRouter/Scheduler 故障隔離</strong>：<ul>
-<li>為 <code>Core/EventRouter.lua</code> 的 OnEvent 核心循環與 <code>Core/Scheduler.lua</code> 的定時任務 callback 加上參數化 <code>pcall</code> 容錯，確保單一模組報錯時，不會干擾或中斷其他模組與定時器的執行。</li>
-</ul>
-</li>
+<li>補齊並無縫支持<code>zhTW</code> (繁中)、<code>zhCN</code> (簡中)、<code>enUS</code> (簡中)、<code>koKR</code> (韓文) 與 <code>ruRU</code> (俄文) 五大語系，共144個詞條。</li>
+<li><strong>動態專精本地化API重構</strong>：在<code>UI/Options.lua</code>的篩選選項中引入<code>CLASS_TOKEN_TO_ID</code>映射，優先調用官方嫁接API <code>GetSpecializationInfoForClassID</code>取得最準確的本地化專精名稱，並提供雙軌本地化備份。</li>
+<li><strong>ClassPower核心資源安全偵查與錯案加強</strong>：</li>
+<li>為 <code>detectClassPower</code> 與 <code>updatePower</code> 部署密切注意 <code>pcall</code> 隔離與 <code>issecretvalue</code> 防衛機制，防止戰鬥中能量數值差異為秘密表時大小比較造成的 Lua 崩潰。</li>
+<li><strong>EventRouter/Scheduler 故障隔離</strong>：</li>
+<li>為<code>Core/EventRouter.lua</code>的OnEvent核心循環與<code>Core/Scheduler.lua</code>的定時任務回調回調參數化<code>pcall</code>容錯，確保單一模組報錯時，不會幹擾或中斷其他模組與定時的執行。</li>
 <li><strong>雙軌 Native Binding 倒數與 Pandemic Glow</strong>：<ul>
-<li>時間渲染優先啟用 <code>C_DurationUtil.CreateDurationTextBinding</code> 與 <code>SetCooldownFromDurationObject</code> 降級通道。</li>
-<li>在 DoT 光環滿足 Pandemic 刷新時間時，為 Icon 啟用 Glow 亮框效果。</li>
+<li>時間渲染優先權實作 <code>C_DurationUtil.CreateDurationTextBinding</code> 與 <code>SetCooldownFromDurationObject</code> 降級通道。</li>
+<li>在DoT光環滿足Pandemic刷新時間時，為 Icon 啟用發光亮框效果。</li>
 </ul>
 </li>
-<li><strong>13 職業與 28 個英雄天賦資料庫擴展</strong>：<ul>
-<li>更新 <code>Data/SpellArray.lua</code>，為所有 13 個職業與 28 個英雄天賦（如 Tempest, Sacred Weapon, Diabolic Ritual 等）配置了最新的法術 ID 預設監控。</li>
+<li><strong>13個職業與28個英雄天賦資料庫擴展</strong>：<ul>
+<li>更新<code>Data/SpellArray.lua</code>，為所有13個職業與28個英雄天賦（如暴風雨、神聖、武器惡魔儀式等）配置了最新的武器ID預設監控。</li>
 </ul>
 </li>
 </ul>
-<h3 id="2_1">2. 後續維護與開發建議</h3>
+<h3 id="2_1">2.後續維護與開發建議</h3>
 <ul>
-<li><strong>安全防禦優先</strong>：在與 any 光環、冷卻、能量、時間相關的數值進行大小比較或 table 索引時，必須先使用 <code>issecretvalue</code> 進行防禦性檢查。</li>
-<li><strong>語法靜態檢驗</strong>：在對 any Lua 檔案進行修改後，必須執行 <code>luac -p</code> 檢查。</li>
-<li><strong>12.0.7 &amp; 12.1.0 專家聯席會審與影子載體研究 (2026.06.07 更新)</strong>：<ul>
-<li>召集全體專家 subagents 進行圓桌聯席會審。Lua VM 專家指出戰鬥熱路徑中匿名閉包 <code>pcall</code> 導致 LuaJIT Trace Compiler Abort 的底層開銷，並提供了 Module 級別 static local fallback 機制；AddOn Architect 起草了 <code>Docs/19_AURA_1210_REDUX_BLUEPRINT.md</code> 藍圖，全面規劃了 <code>AuraService</code> 零分配快取池 <code>AuraStatePool</code> 及 C++ Native Duration Binding 雙軌渲染管線。</li>
-<li><strong>影子載體技術 (Shadow Host) 實作</strong>：針對利用原生 <code>CooldownViewer</code> (冷卻管理器/CDM) 作為影子載體以避讓戰鬥 Secret / Taint 限制完成實作。新建 <code>Services/ShadowHostService.lua</code> 實作官方 Pool Hook，並於 <code>UI/Renderer.lua</code> 中引入寄生渲染與級聯排版避讓，100% 避開戰鬥中 layout CPU 與 Taint 開銷。評估研究可參考 <code>Docs/20_CDM_BYPASS_FEASIBILITY_STUDY.md</code>。</li>
+<li><strong>安全防禦優先</strong>：在與任何光環、冷卻、能量、時間相關的數值進行大小比較或表索引時，必須先使用 <code>issecretvalue</code> 進行防禦性檢查。</li>
+<li><strong>修改語法靜態檢查</strong>：在對任何Lua檔案進行後必須，執行 <code>luac -p</code> 檢查。</li>
+<li><strong>12.0.7 &amp; 12.1.0 專家聯合會與月亮載體研究（2026.06.07更新）</strong>：</li>
+<li>召集全體專家分代理進行圓桌聯會審定。 Lua VM專家指出熱路中閉隱包<code>pcall</code>導致LuaJIT Trace編譯器中止的底層工資，並提供了模組級靜態本地回退機制；AddOn架構師建立了<code>Docs/19_AURA_1210_REDUX_BLUEPRINT.md</code>藍圖，全面規劃了__MEAM__CODE_4) 零點存儲</li>
+<li><strong>影子載體技術(Shadow Host)實務</strong>：針對利用橋樑<code>CooldownViewer</code> (冷卻管理器/CDM)作為影子載體以避戰秘密/污染限製完成實現。新建<code>Services/ShadowHostService.lua</code>實踐官方池Hook，並於<code>UI/Renderer.lua</code>中引入寄生渲染讓與級聯排版避讓，100%黑暗中配合架構CPU與Taint。評估研究可參考<code>Docs/20_CDM_BYPASS_FEASIBILITY_STUDY.md</code>。</li>
+<li><strong>12.1.0 零分配 &amp; 事件驅動全模組重構 (2026.06.07 已完成)</strong>：</li>
+<li><strong>資料視圖解關聯</strong>：解關聯<code>AuraService</code>、<strong>完全EAMCODE_1</strong>、<code>ItemCooldownService</code>、<code>GroundEffectService</code>與__EAMCODE_全部__，五大資料服務改為驅動事件，不再與<code>Renderer</code>直接連接，而是向至EAM__CO8D__EAM1 86_DED__EAM__CODDE<strong><em>_EAM</em>_CO8DDEA</strong>EAM__CODDE_%<strong>EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_0__EAM__CO8DDEA__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_%__EAMCODE___EAMCODE6%</strong> <em>EAMCODE_5__%__EAM__CODDE</em>%<strong>EAM__CODDE_0__EAM__CO8DDEA__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_0__EAM__CO8DDEA__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_0__EAM__CO8DDEA__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CODDE_%__EAM__CODDE_%</strong>。</li>
+<li><strong>境內控制器引入</strong>：引入<code>Managers/AlertManager.lua</code>統一管理和調度這五類變更事件，使用<code>Scheduler</code>實行同步節流與批量更新（<code>BeginBatch/EndBatch</code>），消除佈局本身。</li>
+<li><strong>多型零分配物件池</strong>：在所有服務中配置強調的 <code>StatePool</code> （如 <code>GroundEffectStatePool</code> 和 <code>TotemStatePool</code> 等），在 <code>acquire</code>狀態對象時綁定<code>releaseFunc</code>，並由<code>AlertManager</code>在渲染後識別多__A__EA__A__3__4D__EAMCO`fstate__EAMCO"__EA安全恢復對象，完成期運行0-分配最大限度降低GC目標。</li>
+<li><strong>鏡像載體文字剪裁與遮蔽修改</strong>：針對吸附官方CooldownViewer（CDM）時，因牽引容器<code>ClipsChildren</code>裁切與FrameLevel顯示導致技能名稱不顯示的問題，實施動態佈局調整。寄生模式下自動將技能名稱（<code>nameText</code>）移至圖示底部並設定高亮顯示圖示底部並設定高亮顯色，同時提權<code>FrameLevel</code>（相對於）<code>hostIcon</code> + 10），解決了「看不見的技能名稱」的痛點。</li>
+<li><strong>靜態語法安全性偵測設定</strong>：32個Lua檔案100%滲透語法安全性偵測設定。</li>
+<li><strong>16完成全新與高階事件整合（2026.06.07已）</strong>：<ul>
+<li><strong>替代無效CLEU</strong>：在 <code>GroundEffectService</code> 中全面刪除 <code>COMBAT_LOG_EVENT_UNFILTERED</code> 註冊，改為訂閱 <code>UNIT_SPELLCAST_SUCCEEDED</code> 並篩選 <code>unitTarget == "player"</code>，100% <code>unitTarget == "player"</code>，100% <code>unitTarget == __EAMCODE10%，CO __</code>EAMCODE_3__10%，100%，100%。 <strong>EAMDE_0</strong> 在雪天等，</li>
 </ul>
 </li>
-<li><strong>12.1.0 零分配 &amp; 事件驅動全模組重構 (2026.06.07 已完成)</strong>：<ul>
-<li><strong>完全數據-視圖解耦</strong>：解耦 <code>AuraService</code>、<code>CooldownService</code>、<code>ItemCooldownService</code>、<code>GroundEffectService</code> 與 <code>TotemService</code>，五大數據服務全部改為事件驱动，不再與 <code>Renderer</code> 直接耦合，而是向 <code>EventRouter</code> 拋出對應的 <code>EAM_*_STATE_CHANGED</code> 事件。</li>
-<li><strong>中介控制器引入</strong>：引入 <code>Managers/AlertManager.lua</code> 統一管理和調度這五類變更事件，使用 <code>Scheduler</code> 實作非同步節流與批次更新（<code>BeginBatch/EndBatch</code>），消除 Layout Churn。</li>
-<li><strong>多型零分配物件池</strong>：在所有服務中配置專屬的 <code>StatePool</code>（例如 <code>GroundEffectStatePool</code> 與 <code>TotemStatePool</code> 等），在 <code>acquire</code> 狀態物件時綁定 <code>releaseFunc</code>，並由 <code>AlertManager</code> 在渲染隱藏後多型呼叫 <code>state.releaseFunc(state)</code> 安全回收物件，達成運行期 0-Allocation 極致低 GC 目標。</li>
-<li><strong>影子載體文字剪裁與遮擋修正</strong>：針對吸附官方 CooldownViewer（CDM）時，因原生容器 <code>ClipsChildren</code> 裁切與 FrameLevel 遮擋導致技能名稱不顯示的問題，實作動態佈局調整。寄生模式下自動將技能名稱（<code>nameText</code>）移至圖示內側底部並設為 Highlight 顯色，同時提權 <code>FrameLevel</code>（相對於 <code>hostIcon</code> + 10），解決了「看不見技能名稱」的痛點。</li>
-<li><strong>靜態安全語法檢驗</strong>：32 個 Lua 檔案 100% 通過語法安全性檢驗。</li>
+<li><strong>高頻能量無延遲更新</strong>：在 <code>ClassPowerService</code> 中追加註冊 <code>UNIT_POWER_FREQUENT</code> 事件，使聖能、連擊點更新反應速度達到 0ms 延遲。<ul>
+<li><strong>技能覆蓋動態緊接在</strong>：在<code>CooldownService</code>註冊<code>COOLDOWN_VIEWER_SPELL_OVERRIDE_UPDATED</code>，當法術因天賦/狀態覆蓋變更時，即時刷新被覆蓋或原始技能的冷卻，徹底消除覆蓋時消耗/殘留Bug。</li>
 </ul>
 </li>
-<li><strong>16 大全新與高頻事件整合 (2026.06.07 已完成)</strong>：<ul>
-<li><strong>替代失效 CLEU</strong>：在 <code>GroundEffectService</code> 中全面移除 <code>COMBAT_LOG_EVENT_UNFILTERED</code> 註冊，改為訂閱 <code>UNIT_SPELLCAST_SUCCEEDED</code> 且篩選 <code>unitTarget == "player"</code>，100% 規避 CLEU 在 12.x 中的封閉限制，完美重建暴風雪等地面技能計時。</li>
-<li><strong>高頻能量無延遲更新</strong>：在 <code>ClassPowerService</code> 中追加註冊 <code>UNIT_POWER_FREQUENT</code> 事件，使聖能、連擊點更新反應速度達到 0ms 延遲。</li>
-<li><strong>技能 Override 動態跟隨</strong>：在 <code>CooldownService</code> 註冊 <code>COOLDOWN_VIEWER_SPELL_OVERRIDE_UPDATED</code>，當法術因天賦/狀態 override 變更時，即時刷新被覆蓋或原始技能的冷卻，徹底消除 override 時計時失效/殘留 Bug。</li>
-<li><strong>原生快捷列金色發光同步</strong>：在 <code>AlertManager</code> 中監聽 <code>SPELL_ACTIVATION_OVERLAY_GLOW_SHOW</code> 與 <code>SPELL_ACTIVATION_OVERLAY_GLOW_HIDE</code> 快捷列高亮事件，維護本地 <code>glowSpells</code> 表，以 Decorator（裝飾屬性）形式為 Aura / Cooldown 狀態添加 <code>state.overlayGlow</code> 標記；Renderer 動態支援 <code>pandemicReady</code> 與 <code>overlayGlow</code> 雙軌顯示金色發光，100% 同步官方 Proc 發光。</li>
-<li><strong>靜態安全語法檢驗</strong>：修改之所有 5 個核心檔案 100% 通過 <code>luac -p</code> 的靜態語法檢查。</li>
+<li><strong>新年快速金色發光同步</strong>：在 <code>AlertManager</code> 中監聽 <code>SPELL_ACTIVATION_OVERLAY_GLOW_SHOW</code> 與 <code>SPELL_ACTIVATION_OVERLAY_GLOW_HIDE</code> 快捷列高亮事件，維護本地 <code>glowSpells</code> 表，以 Decorator（裝飾屬性）為形式 Aura / Cooldown 狀態新增 <code>state.overlayGlow</code>_EA_EA__MCO_EA 動態標記。 <code>overlayGlow</code>雙軌顯示金色發光，100%同步官方Proc發光。</li>
+<li><strong>修改靜態語法檢查</strong>：對所有5個核心檔案100%通過 <code>luac -p</code> 的靜態語法檢查。</li>
+<li><strong>調試完成診斷與統計工具修復與擴展 (2026.06.07 已)</strong>：<ul>
+<li>12.1.0修改架構模組後，診斷日誌中 <code>visibleIcons</code> 恆為 <code>0</code> 和 <code>alertFrame.exists</code> 恆為 <code>false</code> 的統計 Bug。</li>
 </ul>
 </li>
-<li><strong>除錯診斷與統計工具修復與擴展 (2026.06.07 已完成)</strong>：<ul>
-<li>修復 12.1.0 模組重構後，診斷日誌中 <code>visibleIcons</code> 恆為 <code>0</code> 與 <code>alertFrame.exists</code> 恆為 <code>false</code> 的統計 Bug。</li>
-<li>擴展 <code>/eam debug</code> 輸出資訊，新增各數據服務的 <code>active</code> 監控 Spell ID 列表、記憶體佔用 <code>memoryKB</code>、<code>glowSpells</code> 發光快取列表、以及 7 大 Alert Frame 底下所有活躍 Icon 的座標與實體 <code>:IsShown()</code> 屬性，極大增強後續除錯與日誌分析穿透力。</li>
-<li>靜態安全語法檢驗：修改之 2 個診斷模組檔案 100% 通過 <code>luac -p</code> 靜態語法檢查。</li>
+<li>補充<code>/eam調試</code>資訊，新增各資料服務的<code>active</code>監控試劑ID清單、記憶體佔用<code>memoryKB</code>、<code>glowSpells</code>發光報表輸出清單、7大警報框底下所有活動圖示的座標與實體<code>:IsShown(5)，
+    -修改靜態語法檢驗：之 2 個診斷模組檔 100% 通過</code>luac -p` 靜態語法檢查。</li>
+<li><strong>技能無冷卻時強行顯示空白圖示Bug修復（2026.06.07已完成）</strong>：</li>
+<li>修改非衝鋒技能在完全沒有在冷卻中（<code>cooldownInfo</code>為<code>nil</code>）時，因<code>infoSafe</code>排除防衛過當而強行在畫面上顯示15個無倒數、無螺旋幾何的空圖示Bug。<ul>
+<li>修改<code>CooldownService.lua</code>的<code>shouldShow</code>邏輯，增加<code>cooldownInfo</code>存在性防護，無冷卻時直接保持不顯示，恢復精確監控。</li>
 </ul>
 </li>
-<li><strong>技能無冷卻時強行顯示空圖示 Bug 修復 (2026.06.07 已完成)</strong>：<ul>
-<li>修復非 Charge 技能在完全沒有在冷卻中（<code>cooldownInfo</code> 為 <code>nil</code>）時，因 <code>infoSafe</code> 判定防衛過當而強行在畫面上顯示 15 個無倒數、無螺旋陰影的空圖示 Bug。</li>
-<li>修正 <code>CooldownService.lua</code> 的 <code>shouldShow</code> 邏輯，增加 <code>cooldownInfo</code> 存在性 guard，無冷卻時直接保持不顯示，回歸精準監控。</li>
-<li>靜態安全語法檢驗：修改之 <code>CooldownService.lua</code> 100% 通過 <code>luac -p</code> 靜態語法檢查。</li>
+<li>修改靜態語法檢查：之 <code>CooldownService.lua</code> 100% 通過 <code>luac -p</code> 靜態語法檢查。</li>
+<li><strong>戰鬥設定（秘密）光環時間倒數降級與自動回復恢復機制（2026.06.07已完成）</strong>：</li>
+<li>當玩家在戰鬥中，光環時間與端點時間被標記為秘密時間，實施優先視角<code>C_TooltipInfo</code>抓取說明中的持續時間（<code>scrapedDur</code>）來建立非秘密的普通<code>DurationObject</code>與分數型計時器（<code>TIMER_NUMERIC</code>），讓器能夠正常渲染倒數。</li>
+<li>在<code>UI/Renderer.lua</code>中維護<code>activeDurationObjects</code>，在統一的<code>onLegacyTimerUpdate</code>系統中每一幀進行突破<code>:IsZero()</code>對抗。一旦爆發，主動觸發與恢復，徹底解決秘密光環殘留Bug。<ul>
+<li>靜態語法檢查：<code>AuraService.lua</code> 與 <code>UI/Renderer.lua</code> 100% 修改 <code>luac -p</code> 靜態語法檢查。</li>
 </ul>
 </li>
-<li><strong>戰鬥受限（Secret）光環時間倒數降級與自動到期回收機制 (2026.06.07 已完成)</strong>：<ul>
-<li>當玩家在戰鬥中，光環時間與過期時間被標記為 Secret 時，實作優先透過 <code>C_TooltipInfo</code> 抓取說明中的持續時間（<code>scrapedDur</code>）來建立非 Secret 的普通 <code>DurationObject</code> 與數值型計時器（<code>TIMER_NUMERIC</code>），讓 Renderer 能正常渲染倒數。</li>
-<li>在 <code>UI/Renderer.lua</code> 中維護 <code>activeDurationObjects</code>，在統一的 <code>onLegacyTimerUpdate</code> 系統中每幀對其進行原生 <code>:IsZero()</code> 判定。一旦到期，主動觸發隱藏與回收，徹底免除 Secret 光環殘留 Bug。</li>
-<li>靜態安全語法檢驗：修改之 <code>AuraService.lua</code> 與 <code>UI/Renderer.lua</code> 100% 通過 <code>luac -p</code> 靜態語法檢查。</li>
+<li><strong>12.1.0零分配StatePool恢復與基於Pool-Token延遲調度之JIT優化實踐（2026.06.09已完成）</strong>：</li>
+<li><strong>P0 記憶體洩漏修復</strong>：在 <code>AuraService.lua</code>、<code>GroundEffectService.lua</code>、<code>TotemService.lua</code> 的 <code>StatePool.acquire</code> 內，統一安全地綁定<code>state.releaseFunc = Pool.release</code>，並在__EAMCODE_5%」時設定為__EAMCODE_5%」圖示後能成功恢復狀態，解決了隱藏了前期分配資產池網格GC流失的嚴重P0 Bug。</li>
+<li><strong>刪除JIT Trace Abort</strong>：完全移除在 OnUpdate 中對 <code>durationObj:IsZero()</code> 的 <code>pairs</code> 輪詢與 <code>pcall</code> 檢查。改為在 <code>Renderer.render</code> 啟動時脈時，穿越 <code>timerTokenPool</code> 零分配令牌池取得令牌，並以 <code>Scheduler.after</code> 註冊單次後續任務。</li>
+<li><strong>極限0-分配發生</strong>：代替時由<code>onDurationTimerExpired(token)</code>判斷token激活狀態以準確與恢復隱藏。整個計時與恢復流程完全完成0-分配（零堆記憶體配置）與零輪詢CPU幾十，消除了戰鬥微卡頓，且熱路徑100%可被LuaJIT編譯，速度提升數百倍。<ul>
+<li><strong>修改靜態語法檢查</strong>：之4個核心檔案全部100%通過 <code>luac -p</code> 靜態語法檢查。</li>
 </ul>
 </li>
-<li><strong>12.1.0 零分配 StatePool 回收與基於 Pool-Token 延時排程之 JIT 優化實作 (2026.06.09 已完成)</strong>：<ul>
-<li><strong>P0 記憶體洩漏修復</strong>：在 <code>AuraService.lua</code>、<code>GroundEffectService.lua</code>、<code>TotemService.lua</code> 的 <code>StatePool.acquire</code> 內，統一安全地綁定 <code>state.releaseFunc = Pool.release</code>，並在 <code>release</code> 時將其設為 <code>nil</code>，100% 確保 <code>AlertManager</code> 在隱藏 icon 後能成功回收 state，解決了預分配物件池耗盡落入 GC Churn 的嚴重 P0 Bug。</li>
-<li><strong>消滅 JIT Trace Abort</strong>：完全移除在 OnUpdate 中對 <code>durationObj:IsZero()</code> 的 <code>pairs</code> 輪詢與 <code>pcall</code> 檢查。改為在 <code>Renderer.render</code> 啟動計時器時，透過 <code>timerTokenPool</code> 零分配令牌池獲取 token，並以 <code>Scheduler.after</code> 註冊單次延期回收任務。</li>
-<li><strong>極限 0-Allocation 效能</strong>：到期時由 <code>onDurationTimerExpired(token)</code> 判斷 token 活躍狀態以精確隱藏與回收。整個計時與回收流程完全達成 0-Allocation（零堆記憶體配置）與零輪詢 CPU 開銷，消除了戰鬥微卡頓，且熱路徑 100% 可被 LuaJIT 編譯，速度提升數百倍。</li>
-<li><strong>靜態安全語法檢驗</strong>：修改之 4 個核心檔案全部 100% 通過 <code>luac -p</code> 靜態語法檢查。</li>
+<li><strong>12.1.0專家矩陣擴展與新專家定義（2026.06.09已完成）</strong>：<ul>
+<li><strong>專家定義</strong>：使用<code>define_subagent</code>定義了<code>EAM_Mock_Sandbox_Expert</code> (MOCK)、<code>EAM_Data_Guard_Expert</code> (DATA)、<code>EAM_DevOps_Release_Expert</code> (DEVOPS) 和 <code>EAM_Combat_Scraper_Expert</code> (<code>EAM_Combat_Scraper_Expert</code> (__EA)CODE7__完成一個全新的專家。</li>
 </ul>
 </li>
-<li><strong>12.1.0 專家矩陣擴展與新專家定義 (2026.06.09 已完成)</strong>：<ul>
-<li><strong>專家定義</strong>：使用 <code>define_subagent</code> 定義了 <code>EAM_Mock_Sandbox_Expert</code> (MOCK)、<code>EAM_Data_Guard_Expert</code> (DATA)、<code>EAM_DevOps_Release_Expert</code> (DEVOPS) 與 <code>EAM_Combat_Scraper_Expert</code> (SCRAPER) 四大全新領域的專家，並在系統中完成註冊。</li>
-<li><strong>RACI 矩陣升級</strong>：修改 <code>Docs/21_RACI_EXPERTS_MATRIX.md</code> 擴展專案的 RACI 職責矩陣，引入「沙盒測試」與「WTF 設定檔遷移」兩個全新的任務領域，確立了新增專家的 R/A/C 分工定位，理清了自動化測試、WTF 設定遷移防禦與 CI 發佈的權責邊界。</li>
-</ul>
-</li>
+<li><strong>修改RACI矩陣升級</strong>：<code>Docs/21_RACI_EXPERTS_MATRIX.md</code>擴展專案的RACI職責矩陣，引入「沙盒測試」與「WTF設定檔遷移」兩個全新的任務領域，認識了新增專家的R/A__EAMCODE_4分機定位測試</li>
 </ul>
     </div>
     <div id="doc-content-en" class="lang-content">
         <a href="AGENTS.md.html" class="back-btn">← Back to AI Entrance (AGENTS)</a>
+<!-- EAM_DOCUMENTATION_SOURCE: zh-TW -->
 <h1 id="eventalertmod-ai-entrance-guide-file">EventAlertMod AI entrance guide file</h1>
-<p>This project is in the process of rewriting the official server of EventAlertMod (EAM). The existing code is only used as a "behavioral reference" and the old architecture cannot be directly used as the basis for the new architecture.</p>
+<p>This project releases the Retail server rewrite of EventAlertMod (EAM). The existing solution code is used as a "behavior reference", and the old architecture can only be directly used as the basis of the new architecture.</p>
 <h2 id="dialog-and-documentation-principles">Dialog and Documentation Principles</h2>
 <ul>
-<li>Default is Taiwanese Traditional Chinese.</li>
-<li>The user is called "Younger".</li>
-<li>Reply directly to the task, keeping clear technical judgment and clear structure.</li>
-<li>WoW AddOn related tasks must first confirm the difference between the official server and the classic server; this project only deals with the official server.</li>
-<li>When it comes to 12.x API, Secret Values, C_* namespace or Widget behavior, please refer to <code>Docs</code> and the latest Warcraft Wiki API change information first.</li>
-<li>Do not claim to have completed WoW official server validation unless it has actually been loaded and tested in WoW Retail.</li>
-<li>During each development, the relevant files in Docs/ must be actively updated simultaneously to maintain the consistency of the documentation and code, and must not passively wait for user instructions (don't move every time).</li>
+<li>Use the default Taiwanese Traditional Chinese.</li>
+<li>The username is "Younger".</li>
+<li>Reply directly to the task, keeping the technology clear and the structure clear.</li>
+<li>WoW AddOn Related tasks must first confirm the differences between the Retail server and the Classic server; this project only deals with the Retail server.</li>
+<li>When it comes to 12.x API, Secret Values, C_* namespaces or Widget behavior, you must first refer to <code>Docs</code> and the latest Warcraft Wiki API change information.</li>
+<li>Official WoW machine validation has not yet been completed, unless it is actually loaded and tested in WoW Retail.</li>
+<li>When developing, the files/related files must be actively updated simultaneously to maintain the consistency of the files and code, and must not wait for user instructions (do not move every moment).</li>
 <li><strong>File and HTML conversion rules</strong>:</li>
-<li>The absolute guidance file for subsequent development and AI collaboration will always use <code>AGENTS.md</code> and the <code>.md</code> file named in its content as the only fact and Facts-of-Truth reference.</li>
-<li>The HTML version is only for human beings (teenagers) to use in a browser so that it is easy to read and read. AI must always use the <code>.md</code> original file as the only basis when reading, writing and referencing, and HTML is not allowed to be used as a development factual reference.</li>
-<li>When <code>./Docs/*.md</code> or <code>./AGENTS.md</code> is modified and contains mind maps (Mermaid), tables, flow charts, and images, the conversion tool (<code>batch_convert_docs.py</code>) must be executed to generate an additional <code>.html</code> file with the same name (such as <code>00_AI_CONTEXT.md.html</code>) in <code>./docs_html</code>.</li>
+<li>The absolute guidance document for subsequent development and AI collaboration will always use <code>AGENTS.md</code> and the <code>.md</code> file named in its content as the only fact and Facts-of-Truth reference.</li>
+<li>The HTML version is easy to read and use for adults (teenagers) in the browser. When AI readers and writers use it as a reference, they must always use the <code>.md</code> original file as the only benchmark, and HTML must not be used as a development factual reference.</li>
+<li>When <code>./Docs/*.md</code> or <code>./AGENTS.md</code> is modified to include a mind map (Mermaid), table, flow chart, or image, the conversion tool (<code>batch_convert_docs.py</code>) must be executed to generate an additional __EAMCODE___ file (such as a file) with the same name in <code>./docs_html</code>.</li>
 </ul>
 <h2 id="must-read-documents">Must-read documents</h2>
-<p>Before making changes to your code, read the following documents:</p>
+<p>Before making changes to your code, please read the following documents:</p>
 <ul>
 <li><code>Docs/00_AI_CONTEXT.md</code></li>
 <li><code>Docs/01_ARCHITECTURE.md</code></li>
@@ -1022,511 +1004,489 @@ For the old discussion thread, please refer to:</p>
 </ul>
 <h2 id="project-goal">Project goal</h2>
 <ul>
-<li>Target game: World of Warcraft Retail only.</li>
-<li>Target API generation: Retail 12.x / Midnight-era AddOn API.</li>
+<li>Target game: Only the official version of World of Warcraft.</li>
+<li>Target API Generation: Live 12.x / Midnight Era AddOn API.</li>
 <li>Architecture direction: event-driven, low GC, modular, and maintainable.</li>
-<li>User experience: retain the positioning of EAM as "simpler, lighter, focused aura and cooldown reminder than WeakAuras".</li>
-<li>Existing data tables, localized strings, Slash Command semantics and user-visible behaviors can be retained; the internal structure should be redesigned.</li>
+<li>User experience: retain the positioning of EAM as "simpler, lighter, focused Aura and cooldown reminder than WeakAuras".</li>
+<li>Existing data tables, localized strings, slash command semantics and user behavior visualization can be retained; the internal structure should be redesigned.</li>
 </ul>
 <h2 id="hard-limit">Hard limit</h2>
 <ul>
 <li>
-<p>Does not support Classi## Secret / Protected Data rules and security checks
-Retail 12.x may mark aura, cooldown, spell, time, unit or string data as Secret / Protected / Display-only. In order to prevent Lua from crashing or blocking errors due to Secret/Protected restrictions during combat, four core inspection API specifications and Table index defense mechanisms must be implemented:</p>
+<p>Classi## secret/protected data rules and security checks are not supported
+Retail 12.x may mark Aura, cooldown, effect, time, unit or string data as Secret / Protected / Display-only. To defend against Lua collisions or head errors caused by Secret/Protected limitations in combat, four core checks API canonical factor table index defense mechanisms are implemented:</p>
 </li>
 <li>
-<p><strong>Four core inspection functions</strong>:</p>
+<p><strong>Four core checking functions</strong>:</p>
 </li>
-<li><code>issecretvalue(value)</code>: Determine whether a specific value is a protected secret value (Secret Value).</li>
+<li><code>issecretvalue(value)</code>: Secret Value to determine whether a specific value is protected.</li>
 <li><code>canaccessvalue(value)</code>: Determine whether you currently have permission to access and read the value.</li>
-<li><code>canaccesstable(table)</code>: Determines whether the entire table object can be safely read (not Restricted).</li>
-<li><code>issecrettable(table)</code> / <code>hasanysecretvalues(table)</code>: Check whether the table object structure itself has been restricted or contains secret values.</li>
-<li><strong>Table index prevention (Critical)</strong>: It is strictly prohibited to use keys that may be secret values ​​(such as unverified <code>spellId</code> or <code>text</code>, etc.) to perform index operations on any non-secure custom table, otherwise the <code>attempted to index a table that cannot be indexed with secret keys</code> critical error will be triggered immediately. Before indexing a custom config table, you must first ensure that the key is not a protected secret value with <code>issecretvalue(key)</code> and check table security with <code>canaccesstable(targetTable)</code>.</li>
-<li>First confirm whether the source table is readable (<code>canaccesstable</code>), then read the field, and then confirm whether the field value is Secret (<code>issecretvalue</code>).</li>
-<li>Do not perform arithmetic, comparison, stringification, table key, serialization or any function transfer on duration, expirationTime, spellID, timeLeft and other values ​​before confirming safety.</li>
-<li>Don't fudge duration, expiration, cooldown or stack values.</li>
-<li>Guess values ​​must not be mixed into facts; derived values ​​must be marked as derived.</li>
-<li>When the data cannot be obtained safely, the icon, name, and active states that can be safely displayed are retained, and the timer is displayed as protected, displayOnly, or unknown.</li>
-<li>Debug status needs to record boundaryWarnings.</li>
+<li><code>canaccesstable(table)</code>: Determines whether the entire table object can be safely read (not schema).</li>
+<li><code>issecrettable(table)</code> / <code>hasanysecretvalues(table)</code>: Check whether the table object structure itself is restricted or contains secret values.</li>
+<li><strong>Table index protection (key)</strong>: It is strictly prohibited to use keys with secret values ​​(such as <code>spellId</code> or <code>text</code>, etc. that guarantee verification) to index any non-secure serious custom tables, otherwise the <code>attempted to index a table that cannot be indexed with Key Secrets</code> error will be triggered immediately. Before customizing the table index, you must first use <code>issecretvalue(key)</code> to confirm that the golden key is not a protected secret value, and use <code>canaccesstable(targetTable)</code> to check the table security.</li>
+<li>First confirm whether the source table is secret (<code>canaccesstable</code>), then read the field, and then confirm whether the field value is secret (<code>issecretvalue</code>).</li>
+<li>Do not perform arithmetic, comparison, stringification, table keying, serialization or any function input on duration, expirationTime, spellID, timeLeft and other values ​​before confirming safety.</li>
+<li>No squeeze on creation duration, transition time, cooldown, or required value.</li>
+<li>Guess values ​​must not be mixed with facts; derived value tags must be derived values.</li>
+<li>When the data cannot be obtained safely, the icon, name, and activity status that can be safely displayed are retained, and the timer is displayed as protected, displayOnly, or unknown.</li>
+<li>Error detection status needs to record boundaryWarnings.</li>
 <li>
-<p>If possible, schedule a refresh after leaving combat. Aura, cooldown, spell, time, unit or string data can be marked as Secret / Protected / Display-only. In order to prevent Lua from crashing or blocking errors due to Secret/Protected restrictions during combat, four core inspection API specifications and Table index defense mechanisms must be implemented:</p>
+<p>If equipped, the schedule is refreshed after leaving combat. Ability to mark Aura, cooldown, spell, time, unit or string data as secret/protected/display only. In order to prevent Lua from crashing or crashing due to secret/protected restrictions during combat, four core inspections of API specifications and table index defense mechanisms are required:</p>
 </li>
 <li>
 <p><strong>Three core inspection functions</strong>:</p>
 </li>
-<li><code>issecretvalue(value)</code>: Determine whether a specific value is a protected secret value (Secret Value).</li>
+<li><code>issecretvalue(value)</code>: Secret Value to determine whether a specific value is protected.</li>
 <li><code>canaccessvalue(value)</code>: Determine whether you currently have permission to access and read the value.</li>
-<li><code>canaccesstable(table)</code>: Determines whether the entire table object can be safely read (not Restricted).</li>
-<li><strong>Table special inspection and index defense</strong>:</li>
-<li><code>isserettable(table)</code>: Checks whether the target table itself has been marked as a Secret Table.</li>
+<li><code>canaccesstable(table)</code>: Determines whether the entire table object can be safely read (not schema).</li>
+<li><strong>Table special checking and index defense</strong>:</li>
+<li><code>isserettable(table)</code>: Checks whether the target table itself has been marked as Secret Table.</li>
 <li><code>hasanysecretvalues(table)</code>: Check if the table contains any secret values ​​(Secret Values).</li>
-<li><strong>Table index prevention (Critical)</strong>: It is strictly prohibited to use keys that may be secret values ​​(such as unverified <code>spellId</code> or <code>text</code>, etc.) to perform index operations on any non-secure custom table, otherwise the <code>attempted to index a table that cannot be indexed with secret keys</code> critical error will be triggered immediately. Before indexing a custom config table, you must first ensure that the key is not a protected secret value with <code>issecretvalue(key)</code> and check table security with <code>canaccesstable(targetTable)</code>.</li>
-<li>First confirm whether the source table is readable (<code>canaccesstable</code>), then read the field, and then confirm whether the field value is Secret (<code>issecretvalue</code>).</li>
-<li>Do not perform arithmetic, comparison, stringification, table key, serialization or any function transfer on duration, expirationTime, spellID, timeLeft and other values ​​before confirming safety.</li>
-<li>Don't fudge duration, expiration, cooldown or stack values.</li>
-<li>Guess values ​​must not be mixed into facts; derived values ​​must be marked as derived.</li>
-<li>When the data cannot be obtained safely, the icon, name, and active states that can be safely displayed are retained, and the timer is displayed as protected, displayOnly, or unknown.</li>
-<li>Debug status needs to record boundaryWarnings.</li>
-<li>If possible, schedule a refresh after leaving combat.</li>
+<li><strong>Table index protection (key)</strong>: It is strictly prohibited to use keys with secret values ​​(such as <code>spellId</code> or <code>text</code>, etc. that guarantee verification) to index any non-secure serious custom tables, otherwise the <code>attempted to index a table that cannot be indexed with Key Secrets</code> error will be triggered immediately. Before customizing the table index, you must first use <code>issecretvalue(key)</code> to confirm that the golden key is not a protected secret value, and use <code>canaccesstable(targetTable)</code> to check the table security.</li>
+<li>First confirm whether the source table is secret (<code>canaccesstable</code>), then read the field, and then confirm whether the field value is secret (<code>issecretvalue</code>).</li>
+<li>Do not perform arithmetic, comparison, stringification, table keying, serialization or any function input on duration, expirationTime, spellID, timeLeft and other values ​​before confirming safety.</li>
+<li>No squeeze on creation duration, transition time, cooldown, or required value.</li>
+<li>Guess values ​​must not be mixed with facts; derived value tags must be derived values.</li>
+<li>When the data cannot be obtained safely, the icon, name, and activity status that can be safely displayed are retained, and the timer is displayed as protected, displayOnly, or unknown.</li>
+<li>Error detection status needs to record boundaryWarnings.</li>
+<li>If possible, the schedule will leave combat shortly.</li>
 </ul>
 <h2 id="taint-control-rules">Taint control rules</h2>
 <ul>
-<li>Do not hook, override, redefine or monkey patch Blizzard secure/protected functions, FrameXML core functions, action button, unit frame, nameplate, spell cast, targeting, item use related paths.</li>
-<li>Do not modify the protected frame's attribute, parent, anchor, size, visibility, template or click behavior in combat.</li>
-<li>Do not pass EAM runtime state, secret/protected value, debug object or addon callback into the Blizzard frame that may pollute the secure chain.</li>
-<li>EventRouter uses orphan frames; the Renderer frame is only responsible for display and does not assume secure action or protected interaction.</li>
-<li>If you need to operate the frame under UIParent, it must be limited to non-protected display purposes, and it may cause structural changes to the taint after the <code>InCombatLockdown()</code> delay.</li>
-<li>Do not use <code>forceinsecure</code>, do not attempt to clear or bypass taint, and do not suppress Blizzard blocked actions with third-party workarounds.</li>
-<li>When taint, blocked action, and combat lockdown errors are found, they need to be recorded in <code>Docs/15_DEVELOPMENT_ISSUE_LOG.md</code>, and the trigger path, combat status, and reproducible steps must be marked.</li>
+<li>No hooking, overriding, redefining or monkey-patching Blizzard secure/protected functions, FrameXML core functions, action buttons, unit frames, nameplates, spell casting, positioning, item usage related paths.</li>
+<li>Do not modify the protected frame's properties, parent, rule points, size, visibility, template or click behavior in combat.</li>
+<li>Do not use EAM runtime state, secret/protection values, debugging objects, or plug-in callbacks to form Blizzard frameworks that could pollute the security chain.</li>
+<li>Use EventRouter orphan framework; the rendering framework is only responsible for display and not responsible for safe operations or protected interactions.</li>
+<li>If you need to restrict operations to the frame below a UIParent, you must do so in unprotected display use, and delaying <code>InCombatLockdown()</code> may cause structural changes to the taint.</li>
+<li>Do not use <code>forceinsecure</code>, do not attempt to clear or bypass contamination points, or use third-party workarounds to suppress Blizzard blocking operations.</li>
+<li>When stains, blocked actions, or combat lock errors are found, they need to be recorded to <code>Docs/15_DEVELOPMENT_ISSUE_LOG.md</code> and bound to the trigger path, combat status, and resettable steps.</li>
 </ul>
 <h2 id="durationobject-and-time-display">DurationObject and time display</h2>
 <ul>
-<li>Secret or protected time data must not use <code>OnUpdate</code> to count down by itself.</li>
-<li>If Retail provides a DurationObject, it will be handled by the native UI first, such as <code>CooldownFrame:SetCooldownFromDurationObject()</code> or <code>FontString:SetDurationText()</code>.</li>
-<li><code>Cooldown:SetCountdownFormatter()</code>, <code>Cooldown:SetCountdownMillisecondsThreshold()</code> and other related capabilities after 12.0.5 need to be used after confirming the files and actual machines.</li>
-<li>Manual timer strings can only be used with common values ​​that have been confirmed to be safe.</li>
+<li>Secret or protected time data may not be used with <code>OnUpdate</code> Mobile Countdown.</li>
+<li>If Retail provides DurationObject, override UI processing, e.g. <code>CooldownFrame:SetCooldownFromDurationObject()</code> or <code>FontString:SetDurationText()</code>.</li>
+<li><code>Cooldown:SetCountdownFormatter()</code>, <code>Cooldown:SetCountdownMillisecondsThreshold()</code>, etc. The related capabilities after 12.0.5 need to be confirmed with files and actual machines before use.</li>
+<li>Manual timer keypad is only used to confirm safe normal numbers.</li>
 </ul>
-<h2 id="tooltip-c_tooltipinfo-downgrade-strategy">Tooltip / C_TooltipInfo downgrade strategy</h2>
-<p>Tooltip parsing can only be used as a fallback for low-frequency, conservative, clearly marked sources:
-- Prefer using <code>C_TooltipInfo</code> or the display object supported by Blizzard.
+<h2 id="tooltips-c_tooltipinfo-downgrade-strategy">Tooltips / C_TooltipInfo Downgrade Strategy</h2>
+<p>Tooltip parsing can only be used as a fallback for low-frequency, screenshots, and clearly marked sources:
+- Prefer using <code>C_TooltipInfo</code> or Blizzard supported display items.
 - Can parse explicit numerical values ​​in static description text.
-- Don't parse dynamic remaining time literals as facts.
-- Don't perform tooltip scraping in hot paths, in combat, or every frame.
-- Parsing results must not override security API facts and can only be used as derived or display-only auxiliary.
-- Must downgrade silently when parsing fails and must not cause misleading timers.</p>
-<h2 id="events-and-frame-rules">Events and Frame rules</h2>
+- Don't parse remaining time literals as facts.
+- No tooltip grabs performed in hot paths, in combat, or every frame.
+- The parsed results cannot overwrite the security API facts and can only be exported or displayed only as auxiliary.
+- Quiet must be downgraded when parsing fails, and dim timer cannot be generated.</p>
+<h2 id="event-and-frame-rules">Event and frame rules</h2>
 <ul>
-<li>Use a single EventRouter for event dispatch.</li>
-<li>Pure event listening frame uses orphan frame: <code>CreateFrame("Frame", nil, nil)</code>.</li>
+<li>Event specifications use a single EventRouter.</li>
+<li>Pure event listening architecture uses orphan framework: <code>CreateFrame("Frame", nil, nil)</code>.</li>
 <li>Does not assume logical dispatcher responsibilities on UIParent-parented frames.</li>
-<li>Don't dynamically register or unregister events for UI-parented frames in combat.</li>
-<li>Event registration changes should be managed centrally to avoid repeated churn.</li>
+<li>Do not dynamically register or unregister events to the UI parent frame during combat.</li>
+<li>Event registration changes should be managed centrally to avoid duplication of water supply.</li>
 </ul>
-<h2 id="scheduler-and-performance-rules">Scheduler and Performance Rules</h2>
+<h2 id="scheduler-and-all-rules">Scheduler and all rules</h2>
 <ul>
-<li>Priority event driven; scheduled fallback must be centralized, low-frequency, and throttling.</li>
-<li>Only use a single Scheduler <code>OnUpdate</code>.</li>
-<li>Disable timer-per-icon, timer-per-spell, hot path iteration <code>C_Timer.After(function() ...)</code>.</li>
-<li><code>UNIT_AURA</code>, <code>SPELL_UPDATE_COOLDOWN</code>, <code>OnUpdate</code>, and Renderer updates belong to the hot path.</li>
+<li>Priority event driven; scheduled rollback must be concentrated, low-frequency, and throttling.</li>
+<li>Only use a single schedule <code>OnUpdate</code>.</li>
+<li>It is forbidden to attach icon timers, application timers, and hot paths to repeat <code>C_Timer.After(function() ...)</code>.</li>
+<li><code>UNIT_AURA</code>, <code>SPELL_UPDATE_COOLDOWN</code>, <code>OnUpdate</code>, renderer updates belong to the hot path.</li>
 <li>Hot paths must not be configured with temporary tables, closures or unnecessary strings.</li>
-<li>Hot path avoidance <code>pairs</code> / <code>ipairs</code>; use numeric loop when stable numeric index is available.</li>
-<li>Hot path avoidance <code>table.insert</code>; uses direct index when writing with direct index available.</li>
-<li>Use buffer and <code>table.concat</code> to group strings in loops to avoid continuous <code>..</code>.</li>
-<li>Non-essential work should be delayed, curtailed or stopped during low FPS or combat.</li>
-<li>Large-scale item scanning must not be executed in normal runtime; if item-spell cache is required, it must be opt-in, idle-only, interruptible, FPS-aware, and combat-aware.</li>
+<li>Hot path avoidance <code>pairs</code> / <code>ipairs</code>; use digit looping when stable numeric indexing is available.</li>
+<li>Hot path avoidance <code>table.insert</code>; use direct indexing when writing with direct indexing available.</li>
+<li>Use buffer and <code>table.concat</code> for group strings in loops to avoid continuous <code>..</code>.</li>
+<li>Non-essential work should be postponed, reduced or stopped during low FPS or combat.</li>
+<li>Large-scale item scanning cannot be performed when fighting normally; if magic storage is required, choose Join, Idle Only, Interruptible, FPS Fishing, or Combat Fishing.</li>
 </ul>
 <h2 id="tablecreate-tablefreeze-policy">table.create / table.freeze policy</h2>
 <ul>
-<li><code>table.create</code> for predictable configuration: array, pool, ring buffer, record list, icon pool, default template.</li>
-<li><code>table.create</code>, <code>table.freeze</code>, <code>table.isfrozen</code> fallback must be provided.</li>
-<li><code>table.freeze</code> is only used for immutable static data: constants, enum, schema, default field profile, module contract, prototype, metatable.</li>
-<li>Stable API alias tables, such as <code>EAM.API</code>, can be frozen, but only when confirmed that it will not cause loading sequence or testing difficulties.</li>
-<li>SavedVariables, runtime cache, aura/cooldown state, icon state, pool object, scheduler queue, debug/session record must not be frozen.</li>
+<li><code>table.create</code> is used for expected settings: charts, graphs, flow charts, record lists, icon pools, and default templates.</li>
+<li>Must provide <code>table.create</code>, <code>table.freeze</code>, <code>table.isfrozen</code> backup.</li>
+<li><code>table.freeze</code> only for immutable static data: enums, patterns, default field profiles, contract modules, prototypes, metatables.</li>
+<li>Stable API alias tables can be frozen, e.g. <code>EAM.API</code>, but only when confirmed without causing load sequence or test failures.</li>
+<li>SavedVariables, runtime cache, Aura/cooldown status, icon status, pool items, scheduler queue, debug/session records must not be frozen.</li>
 </ul>
-<h2 id="ui-renderer-rules">UI / Renderer Rules</h2>
+<h2 id="uirenderer-rules">UI/renderer rules</h2>
 <ul>
-<li>Renderer does not check the API directly; the data is provided by the service layer.</li>
-<li>Icons, buttons, and FontString use pool.</li>
-<li>Renderer does not execute secure action, does not register click-cast, does not change Blizzard protected frame, and does not pollute the action bar / unit frame / nameplate path.</li>
-<li>Avoid unnecessary frame creation after initialization.</li>
-<li><code>SetText</code>, <code>SetPoint</code>, <code>SetSize</code>, <code>SetTexture</code>, layout compare the previous value before writing.</li>
-<li>During batch layout, you can hide the parent first and then display it after completion.</li>
-<li>Supports timer, stack, spell name, aura value label, but only displays safe information.</li>
-<li>The UI defaults are kept simple and EAM cannot be made into a WeakAuras complex system.</li>
+<li>The renderer does not check the API directly; the information is provided by the service layer.</li>
+<li>Use the pool for icons, buttons, and FontString.</li>
+<li>The renderer does not perform safe operations, does not register click maps, does not modify Blizzard protection frames, and does not operate Taint column/unit frame/nameplate paths.</li>
+<li>Avoid building redundant frames after initialization.</li>
+<li><code>SetText</code>, <code>SetPoint</code>, <code>SetSize</code>, <code>SetTexture</code>, layout compare the last value before writing.</li>
+<li>During batch layout, you can hide the parent first and then show it after completion.</li>
+<li>Supports timers, potion names, and halo value labels, but only displays safety information.</li>
+<li>UI defaults are kept simple and EAM cannot be introduced into WeakAuras complex systems.</li>
 </ul>
 <h2 id="savedvariables-rules">SavedVariables Rules</h2>
 <ul>
-<li>SavedVariables must have a schema version.</li>
-<li>Provide old data migration, defaults, and validation.</li>
-<li>Do not freeze SavedVariables.</li>
-<li>Does not write per-frame or high-frequency runtime state.</li>
-<li>Fields that cannot be safely migrated must be kept as backups or marked as legacy, and user settings cannot be destroyed silently.</li>
+<li>SavedVariables must have an architecture version.</li>
+<li>Provide old data migration, default, and verification.</li>
+<li>Don't freeze SavedVariables.</li>
+<li>Does not read every frame or high runtime state.</li>
+<li>Fields that cannot be safely migrated must be backed up or marked as genetic, and user settings must not be silently destroyed.</li>
 </ul>
-<h2 id="debug-ai-handover-rules">Debug / AI handover rules</h2>
+<h2 id="debuggingai-handover-rules">Debugging/AI handover rules</h2>
 <ul>
-<li>Debug is turned off by default.</li>
-<li>Debug export must be on-demand.</li>
+<li>Debug preset is off.</li>
+<li>Debugging Debugging must be achieved.</li>
 <li>Snapshot needs to be split:</li>
-<li>facts</li>
-<li>derived</li>
-<li>human notes</li>
-<li>boundaryWarnings
-  -environment</li>
-<li>Do not output huge logs.</li>
+<li>Facts</li>
+<li>derived
+  ——Human Notes</li>
+<li>boundaryWarnings</li>
+<li>environment</li>
+<li>No huge log output.</li>
 <li>Export strings are only created when explicitly requested by the user.</li>
 </ul>
-<h2 id="programming-style">Programming style</h2>
+<h2 id="course-style">Course Style</h2>
 <ul>
-<li>Identifier is in English.</li>
-<li>Comments are available in Traditional Chinese and focus on WoW API boundaries, performance reasons, and architectural decisions.</li>
-<li>All officially loaded program files must have file-level comments describing the module philosophy, responsibility boundaries, data ownership and future maintenance precautions; details are in <code>Docs/12_CODE_COMMENTARY_GUIDE.md</code>.</li>
+<li>Use Chinese for identifiers.</li>
+<li>Annotations can be in Traditional Chinese, focusing on WoW API boundaries, reasons and architectural decisions.
+-All officially loaded project files must have file system comments describing the module, responsibility boundaries, data numbers and future precautions; details are as per <code>Docs/12_CODE_COMMENTARY_GUIDE.md</code>.</li>
 <li>Use 4 spaces for indentation.</li>
 <li>Do not use inline semicolons.</li>
-<li>Namespace/Module uses PascalCase.</li>
-<li>Function/local variable uses camelCase.</li>
-<li>Private function / private table are prefixed with <code>_</code>.</li>
-<li>Constant uses UPPER_SNAKE_CASE.</li>
+<li>Namespaces/modules use PascalCase.</li>
+<li>Use camelCase for functions/local variables.</li>
+<li>Conduit functions/conduit tables are exported as <code>_</code>.</li>
+<li>Symbol use UPPER_SNAKE_CASE.</li>
 </ul>
 <h2 id="file-backup-rules">File backup rules</h2>
 <ul>
 <li>Any files must be backed up to the <code>backup/</code> folder in the project root directory before being deleted, moved, overwritten or modified.</li>
 <li>The backup file name format is "original file name suffix <code>__yyyyMMddHHmmss</code>", for example <code>AGENTS.md__20260526122904</code>.</li>
-<li>The timestamp uses local time, in the format of year, month, day, hour, minute and second, making it easy to sort and trace by time.</li>
-<li>If you want to process multiple files, you should back them up one by one before starting the same batch of operations; actual modification, move or deletion can only be done after the backup is completed.</li>
-<li>The backup folder is only used as a reference source for future development, accidental deletion and backtracking, and must not be packaged into the CurseForge release file.</li>
-<li>If the original file does not exist, the reason must be reported first, and no empty backup may be created to pretend to be the original content.</li>
+<li>Use the timer's local time in the format of year, month, day, hour, minute and second, which is convenient for sorting time and tracing.
+-When processing multiple files, they should be backed up one by one before starting the same job; actual modification, movement or deletion can only be carried out after the backup is completed.</li>
+<li>The backup folder is only used as a reference source for future development, modification and backtracking, and must not be compressed into CurseForge release files.</li>
+<li>If the original file does not exist, the reason must be returned first. An empty backup cannot be created to pretend to be the original content.</li>
 </ul>
-<h2 id="development-problem-recording-rules">Development problem recording rules</h2>
+<h2 id="develop-problem-recording-rules">Develop problem recording rules</h2>
 <ul>
-<li>Bottlenecks, limitations, errors, tool failures, API uncertainties and solutions encountered during the development process must be recorded in <code>Docs/15_DEVELOPMENT_ISSUE_LOG.md</code>.</li>
-<li>The purpose of recording is to reduce repeated trials and errors in the future, save AI context/token, and retain decision-making context.</li>
-<li>Each record contains at least the date, situation, symptoms, cause judgment, tried methods, effective solutions, and follow-up precautions.</li>
-<li>If the issue has not been resolved, please mark it as "Unresolved" and indicate the next step of verification.</li>
-<li>Do not record passwords, tokens, personal account information, or any sensitive information that should not enter project files.</li>
+<li>Bottlenecks, limitations, errors, tool failures, API requirements and solutions encountered during the development process are all recorded in <code>Docs/15_DEVELOPMENT_ISSUE_LOG.md</code>.</li>
+<li>The ultimate purpose is to reduce repeated trial and error in the future, save AI up and down /token, and retain the context of decision-making.</li>
+<li>Each record contains at least the appointment, symptoms, cause judgment, tried methods, effective solutions, and follow-up matters and precautions.</li>
+<li>If the problem has not been resolved, please mark it as "Unresolved" and indicate the next step of verification.</li>
+<li>Do not log passwords, tokens, private account information, or any sensitive information entering project files.</li>
 </ul>
-<h2 id="project-specific-skill-rules">Project-specific Skill rules</h2>
+<h2 id="project-specific-skill-rules">Project-specific skill rules</h2>
 <ul>
-<li>If the same type of process is found to be repeated during the development process, and stable steps, input conditions, output results and risk control are in place, it should be organized into a SKILL exclusive to the EventAlertMod project.</li>
-<li>Processes suitable for conversion to SKILL include: packaging and publishing, Lua static verification, WoW API verification, SavedVariables migration check, Secret boundary review, file synchronization, and language file synchronization.</li>
-<li>Currently <code>eam-retail-p0-review</code> has been created at <code>.codex/skills/eam-retail-p0-review/SKILL.md</code> for the P0 Secret/Taint/API/static verification process of EAM Retail rewrite.</li>
-<li>Before creating SKILL, you need to confirm that the process is indeed repeatable, and record existing bottlenecks and solutions to <code>Docs/15_DEVELOPMENT_ISSUE_LOG.md</code>.</li>
-<li>SKILL content should include trigger conditions, necessary pre-checks, prohibited matters, backup rules, verification methods and final report format.</li>
-<li>Processes that have not yet been verified, still require manual judgment, or contain sensitive information must not be made into a fully automated SKILL.</li>
+<li>If similar processes are found to be repeated during the development process, and stable steps, input conditions, output results and risk control management are in place, they should be organized into EventAlertMod special case SKILL.</li>
+<li>Processes suitable for conversion to SKILL include: compressed release, Lua static verification, WoW API query, SavedVariables migration check, secret boundary review, file synchronization, and document synchronization.
+-Currently, <code>eam-Retail-p0-review</code> has been established at the location of <code>.codex/skills/eam-Retail-p0-review/SKILL.md</code>, which is used for static verification of the P0 Secret/Taint/API/static verification of the EAM Retail server rewrite.</li>
+<li>Before establishing SKILL, you need to confirm that the process is indeed repeatable. Jiangsu Lakes and solutions are recorded in <code>Docs/15_DEVELOPMENT_ISSUE_LOG.md</code>.</li>
+<li>The SKILL content should include trigger conditions, necessary pre-checks, prohibited items, backup rules, verification methods and final return format.</li>
+<li>Process hard assistance skills that have not yet been verified, require manual judgment, or contain sensitive information.</li>
 </ul>
-<h2 id="subagent-usage-rules">Subagent usage rules</h2>
+<h2 id="subagent-program-usage-rules">Subagent program usage rules</h2>
 <ul>
-<li>The user has authorized: If there is a situation suitable for subagent in this project in the future, you need to actively plan and use it.</li>
-<li>Determine the critical path before use; work that immediately blocks the main process is handled locally by the main agent.</li>
-<li>Subagent is mainly used for sidecar tasks that are parallel, clear, acceptable and do not cover each other.</li>
-<li>Suitable scenarios include: Retail API verification, Secret / taint review, hot path scanning, Docs consistency check, non-overlapping file slicing of modular rewrite, package release check.</li>
-<li>Unsuitable scenarios include: small single-file modifications, high-risk operations that require immediate authorization, large-scale moves/deletions that have not been backed up, and highly coupled changes with highly overlapping write ranges.</li>
-<li>File responsibility boundaries, prohibited items, backup rules, verification output and final report format must be clearly specified when dispatching work.</li>
-<li>Subagent results need to be integrated by the main agent; the subagent's API judgment must not be considered to have been verified on the actual machine.</li>
-<li>See <code>Docs/17_SUBAGENT_WORKFLOW.md</code> for the detailed process.</li>
-<li>All collaboration and PR review must strictly follow the RACI separation of responsibilities and review principles of <a href="file:///d:/EventAlertMod/Docs/21_RACI_EXPERTS_MATRIX.md.html">Docs/21_RACI_EXPERTS_MATRIX.md</a>.</li>
+<li>The user has been authorized: If a role suitable for a sub-agent appears in this project in the future, you need to proactively plan and use it.</li>
+<li>Use to determine the critical path first; immediately block the work of the main process and process it locally by the main agent.</li>
+<li>Subagents are primarily taskable, clear, appreciable and do not override each other's sidecar tasks.</li>
+<li>Suitable molds include: Retail server API verification, Secret/taint review, hot path scanning, file consistency check, non-overlapping file slicing for modular replacement, and release check.</li>
+<li>Unsuitable architectures include: small single file modifications, high-risk operations that require immediate authorization, uninstalled moves/deletions that have not been lost, and high correlations with highly overlapping write ranges.</li>
+<li>When dispatching workers, the scope of file responsibilities, prohibited items, backup rules, verification output and final return format must be clearly specified.</li>
+<li>Subagent results need to be integrated by the master agent; subagent API determinations must not be considered machine-validated.</li>
+<li>Please refer to <code>Docs/17_SUBAGENT_WORKFLOW.md</code> for detailed procedures.</li>
+<li>All collaboration with PR review must strictly follow the RACI division of responsibilities and review principles of <a href="file:///d:/EventAlertMod/Docs/21_RACI_EXPERTS_MATRIX.md.html">Docs/21_RACI_EXPERTS_MATRIX.md</a>.</li>
 </ul>
 <h2 id="implementation-process">Implementation process</h2>
 <ol>
-<li>Audit: Read the complete source tree, TOC, XML, SavedVariables, global, Classic/MOP branch, OnUpdate/C_Timer, aura/cooldown/item API.</li>
-<li>Plan: Define module responsibilities and migration strategies first before starting large-scale changes.</li>
-<li>Rewrite: Create Core, Services, UI, and Debug modules to retain available data and user semantics.</li>
-<li>Static Validation: Execute available Lua syntax check, global variable search, <code>C_Timer.After</code> closure search, <code>table.freeze</code> misuse search.</li>
-<li>Report: Be clear about return changes, unverified projects, risks and next steps.</li>
+<li>Audit: read the complete source code tree, TOC, XML, SavedVariables, global, Classic/MOP branch, OnUpdate__EAMCODE_5_ _, Halo/cooldownOnUpdate/C_Timer, auraEAMCODED__, ACODE_4<strong><em>_</em>, aCODE_3</strong>, auraEAMCODEA__, A__uraEA__3__A__a☺</li>
+<li>Solution design: first determine module responsibilities and migration strategies, and then start large-scale modules.</li>
+<li>Rewrite: Establish core, service, UI, and debugging modules to obtain available data and user semantics.</li>
+<li>Static verification: perform available Lua syntax check, global variable search, <code>C_Timer.After</code> closure search, <code>table.freeze</code> error search.</li>
+<li>Report: Identify changes, unverified items, risks and next steps.</li>
 </ol>
-<h2 id="shortcut-commands">Shortcut commands</h2>
+<h2 id="quick-instructions">Quick instructions</h2>
 <ul>
-<li>When the user only enters the word "Package", <code>Tools/Build-CurseForgePackage.ps1</code> is executed directly.</li>
-<li>When the user enters "Package development version", execute <code>Tools/Build-CurseForgePackage.ps1 -DevMode</code> directly.</li>
-<li>Before packaging, you need to confirm that the <code>## Version</code> of <code>EventAlertMod.toc</code> conforms to <code>EventAlertMod_MN_yyyyMMdd</code>.</li>
-<li>The packaged output file name must match <code>EventAlertMod_MN_yyyyMMdd_HHmmss.zip</code>.</li>
-<li>Report the zip path, Lua syntax check results, and excluded folder check results after packaging.</li>
-<li>See <code>Docs/14_PACKAGING_GUIDE.md</code> for relevant rules.</li>
+<li>When the user only enters the word "resource", <code>Tools/Build-CurseForgePackage.ps1</code> is executed directly.</li>
+<li>When the user enters "compressed development version", <code>Tools/Build-CurseForgePackage.ps1 -DevMode</code> is executed directly.</li>
+<li>Before foldering, you need to confirm that the <code>## version</code> of <code>EventAlertMod.toc</code> matches <code>EventAlertMod_MN_yyyyMMdd</code>.</li>
+<li>The budget file name must comply with <code>EventAlertMod_MN_yyyyMMdd_HHmmss.zip</code>.</li>
+<li>Return zip path, Lua syntax check results, and excluded folder check results after compression.</li>
+<li>See <code>Docs/14_PACKAGING_GUIDE.md</code> for related rules.</li>
 </ul>
 <h2 id="the-final-return-must-contain">The final return must contain</h2>
-<p>The final report of each implementation pass must at least list:</p>
+<p>Final reports on relevant practices are now available at least:</p>
 <ol>
-<li>Change files.</li>
+<li>Change the file.</li>
 <li>Major architectural changes.</li>
-<li>Retained legacy EAM behavior.</li>
-<li>Old behavior removed.</li>
-<li>Lua/WoW API assumptions.</li>
+<li>Retain the old EAM behavior.</li>
+<li>Remove old behavior.</li>
+<li>Lua / WoW API Assumptions.</li>
 <li><code>table.create</code> / <code>table.freeze</code> uses summary.</li>
-<li>Secret/Protected Data processing strategy.</li>
-<li>Static verification performed.</li>
-<li>Validation not performed.</li>
-<li>Necessary WoW Retail real-world testing.</li>
-<li>Known Risks.</li>
+<li>Confidential/Protected Data Handling Policy.</li>
+<li>Static verification has been performed.</li>
+<li>Validation not performed.
+10.WoW officially serves the needs of real machine testing.</li>
+<li>Known risks.</li>
 <li>Next suggested task.</li>
 </ol>
-<h2 id="latest-reconstruction-progress-of-the-project-updated-on-20260606">Latest reconstruction progress of the project (updated on 2026.06.06)</h2>
-<h3 id="1-completed-core-refactoring-retail-1207">1. Completed core refactoring (Retail 12.0.7)</h3>
+<h2 id="latest-reconstruction-details-of-the-project-updated-on-20260606">Latest reconstruction details of the project (updated on 2026.06.06)</h2>
+<h3 id="1-core-reconstruction-completed-retail-1207">1. Core reconstruction completed (Retail 12.0.7)</h3>
 <ul>
-<li><strong>Full code localization cleaning (12.0.7 - 2026.06.06)</strong>:<ul>
-<li>All hard-coded Chinese/English prompt nouns and UI display strings in the entire file (including all logic in the <code>Services</code> and <code>UI</code> directories) have been completely extracted as Keys in <code>EAM.L</code>.</li>
-</ul>
-</li>
-<li>Complete and seamlessly support five major language families: <code>zhTW</code> (Traditional Chinese), <code>zhCN</code> (Simplified Chinese), <code>enUS</code> (English base), <code>koKR</code> (Korean) and <code>ruRU</code> (Russian), with a total of 144 entries.<ul>
-<li><strong>Dynamic Specialization Localization API Refactoring</strong>: Introduce <code>CLASS_TOKEN_TO_ID</code> mapping in the filter drop-down menu of <code>UI/Options.lua</code>, give priority to calling the official native API <code>GetSpecializationInfoForClassID</code> to obtain the most accurate localized specialization name, and provide a dual-track backup fallback line of defense.</li>
-</ul>
-</li>
-<li><strong>ClassPower core resource security and debugging enhancement</strong>:<ul>
-<li>Deploy a full set of <code>pcall</code> isolation and <code>issecretvalue</code> defense mechanisms for <code>detectClassPower</code> and <code>updatePower</code> to prevent Lua crashes caused by size comparison when the energy value mutates to Secret Table during battle.</li>
-</ul>
-</li>
-<li><strong>EventRouter/Scheduler fault isolation</strong>:</li>
-<li>Add parameterized <code>pcall</code> fault tolerance to the OnEvent core loop of <code>Core/EventRouter.lua</code> and the scheduled task callback of <code>Core/Scheduler.lua</code> to ensure that when a single module reports an error, it will not interfere with or interrupt the execution of other modules and timers.</li>
+<li><strong>Full code localization cleaning (12.0.7 - 2026.06.06)</strong>:</li>
+<li>All coded hard/English prompt terms and UI strings in the entire file (including all logic under the <code>Services</code> and <code>UI</code> directories) have been fully extracted into keys in <code>EAM.L</code>.</li>
+<li>Complete and seamlessly support five major language families: <code>zhTW</code> (Traditional Chinese), <code>zhCN</code> (Simplified Chinese), <code>enUS</code> (Simplified Chinese), <code>koKR</code> (Korean) and <code>ruRU</code> (Russian), with a total of 144 entries.</li>
+<li><strong>Dynamic Specialization Localization API Reconstruction</strong>: Introduce <code>CLASS_TOKEN_TO_ID</code> mapping in the filtering options of <code>UI/Options.lua</code>, give priority to calling the official grafting API <code>GetSpecializationInfoForClassID</code> to obtain the most accurate localized specialization name, and provide dual-track localization backup.</li>
+<li><strong>ClassPower Core Resource Security Investigation and Wrong Case Enhancement</strong>:</li>
+<li>Pay close attention to the <code>pcall</code> isolation and <code>issecretvalue</code> defense mechanisms for <code>detectClassPower</code> and <code>updatePower</code> deployments to prevent Lua crashes caused by size comparisons when the energy value difference is a secret table in combat.</li>
+<li><strong>EventRouter/Scheduler Fault isolation</strong>:</li>
+<li>Parameterized <code>pcall</code> fault tolerance for the OnEvent core loop of <code>Core/EventRouter.lua</code> and the scheduled task callback of <code>Core/Scheduler.lua</code> to ensure that when a single module reports an error, it will not interfere with or interrupt the execution of other modules and timing.</li>
 <li><strong>Dual-track Native Binding Countdown and Pandemic Glow</strong>:<ul>
-<li>Time rendering preferentially enables <code>C_DurationUtil.CreateDurationTextBinding</code> and <code>SetCooldownFromDurationObject</code> downgrade channels.</li>
-<li>Enable the Glow bright frame effect for the Icon when the DoT aura meets the Pandemic refresh time.</li>
+<li>Temporal rendering priority implementation of <code>C_DurationUtil.CreateDurationTextBinding</code> and <code>SetCooldownFromDurationObject</code> downgrade passes.</li>
+<li>Enable the glowing bright frame effect for the Icon when the DoT Aura meets the Pandemic refresh time.</li>
 </ul>
 </li>
-<li><strong>13 Classes and 28 Hero Talent Library Expansions</strong>:<ul>
-<li>Updated <code>Data/SpellArray.lua</code> to configure the latest spell ID preset monitoring for all 13 classes and 28 hero talents (such as Tempest, Sacred Weapon, Diabolic Ritual, etc.).</li>
-</ul>
-</li>
+<li><strong>13 professions and 28 hero talent database expansion</strong>:
+    -Updated <code>Data/SpellArray.lua</code>, configured the latest weapon ID preset monitoring for all 13 professions and 28 hero talents (such as Tempest, Holy, Weapon Demon Ritual, etc.).</li>
 </ul>
 <h3 id="2-follow-up-maintenance-and-development-suggestions">2. Follow-up maintenance and development suggestions</h3>
 <ul>
-<li><strong>Security Defense First</strong>: When doing size comparisons or table indexes with any aura, cooldown, energy, or time related values, a defensive check with <code>issecretvalue</code> must be used first.</li>
-<li><strong>Syntax Static Check</strong>: A <code>luac -p</code> check must be performed after modifications to any Lua file.</li>
-<li><strong>12.0.7 &amp; 12.1.0 Expert Joint Review and Shadow Carrier Research (Updated on 2026.06.07)</strong>:</li>
-<li>Convene all expert subagents for a joint roundtable review. Lua VM experts pointed out that the anonymous closure <code>pcall</code> in the combat hot path caused the underlying overhead of LuaJIT Trace Compiler Abort, and provided a Module level static local fallback mechanism; AddOn Architect drafted the <code>Docs/19_AURA_1210_REDUX_BLUEPRINT.md</code> blueprint, comprehensively planning the <code>AuraService</code> zero-allocation cache pool <code>AuraStatePool</code> and C++ Native Duration Binding dual-track rendering pipeline.</li>
-<li><strong>Shadow Host Technology Implementation</strong>: Completed the implementation of using the native <code>CooldownViewer</code> (Cooldown Manager/CDM) as a shadow host to avoid combat Secret / Taint restrictions. Create a new <code>Services/ShadowHostService.lua</code> to implement the official Pool Hook, and introduce parasitic rendering and cascade layout avoidance in <code>UI/Renderer.lua</code> to 100% avoid layout CPU and Taint overhead in combat. The evaluation study can be found in <code>Docs/20_CDM_BYPASS_FEASIBILITY_STUDY.md</code>.</li>
-<li><strong>12.1.0 Zero Allocation &amp; Event-Driven Full Module Refactoring (Completed on 2026.06.07)</strong>:<ul>
-<li><strong>Complete data-view decoupling</strong>: Decouple <code>AuraService</code>, <code>CooldownService</code>, <code>ItemCooldownService</code>, <code>GroundEffectService</code> and <code>TotemService</code>. The five major data services are all changed to event-driven. They are no longer directly coupled with <code>Renderer</code>, but throw the corresponding <code>EAM_*_STATE_CHANGED</code> event to <code>EventRouter</code>.</li>
-</ul>
-</li>
-<li><strong>Mediation Controller Introduction</strong>: Introduce <code>Managers/AlertManager.lua</code> to uniformly manage and schedule these five types of change events, use <code>Scheduler</code> to implement asynchronous throttling and batch updates (<code>BeginBatch/EndBatch</code>), and eliminate Layout Churn.</li>
-<li><strong>Multi-type zero-allocation object pool</strong>: Configure dedicated <code>StatePool</code> (such as <code>GroundEffectStatePool</code> and <code>TotemStatePool</code>, etc.) in all services, bind <code>releaseFunc</code> when <code>acquire</code> state objects, and <code>AlertManager</code> will call <code>state.releaseFunc(state)</code> after rendering is hidden to safely recycle objects, achieving extremely low runtime 0-Allocation GC target.</li>
-<li><strong>Shadow carrier text clipping and occlusion correction</strong>: To solve the problem that the skill name is not displayed due to the clipping and FrameLevel occlusion of the native container <code>ClipsChildren</code> when adsorbing the official CooldownViewer (CDM), dynamic layout adjustment has been implemented. In parasitic mode, the skill name (<code>nameText</code>) is automatically moved to the bottom of the inner side of the icon and set to Highlight. At the same time, the privilege is raised to <code>FrameLevel</code> (relative to <code>hostIcon</code> + 10), which solves the pain point of "invisible skill name".</li>
-<li><strong>Static safe syntax check</strong>: 32 Lua files 100% passed the syntax safety check.</li>
-<li><strong>16 big new and high-frequency event integration (completed on 2026.06.07)</strong>:</li>
-<li>Do not use <code>forceinsecure</code>, do not attempt to clear or bypass taint, and do not suppress Blizzard blocked actions with third-party workarounds.</li>
-<li>When taint, blocked action, and combat lockdown errors are found, they need to be recorded in <code>Docs/15_DEVELOPMENT_ISSUE_LOG.md</code>, and the trigger path, combat status, and reproducible steps must be marked.</li>
+<li><strong>Security Defensive First</strong>: A defensive check with <code>issecretvalue</code> must be performed before size comparisons or table indexes against any Aura, cooldown, energy, time related values.</li>
+<li><strong>Modify syntax static check</strong>: <code>luac -p</code> check must be performed after any Lua file is processed.</li>
+<li><strong>12.0.7 &amp; 12.1.0 Expert Federation and Moon Carrier Research (updated on 2026.06.07)</strong>:</li>
+<li>Convene all experts and sub-agents for roundtable review. Lua VM experts pointed out that the hot path hidden package <code>pcall</code> caused the LuaJIT Trace compiler to interrupt the underlying process, and provided a module-level static local fallback mechanism; AddOn architects created the <code>Docs/19_AURA_1210_REDUX_BLUEPRINT.md</code> blueprint and comprehensively planned __MEAM__CODE_4) zero point storage</li>
+<li><strong>Shadow Host Technology (Shadow Host) Practice</strong>: Implemented for using the bridge <code>CooldownViewer</code> (Cooling Manager /CDM) as a shadow host to avoid secret/pollution restrictions. Create a new <code>Services/ShadowHostService.lua</code> implementation official pool Hook, and introduce parasitic rendering and cascade typesetting avoidance in <code>UI/Renderer.lua</code> to coordinate the CPU and Taint in 100% darkness. Evaluation research can refer to <code>Docs/20_CDM_BYPASS_FEASIBILITY_STUDY.md</code>.</li>
+<li><strong>12.1.0 Zero Allocation &amp; Event-Driven Full Module Refactoring (Completed on 2026.06.07)</strong>:</li>
+<li><strong>Data view disassociation</strong>: disassociate <code>AuraService</code>, <strong>complete EAMCODE_1</strong>, <code>ItemCooldownService</code>, <code>GroundEffectService</code> and <strong>EAMCODE_all</strong>. The five major data services are changed to driver events and are no longer directly connected to <code>Renderer</code>, but to EAM__CO8D__EAM1 86_DED__EAM__CODDE<strong><em>_EAM</em>_CO8DDEA</strong>EAM__CODDE_%<strong>EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_0__EAM__CO8DDEA__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_%__EAMCODE___EAMCODE6%</strong> <em>EAMCODE_5__%__EAM__CODDE</em>%<strong>EAM__CODDE_0__EAM__CO8DDEA__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_0__EAM__CO8DDEA__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_0__EAM__CO8DDEA__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CODDE_%__EAM__CODDE_%</strong>.</li>
+<li><strong>Introduction of domestic controller</strong>: Introduce <code>Managers/AlertManager.lua</code> to uniformly manage and schedule these five types of change events, use <code>Scheduler</code> to implement synchronous throttling and batch updates (<code>BeginBatch/EndBatch</code>), and eliminate the layout itself.</li>
+<li><strong>Multi-type zero-allocation Object Pool</strong>: Configure emphasized <code>StatePool</code> (such as <code>GroundEffectStatePool</code> and <code>TotemStatePool</code>, etc.) in all services, in <code>acquire</code> state object is bound to <code>releaseFunc</code>, and is recognized by <code>AlertManager</code> after rendering. Multiple __A__EA__A__3__4D__EAMCO`fstate__EAMCO"__EA safely restores the object and runs 0-allocation during completion to minimize GC goals.</li>
+<li><strong>Mirror carrier text clipping and masking modification</strong>: To address the problem that the skill name is not displayed due to the clipping and FrameLevel display of the pulling container <code>ClipsChildren</code> when adsorbing the official CooldownViewer (CDM), dynamic layout adjustments have been implemented. In parasitic mode, the skill name (<code>nameText</code>) is automatically moved to the bottom of the icon and the bottom of the icon is highlighted and the highlight color is set. At the same time, the privilege is elevated to <code>FrameLevel</code> (relative to) <code>hostIcon</code> + 10), which solves the pain point of "invisible skill names".</li>
+<li><strong>Static syntax security detection settings</strong>: 32 Lua files have 100% penetration of syntax security detection settings.</li>
+<li><strong>16Complete the integration of new and advanced events (as of June 7, 2026)</strong>:</li>
+<li>Do not use <code>forceinsecure</code>, do not attempt to clear or bypass contamination points, or use third-party workarounds to suppress Blizzard blocking operations.</li>
+<li>When stains, blocked actions, or combat lock errors are found, they need to be recorded to <code>Docs/15_DEVELOPMENT_ISSUE_LOG.md</code> and bound to the trigger path, combat status, and resettable steps.</li>
 </ul>
 <h2 id="durationobject-and-time-display_1">DurationObject and time display</h2>
 <ul>
-<li>Secret or protected time data must not use <code>OnUpdate</code> to count down by itself.</li>
-<li>If Retail provides a DurationObject, it will be handled by the native UI first, such as <code>CooldownFrame:SetCooldownFromDurationObject()</code> or <code>FontString:SetDurationText()</code>.</li>
-<li><code>Cooldown:SetCountdownFormatter()</code>, <code>Cooldown:SetCountdownMillisecondsThreshold()</code> and other related capabilities after 12.0.5 need to be used after confirming the files and actual machines.</li>
-<li>Manual timer strings can only be used with common values ​​that have been confirmed to be safe.</li>
+<li>Secret or protected time data may not be used with <code>OnUpdate</code> Mobile Countdown.</li>
+<li>If Retail provides DurationObject, override UI processing, such as <code>CooldownFrame:SetCooldownFromDurationObject()</code> or <code>FontString:SetDurationText()</code>.</li>
+<li><code>Cooldown:SetCountdownFormatter()</code>, <code>Cooldown:SetCountdownMillisecondsThreshold()</code>, etc. The related capabilities after 12.0.5 need to be confirmed with files and actual machines before use.</li>
+<li>Manual timer keypad is only used to confirm safe normal numbers.</li>
 </ul>
-<h2 id="tooltip-c_tooltipinfo-downgrade-strategy_1">Tooltip / C_TooltipInfo downgrade strategy</h2>
-<p>Tooltip parsing can only be used as a fallback for low-frequency, conservative, clearly marked sources:</p>
+<h2 id="tooltips-c_tooltipinfo-downgrade-strategy_1">Tooltips / C_TooltipInfo Downgrade Strategy</h2>
+<p>Tooltip parsing can only be used as a fallback for low-frequency, screenshots, and clearly marked sources:</p>
 <ul>
-<li>Prefer using <code>C_TooltipInfo</code> or the display object supported by Blizzard.</li>
+<li>Prefer using <code>C_TooltipInfo</code> or Blizzard supported display items.</li>
 <li>Can parse explicit numerical values ​​in static description text.</li>
-<li>Don't parse dynamic remaining time literals as facts.</li>
-<li>Don't perform tooltip scraping in hot paths, in combat, or every frame.</li>
-<li>Parsing results must not override security API facts and can only be used as derived or display-only auxiliary.</li>
-<li>Must downgrade silently when parsing fails and must not cause misleading timers.</li>
+<li>Don't parse remaining time literals as facts.</li>
+<li>No tooltip grabs performed in hot paths, in combat, or every frame.</li>
+<li>The parsed results cannot overwrite the security API facts and can only be exported or displayed only as auxiliary.</li>
+<li>Quiet must be downgraded when parsing fails, and dim timer cannot be generated.</li>
 </ul>
-<h2 id="events-and-frame-rules_1">Events and Frame rules</h2>
+<h2 id="event-and-frame-rules_1">Event and frame rules</h2>
 <ul>
-<li>Use a single EventRouter for event dispatch.</li>
-<li>Pure event listening frame uses orphan frame: <code>CreateFrame("Frame", nil, nil)</code>.</li>
+<li>Event specifications use a single EventRouter.</li>
+<li>Pure event listening architecture uses orphan framework: <code>CreateFrame("Frame", nil, nil)</code>.</li>
 <li>Does not assume logical dispatcher responsibilities on UIParent-parented frames.</li>
-<li>Don't dynamically register or unregister events for UI-parented frames in combat.</li>
-<li>Event registration changes should be managed centrally to avoid repeated churn.</li>
+<li>Do not dynamically register or unregister events to the UI parent frame during combat.</li>
+<li>Event registration changes should be managed centrally to avoid duplication of water supply.</li>
 </ul>
-<h2 id="scheduler-and-performance-rules_1">Scheduler and Performance Rules</h2>
+<h2 id="scheduler-and-all-rules_1">Scheduler and all rules</h2>
 <ul>
-<li>Priority event driven; scheduled fallback must be centralized, low-frequency, and throttling.</li>
-<li>Only use a single Scheduler <code>OnUpdate</code>.</li>
-<li>Disable timer-per-icon, timer-per-spell, hot path iteration <code>C_Timer.After(function() ...)</code>.</li>
-<li><code>UNIT_AURA</code>, <code>SPELL_UPDATE_COOLDOWN</code>, <code>OnUpdate</code>, and Renderer updates belong to the hot path.</li>
+<li>Priority event driven; scheduled rollback must be concentrated, low-frequency, and throttling.</li>
+<li>Only use a single schedule <code>OnUpdate</code>.</li>
+<li>It is forbidden to attach icon timers, application timers, and hot paths to repeat <code>C_Timer.After(function() ...)</code>.</li>
+<li><code>UNIT_AURA</code>, <code>SPELL_UPDATE_COOLDOWN</code>, <code>OnUpdate</code>, renderer updates belong to the hot path.</li>
 <li>Hot paths must not be configured with temporary tables, closures or unnecessary strings.</li>
-<li>Hot path avoidance <code>pairs</code> / <code>ipairs</code>; use numeric loop when stable numeric index is available.</li>
-<li>Hot path avoidance <code>table.insert</code>; uses direct index when writing with direct index available.</li>
-<li>Use buffer and <code>table.concat</code> to group strings in loops to avoid continuous <code>..</code>.</li>
-<li>Non-essential work should be delayed, curtailed or stopped during low FPS or combat.</li>
-<li>Large-scale item scanning must not be executed in normal runtime; if item-spell cache is required, it must be opt-in, idle-only, interruptible, FPS-aware, and combat-aware.</li>
+<li>Hot path avoidance <code>pairs</code> / <code>ipairs</code>; use digit looping when stable numeric indexing is available.</li>
+<li>Hot path avoidance <code>table.insert</code>; use direct indexing when writing with direct indexing available.</li>
+<li>Use buffer and <code>table.concat</code> for group strings in loops to avoid continuous <code>..</code>.</li>
+<li>Non-essential work should be postponed, reduced or stopped during low FPS or combat.</li>
+<li>Large-scale item scanning cannot be performed when fighting normally; if magic storage is required, choose Join, Idle Only, Interruptible, FPS Fishing, or Combat Fishing.</li>
 </ul>
 <h2 id="tablecreate-tablefreeze-policy_1">table.create / table.freeze policy</h2>
 <ul>
-<li><code>table.create</code> for predictable configuration: array, pool, ring buffer, record list, icon pool, default template.</li>
-<li><code>table.create</code>, <code>table.freeze</code>, <code>table.isfrozen</code> fallback must be provided.</li>
-<li><code>table.freeze</code> is only used for immutable static data: constants, enum, schema, default field profile, module contract, prototype, metatable.</li>
-<li>Stable API alias tables, such as <code>EAM.API</code>, can be frozen, but only when confirmed that it will not cause loading sequence or testing difficulties.</li>
-<li>SavedVariables, runtime cache, aura/cooldown state, icon state, pool object, scheduler queue, debug/session record must not be frozen.</li>
+<li><code>table.create</code> is used for expected settings: charts, diagrams, flow charts, record lists, icon pools, and default templates.</li>
+<li>Must provide <code>table.create</code>, <code>table.freeze</code>, <code>table.isfrozen</code> backup.</li>
+<li><code>table.freeze</code> is only used for immutable static data: enums, patterns, default field profiles, module contracts, prototypes, metatables.</li>
+<li>Stable API alias tables can be frozen, e.g. <code>EAM.API</code>, but only when confirmed without causing load sequence or test failures.</li>
+<li>SavedVariables, runtime cache, Aura/cooldown status, icon status, pool items, scheduler queue, debug/session records must not be frozen.</li>
 </ul>
-<h2 id="ui-renderer-rules_1">UI / Renderer Rules</h2>
+<h2 id="uirenderer-rules_1">UI/renderer rules</h2>
 <ul>
-<li>Renderer does not check the API directly; the data is provided by the service layer.</li>
-<li>Icons, buttons, and FontString use pool.</li>
-<li>Renderer does not execute secure action, does not register click-cast, does not change Blizzard protected frame, and does not pollute the action bar / unit frame / nameplate path.</li>
-<li>Avoid unnecessary frame creation after initialization.</li>
-<li><code>SetText</code>, <code>SetPoint</code>, <code>SetSize</code>, <code>SetTexture</code>, layout compare the previous value before writing.</li>
-<li>During batch layout, you can hide the parent first and then display it after completion.</li>
-<li>Supports timer, stack, spell name, aura value label, but only displays safe information.</li>
-<li>The UI defaults are kept simple and EAM cannot be made into a WeakAuras complex system.</li>
+<li>The renderer does not check the API directly; the information is provided by the service layer.</li>
+<li>Use the pool for icons, buttons, and FontString.</li>
+<li>The renderer does not perform safe operations, does not register click maps, does not modify Blizzard protection frames, and does not operate Taint column/unit frame/nameplate paths.</li>
+<li>Avoid building redundant frames after initialization.</li>
+<li><code>SetText</code>, <code>SetPoint</code>, <code>SetSize</code>, <code>SetTexture</code>, layout compare the last value before writing.</li>
+<li>During batch layout, you can hide the parent first and then show it after completion.</li>
+<li>Supports timers, potion names, and halo value labels, but only displays safety information.</li>
+<li>Keep the UI defaults simple and do not introduce EAM into WeakAuras complex systems.</li>
 </ul>
 <h2 id="savedvariables-rules_1">SavedVariables Rules</h2>
 <ul>
-<li>SavedVariables must have a schema version.</li>
-<li>Provide old data migration, defaults, and validation.</li>
-<li>Do not freeze SavedVariables.</li>
-<li>Does not write per-frame or high-frequency runtime state.</li>
-<li>Fields that cannot be safely migrated must be kept as backups or marked as legacy, and user settings cannot be destroyed silently.</li>
+<li>SavedVariables must have schema version.</li>
+<li>Provide old data migration, default, and verification.</li>
+<li>Don't freeze SavedVariables.</li>
+<li>Does not read every frame or high runtime state.</li>
+<li>Fields that cannot be safely migrated must be backed up or marked as genetic, and user settings must not be silently destroyed.</li>
 </ul>
-<h2 id="debug-ai-handover-rules_1">Debug / AI handover rules</h2>
+<h2 id="debuggingai-handover-rules_1">Debugging/AI handover rules</h2>
 <ul>
-<li>Debug is turned off by default.</li>
-<li>Debug export must be on-demand.</li>
+<li>Debug preset is off.</li>
+<li>Debugging Debugging must be achieved.</li>
 <li>Snapshot needs to be split:</li>
-<li>facts</li>
-<li>derived</li>
-<li>human notes</li>
-<li>boundaryWarnings
-  -environment</li>
-<li>Do not output huge logs.</li>
+<li>Facts</li>
+<li>derived
+  ——Human Notes</li>
+<li>boundaryWarnings</li>
+<li>environment</li>
+<li>No huge log output.</li>
 <li>Export strings are only created when explicitly requested by the user.</li>
 </ul>
-<h2 id="programming-style_1">Programming style</h2>
+<h2 id="course-style_1">Course Style</h2>
 <ul>
-<li>Identifier is in English.</li>
-<li>Comments are available in Traditional Chinese and focus on WoW API boundaries, performance reasons, and architectural decisions.</li>
-<li>All officially loaded program files must have file-level comments describing the module philosophy, responsibility boundaries, data ownership and future maintenance precautions; details are in <code>Docs/12_CODE_COMMENTARY_GUIDE.md</code>.</li>
+<li>Use Chinese for identifiers.</li>
+<li>Annotations can be in Traditional Chinese, focusing on WoW API boundaries, reasons and architectural decisions.
+-All officially loaded project files must have file system annotations, describing the module, responsibility boundaries, data numbers and future precautions; details follow <code>Docs/12_CODE_COMMENTARY_GUIDE.md</code>.</li>
 <li>Use 4 spaces for indentation.</li>
 <li>Do not use inline semicolons.</li>
-<li>Namespace/Module uses PascalCase.</li>
-<li>Function/local variable uses camelCase.</li>
-<li>Private function / private table are prefixed with <code>_</code>.</li>
-<li>Constant uses UPPER_SNAKE_CASE.</li>
+<li>Namespaces/modules use PascalCase.</li>
+<li>Use camelCase for functions/local variables.</li>
+<li>Conduit functions/conduit tables are exported as <code>_</code>.</li>
+<li>Symbol use UPPER_SNAKE_CASE.</li>
 </ul>
 <h2 id="file-backup-rules_1">File backup rules</h2>
 <ul>
 <li>Any files must be backed up to the <code>backup/</code> folder in the project root directory before being deleted, moved, overwritten or modified.</li>
 <li>The backup file name format is "original file name suffix <code>__yyyyMMddHHmmss</code>", for example <code>AGENTS.md__20260526122904</code>.</li>
-<li>The timestamp uses local time, in the format of year, month, day, hour, minute and second, making it easy to sort and trace by time.</li>
-<li>If you want to process multiple files, you should back them up one by one before starting the same batch of operations; actual modification, move or deletion can only be done after the backup is completed.</li>
-<li>The backup folder is only used as a reference source for future development, accidental deletion and backtracking, and must not be packaged into the CurseForge release file.</li>
-<li>If the original file does not exist, the reason must be reported first, and no empty backup may be created to pretend to be the original content.</li>
+<li>Use the timer's local time in the format of year, month, day, hour, minute and second, which is convenient for sorting time and tracing.
+-When processing multiple files, they should be backed up one by one before starting the same job; actual modification, movement or deletion can only be carried out after the backup is completed.</li>
+<li>The backup folder is only used as a reference source for future development, modification and backtracking, and must not be compressed into CurseForge release files.</li>
+<li>If the original file does not exist, the reason must be returned first. An empty backup cannot be created to pretend to be the original content.</li>
 </ul>
-<h2 id="development-problem-recording-rules_1">Development problem recording rules</h2>
+<h2 id="develop-problem-recording-rules_1">Develop problem recording rules</h2>
 <ul>
-<li>Bottlenecks, limitations, errors, tool failures, API uncertainties and solutions encountered during the development process must be recorded in <code>Docs/15_DEVELOPMENT_ISSUE_LOG.md</code>.</li>
-<li>The purpose of recording is to reduce repeated trials and errors in the future, save AI context/token, and retain decision-making context.</li>
-<li>Each record contains at least the date, situation, symptoms, cause judgment, tried methods, effective solutions, and follow-up precautions.</li>
-<li>If the issue has not been resolved, please mark it as "Unresolved" and indicate the next step of verification.</li>
-<li>Do not record passwords, tokens, personal account information, or any sensitive information that should not enter project files.</li>
+<li>Bottlenecks, limitations, errors, tool failures, API requirements and solutions encountered during the development process are all recorded in <code>Docs/15_DEVELOPMENT_ISSUE_LOG.md</code>.</li>
+<li>The ultimate purpose is to reduce repeated trial and error in the future, save AI up and down /token, and retain the context of decision-making.</li>
+<li>Each record contains at least the appointment, symptoms, cause judgment, tried methods, effective solutions, and follow-up matters and precautions.</li>
+<li>If the problem has not been resolved, please mark it as "Unresolved" and indicate the next step of verification.</li>
+<li>Do not log passwords, tokens, private account information, or any sensitive information entering project files.</li>
 </ul>
-<h2 id="project-specific-skill-rules_1">Project-specific Skill rules</h2>
+<h2 id="project-specific-skill-rules_1">Project-specific skill rules</h2>
 <ul>
-<li>If the same type of process is found to be repeated during the development process, and stable steps, input conditions, output results and risk control are in place, it should be organized into a SKILL exclusive to the EventAlertMod project.</li>
-<li>Processes suitable for conversion to SKILL include: packaging and publishing, Lua static verification, WoW API verification, SavedVariables migration check, Secret boundary review, file synchronization, and language file synchronization.</li>
-<li>Currently <code>eam-retail-p0-review</code> has been created at <code>.codex/skills/eam-retail-p0-review/SKILL.md</code> for the P0 Secret/Taint/API/static verification process of EAM Retail rewrite.</li>
-<li>Before creating SKILL, you need to confirm that the process is indeed repeatable, and record existing bottlenecks and solutions to <code>Docs/15_DEVELOPMENT_ISSUE_LOG.md</code>.</li>
-<li>SKILL content should include trigger conditions, necessary pre-checks, prohibited matters, backup rules, verification methods and final report format.</li>
-<li>Processes that have not yet been verified, still require manual judgment, or contain sensitive information must not be made into a fully automated SKILL.</li>
+<li>If similar processes are found to be repeated during the development process, and stable steps, input conditions, output results and risk control management are in place, they should be organized into EventAlertMod special case SKILL.</li>
+<li>Processes suitable for conversion to SKILL include: compressed release, Lua static verification, WoW API verification, SavedVariables migration check, secret boundary review, file synchronization, and language file synchronization.</li>
+<li>Currently, <code>eam-Retail-p0-review</code> has been created, located at <code>.codex/skills/eam-Retail-p0-review/SKILL.md</code>, which is used for static verification of the P0 Secret/Taint/API/static verification of the EAM Retail server rewrite.</li>
+<li>Before establishing SKILL, you need to confirm that the process is indeed repeatable. Jiangsu Lakes and solutions are recorded in <code>Docs/15_DEVELOPMENT_ISSUE_LOG.md</code>.</li>
+<li>The SKILL content should include trigger conditions, necessary pre-checks, prohibited items, backup rules, verification methods and final return format.</li>
+<li>Process hard assistance skills that have not yet been verified, require manual judgment, or contain sensitive information.</li>
 </ul>
-<h2 id="subagent-usage-rules_1">Subagent usage rules</h2>
+<h2 id="subagent-program-usage-rules_1">Subagent program usage rules</h2>
 <ul>
-<li>The user has authorized: If there is a situation suitable for subagent in this project in the future, you need to actively plan and use it.</li>
-<li>Determine the critical path before use; work that immediately blocks the main process is handled locally by the main agent.</li>
-<li>Subagent is mainly used for sidecar tasks that are parallel, clear, acceptable and do not cover each other.</li>
-<li>Suitable scenarios include: Retail API verification, Secret / taint review, hot path scanning, Docs consistency check, non-overlapping file slicing of modular rewrite, package release check.</li>
-<li>Unsuitable scenarios include: small single-file modifications, high-risk operations that require immediate authorization, large-scale moves/deletions that have not been backed up, and highly coupled changes with highly overlapping write ranges.</li>
-<li>File responsibility boundaries, prohibited items, backup rules, verification output and final report format must be clearly specified when dispatching work.</li>
-<li>Subagent results need to be integrated by the main agent; the subagent's API judgment must not be considered to have been verified on the actual machine.</li>
-<li>See <code>Docs/17_SUBAGENT_WORKFLOW.md</code> for the detailed process.</li>
+<li>The user has been authorized: If a role suitable for a sub-agent appears in this project in the future, you need to proactively plan and use it.</li>
+<li>Use to determine the critical path first; immediately block the work of the main process and process it locally by the main agent.</li>
+<li>Subagents are primarily taskable, clear, appreciable and do not override each other's sidecar tasks.</li>
+<li>Suitable molds include: Retail server API verification, Secret/taint review, hot path scanning, file consistency check, non-overlapping file slicing for modular replacement, and release check.</li>
+<li>Unsuitable architectures include: small single file modifications, high-risk operations that require immediate authorization, uninstalled moves/deletions that have not been lost, and high correlations with highly overlapping write ranges.</li>
+<li>When dispatching workers, the scope of file responsibilities, prohibited items, backup rules, verification output and final return format must be clearly specified.</li>
+<li>Subagent results need to be integrated by the master agent; subagent API determinations must not be considered machine-validated.</li>
+<li>Please refer to <code>Docs/17_SUBAGENT_WORKFLOW.md</code> for detailed procedures.</li>
 </ul>
 <h2 id="implementation-process_1">Implementation process</h2>
 <ol>
-<li>Audit: Read the complete source tree, TOC, XML, SavedVariables, global, Classic/MOP branch, OnUpdate/C_Timer, aura/cooldown/item API.</li>
-<li>Plan: Define module responsibilities and migration strategies first before starting large-scale changes.</li>
-<li>Rewrite: Create Core, Services, UI, and Debug modules to retain available data and user semantics.</li>
-<li>Static Validation: Execute available Lua syntax check, global variable search, <code>C_Timer.After</code> closure search, <code>table.freeze</code> misuse search.</li>
-<li>Report: Be clear about return changes, unverified projects, risks and next steps.</li>
+<li>Review: Read the complete source code tree, TOC, XML, SavedVariables, global, Classic/MOP branch, OnUpdate/C_Timer, Aura/cooldownOnUpdateOnUpdate/C_Timer, Aura/cooldownOnUpdate__EAMCODE_6_EAMCODE_6__8, /cooldownOnUpdate__EAMCODE__8, __EAM__86_6%.</li>
+<li>Solution design: first module responsibilities and migration strategies, and then start large-scale modules.</li>
+<li>Rewrite: Establish core, service, UI, and debugging modules to obtain available data and user semantics.</li>
+<li>Static verification: perform available Lua syntax check, global variable search, <code>C_Timer.After</code> closure search, <code>table.freeze</code> error search.</li>
+<li>Report: Identify changes, unverified items, risks and next steps.</li>
 </ol>
-<h2 id="shortcut-commands_1">Shortcut commands</h2>
+<h2 id="quick-instructions_1">Quick instructions</h2>
 <ul>
-<li>When the user only enters the word "Package", <code>Tools/Build-CurseForgePackage.ps1</code> is executed directly.</li>
-<li>Before packaging, you need to confirm that the <code>## Version</code> of <code>EventAlertMod.toc</code> conforms to <code>EventAlertMod_MN_yyyyMMdd</code> (except for the development version, which will overwrite the name DEV and skip date verification).</li>
-<li>The package output file name must match <code>EventAlertMod_MN_yyyyMMdd_HHmmss.zip</code>, and the development version is <code>EventAlertMod_DEV_yyyyMMdd_HHmmss.zip</code>.</li>
-<li>Report the zip path, Lua syntax check results, and excluded folder check results after packaging.</li>
-<li>See <code>Docs/14_PACKAGING_GUIDE.md</code> for relevant rules.</li>
+<li>When the user only enters the word "resource", <code>Tools/Build-CurseForgePackage.ps1</code> is executed directly.</li>
+<li>Before using resources, you need to confirm that <code>EventAlertMod.toc</code> and <code>## Version</code> conform to <code>EventAlertMod_MN_yyyyMMdd</code> (when developing the version, it will be overwritten and named DEV to skip date verification).</li>
+<li>The compressed output file name must conform to <code>EventAlertMod_MN_yyyyMMdd_HHmmss.zip</code>, and the development version is <code>EventAlertMod_DEV_yyyyMMdd_HHmmss.zip</code>.</li>
+<li>Return zip path, Lua syntax check results, and excluded folder check results after compression.</li>
+<li>See <code>Docs/14_PACKAGING_GUIDE.md</code> for related rules.</li>
 </ul>
 <h2 id="the-final-return-must-contain_1">The final return must contain</h2>
-<p>The final report of each implementation pass must at least list:</p>
+<p>Final reports on relevant practices are now available at least:</p>
 <ol>
-<li>Change files.</li>
+<li>Change the file.</li>
 <li>Major architectural changes.</li>
-<li>Retained legacy EAM behavior.</li>
-<li>Old behavior removed.</li>
-<li>Lua/WoW API assumptions.</li>
+<li>Retain the old EAM behavior.</li>
+<li>Remove old behavior.</li>
+<li>Lua / WoW API Assumptions.</li>
 <li><code>table.create</code> / <code>table.freeze</code> uses summary.</li>
-<li>Secret/Protected Data processing strategy.</li>
-<li>Static verification performed.</li>
-<li>Validation not performed.</li>
-<li>Necessary WoW Retail real-world testing.</li>
-<li>Known Risks.</li>
+<li>Confidential/Protected Data Handling Policy.</li>
+<li>Static verification has been performed.</li>
+<li>Validation not performed.
+10.WoW officially serves the needs of real machine testing.</li>
+<li>Known risks.</li>
 <li>Next suggested task.</li>
 </ol>
-<h2 id="latest-reconstruction-progress-of-the-project-updated-on-20260606_1">Latest reconstruction progress of the project (updated on 2026.06.06)</h2>
-<h3 id="1-completed-core-refactoring-retail-1207_1">1. Completed core refactoring (Retail 12.0.7)</h3>
+<h2 id="latest-reconstruction-details-of-the-project-updated-on-20260606_1">Latest reconstruction details of the project (updated on 2026.06.06)</h2>
+<h3 id="1-core-reconstruction-completed-retail-1207_1">1. Core reconstruction completed (Retail 12.0.7)</h3>
 <ul>
 <li><strong>Full code localization cleaning (12.0.7 - 2026.06.06)</strong>:<ul>
-<li>All hard-coded Chinese/English prompt nouns and UI display strings in the entire file (including all logic in the <code>Services</code> and <code>UI</code> directories) have been completely extracted as Keys in <code>EAM.L</code>.</li>
+<li>All coded hard/English prompt terms and UI strings in the entire file (including all logic under the <code>Services</code> and <code>UI</code> directories) have been fully extracted into keys in <code>EAM.L</code>.</li>
 </ul>
 </li>
-<li>Complete and seamlessly support five major language families: <code>zhTW</code> (Traditional Chinese), <code>zhCN</code> (Simplified Chinese), <code>enUS</code> (English base), <code>koKR</code> (Korean) and <code>ruRU</code> (Russian), with a total of 144 entries.<ul>
-<li><strong>Dynamic Specialization Localization API Refactoring</strong>: Introduce <code>CLASS_TOKEN_TO_ID</code> mapping in the filter drop-down menu of <code>UI/Options.lua</code>, give priority to calling the official native API <code>GetSpecializationInfoForClassID</code> to obtain the most accurate localized specialization name, and provide a dual-track backup fallback line of defense.</li>
-</ul>
-</li>
-<li><strong>ClassPower core resource security and debugging enhancement</strong>:<ul>
-<li>Deploy a full set of <code>pcall</code> isolation and <code>issecretvalue</code> defense mechanisms for <code>detectClassPower</code> and <code>updatePower</code> to prevent Lua crashes caused by size comparison when the energy value mutates to Secret Table during battle.</li>
-</ul>
-</li>
-<li><strong>EventRouter/Scheduler fault isolation</strong>:</li>
-<li>Add parameterized <code>pcall</code> fault tolerance to the OnEvent core loop of <code>Core/EventRouter.lua</code> and the scheduled task callback of <code>Core/Scheduler.lua</code> to ensure that when a single module reports an error, it will not interfere with or interrupt the execution of other modules and timers.</li>
+<li>Complete and seamlessly support five major language families: <code>zhTW</code> (Traditional Chinese), <code>zhCN</code> (Simplified Chinese), <code>enUS</code> (Simplified Chinese), <code>koKR</code> (Korean) and <code>ruRU</code> (Russian), with a total of 144 entries.</li>
+<li><strong>Dynamic Specialization Localization API Reconstruction</strong>: Introduce <code>CLASS_TOKEN_TO_ID</code> mapping in the filtering options of <code>UI/Options.lua</code>, give priority to calling the official grafting API <code>GetSpecializationInfoForClassID</code> to obtain the most accurate localized specialization name, and provide dual-track localization backup.</li>
+<li><strong>ClassPower Core Resource Security Investigation and Wrong Case Enhancement</strong>:</li>
+<li>Pay close attention to the <code>pcall</code> isolation and <code>issecretvalue</code> defense mechanisms for <code>detectClassPower</code> and <code>updatePower</code> deployments to prevent Lua crashes caused by size comparisons when the energy value difference is a secret table in combat.</li>
+<li><strong>EventRouter/Scheduler Fault isolation</strong>:</li>
+<li>Parameterized <code>pcall</code> fault tolerance for the OnEvent core loop of <code>Core/EventRouter.lua</code> and the scheduled task callback of <code>Core/Scheduler.lua</code> to ensure that when a single module reports an error, it will not interfere with or interrupt the execution of other modules and timing.</li>
 <li><strong>Dual-track Native Binding Countdown and Pandemic Glow</strong>:<ul>
-<li>Time rendering preferentially enables <code>C_DurationUtil.CreateDurationTextBinding</code> and <code>SetCooldownFromDurationObject</code> downgrade channels.</li>
-<li>Enable the Glow bright frame effect for the Icon when the DoT aura meets the Pandemic refresh time.</li>
+<li>Temporal rendering priority implementation of <code>C_DurationUtil.CreateDurationTextBinding</code> and <code>SetCooldownFromDurationObject</code> downgrade passes.</li>
+<li>Enable the glowing bright frame effect for the Icon when the DoT Aura meets the Pandemic refresh time.</li>
 </ul>
 </li>
-<li><strong>13 Classes and 28 Hero Talent Library Expansions</strong>:<ul>
-<li>Updated <code>Data/SpellArray.lua</code> to configure the latest spell ID preset monitoring for all 13 classes and 28 hero talents (such as Tempest, Sacred Weapon, Diabolic Ritual, etc.).</li>
-</ul>
-</li>
+<li><strong>13 professions and 28 hero talent database expansion</strong>:
+    -Updated <code>Data/SpellArray.lua</code>, configured the latest weapon ID preset monitoring for all 13 professions and 28 hero talents (such as Tempest, Holy, Weapon Demon Ritual, etc.).</li>
 </ul>
 <h3 id="2-follow-up-maintenance-and-development-suggestions_1">2. Follow-up maintenance and development suggestions</h3>
 <ul>
-<li><strong>Security Defense First</strong>: When doing size comparisons or table indexes with any aura, cooldown, energy, or time related values, a defensive check with <code>issecretvalue</code> must be used first.</li>
-<li><strong>Syntax Static Check</strong>: A <code>luac -p</code> check must be performed after modifications to any Lua file.</li>
-<li><strong>12.0.7 &amp; 12.1.0 Expert Joint Review and Shadow Carrier Research (Updated on 2026.06.07)</strong>:</li>
-<li>Convene all expert subagents for a joint roundtable review. Lua VM experts pointed out that the anonymous closure <code>pcall</code> in the combat hot path caused the underlying overhead of LuaJIT Trace Compiler Abort, and provided a Module level static local fallback mechanism; AddOn Architect drafted the <code>Docs/19_AURA_1210_REDUX_BLUEPRINT.md</code> blueprint, comprehensively planning the <code>AuraService</code> zero-allocation cache pool <code>AuraStatePool</code> and C++ Native Duration Binding dual-track rendering pipeline.</li>
-<li><strong>Shadow Host Technology Implementation</strong>: Completed the implementation of using the native <code>CooldownViewer</code> (Cooldown Manager/CDM) as a shadow host to avoid combat Secret / Taint restrictions. Create a new <code>Services/ShadowHostService.lua</code> to implement the official Pool Hook, and introduce parasitic rendering and cascade layout avoidance in <code>UI/Renderer.lua</code> to 100% avoid layout CPU and Taint overhead in combat. The evaluation study can be found in <code>Docs/20_CDM_BYPASS_FEASIBILITY_STUDY.md</code>.</li>
-<li><strong>12.1.0 Zero Allocation &amp; Event-Driven Full Module Refactoring (Completed on 2026.06.07)</strong>:<ul>
-<li><strong>Complete data-view decoupling</strong>: Decouple <code>AuraService</code>, <code>CooldownService</code>, <code>ItemCooldownService</code>, <code>GroundEffectService</code> and <code>TotemService</code>. The five major data services are all changed to event-driven. They are no longer directly coupled with <code>Renderer</code>, but throw the corresponding <code>EAM_*_STATE_CHANGED</code> event to <code>EventRouter</code>.</li>
+<li><strong>Security Defensive First</strong>: A defensive check with <code>issecretvalue</code> must be performed before size comparisons or table indexes against any Aura, cooldown, energy, time related values.</li>
+<li><strong>Modify syntax static check</strong>: <code>luac -p</code> check must be performed after any Lua file is processed.</li>
+<li><strong>12.0.7 &amp; 12.1.0 Expert Federation and Moon Carrier Research (updated on 2026.06.07)</strong>:</li>
+<li>Convene all experts and sub-agents for roundtable review. Lua VM experts pointed out that the hot path hidden package <code>pcall</code> caused the LuaJIT Trace compiler to interrupt the underlying process, and provided a module-level static local fallback mechanism; AddOn architects created the <code>Docs/19_AURA_1210_REDUX_BLUEPRINT.md</code> blueprint and comprehensively planned __MEAM__CODE_4) zero point storage</li>
+<li><strong>Shadow Host Technology (Shadow Host) Practice</strong>: Implemented for using the bridge <code>CooldownViewer</code> (Cooling Manager /CDM) as a shadow host to avoid secret/pollution restrictions. Create a new <code>Services/ShadowHostService.lua</code> implementation official pool Hook, and introduce parasitic rendering and cascade typesetting avoidance in <code>UI/Renderer.lua</code> to coordinate the CPU and Taint in 100% darkness. Evaluation research can refer to <code>Docs/20_CDM_BYPASS_FEASIBILITY_STUDY.md</code>.</li>
+<li><strong>12.1.0 Zero Allocation &amp; Event-Driven Full Module Refactoring (Completed on 2026.06.07)</strong>:</li>
+<li><strong>Data view disassociation</strong>: disassociate <code>AuraService</code>, <strong>complete EAMCODE_1</strong>, <code>ItemCooldownService</code>, <code>GroundEffectService</code> and <strong>EAMCODE_all</strong>. The five major data services are changed to driver events and are no longer directly connected to <code>Renderer</code>, but to EAM__CO8D__EAM1 86_DED__EAM__CODDE<strong><em>_EAM</em>_CO8DDEA</strong>EAM__CODDE_%<strong>EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_0__EAM__CO8DDEA__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_%__EAMCODE___EAMCODE6%</strong> <em>EAMCODE_5__%__EAM__CODDE</em>%<strong>EAM__CODDE_0__EAM__CO8DDEA__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_0__EAM__CO8DDEA__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_%__EAM__CODDE_0__EAM__CO8DDEA__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CO8DDE4__EAM__CODDE_%__EAM__CODDE_%</strong>.</li>
+<li><strong>Introduction of domestic controller</strong>: Introduce <code>Managers/AlertManager.lua</code> to uniformly manage and schedule these five types of change events, use <code>Scheduler</code> to implement synchronous throttling and batch updates (<code>BeginBatch/EndBatch</code>), and eliminate the layout itself.</li>
+<li><strong>Multi-type zero-allocation Object Pool</strong>: Configure emphasized <code>StatePool</code> (such as <code>GroundEffectStatePool</code> and <code>TotemStatePool</code>, etc.) in all services, in <code>acquire</code> state object is bound to <code>releaseFunc</code>, and is recognized by <code>AlertManager</code> after rendering. Multiple __A__EA__A__3__4D__EAMCO`fstate__EAMCO"__EA safely restores the object and runs 0-allocation during completion to minimize GC goals.</li>
+<li><strong>Mirror carrier text clipping and masking modification</strong>: To address the problem that the skill name is not displayed due to the clipping and FrameLevel display of the pulling container <code>ClipsChildren</code> when adsorbing the official CooldownViewer (CDM), dynamic layout adjustments have been implemented. In parasitic mode, the skill name (<code>nameText</code>) is automatically moved to the bottom of the icon and the bottom of the icon is highlighted and the highlight color is set. At the same time, the privilege is elevated to <code>FrameLevel</code> (relative to) <code>hostIcon</code> + 10), which solves the pain point of "invisible skill names".</li>
+<li><strong>Static syntax security detection settings</strong>: 32 Lua files have 100% penetration of syntax security detection settings.</li>
+<li><strong>16Complete the integration of new and advanced events (as of June 7, 2026)</strong>:<ul>
+<li><strong>Override invalid CLEU</strong>: Fully remove <code>COMBAT_LOG_EVENT_UNFILTERED</code> registration in <code>GroundEffectService</code>, subscribe to <code>UNIT_SPELLCAST_SUCCEEDED</code> instead and filter <code>unitTarget == "player"</code>, 100% <code>unitTarget == "player"</code>, 100% <code>unitTarget == __EAMCODE10%, CO __</code>EAMCODE_3__10%, 100%, 100%. <strong>EAMDE_0</strong> Waiting in the snow,</li>
 </ul>
 </li>
-<li><strong>Mediation Controller Introduction</strong>: Introduce <code>Managers/AlertManager.lua</code> to uniformly manage and schedule these five types of change events, use <code>Scheduler</code> to implement asynchronous throttling and batch updates (<code>BeginBatch/EndBatch</code>), and eliminate Layout Churn.</li>
-<li><strong>Multi-type zero-allocation object pool</strong>: Configure dedicated <code>StatePool</code> (such as <code>GroundEffectStatePool</code> and <code>TotemStatePool</code>, etc.) in all services, bind <code>releaseFunc</code> when <code>acquire</code> state objects, and <code>AlertManager</code> will call <code>state.releaseFunc(state)</code> after rendering is hidden to safely recycle objects, achieving extremely low runtime 0-Allocation GC target.</li>
-<li><strong>Shadow carrier text clipping and occlusion correction</strong>: To solve the problem that the skill name is not displayed due to the clipping and FrameLevel occlusion of the native container <code>ClipsChildren</code> when adsorbing the official CooldownViewer (CDM), dynamic layout adjustment has been implemented. In parasitic mode, the skill name (<code>nameText</code>) is automatically moved to the bottom of the inner side of the icon and set to Highlight. At the same time, the privilege is raised to <code>FrameLevel</code> (relative to <code>hostIcon</code> + 10), which solves the pain point of "invisible skill name".</li>
-<li><strong>Static safe syntax check</strong>: 32 Lua files 100% passed the syntax safety check.</li>
-<li><strong>16 big new and high-frequency event integration (completed on 2026.06.07)</strong>:<ul>
-<li><strong>Replacement of invalid CLEU</strong>: Completely remove <code>COMBAT_LOG_EVENT_UNFILTERED</code> registration in <code>GroundEffectService</code>, subscribe to <code>UNIT_SPELLCAST_SUCCEEDED</code> instead and filter <code>unitTarget == "player"</code>, 100% circumvent the closed restrictions of CLEU in 12.x, and perfectly reconstruct the timing of ground skills such as snowstorms.</li>
+<li><strong>High-frequency energy update without delay</strong>: Additional registration of <code>UNIT_POWER_FREQUENT</code> event in <code>ClassPowerService</code> enables the response speed of holy energy and combo point update to reach 0ms delay.<ul>
+<li><strong>Skill override dynamics follows</strong>: Register <code>COOLDOWN_VIEWER_SPELL_OVERRIDE_UPDATED</code> in <code>CooldownService</code>. When a spell is changed due to talent/status override, the cooldown of the overwritten or original skill will be refreshed immediately, completely eliminating the consumption/residual bug when overwriting.</li>
 </ul>
 </li>
-<li><strong>High-frequency energy update without delay</strong>: Additional registration of <code>UNIT_POWER_FREQUENT</code> event in <code>ClassPowerService</code>, so that the response speed of holy energy and combo point update reaches 0ms delay.<ul>
-<li><strong>Skill Override Dynamic Follow</strong>: Register <code>COOLDOWN_VIEWER_SPELL_OVERRIDE_UPDATED</code> in <code>CooldownService</code>. When a spell changes due to talent/status override, the cooldown of the overwritten or original skill will be refreshed immediately, completely eliminating the timing failure/residual bug during override.</li>
+<li><strong>New Year's Fast Golden Glow Synchronization</strong>: Listen for <code>SPELL_ACTIVATION_OVERLAY_GLOW_SHOW</code> and <code>SPELL_ACTIVATION_OVERLAY_GLOW_HIDE</code> shortcut column highlight events in <code>AlertManager</code>, maintain the local <code>glowSpells</code> table, and add the <code>state.overlayGlow</code>_EA_EA__MCO_EA dynamic tag for the Aura / Cooldown state in the form of Decorator (decoration attribute). <code>overlayGlow</code> Dual-track display golden glow, 100% synchronized official Proc glow.</li>
+<li><strong>Modify static syntax check</strong>: 100% pass the static syntax check of <code>luac -p</code> for all 5 core files.</li>
+<li><strong>Debugging completed diagnostic and statistical tool repairs and expansions (2026.06.07)</strong>:<ul>
+<li>After modifying the architecture module in 12.1.0, the statistics bug of <code>visibleIcons</code> always being <code>0</code> and <code>alertFrame.exists</code> always being <code>false</code> in the diagnosis log.</li>
 </ul>
 </li>
-<li><strong>Native shortcut bar golden glow synchronization</strong>: Monitor <code>SPELL_ACTIVATION_OVERLAY_GLOW_SHOW</code> and <code>SPELL_ACTIVATION_OVERLAY_GLOW_HIDE</code> shortcut bar highlight events in <code>AlertManager</code>, maintain local <code>glowSpells</code> table, add <code>state.overlayGlow</code> mark for Aura / Cooldown state in the form of Decorator (decoration attribute); Renderer dynamic support <code>pandemicReady</code> and <code>overlayGlow</code> dual-track display golden glow, 100% synchronized with the official Proc glow.</li>
-<li><strong>Static safe syntax check</strong>: All 5 modified core files 100% passed the static syntax check of <code>luac -p</code>.</li>
-<li><strong>Debugging, diagnostic and statistical tool repairs and expansions (completed on 2026.06.07)</strong>:<ul>
-<li>Fixed the statistical bug that <code>visibleIcons</code> is always <code>0</code> and <code>alertFrame.exists</code> is always <code>false</code> in the diagnostic log after the 12.1.0 module reconstruction.</li>
+<li>Supplemented <code>/eam debugging</code> information, added <code>active</code> monitoring reagent ID list of each data service, memory usage <code>memoryKB</code>, <code>glowSpells</code> luminous report output list, coordinates and entities of all active icons under the 7 major alarm boxes: IsShown(5),
+-Modified static syntax check: 2 diagnostic module files passed <code>luac -p</code> static syntax check 100%.</li>
+<li><strong>Bug fix for forcibly displaying a blank icon when the skill has no cooldown (completed on 2026.06.07)</strong>:</li>
+<li>Modify the bug that when non-charge skills are not cooling down at all (<code>cooldownInfo</code> is <code>nil</code>), <code>infoSafe</code> excludes excessive defense and forcibly displays 15 empty icons with no countdown and no spiral geometry on the screen.</li>
+<li>Modify the <code>shouldShow</code> logic of <code>CooldownService.lua</code>, add <code>cooldownInfo</code> existence protection, directly keep it from being displayed when there is no cooling, and restore accurate monitoring.</li>
+<li>Modify the static syntax check: <code>CooldownService.lua</code> 100% passes the <code>luac -p</code> static syntax check.</li>
+<li><strong>Combat settings (secret) Halo time countdown downgrade and automatic recovery recovery mechanism (completed on 2026.06.07)</strong>:</li>
+<li>When the player is in combat, the Aura time and endpoint time are marked as secret times, and the priority perspective <code>C_TooltipInfo</code> is implemented to grab the duration in the description (<code>scrapedDur</code>) to create non-secret normal <code>DurationObject</code> and fractional timers (<code>TIMER_NUMERIC</code>) so that the device can render the countdown normally.</li>
+<li>Maintain <code>activeDurationObjects</code> in <code>UI/Renderer.lua</code>, and fight breakthrough <code>:IsZero()</code> every frame in the unified <code>onLegacyTimerUpdate</code> system. Once it breaks out, it will be actively triggered and restored to completely resolve the remaining bugs in the secret halo.<ul>
+<li>Static syntax checking: <code>AuraService.lua</code> and <code>UI/Renderer.lua</code> 100% modified <code>luac -p</code> static syntax checking.</li>
 </ul>
 </li>
-<li>Expand the <code>/eam debug</code> output information, add the <code>active</code> monitoring Spell ID list of each data service, the memory usage <code>memoryKB</code>, the <code>glowSpells</code> glow cache list, and the <code>:IsShown()</code> attribute of the coordinates and entities of all active icons under the 7 major Alert Frames, which greatly enhances the penetration of subsequent debugging and log analysis.<ul>
-<li>Static safe syntax check: 2 modified diagnostic module files passed <code>luac -p</code> static syntax check 100%.</li>
-</ul>
-</li>
-<li><strong>Bug fix for forcibly displaying an empty icon when the skill has no cooldown (completed on 2026.06.07)</strong>:<ul>
-<li>Fixed a bug where 15 empty icons with no countdown and no spiral shadow are forcibly displayed on the screen due to <code>infoSafe</code> determining that the defense is excessive when non-Charge skills are not in cooldown at all (<code>cooldownInfo</code> is <code>nil</code>).</li>
-<li>Modify the <code>shouldShow</code> logic of <code>CooldownService.lua</code>, add <code>cooldownInfo</code> existence guard, keep it from being displayed when there is no cooling, and return to accurate monitoring.</li>
-</ul>
-</li>
-<li>Static safe syntax check: modified <code>CooldownService.lua</code> 100% passes the <code>luac -p</code> static syntax check.</li>
-<li><strong>Combat Restricted (Secret) Halo Time Countdown Downgrade and Automatic Expiration Recycling Mechanism (Completed on 2026.06.07)</strong>:</li>
-<li>When the player is in battle and the aura time and expiration time are marked as Secret, the implementation gives priority to using <code>C_TooltipInfo</code> to grab the duration (<code>scrapedDur</code>) in the description to create a non-Secret ordinary <code>DurationObject</code> and numeric timer (<code>TIMER_NUMERIC</code>), so that the Renderer can render the countdown normally.</li>
-<li>Maintain <code>activeDurationObjects</code> in <code>UI/Renderer.lua</code> and perform native <code>:IsZero()</code> determination on them every frame in the unified <code>onLegacyTimerUpdate</code> system. Once it expires, it will actively trigger hiding and recycling, completely eliminating the residual bug of Secret aura.<ul>
-<li>Static safe syntax check: The modified <code>AuraService.lua</code> and <code>UI/Renderer.lua</code> 100% pass the <code>luac -p</code> static syntax check.</li>
-</ul>
-</li>
-<li><strong>12.1.0 Zero-allocation StatePool recycling and JIT optimization implementation based on Pool-Token delayed scheduling (Completed on 2026.06.09)</strong>:</li>
-<li><strong>P0 memory leak repair</strong>: In <code>StatePool.acquire</code> of <code>AuraService.lua</code>, <code>GroundEffectService.lua</code>, <code>TotemService.lua</code>, bind <code>state.releaseFunc = Pool.release</code> uniformly and safely, and set it to <code>nil</code> when <code>release</code>, 100% ensure that <code>AlertManager</code> can be successfully recycled after hiding the icon state, which solves the serious P0 bug that occurs when the pre-allocated object pool is exhausted and falls into GC Churn.</li>
-<li><strong>Eliminate JIT Trace Abort</strong>: Completely remove the <code>pairs</code> polling and <code>pcall</code> checks for <code>durationObj:IsZero()</code> in OnUpdate. Instead, when <code>Renderer.render</code> starts the timer, obtain the token through the <code>timerTokenPool</code> zero-allocation token pool, and register a single deferred recycling task with <code>Scheduler.after</code>.</li>
-<li><strong>Limit 0-Allocation Performance</strong>: When it expires, <code>onDurationTimerExpired(token)</code> is used to determine the active status of the token to accurately hide and recycle it. The entire timing and recycling process completely achieves 0-Allocation (zero heap memory configuration) and zero polling CPU overhead, eliminating combat micro-stutters, and 100% of the hot paths can be compiled by LuaJIT, increasing the speed by hundreds of times.<ul>
-<li><strong>Static safe syntax check</strong>: All four modified core files 100% passed the <code>luac -p</code> static syntax check.</li>
+<li><strong>12.1.0 zero-allocation StatePool recovery and JIT optimization practice based on Pool-Token delayed scheduling (completed on 2026.06.09)</strong>:</li>
+<li><strong>P0 memory leak fix</strong>: uniformly and safely bind <code>state.releaseFunc = in</code>AuraService.lua<code>,</code>GroundEffectService.lua<code>,</code>TotemService.lua<code>'s</code>StatePool.acquire<code>Pool.release</code>, and the state can be successfully restored after setting it to __EAMCODE_5%" icon, which solves the serious P0 bug that hides the GC loss of the asset pool grid in the early stage.</li>
+<li><strong>Remove JIT Trace Abort</strong>: Completely remove the <code>pairs</code> polling and <code>pcall</code> checks for <code>durationObj:IsZero()</code> in OnUpdate. Instead, when <code>Renderer.render</code> starts the clock, obtain the token through the <code>timerTokenPool</code> zero-allocation token pool, and register a single subsequent task with <code>Scheduler.after</code>.</li>
+<li><strong>Limit 0-allocation occurs</strong>: When replacing, the token activation status is judged by <code>onDurationTimerExpired(token)</code> to accurately and restore hiding. The entire timing and recovery process completely completes 0-allocation (zero heap memory configuration) and zero-polling the CPU dozens, eliminating combat micro-stutters, and 100% of the hot paths can be compiled by LuaJIT, increasing the speed by hundreds of times.<ul>
+<li><strong>Modify static syntax check</strong>: All 4 core files passed <code>luac -p</code> static syntax check 100%.</li>
 </ul>
 </li>
 <li><strong>12.1.0 Expert Matrix Expansion and New Expert Definition (Completed on 2026.06.09)</strong>:<ul>
-<li><strong>Expert definitions</strong>: <code>EAM_Mock_Sandbox_Expert</code> (MOCK), <code>EAM_Data_Guard_Expert</code> (DATA), <code>EAM_DevOps_Release_Expert</code> (DEVOPS) and <code>EAM_Combat_Scraper_Expert</code> (SCRAPER) are defined using <code>define_subagent</code> Experts in four new fields have completed registration in the system.</li>
+<li><strong>Expert Definition</strong>: Complete a brand new expert using <code>define_subagent</code> defined for <code>EAM_Mock_Sandbox_Expert</code> (MOCK), <code>EAM_Data_Guard_Expert</code> (DATA), <code>EAM_DevOps_Release_Expert</code> (DEVOPS) and <code>EAM_Combat_Scraper_Expert</code> (<strong>EA)CODE7</strong>.</li>
 </ul>
 </li>
-<li><strong>RACI Matrix Upgrade</strong>: Modify <code>Docs/21_RACI_EXPERTS_MATRIX.md</code> to expand the RACI responsibility matrix of the project, introduce two new task areas of "sandbox testing" and "WTF profile migration", establish the R/A/C division of labor positioning of new experts, and clarify the boundaries of authority and responsibility for automated testing, WTF setting migration defense and CI release.</li>
+<li><strong>Modify RACI matrix upgrade</strong>: <code>Docs/21_RACI_EXPERTS_MATRIX.md</code> expands the RACI responsibility matrix of the project, introduces two new task areas of "Sandbox Testing" and "WTF Profile Migration", and recognizes the R/A __EAMCODE_4 extension positioning test of the new expert</li>
 </ul>
     </div>
     

@@ -415,18 +415,19 @@
 
     <div id="doc-content-zh" class="lang-content active">
         <a href="AGENTS.md.html" class="back-btn">← 返回 AI 入口指導檔 (AGENTS)</a>
-<h1 id="1210-aura-auraservice-aurastatepool">12.1.0 Aura 重構：AuraService 解耦、AuraStatePool 設計與雙軌渲染藍圖</h1>
-<p>本文件定義了 EventAlertMod (EAM) 進入 12.1.0 世代的核心重構規劃，旨在徹底解耦數據源與 UI 渲染、降低 Lua VM 戰鬥記憶體抖動 (GC Churn)，並完整適配 Retail 12.x C++ Native Duration Binding 通道。</p>
-<h2 id="push-event-driven-pull">一、 架構演進：從 Push 耦合走向 Event-Driven Pull</h2>
-<h3 id="1">1. 現狀痛點</h3>
-<p>在 12.0.7 中，<code>AuraService.lua</code> 直接調用了 <code>UI/Renderer.lua</code> 的 <code>Renderer.render</code> 與 <code>Renderer.requestLayout</code>。這導致了以下弊端：
-*   <strong>高耦合性</strong>：<code>AuraService</code> 必須知道 <code>Renderer</code> 的接口，這使得無法在無 UI 的環境下對數據庫與事件適配層進行獨立的單元測試 (Unit Test)。
-*   <strong>Layout Churn (排版抖動)</strong>：在 <code>UNIT_AURA</code> 增量更新中，多個光環同時變更會觸發多次 <code>render</code>，導致 Renderer 重複計算 UI 坐標 (Layout)，浪費 CPU 時間。</p>
-<h3 id="2">2. 解耦目標</h3>
-<p>引進 <strong>AlertManager</strong>（控制器層）作為中介。
-*   <code>AuraService</code>：純數據服務，只負責監聽並適配 <code>UNIT_AURA</code> 事件，將光環的物理 facts 寫入 <code>AuraStatePool</code>。數據變更後，僅向 <code>EventRouter</code> 拋出 <code>EAM_AURA_STATE_CHANGED</code> 事件。
-*   <code>AlertManager</code>：監聽此事件，負責依據用戶設定 (alerts 列表、enabled 標記) 做過濾與渲染決策，並以節流 (Throttle) 或批次 (Batch) 的方式請求 <code>Renderer</code> 更新。
-*   <code>Renderer</code> : 純渲染視圖層，只接收包裝好的 Render States，透過 IconPool 刷寫到畫面上。</p>
+<!-- EAM_DOCUMENTATION_SOURCE: zh-TW -->
+<h1 id="1210-auraauraserviceaurastatepool">12.1.0 Aura重構：AuraService解耦合、AuraStatePool設計與雙軌渲染藍圖</h1>
+<p>本檔案定義了 EventAlertMod (EAM) 進入 12.1.0 世代的核心重構規劃，旨在徹底解耦資料來源與 UI 渲染、減輕 Lua VM 戰鬥記憶體疼痛 (GC Churn)，並完整正式服 12.x C++ Native Duration Binding 通道。</p>
+<h2 id="push-event-driven-pull">一、架構演進：從 Push 連線到 Event-Driven Pull</h2>
+<h3 id="1">1.目前狀況痛點</h3>
+<p>在 12.0.7 中，<code>AuraService.lua</code> 直接呼叫了 <code>UI/Renderer.lua</code> 的 <code>Renderer.render</code> 和 <code>Renderer.requestLayout</code>。這導致了以下弊端：
+* <strong>高耦合性</strong>：<code>AuraService</code> 必須知道 <code>Renderer</code> 的接口，這使得無法在無 UI 的環境下對資料庫與事件車輛層進行獨立的單元測試（測試單元）。
+* <strong>Layout Churn（排版迭代）</strong>：在 <code>UNIT_AURA</code> 增量更新中，多個光環同時變更會觸發多次 <code>render</code>，導致渲染器重複計算 UI 座標（Layout），浪費 CPU 時間。</p>
+<h3 id="2">2.解耦目標</h3>
+<p>引入<strong>AlertManager</strong>（控制器層）作為加入。
+* <code>AuraService</code>：純資料服務，只監聽並承載 <code>UNIT_AURA</code> 事件，將光環的實體事實寫入 <code>AuraStatePool</code>。資料變更後，僅向 <code>EventRouter</code> 主動 <code>EAM_AURA_STATE_CHANGED</code> 事件。
+* <code>AlertManager</code>：此監聽事件，使用者負責設定（警報清單、啟用標記）做過濾與渲染決策，並以節流（Throttle）或批次（Batch）的方式請求<code>Renderer</code>更新。
+* <code>Renderer</code> : 純視圖渲染層，只接收包裝好的渲染狀態，透過 IconPool 刷寫到畫面上。</p>
 <div class="mermaid">
 graph TD
     A[Wow UNIT_AURA Event] --> B[AuraService]
@@ -439,18 +440,18 @@ graph TD
 </div>
 
 <hr />
-<h2 id="aurastatepool-gc">二、 AuraStatePool：低 GC 快取池設計</h2>
-<p>為消滅戰鬥熱路徑中反覆分配與回收 Lua Table 造成的 GC 壓力和卡頓，12.1.0 將引進專有的 <strong>AuraStatePool</strong>。</p>
-<h3 id="1_1">1. 結構設計</h3>
+<h2 id="aurastatepoolgc">二、 AuraStatePool：低GC儲存池設計</h2>
+<p>為消除戰鬥熱路徑中分配與恢復Lua表的GC壓力和卡頓，12.1.0將推廣母公司的<strong>AuraStatePool</strong>。</p>
+<h3 id="1_1">1.結構設計</h3>
 <ul>
-<li>使用 <code>table.create(preallocatedSize, 0)</code> 預先分配指定大小的陣列空間，主要分配給 <code>player</code> 與 <code>target</code> 的 active states。</li>
-<li><strong>Recycle Queue (回收佇列)</strong>：<ul>
-<li>光環消失時，狀態 Table 不會被 <code>nil</code> 掉，而是調用 <code>resetState()</code> 抹除其動態內容，並放入 <code>AuraStatePool.recycleBin</code> 中。</li>
-<li>新光環被觸發時，優先從 <code>recycleBin</code> 中 <code>acquire</code> 舊 Table 複用，唯有在 Pool 乾涸時才創建新對象。</li>
+<li>使用 <code>table.create(preallocatedSize, 0)</code> 預先指派指定連線空間的大小，主要指派給 <code>player</code> 和 <code>target</code> 的活動狀態。</li>
+<li><strong>恢復佇列(恢復佇列)</strong>：</li>
+<li>當光環消失時，狀態表不會被 <code>nil</code> 掉，而是呼叫 <code>resetState()</code> 抹除其動態內容，並放入 <code>AuraStatePool.recycleBin</code> 中。<ul>
+<li>新光環觸發時，優先從 <code>recycleBin</code> 中 <code>acquire</code> 舊表復用，只有在 Pool 乾涸時才建立新物件。</li>
 </ul>
 </li>
 </ul>
-<h3 id="2_1">2. 核心代碼設計</h3>
+<h3 id="2_1">2.核心程式碼設計</h3>
 <pre class="codehilite"><code class="language-lua">local AuraStatePool = {
     active = {},
     recycleBin = {},
@@ -504,42 +505,40 @@ function AuraStatePool.release(state)
 end
 </code></pre>
 
-<h3 id="3-secret-value">3. Secret Value 索引安全防禦</h3>
-<p>在戰鬥中，如果用未經驗證的 Key 對 custom table 進行 index，一旦該 Key 是秘密值，Lua 將會發生致命崩潰。
-*   <strong>規則</strong>：在將 <code>spellID</code>、<code>auraInstanceID</code> 等欄位寫入任何 hash 索引（例如 <code>cache.byInstance[id]</code> 或 <code>alertIndex[spellID]</code>）前，必須先以 <code>issecretvalue(id)</code> 進行防禦。
-*   <strong>降級</strong>：若 Key 為 Secret，該光環直接寫入固定的 <code>EAM.Constants.FALLBACK_SECRET_KEY</code>，不進行動態 hash 映射。</p>
+<h3 id="3">3.秘密價值指數安全防禦</h3>
+<p>在戰鬥中，如果未用驗證的Key對自訂表進行索引，一旦該Key為秘密值，Lua就會發生致命的崩潰。
+* <strong>規則</strong>：在將 <code>spellID</code>、<code>auraInstanceID</code> 等欄位寫入任何雜補索引（如 <code>cache.byInstance[id]</code> 或 <code>alertIndex[spellID]</code>）之前，必須先以 <code>issecretvalue 進行防禦。
+* **降級**：若Key為Secret，此光環直接寫入固定的</code>EAM.Constants.FALLBACK_SECRET_KEY`，不進行動態雜湊映射。</p>
 <hr />
-<h2 id="c-native-binding-lua-onupdate">三、 雙軌渲染機制：C++ Native Binding 與 Lua OnUpdate 降級通道</h2>
-<p>為最大化發揮 WoW 12.x 的引擎性能，Renderer 將採用<strong>雙軌化時間顯示渲染管線</strong>。</p>
-<h3 id="1-anative-duration-binding-0-lua-cpu">1. 軌道 A：Native Duration Binding (首選，0-Lua-CPU)</h3>
+<h2 id="c-native-binding-lua-onupdate">三、雙軌渲染：C++ Native Binding 與 Lua OnUpdate 降級通道通道</h2>
+<p>為了最大化發揮 WoW 12.x 的引擎完成，渲染器將採用<strong>雙軌化時間顯示渲染托盤</strong>。</p>
+<h3 id="1-a0-lua-cpu">1. 軌道A：原生持續時間綁定（首選，0-Lua-CPU）</h3>
 <ul>
 <li><strong>原理</strong>：
-    透過 <code>C_UnitAuras.GetAuraDuration(unit, auraInstanceID)</code> 獲取底層的 <code>DurationObject</code>。</li>
-<li><strong>執行步驟</strong>：<ol>
-<li>Renderer 取得 <code>timer.durationObject</code>。</li>
-<li>調用 <code>C_DurationUtil.CreateDurationTextBinding(durationObject, icon.timerText)</code>。</li>
-<li>調用 <code>icon.cooldown:SetCooldownFromDurationObject(durationObject)</code>。</li>
-</ol>
-</li>
+    <code>C_UnitAuras.GetAuraDuration(unit, auraInstanceID)</code> 取得底層的 <code>DurationObject</code>。</li>
+<li><strong>執行步驟</strong>：
+    1.渲染器取得<code>timer.durationObject</code>。
+    2.呼叫<code>C_DurationUtil.CreateDurationTextBinding(durationObject,圖示.timerText)</code>。
+    3.呼叫<code>icon.cooldown:SetCooldownFromDurationObject(durationObject)</code>。</li>
 <li><strong>優勢</strong>：
-    圖示上的秒數倒數與轉圈渲染完全由遊戲客戶端 C++ 底層的定時器驅動，<strong>完全不需要註冊 Lua OnUpdate 腳本</strong>，達成 0 運算開銷與 0 記憶體抖動。</li>
+    圖示上的秒數倒數與轉圈渲染完全由遊戲客戶端 C++ 高階的計時器驅動，<strong>完全不需要註冊 Lua OnUpdate 腳本</strong>，達成 0 頭顱與 0 記憶體。</li>
 </ul>
-<h3 id="2-blua-onupdate-central-scheduler">2. 軌道 B：Lua OnUpdate Central Scheduler (降級通道)</h3>
+<h3 id="2blua-onupdate-central-scheduler">2.軌道B：Lua OnUpdate Central Scheduler (降級通道)</h3>
 <ul>
 <li><strong>原理</strong>：
-    當 <code>DurationObject</code> 不可用（例如非戰鬥技能冷卻、手動設定的地面效果時間、或 PTR API 降級時），回退到傳統的 Lua 倒數。</li>
+當<code>DurationObject</code>不可用時（例如非戰鬥技能冷卻、手動設定的地面效果時間、或PTR API降級時），返回傳統的Lua倒數。</li>
 <li><strong>執行步驟</strong>：<ol>
-<li>取消 <code>icon.timerText</code> 的 native binding。</li>
-<li>將該圖示註冊到 <code>EAM.Core.Scheduler</code> 集中式排程器。</li>
-<li>Scheduler 使用單一的 <code>OnUpdate</code> 以 0.1 秒的間隔（節流）計算 <code>timeLeft</code>，並更新文字。</li>
+<li>取消 <code>icon.timerText</code> 的臨時綁定。</li>
+<li>提示圖示註冊到 <code>EAM.Core.Scheduler</code> 集中式排程器。
+3.調度器使用單一的<code>OnUpdate</code>以0.1秒的間隔（節流）計算<code>timeLeft</code>，並更新文字。</li>
 </ol>
 </li>
 <li><strong>安全防禦</strong>：
-    在 Scheduler 內更新文字前，必須先使用 <code>issecretvalue(timeLeft)</code> 確保時間數字可安全訪問，否則將文字顯示為 <code>"unknown"</code>，徹底杜絕 Indexing/Arithmetic with Secret 報錯。</li>
+在 Scheduler 內更新文字前，必須先使用 <code>issecretvalue(timeLeft)</code> 保證數字可安全存取的時間，否則將文字顯示為 <code>"unknown"</code>，徹底杜絕 Indexing/Arithmetic with Secret 報錯。</li>
 </ul>
 <hr />
-<h2 id="1210">四、 12.1.0 模組化目錄結構預期</h2>
-<p>12.1.0 的重構將進一步優化模組結構，如下所示：</p>
+<h2 id="1210">四、12.1.0模組化目錄結構預期</h2>
+<p>12.1.0的重構將進一步優化模組結構，如下所示：</p>
 <pre class="codehilite"><code class="language-text">EventAlertMod/
 ├── Core/
 │   ├── EventRouter.lua      (單一事件分派器)
@@ -559,18 +558,19 @@ end
     </div>
     <div id="doc-content-en" class="lang-content">
         <a href="AGENTS.md.html" class="back-btn">← Back to AI Entrance (AGENTS)</a>
-<h1 id="1210-aura-refactoring-auraservice-decoupling-aurastatepool-design-and-dual-track-rendering-blueprint">12.1.0 Aura Refactoring: AuraService decoupling, AuraStatePool design and dual-track rendering blueprint</h1>
-<p>This document defines the core reconstruction plan for EventAlertMod (EAM) entering the 12.1.0 generation, aiming to completely decouple data sources and UI rendering, reduce Lua VM combat memory churn (GC Churn), and fully adapt to the Retail 12.x C++ Native Duration Binding channel.</p>
-<h2 id="1-architecture-evolution-from-push-coupling-to-event-driven-pull">1. Architecture evolution: from Push coupling to Event-Driven Pull</h2>
-<h3 id="1-current-pain-points">1. Current pain points</h3>
+<!-- EAM_DOCUMENTATION_SOURCE: zh-TW -->
+<h1 id="1210-aura-reconstruction-auraservice-decoupling-aurastatepool-design-and-dual-track-rendering-blueprint">12.1.0 Aura reconstruction: AuraService decoupling, AuraStatePool design and dual-track rendering blueprint</h1>
+<p>This file defines the core refactoring plan of EventAlertMod (EAM) entering the 12.1.0 generation, which aims to completely decouple data sources and UI rendering, alleviate Lua VM battle memory pain (GC Churn), and complete the Retail server 12.x C++ Native Duration Binding channel.</p>
+<h2 id="1-architecture-evolution-from-push-connection-to-event-driven-pull">1. Architecture evolution: from Push connection to Event-Driven Pull</h2>
+<h3 id="1-pain-points-of-the-current-situation">1. Pain points of the current situation</h3>
 <p>In 12.0.7, <code>AuraService.lua</code> directly calls <code>Renderer.render</code> and <code>Renderer.requestLayout</code> of <code>UI/Renderer.lua</code>. This leads to the following disadvantages:
-* <strong>High coupling</strong>: <code>AuraService</code> must know the interface of <code>Renderer</code>, which makes it impossible to conduct independent unit testing (Unit Test) of the database and event adaptation layer in a UI-less environment.
-* <strong>Layout Churn (typesetting jitter)</strong>: In the <code>UNIT_AURA</code> incremental update, simultaneous changes in multiple halos will trigger multiple <code>render</code>s, causing the Renderer to repeatedly calculate the UI coordinates (Layout), wasting CPU time.</p>
+* <strong>High Coupling</strong>: <code>AuraService</code> must know the interface of <code>Renderer</code>, which makes it impossible to perform independent unit testing (test unit) of the library and event vehicle layer in a UI-less environment.
+* <strong>Layout Churn (layout iteration)</strong>: In the <code>UNIT_AURA</code> incremental update, simultaneous changes in multiple halos will trigger multiple <code>render</code>, causing the renderer to repeatedly calculate the UI coordinates (Layout) and waste CPU time.</p>
 <h3 id="2-decoupling-goals">2. Decoupling goals</h3>
-<p>Introducing <strong>AlertManager</strong> (controller layer) as an intermediary.
-* <code>AuraService</code>: a pure data service, only responsible for monitoring and adapting to the <code>UNIT_AURA</code> event, and writing the physical facts of the aura into <code>AuraStatePool</code>. After data changes, only the <code>EAM_AURA_STATE_CHANGED</code> event is thrown to <code>EventRouter</code>.
-* <code>AlertManager</code>: Listens to this event, is responsible for making filtering and rendering decisions based on user settings (alerts list, enabled tag), and requesting <code>Renderer</code> updates in a throttling (Throttle) or batch (Batch) manner.
-* <code>Renderer</code>: A pure rendering view layer that only receives packaged Render States and writes them to the screen through IconPool.</p>
+<p>Introduced <strong>AlertManager</strong> (controller layer) as a join.
+* <code>AuraService</code>: Pure data service, only listens to and carries <code>UNIT_AURA</code> events, and writes the entity facts of the halo to <code>AuraStatePool</code>. After the data is changed, only <code>EAM_AURA_STATE_CHANGED</code> events are actively sent to <code>EventRouter</code>.
+* <code>AlertManager</code>: For this listening event, the user is responsible for setting (alert list, enable flags), making filtering and rendering decisions, and requesting <code>Renderer</code> updates in a throttling or batch manner.
+* <code>Renderer</code>: A pure view rendering layer that only receives the packaged rendering state and writes it to the screen through IconPool.</p>
 <div class="mermaid">
 graph TD
     A[Wow UNIT_AURA Event] --> B[AuraService]
@@ -583,18 +583,18 @@ graph TD
 </div>
 
 <hr />
-<h2 id="2-aurastatepool-low-gc-cache-pool-design">2. AuraStatePool: low GC cache pool design</h2>
-<p>In order to eliminate GC pressure and lag caused by repeated allocation and recycling of Lua Table in the combat hot path, 12.1.0 will introduce the proprietary <strong>AuraStatePool</strong>.</p>
+<h2 id="2-aurastatepool-low-gc-storage-pool-design">2. AuraStatePool: Low GC storage pool design</h2>
+<p>In order to eliminate GC pressure and lag in allocating and restoring Lua tables in the combat hot path, 12.1.0 will promote the parent company's <strong>AuraStatePool</strong>.</p>
 <h3 id="1-structural-design">1. Structural design</h3>
 <ul>
-<li>Use <code>table.create(preallocatedSize, 0)</code> to pre-allocate array space of a specified size, mainly allocated to the active states of <code>player</code> and <code>target</code>.</li>
-<li><strong>Recycle Queue</strong>:</li>
-<li>When the aura disappears, the state Table will not be <code>nil</code>, but call <code>resetState()</code> to erase its dynamic content and put it into <code>AuraStatePool.recycleBin</code>.<ul>
-<li>When the new halo is triggered, priority will be given to reusing the old Table in <code>acquire</code> in <code>recycleBin</code>, and new objects will only be created when the Pool dries up.</li>
+<li>Use <code>table.create(preallocatedSize, 0)</code> to pre-assign the size of the specified connection space, mainly assigned to the active state of <code>player</code> and <code>target</code>.</li>
+<li><strong>Restore Queue (Restore Queue)</strong>:</li>
+<li>When the halo disappears, the state table will not be deleted by <code>nil</code>, but <code>resetState()</code> will be called to erase its dynamic content and put into <code>AuraStatePool.recycleBin</code>.<ul>
+<li>When a new halo is triggered, the old table <code>acquire</code> in <code>recycleBin</code> will be reused first, and new objects will only be created when the Pool dries up.</li>
 </ul>
 </li>
 </ul>
-<h3 id="2-core-code-design">2. Core code design</h3>
+<h3 id="2core-code-design">2.Core code design</h3>
 <pre class="codehilite"><code class="language-lua">local AuraStatePool = {
     active = {},
     recycleBin = {},
@@ -648,41 +648,41 @@ function AuraStatePool.release(state)
 end
 </code></pre>
 
-<h3 id="3-secret-value-index-security-defense">3. Secret Value index security defense</h3>
-<p>In combat, if a custom table is indexed with an unvalidated Key, Lua will crash fatally once the Key is a secret value.
-* <strong>Rule</strong>: Before writing <code>spellID</code>, <code>auraInstanceID</code>, etc. fields to any hash index (such as <code>cache.byInstance[id]</code> or <code>alertIndex[spellID]</code>), they must be defended with <code>issecretvalue(id)</code>.
-* <strong>Downgrade</strong>: If the Key is Secret, the halo is directly written to the fixed <code>EAM.Constants.FALLBACK_SECRET_KEY</code> without dynamic hash mapping.</p>
+<h3 id="3secret-value-index-security-defense">3.Secret Value Index Security Defense</h3>
+<p>In combat, if a custom table is indexed with a non-validated Key, Lua will crash fatally once the Key becomes a secret value.
+* <strong>Rule</strong>: Before writing <code>spellID</code>, <code>auraInstanceID</code>, etc. fields to any hash index (such as <code>cache.byInstance[id]</code> or <code>alertIndex[spellID]</code>), they must be defended with <code>issecretvalue.
+* **Downgrade**: If Key is Secret, this halo is directly written to the fixed</code>EAM.Constants.FALLBACK_SECRET_KEY` without dynamic hash mapping.</p>
 <hr />
-<h2 id="3-dual-track-rendering-mechanism-c-native-binding-and-lua-onupdate-downgrade-channel">3. Dual-track rendering mechanism: C++ Native Binding and Lua OnUpdate downgrade channel</h2>
-<p>In order to maximize the engine performance of WoW 12.x, Renderer will adopt a <strong>dual-track time display rendering pipeline</strong>.</p>
-<h3 id="1-track-a-native-duration-binding-preferred-0-lua-cpu">1. Track A: Native Duration Binding (preferred, 0-Lua-CPU)</h3>
+<h2 id="3-dual-track-rendering-c-native-binding-and-lua-onupdate-downgrade-channel">3. Dual-track rendering: C++ Native Binding and Lua OnUpdate downgrade channel</h2>
+<p>In order to maximize the engine performance of WoW 12.x, the renderer will use a <strong>dual-track time display render tray</strong>.</p>
+<h3 id="1-track-a-native-duration-binding-preferred-0-lua-cpu">1. Track A: Native duration binding (preferred, 0-Lua-CPU)</h3>
 <ul>
 <li><strong>Principle</strong>:
-    Get the underlying <code>DurationObject</code> through <code>C_UnitAuras.GetAuraDuration(unit, auraInstanceID)</code>.</li>
+<code>C_UnitAuras.GetAuraDuration(unit, auraInstanceID)</code> gets the underlying <code>DurationObject</code>.</li>
 <li><strong>Execution Steps</strong>:<ol>
-<li>Renderer gets <code>timer.durationObject</code>.</li>
-<li>Call <code>C_DurationUtil.CreateDurationTextBinding(durationObject, icon.timerText)</code>.</li>
+<li>The renderer obtains <code>timer.durationObject</code>.</li>
+<li>Call <code>C_DurationUtil.CreateDurationTextBinding(durationObject,picture.timerText)</code>.</li>
 <li>Call <code>icon.cooldown:SetCooldownFromDurationObject(durationObject)</code>.</li>
 </ol>
 </li>
 <li><strong>Advantages</strong>:
-    The countdown of seconds and circle rendering on the icon are completely driven by the underlying timer of the game client C++. There is no need to register the Lua OnUpdate script at all, achieving 0 computing overhead and 0 memory jitter.</li>
+    The second countdown and circle rendering on the icon are completely driven by the high-level timer of the game client C++. <strong>There is no need to register the Lua OnUpdate script</strong>, achieving 0 heads and 0 memory.</li>
 </ul>
 <h3 id="2-track-b-lua-onupdate-central-scheduler-downgrade-channel">2. Track B: Lua OnUpdate Central Scheduler (downgrade channel)</h3>
 <ul>
 <li><strong>Principle</strong>:
-    Fallback to traditional Lua countdown when <code>DurationObject</code> is unavailable (e.g. non-combat skill cooldown, manually set ground effect time, or PTR API downgrade).</li>
+When <code>DurationObject</code> is unavailable (such as non-combat skill cooldown, manually set ground effect time, or PTR API downgrade), the traditional Lua countdown is returned.</li>
 <li><strong>Execution Steps</strong>:<ol>
-<li>Cancel the native binding of <code>icon.timerText</code>.</li>
-<li>Register the icon to the <code>EAM.Core.Scheduler</code> centralized scheduler.</li>
-<li>Scheduler uses a single <code>OnUpdate</code> to calculate <code>timeLeft</code> at 0.1 second intervals (throttle) and update the text.</li>
+<li>Cancel the temporary binding of <code>icon.timerText</code>.</li>
+<li>The prompt icon is registered to the <code>EAM.Core.Scheduler</code> centralized scheduler.</li>
 </ol>
 </li>
+<li>The scheduler uses a single <code>OnUpdate</code> to calculate <code>timeLeft</code> at 0.1 second intervals (throttle), and updates the text.</li>
 <li><strong>Security Defense</strong>:
-    Before updating text in Scheduler, you must first use <code>issecretvalue(timeLeft)</code> to ensure that the time number can be safely accessed, otherwise the text will be displayed as <code>"unknown"</code>, completely eliminating Indexing/Arithmetic with Secret errors.</li>
+Before updating text in Scheduler, you must first use <code>issecretvalue(timeLeft)</code> to ensure the time when the number can be safely accessed. Otherwise, the text will be displayed as <code>"unknown"</code>, completely eliminating Indexing/Arithmetic with Secret errors.</li>
 </ul>
 <hr />
-<h2 id="4-1210-modular-directory-structure-expectation">4. 12.1.0 Modular Directory Structure Expectation</h2>
+<h2 id="4-expected-modular-directory-structure-in-1210">4. Expected modular directory structure in 12.1.0</h2>
 <p>The refactoring of 12.1.0 will further optimize the module structure, as shown below:</p>
 <pre class="codehilite"><code class="language-text">EventAlertMod/
 ├── Core/
