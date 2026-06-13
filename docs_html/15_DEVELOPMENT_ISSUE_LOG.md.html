@@ -427,7 +427,7 @@
 <li>若問題與 WoW Retail API 有關，需標示資料來源為檔案、搜尋索引、NotebookLM、或實機驗證。</li>
 <li>若問題與工具或環境有關，需記錄作業系統、指令、錯誤訊息摘要與可行替代方案。</li>
 <li>若同一類問題或作業流程重複出現，需評估是否整理成 EventAlertMod 專案唯一 SKILL。</li>
-<li>若問題涉及污點、被阻止的動作、戰鬥鎖定或受保護的框架，需記錄觸發路徑、戰鬥狀態、相關框架/API 與可重置步驟。</li>
+<li>若問題涉及污染、被阻止的動作、戰鬥鎖定或受保護的框架，需記錄觸發路徑、戰鬥狀態、相關框架/API 與可重置步驟。</li>
 </ul>
 <h2 id="_3">建議格式</h2>
 <pre class="codehilite"><code class="language-md">### yyyy-mm-dd 標題
@@ -622,7 +622,7 @@
 <li>脅：
 在也沒有舊版EAM全域變數（如<code>EA_Items</code>、<code>EA_AltItems</code>等）的全新安裝環境下（或WTF資料夾被清除），重寫後的EAM登錄後一個ICON沒有出現。</li>
 <li>症狀與原因判斷：</li>
-<li><code>SavedVariables.lua</code> 在初始化時，除了執行 <code>importLegacyTables</code> 嘗試從舊版本全局變數遷移設定之外，沒有將 <code>EAM.Data.SpellArray</code> 中目前職業的預設監控寫入 <code>EAM_DB.alerts</code> 中。
+<li><code>SavedVariables.lua</code> 在初始化時，除了執行 <code>importLegacyTables</code> 嘗試從舊版本全域變數遷移設定之外，沒有將 <code>EAM.Data.SpellArray</code> 中目前職業的預設監控寫入 <code>EAM_DB.alerts</code> 中。
 2.當全新載入時，舊版變數不存在，因此<code>alerts</code>清單完全為空。
   3.各個監控服務（<code>AuraService</code>、<code>CooldownService</code>等）均使用<code>EAM_DB.alerts</code>進行篩選，若警報為空則直接返回，不引發任何更新事件與進行UI危險，故畫面上一個ICON都沒有出現。</li>
 <li>已嘗試方法：
@@ -643,7 +643,7 @@
 <li>已嘗試方法：
   備份 <code>UI/Renderer.lua</code> 和 <code>UI/IconPool.lua</code> 至 <code>backup/</code> 目錄。</li>
 <li>有效解法：</li>
-<li><strong>實施統一降級計時OnUpdate系統</strong>：在<code>UI/Renderer.lua</code>中實施一個全局共享、基於單一OnUpdate框架的<code>legacyTimer</code>系統，提供<code>registerLegacyTimer</code>和<code>unregisterLegacyTimer</code>。只有在降級圖示啟動時該計時才會啟動。</li>
+<li><strong>實施統一降級計時OnUpdate系統</strong>：在<code>UI/Renderer.lua</code>中實施一個全域共享、基於單一OnUpdate框架的<code>legacyTimer</code>系統，提供<code>registerLegacyTimer</code>和<code>unregisterLegacyTimer</code>。只有在降級圖示啟動時該計時才會啟動。</li>
 <li><strong>每秒級小數倒數</strong>：在該 legacyTimer 中，當剩餘時間低於 3 秒時，自動切換為一位小數倒數（如 <code>2.4</code>、<code>0.8</code>），大約 3 秒整數，提供了幾乎完美顯示的高級體驗。</li>
 <li><strong>恢復防禦註銷</strong>：在 <code>IconPool.release</code> 與 <code>Renderer.render</code> 過渡時，確實調用 <code>unregisterLegacyTimer</code> 清除定時，防止殘影或洩密。</li>
 <li><strong>防止文字重疊</strong>：在<code>UI/IconPool.lua</code>的<code>createIcon</code>中，對新烘焙的冷卻框架呼叫<code>cooldown:SetHideCountdownNumbers(true)</code>，徹底消除文字重疊。</li>
@@ -761,7 +761,7 @@
 <li><strong>EventRouter/Scheduler 故障隔離</strong>：在 EventRouter 的 OnEvent 核心循環循環與 Scheduler 的作業執行回調中，配置參數化 <code>pcall</code> 容錯，防止單一模組中斷的模組與模組中斷其他模組中斷的執行。</li>
 <li>後續注意事項：實機驗證時需注意在木人戰鬥與首領戰鬥中，觀察多語系 UI 是否加載正確，以及當策劃觸發單一模組錯誤時，EventRouter 和 Scheduler 是否仍然能夠高可用性地與排程其他警報。</li>
 </ul>
-<h3 id="2026-05-30-12xsecret-keytooltip">2026-05-30 12.x戰鬥加密邊界：Secret-Key查詢表崩潰、Tooltip字串污點＆不安全警報戰鬥流暢化修復（已解決）</h3>
+<h3 id="2026-05-30-12xsecret-keytooltip">2026-05-30 12.x戰鬥加密邊界：Secret-Key查詢表崩潰、Tooltip字串污染＆不安全警報戰鬥流暢化修復（已解決）</h3>
 <ul>
 <li>狀態：已解決、待實機驗證</li>
 <li>威脅：實機戰鬥中遭遇了幾類核心的安全機制爆發：</li>
@@ -770,7 +770,7 @@
   3.戰鬥中警報框架完全隱形不彈出。</li>
 <li>症狀與原因判斷：</li>
 <li><strong>秘密密鑰表索引限制</strong>：WoW 12.x引入了強大的秘密保護。在戰鬥中，從<code>GetAuraDataByIndex</code>回傳的<code>spellId</code>或是<code>leftText</code>都會被標記為<code>秘密值</code>。一旦AddOn程式碼直接使用這個<code>spellId</code>作為密鑰去對任何非安全的自訂表進行索引操作（例如 <code>db[spellId]</code> 或 <code>SavedVariables[spellId]</code>），<strong>EAMCODE Key</strong> __ 引擎會直接爆發並拋出錯誤！</li>
-<li><strong>Secret String Taint限制與參數傳遞</strong>：當工具提示描述在中被標記為Secret時，我們不能在自訂本身的不安全的是函數中進行字符串化（<code>tostring</code>）、字符串拼接戰鬥（<code>..</code>）或正則匹配（<code>string.match</code>）。最關鍵：<strong>所有的秘密值都不能在自訂參數傳遞給任何Lua時被使用函數</strong>！只要確定，函數就會被判定為污點，並在執行涉及秘密的動作時崩潰。</li>
+<li><strong>Secret String Taint限制與參數傳遞</strong>：當工具提示描述在中被標記為Secret時，我們不能在自訂本身的不安全的是函數中進行字符串化（<code>tostring</code>）、字符串拼接戰鬥（<code>..</code>）或正則匹配（<code>string.match</code>）。最關鍵：<strong>所有的秘密值都不能在自訂參數傳遞給任何Lua時被使用函數</strong>！只要確定，函數就會被判定為污染，並在執行涉及秘密的動作時崩潰。</li>
 <li><strong>不安全的UI戰鬥鎖定防衛過度</strong>：先前的代碼為了安全，在 <code>Renderer.lua</code> 和 <code>IconPool.lua</code> 中只要遇到 <code>InCombatLockdown()</code> 為 true，則所有 <code>CreateFrame</code>, <code>SetPoint</code>, <code>SetPoint</code>5__ <code>Hide</code>渲染作業全部延後到戰鬥結束後（PLAYER_REGEN_ENABLED）。然而，我們的警報圖示是純顯示框架，不承擔任何安全動作（如點擊、施法、定位等），也沒有繼承任何安全模板。 WoW引擎完全允許在戰鬥中對不安全框架進行定位與顯隱。過度防護反而導致了戰鬥中警報完全消失，失去了AddOn的價值。</li>
 <li>已嘗試方法：備份 <code>Services/AuraService.lua</code>, <code>Services/GroundEffectService.lua</code>, <code>UI/Renderer.lua</code>, <code>UI/Options.lua</code> 至 <code>backup/</code> 目錄。</li>
 <li>有效解法：</li>
@@ -894,14 +894,14 @@
 <li><strong>警戒字串靜態緩存（warningStringCache）</strong>：於<code>Core/Util.lua</code>引入局部<code>warningStringCache = {}</code>。所有邊界警戒字符串在第一次生成時被緩存，後續直接<code>O(1)</code>重複使用已分配指針，達成<strong>邊界警戒路徑零字符串GC消耗</strong>！</li>
 <li><strong>大量的遷移次數靜態緩存（STACK_STRINGS）</strong>：於 <code>UI/Renderer.lua</code> 引入 <code>STACK_STRINGS</code> 數組，預先將 <code>1</code> 至 <code>100</code> 的大量遷移次數為靜態字串。大量更新時，直接 <code>O(1)</code> 從方案取用已緩存字串，完全初始化 <code>tostring</code> 的執行期記憶體分配！</li>
 <li><strong>戰鬥佈局延遲與親子育兒控制</strong>：確認渲染器無任何安全動作，非安全的圖標直接隱藏安全調用，而結構性框架育兒與佈局則嚴格推遲至戰鬥結束（PLAYER_REGEN_ENABLED），消除安全污染擴散。</li>
-<li>有效解法：重構程式碼已成功寫入<code>Core/Util.lua</code>、<code>UI/Renderer.lua</code>與<code>Services/CooldownService.lua</code>，完美封閉了所有高低頻GC漏洞與污點疑慮。</li>
+<li>有效解法：重構程式碼已成功寫入<code>Core/Util.lua</code>、<code>UI/Renderer.lua</code>與<code>Services/CooldownService.lua</code>，完美封閉了所有高低頻GC漏洞與污染疑慮。</li>
 <li>後續注意事項：實機測試時需特別開啟 Lua 記憶體監控，確認在滿載戰鬥（如觸發大量 GCD、滿超 buff/debuff 觸發、停滯邊界警告）情況下，EAM 的 GC 記憶體分配量維持在絕對的平穩水平。</li>
 </ul>
 <h3 id="2026-05-29-1207-cooldownservice">2026-05-29 12.0.7 CooldownService 響應式二進位矩陣與雙軌安全綁定最佳化</h3>
 <ul>
 <li>狀態：已解決、待實機驗證</li>
 <li>姿勢：為 12.0.7 PTR/Retail 樓層 CooldownService 與渲染器，避免戰鬥高頻事件（如 <code>SPELL_UPDATE_COOLDOWN</code>、<code>SPELL_UPDATE_CHARGES</code>）所帶來的 GC 負荷、污染污染及視覺殘影。</li>
-<li>症狀：高頻事件下，以 <code>pairs</code> 遍歷設定表會分配迭代器與臨時表；且秘密值（如冷卻時間、充能資訊）在 Lua 層做數學攻擊、<code>format</code> 格式化或與舊時間比較間隙時會直接觸發安全污點或執行期 Lua 錯誤。</li>
+<li>症狀：高頻事件下，以 <code>pairs</code> 遍歷設定表會分配迭代器與臨時表；且秘密值（如冷卻時間、充能資訊）在 Lua 層做數學攻擊、<code>format</code> 格式化或與舊時間比較間隙時會直接觸發安全污染或執行期 Lua 錯誤。</li>
 <li>原因判斷：WoW 12.x引入了嚴格的Secret/Protected限制。如果不隔離Secret數據，直接將其作弊或字符串造成可能污染AddOn安全鏈。另外，在高頻事件下分配臨時表會導致微型GC停頓，影響遊戲FPS。</li>
 <li>已嘗試方法：
 1.引入<strong>響應式陣列機制（Reactive Array Cache）</strong>：縫隙檢測<code>db.revision</code>來增量更新<code>alertList</code>陣列，熱路徑（SPELL_UPDATE_COOLDOWN）上完全使用數值<code>for i = 1, alertCount do</code>迴圈歷零，達到100%歷零，達到瞬態的極限零點。</li>
@@ -959,7 +959,7 @@
 <li>原因判斷：Aura 完整更新是熱路徑候選，若警報數量重複掃描，使用者設定越多成本增益；選項若不跨越 <code>SavedVariables</code> 突變 API，容易繞過架構修訂與服務刷新。</li>
 <li>已嘗試方法：新增<code>fullScanUnit</code>，先清單位元光環緩存，再依玩家/target過濾掃描一次並與警報索引分派；未命中的設定警報統一標記為不活動。選項新增spellID/itemID輸入框與四類add/remove按鈕，成功後呼叫服務刷新。</li>
 <li>有效解法：以 <code>auraInstanceID</code> 快取搭配 <code>alertIndex[unit][spellID]</code> 分派狀態；Options 只穿透<code>SavedVariables.add/remove</code> API 寫入狀態，直接修改服務運作時。</li>
-<li>後續注意事項：需在 WoW Retail/PTR 驗證 <code>C_UnitAuras.GetAuraDataByIndex(unit, index, filter)</code> 在 12.0.7 的實際欄位安全性、過濾行為、戰鬥中初次建立選項框架的污點風險，以及 __EAMCO _EA Retail 12.x是否仍可直接使用。</li>
+<li>後續注意事項：需在 WoW Retail/PTR 驗證 <code>C_UnitAuras.GetAuraDataByIndex(unit, index, filter)</code> 在 12.0.7 的實際欄位安全性、過濾行為、戰鬥中初次建立選項框架的污染風險，以及 __EAMCO _EA Retail 12.x是否仍可直接使用。</li>
 </ul>
 <h3 id="2026-05-27-powershell">2026-05-27 PowerShell 正規表示式與變數參考問題</h3>
 <ul>
@@ -1009,7 +1009,7 @@
 <li>原因判斷：這些問題會增加秘密值誤用、打擊鎖定/污染風險與熱路徑配置成本。</li>
 <li>已嘗試方法：新增集中安全讀取助手、排程器任務池、IconPool預熱與戰鬥時幀建立保護、渲染器延遲佈局、偵錯邊界警告聚合，並將TOC/Constants指定到<code>120007</code>。</li>
 <li>有效解法：以服務層逐值檢查事實，渲染器只消費歸一化狀態；戰鬥中遇到結構性UI變更先延後到<code>PLAYER_REGEN_ENABLED</code>。</li>
-<li>後續注意事項：尚未做 WoW Retail/PTR 實機驗證；必須測試 DurationObject、FontString:ClearText、戰鬥佈局延遲、污點/阻止操作日誌、12.0.7 遊戲版本 ID 與 CurseForge5__ 發布。</li>
+<li>後續注意事項：尚未做 WoW Retail/PTR 實機驗證；必須測試 DurationObject、FontString:ClearText、戰鬥佈局延遲、污染/阻止操作日誌、12.0.7 遊戲版本 ID 與 CurseForge5__ 發布。</li>
 </ul>
 <h3 id="2026-05-26-1207-api">2026-05-26 12.0.7 API 摘要發布，需修改先前待已追蹤狀態</h3>
 <ul>
@@ -1021,15 +1021,15 @@
 <li>有效解法：更新 <code>Docs/10_WARCRAFT_WIKI_12X_API_NOTES.md</code>，將 12.0.7 標記為已存在，並記錄與 EAM 相關的 <code>C_DurationUtil</code>、CPU 用法 API 與 __EAMCODE_61 追蹤項目。</li>
 <li>後續注意事項：精確做 WoW Retail/PTR 實機驗證；若目標正式版本從 12.0.5 升到 12.0.7，需同步調整 TOC、備份版本與 CurseForge 遊戲版本 ID。</li>
 </ul>
-<h3 id="2026-05-26">2026-05-26 加入污點控制規則</h3>
+<h3 id="2026-05-26">2026-05-26 加入污染控制規則</h3>
 <ul>
 <li>狀態：已解決</li>
 <li>感染：使用者要求開發過程中必須避免污染污染。</li>
-<li>規則症狀：除規範已涵蓋秘密值、受保護資料與戰鬥安全降級，但缺少獨立的污點控制。</li>
-<li>原因判斷：WoW AddOn 屬於不受信任來源；若污染安全/protected執行路徑，戰鬥中可能導致暴雪UI動作被削弱。 EAM 的渲染器、EventRouter、UI框架與API適配器都必須避免把污點帶進動作條、單元框架、銘牌、施法、目標或物品路徑使用。</li>
-<li>已嘗試方法：查證魔獸爭霸Wiki安全執行/污點相關資料，並更新<code>AGENTS.md</code>、<code>Docs/02_RETAIL_API_BOUNDARIES.md</code>、<code>Docs/12_CODE_COMMENTARY_GUIDE.md</code>。</li>
+<li>規則症狀：除規範已涵蓋秘密值、受保護資料與戰鬥安全降級，但缺少獨立的污染控制。</li>
+<li>原因判斷：WoW AddOn 屬於不受信任來源；若污染安全/protected執行路徑，戰鬥中可能導致暴雪UI動作被削弱。 EAM 的渲染器、EventRouter、UI框架與API適配器都必須避免把污染帶進動作條、單元框架、銘牌、施法、目標或物品路徑使用。</li>
+<li>已嘗試方法：查證魔獸爭霸Wiki安全執行/污染相關資料，並更新<code>AGENTS.md</code>、<code>Docs/02_RETAIL_API_BOUNDARIES.md</code>、<code>Docs/12_CODE_COMMENTARY_GUIDE.md</code>。</li>
 <li>有效解法：將 taint 視為邊界架構；禁止鉤/覆寫 protected 路徑、戰鬥中修改 protected 框架、使用 <code>forceinsecure</code> 或將不安全值傳遞到安全鏈。</li>
-<li>後續注意事項：發現污點、被阻止的操作或戰鬥鎖定錯誤時，需在本檔案觸發路徑、戰鬥狀態、相關框架/API 與可追加步驟。</li>
+<li>後續注意事項：發現污染、被阻止的操作或戰鬥鎖定錯誤時，需在本檔案觸發路徑、戰鬥狀態、相關框架/API 與可追加步驟。</li>
 </ul>
 <h3 id="2026-05-26_1">2026-05-26 建立開發問題記錄制度</h3>
 <ul>
@@ -1079,11 +1079,11 @@
 <li>在 <code>AuraService.lua</code>、<code>GroundEffectService.lua</code> 與 <code>TotemService.lua</code> 的各自物件池的 <code>acquire</code> 內，統一安全地綁定 <code>state.releaseFunc = Pool.release</code>，並在 <code>release</code> 時使 __EAA__MCOD __EA __MCOD。</li>
 <li>徹底刪除 <code>Renderer.lua</code> 的 OnUpdate <code>IsZero</code> 輪詢與 <code>pcall</code> 宣告。
   3.實施重複使用的零令牌分配池<code>timerTokenPool</code>，在<code>Renderer.render</code>啟動計時器時，跨越<code>Scheduler.after</code>註冊單次延遲任務並提交令牌。</li>
-<li>預見時由 <code>onDurationTimerExpired</code> 替代代幣的 <code>active</code> 與圖標主動標誌是否一致，從而隱藏準確圖標，保證整個生命週期 100% 零內存配置與零輪詢前鋒。</li>
+<li>預見時由 <code>onDurationTimerExpired</code> 替代代幣的 <code>active</code> 與圖標主動標誌是否一致，從而隱藏準確圖標，保證整個生命週期 100% 零記憶體配置與零輪詢前鋒。</li>
 <li>有效解法：</li>
 <li>重構程式碼已成功寫入，4個Lua檔 <code>AuraService.lua</code>、<code>GroundEffectService.lua</code>、<code>TotemService.lua</code> 與 <code>UI/Renderer.lua</code> 皆 100% 通過 <code>luac -p</code> 的靜態語法安全性檢討。</li>
 <li>後續注意事項：</li>
-<li>在WoW正式服啟動EAM，高度切換Buff與冷卻時觀察記憶體曲線完全是否水平不上升，並確認當光環逼近時能準確自動消失，完全消除戰鬥污點與JIT中止。</li>
+<li>在WoW正式服啟動EAM，高度切換Buff與冷卻時觀察記憶體曲線完全是否水平不上升，並確認當光環逼近時能準確自動消失，完全消除戰鬥污染與JIT中止。</li>
 </ul>
     </div>
     <div id="doc-content-en" class="lang-content">
@@ -1100,7 +1100,7 @@
 <li>If the problem is related to WoW Retail API, the data source must be marked as a file, search index, NotebookLM, or actual machine verification.</li>
 <li>If the problem is related to the tool or environment, document the operating system, instructions, error message summary, and possible alternatives.</li>
 <li>If the same type of problems or work processes appear repeatedly, it needs to be evaluated whether they can be organized into EventAlertMod and the only project SKILL.</li>
-<li>If the issue involves a taint, blocked action, combat lock, or protected frame, document the trigger path, combat status, associated frame /API, and resettable steps.</li>
+<li>If the issue involves contamination, blocked actions, combat locks, or protected frames, document the trigger path, combat status, associated frame/API, and resettable steps.</li>
 </ul>
 <h2 id="suggested-format">Suggested format</h2>
 <pre class="codehilite"><code class="language-md">### yyyy-mm-dd 標題
@@ -1295,7 +1295,7 @@ Determine whether the event name starts with <code>"EAM_"</code>. If so, it is a
 -Threat:
 In a new installation environment where there are no old EAM global variables (such as <code>EA_Items</code>, <code>EA_AltItems</code>, etc.) (or the WTF folder is cleared), an ICON does not appear after logging in to the rewritten EAM.</li>
 <li>Judgment of symptoms and causes:</li>
-<li>During initialization of <code>SavedVariables.lua</code>, except for executing <code>importLegacyTables</code> to try to migrate settings from the old version of global variables, the default monitoring of the current occupation in <code>EAM.Data.SpellArray</code> was not written to <code>EAM_DB.alerts</code>.</li>
+<li>During initialization of <code>SavedVariables.lua</code>, except for executing <code>importLegacyTables</code> to try to migrate settings from the global variables of the old version, the default monitoring of the current occupation in <code>EAM.Data.SpellArray</code> was not written to <code>EAM_DB.alerts</code>.</li>
 <li>When loading freshly, the old version variables do not exist, so the <code>alerts</code> list is completely empty.</li>
 <li>Each monitoring service (<code>AuraService</code>, <code>CooldownService</code>, etc.) uses <code>EAM_DB.alerts</code> for filtering. If the alarm is empty, it will be returned directly without triggering any update events or UI danger, so no ICON appears on the screen.</li>
 <li>Tried methods:
@@ -1430,7 +1430,7 @@ Magic World 12.x implements secret value restrictions on cooldown and Aura time 
   3. <strong>Energy Protection Defense</strong>: Configure <code>pcall</code> isolation and <code>issecretvalue</code> defense for <code>detectClassPower</code> and <code>updatePower</code> to prevent Lua crashes caused by the size comparison when the energy value is a secret table in the battle.
 4. <strong>EventRouter/Scheduler Fault Isolation</strong>: In the OnEvent core loop of EventRouter and the Scheduler's job execution callback, configure parameterized <code>pcall</code> fault tolerance to prevent modules and modules interrupted by a single module from interrupting the execution of other module interruptions.
 - Follow-up notes: During real-machine verification, you need to pay attention to whether the multi-language UI is loaded correctly during the wooden battle and the boss battle, and whether EventRouter and Scheduler can still schedule other alarms with high availability when planning triggers a single module error.</p>
-<h3 id="2026-05-30-12x-battle-encryption-boundary-secret-key-query-table-crash-tooltip-string-taint-insecurity-alert-battle-smoothing-repair-resolved">2026-05-30 12.x battle encryption boundary: Secret-Key query table crash, Tooltip string taint &amp; insecurity alert battle smoothing repair (resolved)</h3>
+<h3 id="2026-05-30-12x-combat-encryption-boundary-secret-key-query-table-crash-tooltip-string-pollution-unsafe-alert-combat-smoothing-repair-resolved">2026-05-30 12.x combat encryption boundary: Secret-Key query table crash, Tooltip string pollution &amp; unsafe alert combat smoothing repair (resolved)</h3>
 <p>-Status: Resolved, waiting for actual machine verification
 -Threats: Several types of core security mechanism outbreaks were encountered in actual combat:
   1. <code>AuraService.lua:161: Fatal crash while trying to index a table that cannot be indexed using a key.
@@ -1438,7 +1438,7 @@ Magic World 12.x implements secret value restrictions on cooldown and Aura time 
   3. The alarm frame is completely invisible and does not pop up during battle.
 - Judgment of symptoms and causes:
 1. **Secret Key Table Index Limitation**: WoW 12.x introduces strong secret protection. During combat,</code>spellId<code>or</code>leftText<code>returned from</code>GetAuraDataByIndex<code>will be marked as a</code>secret value<code>. Once the AddOn code directly uses this</code>spellId<code>as a key to index any non-secure custom table (such as</code>db[spellId]<code>or</code>SavedVariables[spellId]<code>), the __EAMCODE Key__ __ engine will directly explode and throw an error!
-2. **Secret String Taint restrictions and parameter passing**: When the tooltip description is marked as Secret in the tooltip, we cannot perform stringification (</code>tostring<code>), string concatenation (</code>..<code>) or regular matching (</code>string.match<code>) in the custom unsafe function. The most important thing: **All secret values ​​cannot be used when custom parameters are passed to any Lua function**! As soon as it is determined, the function will be judged as Taint and crash when performing actions involving secrets.
+2. **Secret String Taint restrictions and parameter passing**: When the tooltip description is marked as Secret in the tooltip, we cannot perform stringification (</code>tostring<code>), string concatenation (</code>..<code>) or regular matching (</code>string.match<code>) in the custom unsafe function. The most important thing: **All secret values ​​cannot be used when custom parameters are passed to any Lua function**! As soon as it is determined, the function is judged as Taint and crashes when performing actions involving secrets.
 3. **Unsafe UI Combat Lockdown and excessive defense**: For the sake of safety, the previous code, as long as</code>InCombatLockdown()<code>is true in</code>Renderer.lua<code>and</code>IconPool.lua<code>, then all</code>CreateFrame<code>,</code>SetPoint<code>,</code>SetPoint<code>5__</code>Hide<code>All rendering jobs are deferred until after the battle ends (PLAYER_REGEN_ENABLED). However, our alert icon is a pure display framework and does not assume any security actions (such as clicking, casting, positioning, etc.), nor does it inherit any security templates. The WoW engine fully allows for positioning and hiding of unsafe frames during combat. Over-protection caused the alarm to completely disappear during combat, and the value of AddOn was lost.
 - Tried method: Backup</code>Services/AuraService.lua<code>,</code>Services/GroundEffectService.lua<code>,</code>UI/Renderer.lua<code>,</code>UI/Options.lua<code>to</code>backup/<code>directory.
 - Effective solution:
@@ -1546,12 +1546,12 @@ Magic World 12.x implements secret value restrictions on cooldown and Aura time 
 1. <strong>Static cache of alert strings (warningStringCache)</strong>: Introduce local <code>warningStringCache = {}</code> in <code>Core/Util.lua</code>. All boundary alert strings are cached when they are first generated, and the allocated pointers are reused directly in <code>O(1)</code> to achieve <strong>zero string GC consumption for boundary alert paths</strong>!
 2. <strong>Static cache of a large number of migration times (STACK_STRINGS)</strong>: Introduce the <code>STACK_STRINGS</code> array in <code>UI/Renderer.lua</code>, and pre-set a large number of migration times from <code>1</code> to <code>100</code> as static strings. When updating a large number of times, directly fetch the cached string from the plan in <code>O(1)</code> and completely initialize the execution memory allocation of <code>tostring</code>!
 3. <strong>Combat layout delay and parenting control</strong>: Confirm that the renderer does not have any safety actions, non-safe icons directly hide safety calls, and structural framework parenting and layout are strictly postponed until the end of the battle (PLAYER_REGEN_ENABLED) to eliminate the spread of safety pollution.
-- Effective solution: The reconstructed program code has been successfully written into <code>Core/Util.lua</code>, <code>UI/Renderer.lua</code> and <code>Services/CooldownService.lua</code>, perfectly closing all high and low frequency GC vulnerabilities and taint concerns.
+- Effective solution: The reconstructed program code has been successfully written into <code>Core/Util.lua</code>, <code>UI/Renderer.lua</code> and <code>Services/CooldownService.lua</code>, perfectly closing all high and low frequency GC vulnerabilities and pollution concerns.
 - Follow-up notes: Lua memory monitoring needs to be specially turned on during actual machine testing to confirm that the GC memory allocation of EAM is maintained at an absolutely stable level under full load battles (such as triggering a large number of GCD, triggering buff/debuff when full, and stagnation boundary warning).</p>
 <h3 id="2026-05-29-1207-cooldownservice-responsive-binary-matrix-and-dual-rail-safety-binding-optimization">2026-05-29 12.0.7 CooldownService Responsive binary matrix and dual-rail safety binding optimization</h3>
 <p>-Status: Resolved, waiting for actual machine verification
 - Posture: For 12.0.7 PTR/Retail floor CooldownService and renderer to avoid GC load, pollution pollution and visual afterimages caused by high-frequency combat events (such as <code>SPELL_UPDATE_COOLDOWN</code>, <code>SPELL_UPDATE_CHARGES</code>).
-- Symptoms: Under high-frequency events, traversing the setting table with <code>pairs</code> will allocate iterators and temporary tables; and secret values ​​(such as cooling time, charging information) will directly trigger security stains or execution-time Lua errors when performing mathematical attacks on the Lua layer, formatting <code>format</code>, or comparing gaps with old times.
+- Symptoms: Under high-frequency events, traversing the setting table with <code>pairs</code> will allocate iterators and temporary tables; and secret values ​​(such as cooling time, charging information) will directly trigger security pollution or execution-time Lua errors when performing mathematical attacks on the Lua layer, formatting <code>format</code>, or comparing gaps with old times.
 - Reason: WoW 12.x introduced strict Secret/Protected restrictions. If the Secret data is not isolated, it may directly cause cheating or string strings that may contaminate the AddOn security chain. In addition, allocating temporary tables under high-frequency events will cause micro GC pauses and affect game FPS.
 - Tried methods:
 1. Introduce <strong>reactive array mechanism (Reactive Array Cache)</strong>: gap detection <code>db.revision</code> to incrementally update the <code>alertList</code> array, and the hot path (SPELL_UPDATE_COOLDOWN) completely uses the value <code>for i = 1, alertCount do</code> loop zero, reaching 100% zero, reaching the transient limit zero point.
@@ -1605,7 +1605,7 @@ Magic World 12.x implements secret value restrictions on cooldown and Aura time 
 - Cause judgment: Aura complete update is a hot path candidate. If the number of alarms is scanned repeatedly, the more cost gain the user sets; if the option does not span the <code>SavedVariables</code> mutation API, it is easy to bypass the architecture revision and service refresh.
 - Tried method: Add <code>fullScanUnit</code>, first clear the bit Aura cache, then scan once based on player/target filtering and assign it to the alert index; missed set alerts are marked as inactive. The option adds a spellID/itemID input box and four types of add/remove buttons, and the service is refreshed after success.
 - Effective solution: Use <code>auraInstanceID</code> cache with <code>alertIndex[unit][spellID]</code> to dispatch status; Options only penetrates <code>SavedVariables.add/remove</code> API to write status and directly modify the service operation time.
-- Follow-up Notes: WoW Retail/PTR needs to be verified for <code>C_UnitAuras.GetAuraDataByIndex(unit, index, filter)</code> in 12.0.7 for actual field security, filtering behavior, taint risk of first-time creation of options framework in combat, and whether __EAMCO _EA Retail 12.x can still be used directly.</p>
+- Follow-up note: WoW Retail/PTR needs to be verified in <code>C_UnitAuras.GetAuraDataByIndex(unit, index, filter)</code> for actual field security in 12.0.7, filtering behavior, contamination risks of first-time creation of option frames in combat, and whether __EAMCO _EA Retail 12.x can still be used out of the box.</p>
 <h3 id="2026-05-27-powershell-regular-expressions-and-variables-reference-questions">2026-05-27 PowerShell Regular expressions and variables reference questions</h3>
 <ul>
 <li>Status: Resolved</li>
@@ -1651,26 +1651,26 @@ Magic World 12.x implements secret value restrictions on cooldown and Aura time 
 - Cause determination: These issues will increase the misuse of secret values, combat lock-in/contamination risks, and hot path configuration costs.
 - Tried methods: Added centralized safe reading assistant, scheduler task pool, IconPool warm-up and combat frame establishment protection, renderer delayed layout, debug boundary warning aggregation, and assigned TOC/Constants to <code>120007</code>.
 - Effective solution: Use the service layer to check the facts value-by-value, and the renderer only consumes the normalized state; when encountering structural UI changes in combat, first defer to <code>PLAYER_REGEN_ENABLED</code>.
-- Follow-up Notes: WoW Retail/PTR real-world verification has not been done yet; must test DurationObject, FontString:ClearText, battle layout delay, taint/blocking operation log, 12.0.7 game version ID and CurseForge5__ release.</p>
+- Follow-up Notes: WoW Retail/PTR has not been verified on real machines yet; must test DurationObject, FontString:ClearText, battle layout delay, pollution/blocking operation log, 12.0.7 game version ID and CurseForge5__ release.</p>
 <h3 id="2026-05-26-1207-api-summary-release-need-to-modify-the-previously-tracked-status">2026-05-26 12.0.7 API summary release, need to modify the previously tracked status</h3>
 <ul>
 <li>Status: Resolved</li>
-<li>Assumption: When investigating the development discussions and API changes related to the latest official version of WoW AddOn, the Warcraft Wiki <code>Patch 12.0.7/API_changes</code> was searched.</li>
+<li>Assumption: When investigating the latest official version of WoW AddOn development discussions and API changes, the Warcraft Wiki <code>Patch 12.0.7/API_changes</code> was searched.</li>
 <li>Symptoms: Included <code>Docs/10_WARCRAFT_WIKI_12X_API_NOTES.md</code> still logged 12.0.7 API summary not found yet.</li>
 <li>Reason: Warcraft Wiki has recently added a 12.0.7 API change page, and the previous records are outdated.</li>
 <li>Tried methods: Re-query the Warcraft Wiki API change summary, 12.0.5, 12.0.7 and AddOn community discussions.</li>
 <li>Valid workaround: update <code>Docs/10_WARCRAFT_WIKI_12X_API_NOTES.md</code>, mark 12.0.7 as existing, and log the <code>C_DurationUtil</code>, CPU usage API and __EAMCODE_61 trace items related to EAM.</li>
 <li>Follow-up notes: Accurately conduct WoW Retail/PTR actual machine verification; if the target official version is upgraded from 12.0.5 to 12.0.7, TOC, backup version and CurseForge game version ID need to be adjusted simultaneously.</li>
 </ul>
-<h3 id="2026-05-26-add-taint-control-rules">2026-05-26 Add taint control rules</h3>
+<h3 id="2026-05-26-add-pollution-control-rules">2026-05-26 Add pollution control rules</h3>
 <ul>
 <li>Status: Resolved</li>
 <li>Contamination: Users require that contamination must be avoided during development.</li>
-<li>Rules Symptoms: Except that the specification already covers secret values, protected data and combat security degradation, but lacks independent taint control.</li>
-<li>Reason: WoW AddOn is an untrusted source; if the safe/protected execution path is polluted, Blizzard UI actions may be weakened during battle. Renderers for EAM, EventRouter, UI frameworks, and API adapters must avoid introducing taint into action bars, unit frames, nameplates, spellcasting, target, or item path usage.</li>
-<li>Tried method: Check the Warcraft Wiki security implementation/taint related information, and update <code>AGENTS.md</code>, <code>Docs/02_RETAIL_API_BOUNDARIES.md</code>, <code>Docs/12_CODE_COMMENTARY_GUIDE.md</code>.</li>
+<li>Rules Symptoms: Secret values, protected data and combat security degradation are covered by the specification, but independent contamination controls are missing.</li>
+<li>Reason: WoW AddOn is an untrusted source; if the safe/protected execution path is polluted, Blizzard UI actions may be weakened during battle. Renderers for EAM, EventRouter, UI frameworks, and API adapters must avoid introducing contamination into action bars, unit frames, nameplates, spellcasting, target, or item path usage.</li>
+<li>Tried method: Check the safe implementation/pollution related information of Warcraft Wiki, and update <code>AGENTS.md</code>, <code>Docs/02_RETAIL_API_BOUNDARIES.md</code>, <code>Docs/12_CODE_COMMENTARY_GUIDE.md</code>.</li>
 <li>Effective workaround: Treat taint as a boundary architecture; disable hooking/overwriting protected paths, modifying protected frames in combat, using <code>forceinsecure</code> or passing unsafe values ​​to the safe chain.</li>
-<li>Follow-up notes: When taint, blocked operations or combat lock errors are found, the path, combat status, related framework /API and additional steps need to be triggered in this file.</li>
+<li>Follow-up notes: When contamination, blocked operations, or combat lock errors are discovered, the path, combat status, related framework /API, and additional steps need to be triggered in this file.</li>
 </ul>
 <h3 id="2026-05-26-establish-a-development-issue-recording-system">2026-05-26 Establish a development issue recording system</h3>
 <ul>
@@ -1721,9 +1721,9 @@ Magic World 12.x implements secret value restrictions on cooldown and Aura time 
   3. Implement a reused zero-token allocation pool <code>timerTokenPool</code>, and when <code>Renderer.render</code> starts the timer, register a single delayed task across <code>Scheduler.after</code> and submit the token.
 4. Check whether the <code>active</code> of the token replaced by <code>onDurationTimerExpired</code> when foreseeing is consistent with the icon active flag, thereby hiding the accurate icon and ensuring 100% zero memory configuration and zero polling forward throughout the life cycle.
 - Effective solution:
-  - The reconstructed code has been successfully written, and the four Lua files <code>AuraService.lua</code>, <code>GroundEffectService.lua</code>, <code>TotemService.lua</code> and <code>UI/Renderer.lua</code> have all passed the static syntax security review of <code>luac -p</code>.
+  - The reconstructed code has been successfully written, and the four Lua files <code>AuraService.lua</code>, <code>GroundEffectService.lua</code>, <code>TotemService.lua</code> and <code>UI/Renderer.lua</code> have all passed the static syntax security review of <code>luac -p</code> 100%.
 - Follow-up notes:
-- Start EAM on the official WoW server, and observe whether the memory curve does not rise when switching between buffs and cooldowns, and confirm that the halo can accurately and automatically disappear when it approaches, completely eliminating combat stains and JIT interruptions.</p>
+- Start EAM on the official WoW server, and observe whether the memory curve does not rise when switching between buffs and cooldowns, and confirm that the halo can accurately and automatically disappear when it approaches, completely eliminating combat pollution and JIT interruption.</p>
     </div>
     
     <!-- Mermaid Dynamic Render Script -->

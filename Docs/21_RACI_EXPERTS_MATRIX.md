@@ -68,16 +68,16 @@
 ### 2. 服務（資料與業務邏輯服務）
 * **變更範圍**：[Services/](file:///d:/EventAlertMod/Services/) 下的五大服務與狀態池（StatePool）機制。
 * **Accountable (A) 審查**：由**ARCH**審查服務層的資料-視圖解耦度與事件主動機制。
-* **實務與諮詢**：由 **LUA** 負責分配零 StatePool 的實務與GC防禦。由 **SEC** 諮詢資料讀取是否安全，**PERF** 諮詢事件節流與頻率控制。各職業專精智囊提供解答專精能量與動作時間同步的商業諮詢，移植 **DATA** 諮詢與 SavedVariables加載關聯的相容防禦。
+* **實務與諮詢**：由 **LUA** 負責分配零 StatePool 的實務與GC防禦。由 **SEC** 諮詢資料讀取是否安全，**PERF** 諮詢事件節流與頻率控制。各職業專精專家提供解答專精能量與動作時間同步的商業諮詢，移植 **DATA** 諮詢與 SavedVariables加載關聯的相容防禦。
 
 ### 3. UI / 渲染器（渲染與佈局引擎）
 * **變更範圍**：[UI/Renderer.lua](file:///d:/EventAlertMod/UI/Renderer.lua), [UI/IconPool.lua](file:///d:/EventAlertMod/UI/IconPool.lua), 7 偏移量偏移框架與大偏移框架與大標座的成長框架與大標座成長框架的大偏移框架與大偏移框架。
 * **Accountable (A)審查**：由**UI**負最終責任，審核貨架的標準化狀態消耗、按鍵文字綁定解綁與幀級別覆蓋。
 * **實踐與諮詢**：由 **PERF** 佈局負責靜態關聯偏量算術的實踐，以消除分區尋找飢餓。由 **UX** 諮詢框架的預設座標與流行病輝光的承載形式，四大專業玩家提供實戰預警與框架防盜提示的設定諮詢。
 
-### 4. 安全防禦與污點控制
+### 4. 安全防禦與污染控制
 * **變更範圍**：[Core/Util.lua](file:///d:/EventAlertMod/Core/Util.lua)中的三個檢查，所有OnUpdate倒數、表格索引、`InCombatLockdown()`延遲後防禦。
-* **Accountable (A) 審查**：由**SEC** 審查100%的秘密邊界安全，確保不會因元方法崩潰或污點污染鏈導致行動高峰（Action Blocked）。
+* **Accountable (A) 審查**：由**SEC** 審查100%的秘密邊界安全，確保不會因元方法崩潰或污染污染鏈導致行動高峰（Action Blocked）。
 * **實務與諮詢**：由 **AUD** 負責 `C_TooltipInfo` 降級、`ShadowHostService` 吸附等高階疏導進行安全審計與實務。由 **ARCH** 諮詢 UIParent 下框架創設與屬性修改安全性。
 
 ### 5. Config & UI Panel（設定面板）

@@ -34,7 +34,7 @@
 
 - `EventAlert_LoadDefault.lua`：預設的`EA_Config2`值。
 - `EventAlert_InitVar.lua`：初始化`EA_Config`、`EA_Position`、命名空間
-  運行時表、偵錯標誌、類別/規範全局變數。
+  運行時表、偵錯標誌、類別/規範全域變數。
 - `EventAlert_InitVar_DK.lua`：死亡騎士符文/紋理。
 - `EventAlert_SpellItem.lua`：大型武器/物品資料表。
 - `EventAlert_CreateFrames.lua`：建立圖示、輔助點、捲動清單、
@@ -112,7 +112,7 @@
   `EAFun`、`Aura_*`、`Cooldown`、`SpecialPower` 和選項模組。
 - SavedVariables直接在全域表中初始化，消耗模式
   版本控製或驗證邊界。
-- 本地化使用全局字符串並混合到 UI 設定中。
+- 本地化使用全域字符串並混合到 UI 設定中。
 
 ## 目標模組映射
 

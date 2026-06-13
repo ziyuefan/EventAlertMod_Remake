@@ -21,7 +21,7 @@
   - `Debug/PromptExport.lua`
 - API 查詢與文件整理可和本地實作家具，例如：
 - 12.x API 更改來源複核。
-  - 秘密價值/污點討論整理。
+  - 秘密價值/污染討論整理。
   - DurationObject / DurationTextBinding 實踐方式比較。
 - 驗證與掃描可與修復零件，例如：
   - 搜尋舊API直接呼叫。
@@ -116,12 +116,12 @@
 ---
 
 ## 預定義子代理專家目錄 (預定義子代理專家)
-本專案預先配置了16個子代理專家角色，封面API安全、執行優化、Lua基礎、UI渲染與13個職業的實戰監控智囊團。主代理與開發者可在需要時，直接透過專家的職務定位進行派工與呼叫：
+本專案預先配置了16個子代理專家角色，封面API安全、執行優化、Lua基礎、UI渲染與13個職業的實戰監控專家團。主代理與開發者可在需要時，直接透過專家的職務定位進行派工與呼叫：
 
 ### 1. 核心開發與架構專家
 * **EAM_API_Security_Expert (API 與安全防禦專家)**
 * **職責**：專注12.x API邊界與Secret/Protected值限制審查，解析安全原則讀取（`issecretvalue`、`canaccessvalue`、`canaccesstable`）、`DurationObject`雙軌安全通道與Tooltip Scraping降級預警。
-* **EAM_Performance_Expert（符合污點控制專家）**
+* **EAM_Performance_Expert（符合污染控制專家）**
     * **職責**：主導Hot Path零GC（零時分配）控制、Taint避讓策略（非安全框架隔離、InCombatLockdown限制延遲）、以及`IconPool`框架重複使用最佳化。
 * **EAM_UI_Renderer_Expert（UI 與渲染架構專家）**
     * **職責**：專注UI與資料嚴格分離（渲染器只消費歸一化狀態）、`IconPool`與`CooldownFrame`渲染管理、選項選單版面與12.0.7原生文字綁定的實作。
@@ -130,14 +130,14 @@
 * **EAM_Lua_VM_Expert (Lua虛擬機器與編譯最佳化專家)**
     * **職責**：關注0-GC演算、閉包優化、記憶體管理、本地Inline pcall 匿名閉包開銷與底層元表機制評估。
 * **EAM_Security_Auditor (安全性與 Taint 稽核專家)**
-* **職責**：針對「陰道ScrollingMessageFrame原始解密法」、「一鍵硬體事件提權宏」、「官方UI資料爬蟲（UI Scraping）」等高漏洞漏洞進行生命防週期阻塞與優化平穩降級稽核。
+* **職責**：針對「原生ScrollingMessageFrame原始解密法」、「一鍵硬體事件提權宏」、「官方UI資料爬蟲（UI Scraping）」等高漏洞漏洞進行生命防週期阻塞與優化平穩降級稽核。
 
 ### 2.玩家體驗與實戰監控專家
 * **EAM_UX_Gameplay_Expert（玩法與UX體驗專家）**
 * **職責**：熟悉12.x各職業、疫情機制刷新點提示、DOT/BUFF監控、視覺疲勞優化與戰鬥場景動態載入避讓。
-* **EAM_Class_Expert (職業專精智囊代表)**
+* **EAM_Class_Expert (職業專精專家代表)**
     * **職責**：代表13個職業、39個專精進行實戰監控配置與最佳化，提供30%的疫情臨界秒數與資源防災閾值。
-* **EAM_Class_Tanks (戰車專精智庫)**
+* **EAM_Class_Tanks (坦克專精智庫)**
 * **職責**：代表血DK、復仇DH、防騎、防戰、酒僧、熊德6大坦克，針對主動減傷、生存Buff與Boss尖峰傷害減傷預警給予配置建議。
 * **EAM_Class_Healers (治療專精智庫)**
 * **職責**：代表補德、神/戒牧、補僧、補薩、補騎、恩補喚能師6大治療，針對多目標HoT覆蓋、隨機觸發過程與團隊框架藍耗提供實戰建議。

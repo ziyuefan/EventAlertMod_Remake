@@ -41,7 +41,7 @@
 - `補丁 12.0.0/API 變更`是 Secret Values 與 AddOn 安全限制的核心起點。
 - `Patch 12.0.1/API Changes` 是午夜啟動補丁；對 EAM 的直接影響低於 12.0.0/12.0.5，但仍需追蹤添加光環過濾器和 tooltip/filter 行為。
 - `Patch 12.0.5/API 更改` 明確新增 `table.freeze`、`table.isfrozen`、API 謂詞檔案、冷卻倒數格式化程式、FontString 平滑縮放，並補強秘密/安全相關訊息。
-- 12.x引入了強大的C語言底層Blocked Aura引擎`C_UnitAuras.AddBlockedAura(unit, auraInstanceID)`與時間黑盒`C_UnitAuras.GetAuraDuration(unit, auraInstanceID)`，提供0-GC和100%安全的防污點執行鏈。
+- 12.x引入了強大的C語言底層Blocked Aura引擎`C_UnitAuras.AddBlockedAura(unit, auraInstanceID)`與時間黑盒`C_UnitAuras.GetAuraDuration(unit, auraInstanceID)`，提供0-GC和100%安全的防污染執行鏈。
 - 12.x 引進了資料驅動型 Tooltip 系統，以 `C_TooltipInfo.GetUnitBuffByAuraInstanceID(unit, auraInstanceID)` 與 `GetUnitDebuffByAuraInstanceID` 取代了舊式的 `SetUnitBuff` 模擬渲染，將資料與 UI 徹底分離，並取代了舊式的 `SetUnitBuff` 模擬渲染，將資料與 UI 徹底分離，並完美接了一個橋接橋。
 - `Secret_Values`、`ScriptObject_DurationObject`、`C_Spell.GetSpellCooldown`、`C_TooltipInfo.GetUnitBuffByAuraInstanceID` 這些單頁檔案已論證支撐 EAM 的架構決策：資料來源層必須處理秘密邊界，渲染器應盡量遷移暴雪小工具顯示持續時間。
 - 12.0.7 的公開 API 變更摘要目前未顯示直接影響 EAM aura/cooldown/item Cooldown 核心邏輯的大型 API 變更，但新增 __EAM__CODE_4__6、EA DurationObject / 定時器顯示追蹤項目。
@@ -56,7 +56,7 @@
 - 使用者已於 WoW 12.0.7 PTR client 執行 `C_DurationUtil.CreateDurationTextBinding` 最小測試範例。
 - 結果：FontString 可正常顯示由 `DurationTextBinding` 驅動的倒數文字。
 - 驗證範圍：僅確認最小範例可顯示；尚未代表 EAM Renderer 已完成整合。
-- 尚未驗證：戰鬥中行為、污點日誌、圖示重用後文字清除、區域設定顯示、過渡文字、零持續時間、與主要 `Cooldown:SetCooldownFromDurationObject()` 的整合策略。
+- 尚未驗證：戰鬥中行為、污染日誌、圖示重用後文字清除、區域設定顯示、過渡文字、零持續時間、與主要 `Cooldown:SetCooldownFromDurationObject()` 的整合策略。
 - EAM 實施規則：可將 `DurationTextBinding` 視為 12.0.7 PTR 已可用候選路徑，但正式整合仍需特徵偵測與回退。
 
 ### 與 EAM 直接相關
@@ -459,7 +459,7 @@ EAM `CooldownService` 實施規則：
   - *限制*：在限制（戰鬥限制）狀態下，會回傳被加密的**`SecretValue`**。直接對其進行Lua算術攻擊（如`+ - * / < > ==`）會直接致命觸發紅字錯誤。
 - **`durationObj:GetClockTime()`**：
   - *用途*：用於初步的時脈同步，杜絕與 UI 產生的污染。但在戰鬥中這也是 `SecretValue`。
-### 🎨 C_CurveUtil (曲線化工具) 戰鬥防污點機制
+### 🎨 C_CurveUtil (曲線化工具) 戰鬥防污染機制
 為了解決在戰鬥中無法直接解決「如果剩餘 < 5 那麼」的時間比以改變圖標顏色或引發（因為會觸發 `SecretValue` 比較崩潰）的問題，暴雪引入了 **`C_CurveUtil`**：
 * **機制**：AddOn可使用`C_CurveUtil.CreateCurve()`建立非線性的顏色或輪廓曲線映射，例如定義「在剩餘時間小於20%時變紅（流行病判定）」。
 * **綁定**：橢圓曲線與 `DurationObject` 一併綁定至 Status/Progress Bar 或 Cooldown 控制項（例如 `statusBar:SetColorCurve(curve, durationObject)`）。

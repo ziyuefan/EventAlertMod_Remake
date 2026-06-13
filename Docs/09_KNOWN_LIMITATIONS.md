@@ -46,7 +46,7 @@
 - 目前 TOC 和許多運行時模組所需的 `Lib_ZYF` ；
 - 大型法術/item資料表；
 - `EventAlert_ItemSpellCache.lua` 中的項目範圍掃描；
-- 遞歸計時器調度和每個資源 OnUpdate 腳本；
+- 遞迴計時器調度和每個資源 OnUpdate 腳本；
 - 廣泛的全域變數使用和意外全域變數；
 - 可能與受保護資料衝突的工具提示和光環 API 假設；
 - `Main/` 下有重複的 /archived 文件，其名稱為亂碼，且

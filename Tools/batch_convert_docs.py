@@ -47,6 +47,9 @@ def post_process_translation(text, src_lang, dest_lang):
         
         # 4. 修正一些常見專有名詞的硬翻
         text = re.sub(r'奧術費用', '奧術充能', text)
+        text = re.sub(r'遞歸', '遞迴', text)
+        text = re.sub(r'內存', '記憶體', text)
+        text = re.sub(r'線程', '執行緒', text)
         text = re.sub(r'充電', '充能', text)
         text = re.sub(r'卡塔經典', '浩劫與重生經典服', text)
         text = re.sub(r'卡塔經典賽', '浩劫與重生經典服', text)
@@ -123,7 +126,7 @@ def protect_symbols(text):
     # 匹配魔獸 API、檔案路徑、小駝峰/大駝峰、大寫底線、括號函數呼叫等
     pattern = re.compile(
         r'('
-        r'`[a-zA-Z0-9_./-]+`' # 反單引號包裹的程式碼（必須在最前面，優先匹配，防止被拆開）
+        r'`[^`]+`' # 反單引號包裹的程式碼（必須在最前面，優先匹配，防止被拆開）
         r'|\b[\w/\\]+\.(?:lua|toc|xml|md|html|txt|json|yml|yaml|png|jpg|gif|blp)\b' # 有副檔名的路徑，如 Main/EventAlert_Options.xml
         r'|\b(?i:Main|Images|Sounds|Classic|TBC|Wrath|libs|locale|DevDocument|Core|Services|UI|Data|Managers|Debug|Tools|Music|Image)/[a-zA-Z0-9_/-]*' # 帶斜線的目錄路徑，不分大小寫，如 Main/、Images/、libs/、image/、music/ 等
         r'|\bC_[a-zA-Z0-9_]+(?:\.[a-zA-Z0-9_]+)*\b' # C_ 開頭 API

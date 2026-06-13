@@ -74,7 +74,7 @@
 
 ## 優先 P4：文件、測試與發布
 
-- 更新`Docs/06_TEST_PLAN_RETAIL.md`：新增12.0.7、DurationObject、秘密工具提示、污點日誌、戰鬥鎖定測試。
+- 更新`Docs/06_TEST_PLAN_RETAIL.md`：新增12.0.7、DurationObject、秘密工具提示、污染日誌、戰鬥鎖定測試。
 - 建立專案專用 SKILL 候選：
   - EAM 資料夾與版本同步。
   - EAM WoW API 驗證與檔案回寫。
@@ -98,5 +98,5 @@
 2. 已完成 P1/P2 初版：SavedVariables add/remove API、Slash add/remove、AuraService `UNIT_AURA`快照增補感知快取、調試調試。
 3.已完成P2後半：AuraService全面更新單位系統單次掃描、選項最小可新增/remove面板。
 4. P3已有實測結果：用戶於12.0.7 PTR客戶端確認`C_DurationUtil.CreateDurationTextBinding`最小樣本可正常顯示。
-5.下一步應繼續實機驗證`UNIT_AURA` delta/full有效負載、DurationObject / DurationTextBinding整合、戰鬥佈局延遲、選項模板污點日誌。
+5.下一步應繼續實機驗證`UNIT_AURA` delta/full有效負載、DurationObject / DurationTextBinding整合、戰鬥佈局延遲、選項模板污染日誌。
 6. 實機確認後再補舊 EAM group/special power 行為、Options 啟用切換與 CurseForge `120007` 遊戲版本 ID。

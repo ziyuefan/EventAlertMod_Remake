@@ -43,15 +43,15 @@
 觀察到的主線使用情況：
 
 - `EventAlert_Core.lua`
-  - 遞歸 `C_Timer.After(tempInterval, RecurringFrameUpdate)`
+  - 遞迴 `C_Timer.After(tempInterval, RecurringFrameUpdate)`
   - FPS-調整了位置 /special 幀更新的節奏
   - `C_Timer.NewTicker(1 / GetFramerate(), function() ...)` 用來查找
 - `EventAlert_Aura_Self.lua`
   - `G:OnUpdate(spellId)` 用於光環計時器刷新
   - 在先前指派 `tempFunc = function() G.OnUpdate(spellId) end`
-    `C_Timer.After（延遲，tempFunc）`
+    `C_Timer.After(delay, tempFunc)`
 - `EventAlert_Aura_Target.lua`
-  - `C_Timer.After（延遲，G.OnTarUpdate，G，spellId）`
+  - `C_Timer.After(delay, G.OnTarUpdate, G, spellId)`
 - `EventAlert_Cooldown.lua`
 - `C_Timer.After(nextInterval, G.OnSCDUpdate, G, sid)`
 - `EventAlert_ItemSpellCache.lua`

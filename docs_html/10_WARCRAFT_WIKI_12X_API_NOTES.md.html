@@ -455,7 +455,7 @@
 <li><code>補丁 12.0.0/API 變更</code>是 Secret Values 與 AddOn 安全限制的核心起點。</li>
 <li><code>Patch 12.0.1/API Changes</code> 是午夜啟動補丁；對 EAM 的直接影響低於 12.0.0/12.0.5，但仍需追蹤添加光環過濾器和 tooltip/filter 行為。</li>
 <li><code>Patch 12.0.5/API 更改</code> 明確新增 <code>table.freeze</code>、<code>table.isfrozen</code>、API 謂詞檔案、冷卻倒數格式化程式、FontString 平滑縮放，並補強秘密/安全相關訊息。</li>
-<li>12.x引入了強大的C語言底層Blocked Aura引擎<code>C_UnitAuras.AddBlockedAura(unit, auraInstanceID)</code>與時間黑盒<code>C_UnitAuras.GetAuraDuration(unit, auraInstanceID)</code>，提供0-GC和100%安全的防污點執行鏈。</li>
+<li>12.x引入了強大的C語言底層Blocked Aura引擎<code>C_UnitAuras.AddBlockedAura(unit, auraInstanceID)</code>與時間黑盒<code>C_UnitAuras.GetAuraDuration(unit, auraInstanceID)</code>，提供0-GC和100%安全的防污染執行鏈。</li>
 <li>12.x 引進了資料驅動型 Tooltip 系統，以 <code>C_TooltipInfo.GetUnitBuffByAuraInstanceID(unit, auraInstanceID)</code> 與 <code>GetUnitDebuffByAuraInstanceID</code> 取代了舊式的 <code>SetUnitBuff</code> 模擬渲染，將資料與 UI 徹底分離，並取代了舊式的 <code>SetUnitBuff</code> 模擬渲染，將資料與 UI 徹底分離，並完美接了一個橋接橋。</li>
 <li><code>Secret_Values</code>、<code>ScriptObject_DurationObject</code>、<code>C_Spell.GetSpellCooldown</code>、<code>C_TooltipInfo.GetUnitBuffByAuraInstanceID</code> 這些單頁檔案已論證支撐 EAM 的架構決策：資料來源層必須處理秘密邊界，渲染器應盡量遷移暴雪小工具顯示持續時間。</li>
 <li>12.0.7 的公開 API 變更摘要目前未顯示直接影響 EAM aura/cooldown/item Cooldown 核心邏輯的大型 API 變更，但新增 __EAM__CODE_4__6、EA DurationObject / 定時器顯示追蹤項目。</li>
@@ -468,7 +468,7 @@
 <li>使用者已於 WoW 12.0.7 PTR client 執行 <code>C_DurationUtil.CreateDurationTextBinding</code> 最小測試範例。</li>
 <li>結果：FontString 可正常顯示由 <code>DurationTextBinding</code> 驅動的倒數文字。</li>
 <li>驗證範圍：僅確認最小範例可顯示；尚未代表 EAM Renderer 已完成整合。</li>
-<li>尚未驗證：戰鬥中行為、污點日誌、圖示重用後文字清除、區域設定顯示、過渡文字、零持續時間、與主要 <code>Cooldown:SetCooldownFromDurationObject()</code> 的整合策略。</li>
+<li>尚未驗證：戰鬥中行為、污染日誌、圖示重用後文字清除、區域設定顯示、過渡文字、零持續時間、與主要 <code>Cooldown:SetCooldownFromDurationObject()</code> 的整合策略。</li>
 <li>EAM 實施規則：可將 <code>DurationTextBinding</code> 視為 12.0.7 PTR 已可用候選路徑，但正式整合仍需特徵偵測與回退。</li>
 </ul>
 <h3 id="eam">與 EAM 直接相關</h3>
@@ -833,7 +833,7 @@ isOnGCD
 <li><strong><code>durationObj:GetClockTime()</code></strong>：</li>
 <li><em>用途</em>：用於初步的時脈同步，杜絕與 UI 產生的污染。但在戰鬥中這也是 <code>SecretValue</code>。</li>
 </ul>
-<h3 id="c_curveutil">🎨 C_CurveUtil (曲線化工具) 戰鬥防污點機制</h3>
+<h3 id="c_curveutil">🎨 C_CurveUtil (曲線化工具) 戰鬥防污染機制</h3>
 <p>為了解決在戰鬥中無法直接解決「如果剩餘 &lt; 5 那麼」的時間比以改變圖標顏色或引發（因為會觸發 <code>SecretValue</code> 比較崩潰）的問題，暴雪引入了 <strong><code>C_CurveUtil</code></strong>：
 * <strong>機制</strong>：AddOn可使用<code>C_CurveUtil.CreateCurve()</code>建立非線性的顏色或輪廓曲線映射，例如定義「在剩餘時間小於20%時變紅（流行病判定）」。
 * <strong>綁定</strong>：橢圓曲線與 <code>DurationObject</code> 一併綁定至 Status/Progress Bar 或 Cooldown 控制項（例如 <code>statusBar:SetColorCurve(curve, durationObject)</code>）。
@@ -1114,7 +1114,7 @@ Relevant emphasis.</p>
 <li><code>Patch 12.0.0/API Change</code> is the core starting point for Secret Values ​​and AddOn security restrictions.</li>
 <li><code>Patch 12.0.1/API Changes</code> is a midnight launch patch; has less direct impact on EAM than 12.0.0/12.0.5, but still needs to track the addition of the halo filter and tooltip/filter behavior.</li>
 <li><code>Patch 12.0.5/API Changes</code> Explicitly added <code>table.freeze</code>, <code>table.isfrozen</code>, API predicate files, cooldown countdown formatter, FontString smooth scaling, and enhanced secret/security related messages.</li>
-<li>12.x introduces the powerful C language underlying Blocked Aura engine <code>C_UnitAuras.AddBlockedAura(unit, auraInstanceID)</code> and the time black box <code>C_UnitAuras.GetAuraDuration(unit, auraInstanceID)</code>, providing 0-GC and 100% safe anti-taint execution chain.</li>
+<li>12.x introduces the powerful C language underlying Blocked Aura engine <code>C_UnitAuras.AddBlockedAura(unit, auraInstanceID)</code> and time black box <code>C_UnitAuras.GetAuraDuration(unit, auraInstanceID)</code>, providing 0-GC and 100% safe anti-pollution execution chain.</li>
 <li>12.x introduces a data-driven Tooltip system, replacing the old <code>SetUnitBuff</code> simulation rendering with <code>C_TooltipInfo.GetUnitBuffByAuraInstanceID(unit, auraInstanceID)</code> and <code>GetUnitDebuffByAuraInstanceID</code>, which completely separates data from UI, and replaces the old <code>SetUnitBuff</code> simulation rendering, which separates data and UI Completely separated and perfectly connected with a bridge.</li>
 <li><code>Secret_Values</code>, <code>ScriptObject_DurationObject</code>, <code>C_Spell.GetSpellCooldown</code>, <code>C_TooltipInfo.GetUnitBuffByAuraInstanceID</code> These single-page archives have been demonstrated to support the architectural decisions of EAM: the source layer must handle secret boundaries and the renderer should try to migrate Blizzard gadget display durations.</li>
 <li>Public API change summary for 12.0.7 currently shows no direct impact EAM Aura/cooldown/item Large API changes to Cooldown core logic, but new __EAM__CODE_4__6, EA DurationObject/timer display tracking items.
@@ -1127,7 +1127,7 @@ Note: The above is a cross-collation of files and indexes, which has not been ve
 <li>The user has executed the <code>C_DurationUtil.CreateDurationTextBinding</code> minimal test example on the WoW 12.0.7 PTR client.</li>
 <li>Result: FontString can display the countdown text driven by <code>DurationTextBinding</code> normally.</li>
 <li>Verification scope: Only the minimum sample is confirmed to be displayed; it does not yet mean that EAM Renderer has been integrated.</li>
-<li>Not verified yet: In-combat behavior, taint logs, text clearing after icon reuse, locale display, transition text, zero duration, integration strategy with main <code>Cooldown:SetCooldownFromDurationObject()</code>.</li>
+<li>Not yet verified: In-combat behavior, taint logs, text cleanup after icon reuse, locale display, transition text, zero duration, integration strategy with main <code>Cooldown:SetCooldownFromDurationObject()</code>.</li>
 <li>EAM Implementation rules: <code>DurationTextBinding</code> can be considered an available candidate path for 12.0.7 PTR, but formal integration still requires feature detection and rollback.</li>
 </ul>
 <h3 id="directly-related-to-eam">Directly related to EAM</h3>
@@ -1488,11 +1488,11 @@ isOnGCD
 <li><em>Security Defense</em>: Must use <code>issecretvalue(val)</code> or <code>pcall</code> for preventive protection, or completely replace C++'s <code>clearIfZero</code> parameter (e.g. set in <code>SetCooldownFromDurationObject</code>).</li>
 <li><strong><code>durationObj:GetRemainingDuration()</code></strong>:</li>
 <li><em>Use</em>: Get the remaining seconds.</li>
-<li><em>Restrictions</em>: In the restricted (combat restricted) state, the encrypted <strong><code>SecretValue</code></strong> will be returned. Directly performing Lua arithmetic attacks on it (such as <code>+ - * / &lt; &gt; ==</code>) will directly and fatally trigger a red letter error.</li>
+<li><em>Restrictions</em>: In the restricted (combat restricted) state, the encrypted <strong><code>SecretValue</code></strong> will be returned. Directly performing a Lua arithmetic attack on it (such as <code>+ - * / &lt; &gt; ==</code>) will directly and fatally trigger a red letter error.</li>
 <li><strong><code>durationObj:GetClockTime()</code></strong>:</li>
 <li><em>Purpose</em>: Used for preliminary clock synchronization to prevent contamination with the UI. But in combat this is also <code>SecretValue</code>.</li>
 </ul>
-<h3 id="c_curveutil-curve-tool-combat-anti-bloat-mechanism">🎨 C_CurveUtil (curve tool) combat anti-bloat mechanism</h3>
+<h3 id="c_curveutil-curve-tool-combat-anti-pollution-mechanism">🎨 C_CurveUtil (curve tool) combat anti-pollution mechanism</h3>
 <p>In order to solve the problem that the "if remaining &lt; 5 then" time ratio cannot be directly resolved in combat to change the icon color or trigger (because it will trigger the <code>SecretValue</code> comparison crash), Blizzard introduced <strong><code>C_CurveUtil</code></strong>:
 * <strong>Mechanism</strong>: AddOn can use <code>C_CurveUtil.CreateCurve()</code> to establish non-linear color or contour curve mapping, such as defining "turn red when the remaining time is less than 20% (epidemic determination)".
 * <strong>Binding</strong>: The elliptic curve is bound to the Status/Progress Bar or Cooldown control along with <code>DurationObject</code> (e.g. <code>statusBar:SetColorCurve(curve, durationObject)</code>).

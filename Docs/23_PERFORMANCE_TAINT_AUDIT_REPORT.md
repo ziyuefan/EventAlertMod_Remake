@@ -1,5 +1,5 @@
 <!-- EAM_DOCUMENTATION_SOURCE: zh-TW -->
-#實施與污點控制審查報表：統一OnUpdate與版本面偏移
+#實施與污染控制審查報表：統一OnUpdate與版本面偏移
 
 > [!注意]
 > 本文件由 EAM Performance & Taint Control Expert 撰寫，旨在評估 EventAlertMod 重構版本中統一（legacyTimer）的兼容超時、LAYOUT_OFFSETS 靜態偏移陣列的算術分配性能，並識別戰鬥中潛在的隱性垃圾性分配問題。
@@ -11,7 +11,7 @@
 
 ### 1.1 完全優勢
 * **單一一幀集中驅動**：避免了每個圖示或每個香水各自綁定 `OnUpdate` 的高額設計。當沒有啟動任務時，會呼叫`legacyTimerFrame:SetScript("OnUpdate", nil)`解除綁定，保持CPU零佔用。
-* **孤兒框架隔離**：`legacyTimerFrame`為無父級的框架（`CreateFrame("Frame")`），完全與`UIParent`核心鏈解耦，消除了事件派發過程中的污點傳播風險。
+* **孤兒框架隔離**：`legacyTimerFrame`為無父級的框架（`CreateFrame("Frame")`），完全與`UIParent`核心鏈解耦，消除了事件派發過程中的污染傳播風險。
 ### 1.2 可運行的開銷與GC瓶頸分析
 在創建戰鬥環境（例如 60-120 FPS，擁有多個活動監控圖示）下，目前的實踐存在顯著的 GC 與 CPU 頭：
 1. **牆壁的字符串清理（GC堆垃圾主要來源）**：
@@ -78,7 +78,7 @@ local offsetY = dy * dist
         icon:ClearAllPoints()
         icon:SetAllPoints(hostIcon)
         ```
-* **風險**：官方的`CooldownViewer`與ActionButton屬於高度受保護的安全/受保護框架。非安全的EAM圖示在戰鬥中呼叫`SetParent`附加到安全框架上，當暴雪UI嘗試重新排版或該安全框架時，會操作其子系統包含不安全框架導致整個鏈執行被標記為污點，進而引發了操作按鈕被淹沒、無法點擊的致命錯誤。
+* **風險**：官方的`CooldownViewer`與ActionButton屬於高度受保護的安全/受保護框架。非安全的EAM圖示在戰鬥中呼叫`SetParent`附加到安全框架上，當暴雪UI嘗試重新排版或該安全框架時，會操作其子系統包含不安全框架導致整個鏈執行被標記為污染，進而引發了操作按鈕被淹沒、無法點擊的致命錯誤。
 ### 3.2 隱性GC堆垃圾分配
 1. **熱路徑中的匿名閉包`pcall`**：
     * 在 `Renderer.render` 中：
@@ -109,5 +109,5 @@ local offsetY = dy * dist
 
 ---
 ## RACI 權責分工與審查結論
-本報告審查[Docs/21_RACI_EXPERTS_MATRIX.md](file:///d:/EventAlertMod/Docs/21_RACI_EXPERTS_MATRIX.md)規範，由**性能與污點控制專家**負責（Responsible），為**主代理**提供核心技術決策諮詢。
+本報告審查[Docs/21_RACI_EXPERTS_MATRIX.md](file:///d:/EventAlertMod/Docs/21_RACI_EXPERTS_MATRIX.md)規範，由**性能與污染控制專家**負責（Responsible），為**主代理**提供核心技術決策諮詢。
 * **在下一個重構週期中，應立即針對`UI/Renderer.lua`與`UI/IconPool.lua`進行局部重構，實現“時間字符串存儲”、“無pcall直接呼叫”以及“戰鬥中CreateFrame延遲防禦”，以確保AddOnMCO兼容時的最高低衛”，絕對兼容

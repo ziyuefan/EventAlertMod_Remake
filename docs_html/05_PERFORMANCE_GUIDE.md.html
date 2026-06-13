@@ -457,15 +457,15 @@
 <p>觀察到的主線使用情況：</p>
 <ul>
 <li><code>EventAlert_Core.lua</code></li>
-<li>遞歸 <code>C_Timer.After(tempInterval, RecurringFrameUpdate)</code></li>
+<li>遞迴 <code>C_Timer.After(tempInterval, RecurringFrameUpdate)</code></li>
 <li>FPS-調整了位置 /special 幀更新的節奏</li>
 <li><code>C_Timer.NewTicker(1 / GetFramerate(), function() ...)</code> 用來查找</li>
 <li><code>EventAlert_Aura_Self.lua</code></li>
 <li><code>G:OnUpdate(spellId)</code> 用於光環計時器刷新</li>
 <li>在先前指派 <code>tempFunc = function() G.OnUpdate(spellId) end</code>
-    <code>C_Timer.After（延遲，tempFunc）</code></li>
+    <code>C_Timer.After(delay, tempFunc)</code></li>
 <li><code>EventAlert_Aura_Target.lua</code></li>
-<li><code>C_Timer.After（延遲，G.OnTarUpdate，G，spellId）</code></li>
+<li><code>C_Timer.After(delay, G.OnTarUpdate, G, spellId)</code></li>
 <li><code>EventAlert_Cooldown.lua</code></li>
 <li><code>C_Timer.After(nextInterval, G.OnSCDUpdate, G, sid)</code></li>
 <li><code>EventAlert_ItemSpellCache.lua</code></li>
@@ -614,15 +614,15 @@
 <p>Observed mainline usage:</p>
 <ul>
 <li><code>EventAlert_Core.lua</code></li>
-<li>Recursive <code>C_Timer.After(tempInterval, RecurringFrameUpdate)</code></li>
+<li>recurses <code>C_Timer.After(tempInterval, RecurringFrameUpdate)</code></li>
 <li>FPS - Adjusted the cadence of position /special frame updates</li>
 <li><code>C_Timer.NewTicker(1 / GetFramerate(), function() ...)</code> is used to find</li>
 <li><code>EventAlert_Aura_Self.lua</code></li>
 <li><code>G:OnUpdate(spellId)</code> for Aura timer refresh</li>
-<li>previously assigned <code>tempFunc = function() G.OnUpdate(spellId) end</code>
+<li>previously assigned <strong>E​​​AMCODE_5</strong>
     <code>C_Timer.After(delay, tempFunc)</code></li>
 <li><code>EventAlert_Aura_Target.lua</code></li>
-<li><code>C_Timer.After(delay,G.OnTarUpdate,G,spellId)</code></li>
+<li><code>C_Timer.After(delay, G.OnTarUpdate, G, spellId)</code></li>
 <li><code>EventAlert_Cooldown.lua</code></li>
 <li><code>C_Timer.After(nextInterval, G.OnSCDUpdate, G, sid)</code></li>
 <li><code>EventAlert_ItemSpellCache.lua</code></li>

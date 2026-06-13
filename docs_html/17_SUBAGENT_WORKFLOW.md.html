@@ -436,7 +436,7 @@
 <li><code>Debug/PromptExport.lua</code></li>
 <li>API 查詢與文件整理可和本地實作家具，例如：</li>
 <li>12.x API 更改來源複核。</li>
-<li>秘密價值/污點討論整理。</li>
+<li>秘密價值/污染討論整理。</li>
 <li>DurationObject / DurationTextBinding 實踐方式比較。</li>
 <li>驗證與掃描可與修復零件，例如：</li>
 <li>搜尋舊API直接呼叫。</li>
@@ -524,12 +524,12 @@
 </ol>
 <hr />
 <h2 id="_9">預定義子代理專家目錄 (預定義子代理專家)</h2>
-<p>本專案預先配置了16個子代理專家角色，封面API安全、執行優化、Lua基礎、UI渲染與13個職業的實戰監控智囊團。主代理與開發者可在需要時，直接透過專家的職務定位進行派工與呼叫：</p>
+<p>本專案預先配置了16個子代理專家角色，封面API安全、執行優化、Lua基礎、UI渲染與13個職業的實戰監控專家團。主代理與開發者可在需要時，直接透過專家的職務定位進行派工與呼叫：</p>
 <h3 id="1">1. 核心開發與架構專家</h3>
 <ul>
 <li><strong>EAM_API_Security_Expert (API 與安全防禦專家)</strong></li>
 <li><strong>職責</strong>：專注12.x API邊界與Secret/Protected值限制審查，解析安全原則讀取（<code>issecretvalue</code>、<code>canaccessvalue</code>、<code>canaccesstable</code>）、<code>DurationObject</code>雙軌安全通道與Tooltip Scraping降級預警。</li>
-<li><strong>EAM_Performance_Expert（符合污點控制專家）</strong><ul>
+<li><strong>EAM_Performance_Expert（符合污染控制專家）</strong><ul>
 <li><strong>職責</strong>：主導Hot Path零GC（零時分配）控制、Taint避讓策略（非安全框架隔離、InCombatLockdown限制延遲）、以及<code>IconPool</code>框架重複使用最佳化。</li>
 </ul>
 </li>
@@ -546,17 +546,17 @@
 </ul>
 </li>
 <li><strong>EAM_Security_Auditor (安全性與 Taint 稽核專家)</strong></li>
-<li><strong>職責</strong>：針對「陰道ScrollingMessageFrame原始解密法」、「一鍵硬體事件提權宏」、「官方UI資料爬蟲（UI Scraping）」等高漏洞漏洞進行生命防週期阻塞與優化平穩降級稽核。</li>
+<li><strong>職責</strong>：針對「原生ScrollingMessageFrame原始解密法」、「一鍵硬體事件提權宏」、「官方UI資料爬蟲（UI Scraping）」等高漏洞漏洞進行生命防週期阻塞與優化平穩降級稽核。</li>
 </ul>
 <h3 id="2">2.玩家體驗與實戰監控專家</h3>
 <ul>
 <li><strong>EAM_UX_Gameplay_Expert（玩法與UX體驗專家）</strong></li>
 <li><strong>職責</strong>：熟悉12.x各職業、疫情機制刷新點提示、DOT/BUFF監控、視覺疲勞優化與戰鬥場景動態載入避讓。</li>
-<li><strong>EAM_Class_Expert (職業專精智囊代表)</strong><ul>
+<li><strong>EAM_Class_Expert (職業專精專家代表)</strong><ul>
 <li><strong>職責</strong>：代表13個職業、39個專精進行實戰監控配置與最佳化，提供30%的疫情臨界秒數與資源防災閾值。</li>
 </ul>
 </li>
-<li><strong>EAM_Class_Tanks (戰車專精智庫)</strong></li>
+<li><strong>EAM_Class_Tanks (坦克專精智庫)</strong></li>
 <li><strong>職責</strong>：代表血DK、復仇DH、防騎、防戰、酒僧、熊德6大坦克，針對主動減傷、生存Buff與Boss尖峰傷害減傷預警給予配置建議。</li>
 <li><strong>EAM_Class_Healers (治療專精智庫)</strong></li>
 <li><strong>職責</strong>：代表補德、神/戒牧、補僧、補薩、補騎、恩補喚能師6大治療，針對多目標HoT覆蓋、隨機觸發過程與團隊框架藍耗提供實戰建議。</li>
@@ -595,12 +595,12 @@
 <li><code>Debug/PromptExport.lua</code></li>
 <li>API Query and file organization can be implemented with local furniture, for example:</li>
 <li>12.x API Change source review.</li>
-<li>Secret value/taint discussion organized.</li>
+<li>Secret value/contamination discussion organized.</li>
 <li>DurationObject / DurationTextBinding Comparison of practical methods.</li>
 <li>Verify and scan parts that can be repaired, such as:</li>
 <li>Search for old API calls directly.</li>
 <li>Check for <code>table.freeze</code> errors.</li>
-<li>Check <code>C_Timer.After(function() ...)</code> hot paths.</li>
+<li>Check <code>C_Timer.After(function() ...)</code> hot path.</li>
 <li>Conformance check between Docs and AGENTS.</li>
 <li>Unified culture and terminology in a large number of documents, and completed test lists.</li>
 <li>Package/CurseForge Bypass checks for the release process, such as exclusion lists, TOC versions, zip naming rules.</li>
@@ -683,12 +683,12 @@ Subsequent development follows the requirements:
 </ol>
 <hr />
 <h2 id="predefined-subagent-expert-directory-predefined-subagent-expert">Predefined subagent expert directory (predefined subagent expert)</h2>
-<p>This project is pre-configured with 16 sub-agent expert roles, covering API security, execution optimization, Lua basics, UI rendering and 13 professional practical monitoring think tanks. When needed, main agents and developers can directly dispatch work and call through the expert's job positioning:</p>
+<p>This project is pre-configured with 16 sub-agent expert roles, covering API security, execution optimization, Lua basics, UI rendering and 13 professional actual monitoring expert groups. When needed, main agents and developers can directly dispatch work and call through the expert's job positioning:</p>
 <h3 id="1-core-development-and-architecture-experts">1. Core development and architecture experts</h3>
 <ul>
 <li><strong>EAM_API_Security_Expert (API and security defense experts)</strong></li>
 <li><strong>Responsibilities</strong>: Focus on 12.x API boundary and Secret/Protected value limit review, analyze security principle reading (<code>issecretvalue</code>, <code>canaccessvalue</code>, <code>canaccesstable</code>), <code>DurationObject</code> dual-track security channel and Tooltip Scraping degradation warning.</li>
-<li><strong>EAM_Performance_Expert (Meet Taint Control Expert)</strong><ul>
+<li><strong>EAM_Performance_Expert (Meet Pollution Control Expert)</strong><ul>
 <li><strong>Responsibilities</strong>: Lead Hot Path zero GC (zero time allocation) control, Taint avoidance strategy (non-safe frame isolation, InCombatLockdown limit delay), and <code>IconPool</code> frame reuse optimization.</li>
 </ul>
 </li>
@@ -705,17 +705,17 @@ Subsequent development follows the requirements:
 </ul>
 </li>
 <li><strong>EAM_Security_Auditor (Security and Taint Audit Expert)</strong></li>
-<li><strong>Responsibilities</strong>: Conduct life cycle blocking and optimization smooth degradation audits for high vulnerability vulnerabilities such as "Vaginal ScrollingMessageFrame Original Decryption Method", "One-click Hardware Event Privilege Escalation Macro", "Official UI Data Crawler (UI Scraping)".</li>
+<li><strong>Responsibilities</strong>: Conduct life cycle blocking and optimization smooth degradation audits for high vulnerability vulnerabilities such as "native ScrollingMessageFrame original decryption method", "one-click hardware event privilege escalation macro", "official UI data crawler (UI Scraping)".</li>
 </ul>
 <h3 id="2-player-experience-and-actual-combat-monitoring-expert">2. Player experience and actual combat monitoring expert</h3>
 <ul>
 <li><strong>EAM_UX_Gameplay_Expert (Gameplay and UX experience expert)</strong></li>
 <li><strong>Responsibilities</strong>: Familiar with 12.x professions, epidemic mechanism refresh point prompts, DOT/BUFF monitoring, visual fatigue optimization and combat scene dynamic loading avoidance.</li>
-<li><strong>EAM_Class_Expert (professional expertise think tank representative)</strong><ul>
+<li><strong>EAM_Class_Expert (professional expert representative)</strong><ul>
 <li><strong>Responsibilities</strong>: Represent 13 professions and 39 specialties in actual combat monitoring configuration and optimization, and provide 30% of the epidemic critical seconds and resource disaster prevention threshold.</li>
 </ul>
 </li>
-<li><strong>EAM_Class_Tanks (Chariot Specialization Think Tank)</strong></li>
+<li><strong>EAM_Class_Tanks (Tank Specialization Think Tank)</strong></li>
 <li><strong>Responsibilities</strong>: Represent the six major tanks of blood DK, revenge DH, anti-cavalry, anti-war, wine monk, and bear druid, and provide configuration suggestions for active damage reduction, survival buff, and boss peak damage reduction warning.</li>
 <li><strong>EAM_Class_Healers (Healing Expertise Think Tank)</strong></li>
 <li><strong>Responsibilities</strong>: Represents the six major treatments of Debu, Divine/Discipline, Priest, Monk, Sasha, Cavalry, and Envocation Master, and provides practical suggestions on multi-target HoT coverage, random triggering process, and team frame mana consumption.</li>

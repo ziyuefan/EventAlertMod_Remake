@@ -11,7 +11,7 @@
 - 若問題與 WoW Retail API 有關，需標示資料來源為檔案、搜尋索引、NotebookLM、或實機驗證。
 - 若問題與工具或環境有關，需記錄作業系統、指令、錯誤訊息摘要與可行替代方案。
 - 若同一類問題或作業流程重複出現，需評估是否整理成 EventAlertMod 專案唯一 SKILL。
-- 若問題涉及污點、被阻止的動作、戰鬥鎖定或受保護的框架，需記錄觸發路徑、戰鬥狀態、相關框架/API 與可重置步驟。
+- 若問題涉及污染、被阻止的動作、戰鬥鎖定或受保護的框架，需記錄觸發路徑、戰鬥狀態、相關框架/API 與可重置步驟。
 
 ## 建議格式
 ```md
@@ -203,7 +203,7 @@
 - 脅：
 在也沒有舊版EAM全域變數（如`EA_Items`、`EA_AltItems`等）的全新安裝環境下（或WTF資料夾被清除），重寫後的EAM登錄後一個ICON沒有出現。
 - 症狀與原因判斷：
-  1. `SavedVariables.lua` 在初始化時，除了執行 `importLegacyTables` 嘗試從舊版本全局變數遷移設定之外，沒有將 `EAM.Data.SpellArray` 中目前職業的預設監控寫入 `EAM_DB.alerts` 中。
+  1. `SavedVariables.lua` 在初始化時，除了執行 `importLegacyTables` 嘗試從舊版本全域變數遷移設定之外，沒有將 `EAM.Data.SpellArray` 中目前職業的預設監控寫入 `EAM_DB.alerts` 中。
 2.當全新載入時，舊版變數不存在，因此`alerts`清單完全為空。
   3.各個監控服務（`AuraService`、`CooldownService`等）均使用`EAM_DB.alerts`進行篩選，若警報為空則直接返回，不引發任何更新事件與進行UI危險，故畫面上一個ICON都沒有出現。
 - 已嘗試方法：
@@ -224,7 +224,7 @@
 - 已嘗試方法：
   備份 `UI/Renderer.lua` 和 `UI/IconPool.lua` 至 `backup/` 目錄。
 - 有效解法：
-1. **實施統一降級計時OnUpdate系統**：在`UI/Renderer.lua`中實施一個全局共享、基於單一OnUpdate框架的`legacyTimer`系統，提供`registerLegacyTimer`和`unregisterLegacyTimer`。只有在降級圖示啟動時該計時才會啟動。
+1. **實施統一降級計時OnUpdate系統**：在`UI/Renderer.lua`中實施一個全域共享、基於單一OnUpdate框架的`legacyTimer`系統，提供`registerLegacyTimer`和`unregisterLegacyTimer`。只有在降級圖示啟動時該計時才會啟動。
 2. **每秒級小數倒數**：在該 legacyTimer 中，當剩餘時間低於 3 秒時，自動切換為一位小數倒數（如 `2.4`、`0.8`），大約 3 秒整數，提供了幾乎完美顯示的高級體驗。
   3. **恢復防禦註銷**：在 `IconPool.release` 與 `Renderer.render` 過渡時，確實調用 `unregisterLegacyTimer` 清除定時，防止殘影或洩密。
 4. **防止文字重疊**：在`UI/IconPool.lua`的`createIcon`中，對新烘焙的冷卻框架呼叫`cooldown:SetHideCountdownNumbers(true)`，徹底消除文字重疊。
@@ -338,7 +338,7 @@
 4. **EventRouter/Scheduler 故障隔離**：在 EventRouter 的 OnEvent 核心循環循環與 Scheduler 的作業執行回調中，配置參數化 `pcall` 容錯，防止單一模組中斷的模組與模組中斷其他模組中斷的執行。
 - 後續注意事項：實機驗證時需注意在木人戰鬥與首領戰鬥中，觀察多語系 UI 是否加載正確，以及當策劃觸發單一模組錯誤時，EventRouter 和 Scheduler 是否仍然能夠高可用性地與排程其他警報。
 
-### 2026-05-30 12.x戰鬥加密邊界：Secret-Key查詢表崩潰、Tooltip字串污點＆不安全警報戰鬥流暢化修復（已解決）
+### 2026-05-30 12.x戰鬥加密邊界：Secret-Key查詢表崩潰、Tooltip字串污染＆不安全警報戰鬥流暢化修復（已解決）
 
 - 狀態：已解決、待實機驗證
 - 威脅：實機戰鬥中遭遇了幾類核心的安全機制爆發：
@@ -347,7 +347,7 @@
   3.戰鬥中警報框架完全隱形不彈出。
 - 症狀與原因判斷：
 1. **秘密密鑰表索引限制**：WoW 12.x引入了強大的秘密保護。在戰鬥中，從`GetAuraDataByIndex`回傳的`spellId`或是`leftText`都會被標記為`秘密值`。一旦AddOn程式碼直接使用這個`spellId`作為密鑰去對任何非安全的自訂表進行索引操作（例如 `db[spellId]` 或 `SavedVariables[spellId]`），__EAMCODE Key__ __ 引擎會直接爆發並拋出錯誤！
-2. **Secret String Taint限制與參數傳遞**：當工具提示描述在中被標記為Secret時，我們不能在自訂本身的不安全的是函數中進行字符串化（`tostring`）、字符串拼接戰鬥（`..`）或正則匹配（`string.match`）。最關鍵：**所有的秘密值都不能在自訂參數傳遞給任何Lua時被使用函數**！只要確定，函數就會被判定為污點，並在執行涉及秘密的動作時崩潰。
+2. **Secret String Taint限制與參數傳遞**：當工具提示描述在中被標記為Secret時，我們不能在自訂本身的不安全的是函數中進行字符串化（`tostring`）、字符串拼接戰鬥（`..`）或正則匹配（`string.match`）。最關鍵：**所有的秘密值都不能在自訂參數傳遞給任何Lua時被使用函數**！只要確定，函數就會被判定為污染，並在執行涉及秘密的動作時崩潰。
 3. **不安全的UI戰鬥鎖定防衛過度**：先前的代碼為了安全，在 `Renderer.lua` 和 `IconPool.lua` 中只要遇到 `InCombatLockdown()` 為 true，則所有 `CreateFrame`, `SetPoint`, `SetPoint`5__ `Hide`渲染作業全部延後到戰鬥結束後（PLAYER_REGEN_ENABLED）。然而，我們的警報圖示是純顯示框架，不承擔任何安全動作（如點擊、施法、定位等），也沒有繼承任何安全模板。 WoW引擎完全允許在戰鬥中對不安全框架進行定位與顯隱。過度防護反而導致了戰鬥中警報完全消失，失去了AddOn的價值。
 - 已嘗試方法：備份 `Services/AuraService.lua`, `Services/GroundEffectService.lua`, `UI/Renderer.lua`, `UI/Options.lua` 至 `backup/` 目錄。
 - 有效解法：
@@ -464,14 +464,14 @@
 1. **警戒字串靜態緩存（warningStringCache）**：於`Core/Util.lua`引入局部`warningStringCache = {}`。所有邊界警戒字符串在第一次生成時被緩存，後續直接`O(1)`重複使用已分配指針，達成**邊界警戒路徑零字符串GC消耗**！
 2. **大量的遷移次數靜態緩存（STACK_STRINGS）**：於 `UI/Renderer.lua` 引入 `STACK_STRINGS` 數組，預先將 `1` 至 `100` 的大量遷移次數為靜態字串。大量更新時，直接 `O(1)` 從方案取用已緩存字串，完全初始化 `tostring` 的執行期記憶體分配！
 3. **戰鬥佈局延遲與親子育兒控制**：確認渲染器無任何安全動作，非安全的圖標直接隱藏安全調用，而結構性框架育兒與佈局則嚴格推遲至戰鬥結束（PLAYER_REGEN_ENABLED），消除安全污染擴散。
-- 有效解法：重構程式碼已成功寫入`Core/Util.lua`、`UI/Renderer.lua`與`Services/CooldownService.lua`，完美封閉了所有高低頻GC漏洞與污點疑慮。
+- 有效解法：重構程式碼已成功寫入`Core/Util.lua`、`UI/Renderer.lua`與`Services/CooldownService.lua`，完美封閉了所有高低頻GC漏洞與污染疑慮。
 - 後續注意事項：實機測試時需特別開啟 Lua 記憶體監控，確認在滿載戰鬥（如觸發大量 GCD、滿超 buff/debuff 觸發、停滯邊界警告）情況下，EAM 的 GC 記憶體分配量維持在絕對的平穩水平。
 
 ### 2026-05-29 12.0.7 CooldownService 響應式二進位矩陣與雙軌安全綁定最佳化
 
 - 狀態：已解決、待實機驗證
 - 姿勢：為 12.0.7 PTR/Retail 樓層 CooldownService 與渲染器，避免戰鬥高頻事件（如 `SPELL_UPDATE_COOLDOWN`、`SPELL_UPDATE_CHARGES`）所帶來的 GC 負荷、污染污染及視覺殘影。
-- 症狀：高頻事件下，以 `pairs` 遍歷設定表會分配迭代器與臨時表；且秘密值（如冷卻時間、充能資訊）在 Lua 層做數學攻擊、`format` 格式化或與舊時間比較間隙時會直接觸發安全污點或執行期 Lua 錯誤。
+- 症狀：高頻事件下，以 `pairs` 遍歷設定表會分配迭代器與臨時表；且秘密值（如冷卻時間、充能資訊）在 Lua 層做數學攻擊、`format` 格式化或與舊時間比較間隙時會直接觸發安全污染或執行期 Lua 錯誤。
 - 原因判斷：WoW 12.x引入了嚴格的Secret/Protected限制。如果不隔離Secret數據，直接將其作弊或字符串造成可能污染AddOn安全鏈。另外，在高頻事件下分配臨時表會導致微型GC停頓，影響遊戲FPS。
 - 已嘗試方法：
 1.引入**響應式陣列機制（Reactive Array Cache）**：縫隙檢測`db.revision`來增量更新`alertList`陣列，熱路徑（SPELL_UPDATE_COOLDOWN）上完全使用數值`for i = 1, alertCount do`迴圈歷零，達到100%歷零，達到瞬態的極限零點。
@@ -527,7 +527,7 @@
 - 原因判斷：Aura 完整更新是熱路徑候選，若警報數量重複掃描，使用者設定越多成本增益；選項若不跨越 `SavedVariables` 突變 API，容易繞過架構修訂與服務刷新。
 - 已嘗試方法：新增`fullScanUnit`，先清單位元光環緩存，再依玩家/target過濾掃描一次並與警報索引分派；未命中的設定警報統一標記為不活動。選項新增spellID/itemID輸入框與四類add/remove按鈕，成功後呼叫服務刷新。
 - 有效解法：以 `auraInstanceID` 快取搭配 `alertIndex[unit][spellID]` 分派狀態；Options 只穿透`SavedVariables.add/remove` API 寫入狀態，直接修改服務運作時。
-- 後續注意事項：需在 WoW Retail/PTR 驗證 `C_UnitAuras.GetAuraDataByIndex(unit, index, filter)` 在 12.0.7 的實際欄位安全性、過濾行為、戰鬥中初次建立選項框架的污點風險，以及 __EAMCO _EA Retail 12.x是否仍可直接使用。
+- 後續注意事項：需在 WoW Retail/PTR 驗證 `C_UnitAuras.GetAuraDataByIndex(unit, index, filter)` 在 12.0.7 的實際欄位安全性、過濾行為、戰鬥中初次建立選項框架的污染風險，以及 __EAMCO _EA Retail 12.x是否仍可直接使用。
 
 ### 2026-05-27 PowerShell 正規表示式與變數參考問題
 - 狀態：已解決
@@ -575,7 +575,7 @@
 - 原因判斷：這些問題會增加秘密值誤用、打擊鎖定/污染風險與熱路徑配置成本。
 - 已嘗試方法：新增集中安全讀取助手、排程器任務池、IconPool預熱與戰鬥時幀建立保護、渲染器延遲佈局、偵錯邊界警告聚合，並將TOC/Constants指定到`120007`。
 - 有效解法：以服務層逐值檢查事實，渲染器只消費歸一化狀態；戰鬥中遇到結構性UI變更先延後到`PLAYER_REGEN_ENABLED`。
-- 後續注意事項：尚未做 WoW Retail/PTR 實機驗證；必須測試 DurationObject、FontString:ClearText、戰鬥佈局延遲、污點/阻止操作日誌、12.0.7 遊戲版本 ID 與 CurseForge5__ 發布。
+- 後續注意事項：尚未做 WoW Retail/PTR 實機驗證；必須測試 DurationObject、FontString:ClearText、戰鬥佈局延遲、污染/阻止操作日誌、12.0.7 遊戲版本 ID 與 CurseForge5__ 發布。
 
 ### 2026-05-26 12.0.7 API 摘要發布，需修改先前待已追蹤狀態
 
@@ -587,15 +587,15 @@
 - 有效解法：更新 `Docs/10_WARCRAFT_WIKI_12X_API_NOTES.md`，將 12.0.7 標記為已存在，並記錄與 EAM 相關的 `C_DurationUtil`、CPU 用法 API 與 __EAMCODE_61 追蹤項目。
 - 後續注意事項：精確做 WoW Retail/PTR 實機驗證；若目標正式版本從 12.0.5 升到 12.0.7，需同步調整 TOC、備份版本與 CurseForge 遊戲版本 ID。
 
-### 2026-05-26 加入污點控制規則
+### 2026-05-26 加入污染控制規則
 
 - 狀態：已解決
 - 感染：使用者要求開發過程中必須避免污染污染。
-- 規則症狀：除規範已涵蓋秘密值、受保護資料與戰鬥安全降級，但缺少獨立的污點控制。
-- 原因判斷：WoW AddOn 屬於不受信任來源；若污染安全/protected執行路徑，戰鬥中可能導致暴雪UI動作被削弱。 EAM 的渲染器、EventRouter、UI框架與API適配器都必須避免把污點帶進動作條、單元框架、銘牌、施法、目標或物品路徑使用。
-- 已嘗試方法：查證魔獸爭霸Wiki安全執行/污點相關資料，並更新`AGENTS.md`、`Docs/02_RETAIL_API_BOUNDARIES.md`、`Docs/12_CODE_COMMENTARY_GUIDE.md`。
+- 規則症狀：除規範已涵蓋秘密值、受保護資料與戰鬥安全降級，但缺少獨立的污染控制。
+- 原因判斷：WoW AddOn 屬於不受信任來源；若污染安全/protected執行路徑，戰鬥中可能導致暴雪UI動作被削弱。 EAM 的渲染器、EventRouter、UI框架與API適配器都必須避免把污染帶進動作條、單元框架、銘牌、施法、目標或物品路徑使用。
+- 已嘗試方法：查證魔獸爭霸Wiki安全執行/污染相關資料，並更新`AGENTS.md`、`Docs/02_RETAIL_API_BOUNDARIES.md`、`Docs/12_CODE_COMMENTARY_GUIDE.md`。
 - 有效解法：將 taint 視為邊界架構；禁止鉤/覆寫 protected 路徑、戰鬥中修改 protected 框架、使用 `forceinsecure` 或將不安全值傳遞到安全鏈。
-- 後續注意事項：發現污點、被阻止的操作或戰鬥鎖定錯誤時，需在本檔案觸發路徑、戰鬥狀態、相關框架/API 與可追加步驟。
+- 後續注意事項：發現污染、被阻止的操作或戰鬥鎖定錯誤時，需在本檔案觸發路徑、戰鬥狀態、相關框架/API 與可追加步驟。
 
 ### 2026-05-26 建立開發問題記錄制度
 
@@ -644,8 +644,8 @@
 1. 在 `AuraService.lua`、`GroundEffectService.lua` 與 `TotemService.lua` 的各自物件池的 `acquire` 內，統一安全地綁定 `state.releaseFunc = Pool.release`，並在 `release` 時使 __EAA__MCOD __EA __MCOD。
   2. 徹底刪除 `Renderer.lua` 的 OnUpdate `IsZero` 輪詢與 `pcall` 宣告。
   3.實施重複使用的零令牌分配池`timerTokenPool`，在`Renderer.render`啟動計時器時，跨越`Scheduler.after`註冊單次延遲任務並提交令牌。
-4. 預見時由 `onDurationTimerExpired` 替代代幣的 `active` 與圖標主動標誌是否一致，從而隱藏準確圖標，保證整個生命週期 100% 零內存配置與零輪詢前鋒。
+4. 預見時由 `onDurationTimerExpired` 替代代幣的 `active` 與圖標主動標誌是否一致，從而隱藏準確圖標，保證整個生命週期 100% 零記憶體配置與零輪詢前鋒。
 - 有效解法：
   - 重構程式碼已成功寫入，4個Lua檔 `AuraService.lua`、`GroundEffectService.lua`、`TotemService.lua` 與 `UI/Renderer.lua` 皆 100% 通過 `luac -p` 的靜態語法安全性檢討。
 - 後續注意事項：
-- 在WoW正式服啟動EAM，高度切換Buff與冷卻時觀察記憶體曲線完全是否水平不上升，並確認當光環逼近時能準確自動消失，完全消除戰鬥污點與JIT中止。
+- 在WoW正式服啟動EAM，高度切換Buff與冷卻時觀察記憶體曲線完全是否水平不上升，並確認當光環逼近時能準確自動消失，完全消除戰鬥污染與JIT中止。

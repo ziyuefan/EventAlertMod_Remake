@@ -71,6 +71,6 @@ Module: Core/EventRouter
 適合轉成 SKILL 的流程包含預算發佈、Lua靜態驗證、WoW API 查詢、SavedVariables遷移檢查、秘密邊界審查、檔案同步與語系檔案同步。尚未驗證、仍需大量人工判斷或涉及敏感資訊的流程，不適用於硬體自動化SKILL。
 
 ## Taint 控制註解規則
-涉及UI框架、暴雪框架、戰鬥鎖定、secure/protected路線的檔案，檔案系統註解必須說明污點避免風險與方式。常見重點包括：是否使用孤兒框架、是否接觸UIParent、是否會在戰鬥中改anchor/visibility/attribute、是否可能存在secret/protected值、是否會hook暴雪框架。
+涉及UI框架、暴雪框架、戰鬥鎖定、secure/protected路線的檔案，檔案系統註解必須說明污染避免風險與方式。常見重點包括：是否使用孤兒框架、是否接觸UIParent、是否會在戰鬥中改anchor/visibility/attribute、是否可能存在secret/protected值、是否會hook暴雪框架。
 
-若程式碼刻意避免某些Blizzard API或hook方式，應在註解中保留原因，未來重構時將污點重新避免引入。
+若程式碼刻意避免某些Blizzard API或hook方式，應在註解中保留原因，未來重構時將污染重新避免引入。
