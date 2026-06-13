@@ -12,7 +12,7 @@
 - 靜態常數可能會被凍結。運行時狀態和 SavedVariables 絕不能
   被凍結。
 - 每個主動載入的來源檔案必須以模組註解區塊開頭
-  記錄目的、設計理念、所有權、突變邊界，以及
+  記錄目的、設計理念、所有權、變更邊界，以及
   保養注意事項。當模組合約發生變化時，請保持此評論最新。
   請參閱“Docs/12_CODE_COMMENTARY_GUIDE.md”。
 
@@ -29,7 +29,7 @@
 - 本地 API 別名表
 - 僅限正式服的防護結果
 
-突變：
+狀態變更：
 - 可以初始化外掛名稱空間一次
 - 不得改變 SavedVariables
 
@@ -42,7 +42,7 @@
 輸出：
 
 - `CreateTable`、`FreezeTable`、`IsFrozen`、泳池助手、安全擦除/release、
-  穩定的枚舉助手，調試斷言
+  穩定的枚舉助手，除錯斷言
 - Secret/protected 值安全讀取助手：
   - `readSafeField`
   - `readSafeScalar`
@@ -50,7 +50,7 @@
   - `appendBoundaryWarning`
   - `clearTimer`
 
-突變：
+狀態變更：
 
 - 僅擁有輔助本地池
 
@@ -65,7 +65,7 @@
 - 凍結枚舉表、模組名稱、事件名稱、狀態常數、模式
   版本、哨兵常數，例如 `UNKNOWN` 和 `EMPTY`
 
-突變：
+狀態變更：
 
 - 凍結後沒有
 
@@ -79,7 +79,7 @@
 輸出：
 - 透過參數化 `pcall` 錯誤隔離來分派對已註冊模組處理程序的調用，確保一個模組處理程序中的故障不會阻止其他註冊者
 
-突變：
+狀態變更：
 
 - 擁有事件框架與事件註冊表
 - 每個活動報名沒有關閉分配
@@ -92,10 +92,10 @@
 
 輸出：
 
-- 在保護性 `pcall` 隔離下進行回調度調度，確保捕獲作業運行時故障並且不會破壞全域程式碼框架
-- 無論回調成功與否，安全佇列清理和任務記錄回收
+- 在保護性 `pcall` 隔離下進行回呼度調度，確保捕獲作業運行時故障並且不會破壞全域程式碼框架
+- 無論回呼成功與否，安全佇列清理和任務記錄回收
 
-突變：
+狀態變更：
 
 - 擁有一個 OnUpdate 框架、到期佇列、可重複使用作業記錄和任務池
 - 沒有每個圖示的調度表
@@ -113,12 +113,12 @@
 - 驗證警告
 - 使用者觸發的警報添加/remove光環、法術冷卻和物品冷卻的API
 
-突變：
+狀態變更：
 
 - 在載入/migration/config變更期間可能會改變SavedVariables
 - 不得寫入高頻運轉時狀態
 - 不得結凍 SavedVariables
-- 在使用者觸發的配置突變後增加 `EAM_DB.revision`
+- 在使用者觸發的配置變更後增加 `EAM_DB.revision`
 
 ## Core/Performance
 
@@ -130,7 +130,7 @@
 
 - 節流決策、分析樣本、共享表池
 
-突變：
+狀態變更：
 
 - 僅擁有分析/session 計數器
 
@@ -150,7 +150,7 @@
 - 配置修訂感知警報索引，按單元鍵入並配置 spellID
 - 完整更新回退掃描每個追蹤單元/filter一次，重建單元光環緩存，並將不匹配的配置警報標記為非活動狀態
 
-突變：
+狀態變更：
 
 - 僅擁有 aura 運行時快取和 `AuraStatePool`
 - 不得創建 UI 框架
@@ -168,7 +168,7 @@
 -batch/throttled 呼叫包裝在佈局批次控制中的 `Renderer.render` (`Renderer.BeginBatch` / `Renderer.EndBatch`)
 - 在 UI 隱藏渲染完成後，透過 `state.releaseFunc(state)` 回收多類型狀態表以回收非活動狀態（Aura、Cooldown、Item、GroundEffect、Totem）
 
-突變：
+狀態變更：
 
 - 擁有掛起的更新佇列和節流調度程序狀態
 - 不擁有 AlertState、SavedVariables 或 UI 圖標
@@ -185,7 +185,7 @@
 - 標準化 `CooldownState` 和 `AlertState`
 - 髒警報 ID
 
-突變：
+狀態變更：
 
 - 僅擁有法術冷卻緩存
 
@@ -202,7 +202,7 @@
 - 每個 spellID 映射活動主機圖示幀
 - 非戰鬥中本機幀的零污染不可見設定（Alpha = 0）
 
-突變：
+狀態變更：
 
 - 僅擁有內部 spellID 到框架映射註冊表
 - 不得在戰鬥中修改安全屬性
@@ -220,7 +220,7 @@
 - 標準化 `ItemCooldownState` 和 `AlertState`
 - 快取狀態
 
-突變：
+狀態變更：
 
 - 擁有物品冷卻運轉時緩存
 - 任何物品-法術映射快取都必須是增量且可中斷的
@@ -236,7 +236,7 @@
 - 安全名稱/icon/link 可用事實
 - 有界查找緩存，僅儲存安全欄位和邊界警告
 
-突變：
+狀態變更：
 
 - 擁有查找緩存
 - 必須避免激烈的戰鬥查詢循環
@@ -252,7 +252,7 @@
 - 當前等級功率類型的動態中央堆疊編號和 AlertState，在功率更新期間受到 `pcall` 隔離和 `issecretvalue` 檢查的保護，以繞過戰鬥中的限制值 /table 運行時異常
 - 直接佈局渲染到 classPower 框架
 
-突變：
+狀態變更：
 
 - 除了調度事件狀態更新和防禦邊界記錄之外，沒有其他操作
 
@@ -260,7 +260,7 @@
 
 輸入：
 
-- 配置的地面效應項目（動態/manual模式）
+- 配置的地面效果（動態/manual模式）
 - 未過濾的戰鬥日誌事件（SPELL_CAST_SUCCESS）
 - 施法成功期間低頻 C_TooltipInfo.GetSpellByID 查找
 
@@ -270,7 +270,7 @@
 - 從 `GroundEffectStatePool` 分配的標準化 `GroundEffectState` 和 `AlertState`
 - 透過 Scheduler.after 安排發布計時器
 
-突變：
+狀態變更：
 
 - 僅擁有地面效應活動計時器表、activeStates 快取和 `GroundEffectStatePool`
 
@@ -286,7 +286,7 @@
 - `EAM_TOTEM_STATE_CHANGED` 事件觸發到 EventRouter 並帶有狀態和 frameName
 - 從 `TotemStatePool` 分配的標準化 `TotemState` 和 `AlertState`
 
-突變：
+狀態變更：
 
 - 僅擁有 activeStates 快取和 `TotemStatePool`
 
@@ -301,7 +301,7 @@
 - 取得/released圖示框記錄
 - 預熱非活動圖示以避免創建戰鬥中框架
 
-突變：
+狀態變更：
 
 - 擁有框架、紋理、冷卻區域、FontStrings
 - 框架創建應該在初始化期間或僅在受控增長期間發生
@@ -318,7 +318,7 @@
 - 可見的UI狀態
 - 佈局批次控制端點 (`Renderer.BeginBatch` / `Renderer.EndBatch`) 以延遲昂貴的 X/Y 佈局計算
 
-突變：
+狀態變更：
 
 - 僅改變 UI 框架
 - 從不取得aura/cooldown數據
@@ -334,19 +334,19 @@
 
 輸出：
 
-- 透過 `SavedVariables` 配置突變
+- 透過 `SavedVariables` 配置變更
 - 使用本機「GetSpecializationInfoForClassID(classID, specIndex)」和強大的靜態後備表進行動態、本地化專業化下拉過濾，確保 100% 本地化類別 /spec UI 文本，無需硬編碼
 - 用於明確 add/remove 操作的最小遊戲內面板：
   - 玩家光環spellID
   - 目標光環spellID
   - 法術冷卻時間spellID
   - 物品冷卻時間itemID
-- 用戶觸發突變成功後立即刷新服務
+- 用戶觸發變更成功後立即刷新服務
 
-突變：
+狀態變更：
 
 - 僅 UI 小部件和明確配置值
-- 如果正式服阻止或面臨受保護的 UI 突變的風險，則必須在戰鬥中延遲首次框架創建
+- 如果正式服阻止或面臨受保護的 UI 變更的風險，則必須在戰鬥中延遲首次框架創建
 
 ## UI/Slash
 
@@ -359,7 +359,7 @@
 - 設定操作、狀態文字、偵錯匯出請求
 - 針對玩家光環、目標光環、法術冷卻時間和物品冷卻時間的簡單“/eam添加”和“/eam刪除”命令
 
-突變：
+狀態變更：
 - 可呼叫模組API；不得直接編輯服務內部
 - 僅透過「Core/SavedVariables」寫入持久警報配置
 
@@ -374,9 +374,9 @@
 - 緊湊的`DebugSnapshot`
 - 來自服務狀態的聚合邊界警告
 
-突變：
+狀態變更：
 
-- 僅擁有瞬時調試記錄
+- 僅擁有瞬時除錯記錄
 
 ## Debug/PromptExport
 
@@ -389,6 +389,6 @@
 
 - 類似 JSON 的緊湊文本
 
-突變：
+狀態變更：
 
 - 除了瞬態字串產生器緩衝區之外沒有任何其他

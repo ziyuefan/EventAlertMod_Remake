@@ -44,7 +44,7 @@
 - 12.x引入了強大的C語言底層Blocked Aura引擎`C_UnitAuras.AddBlockedAura(unit, auraInstanceID)`與時間黑盒`C_UnitAuras.GetAuraDuration(unit, auraInstanceID)`，提供0-GC和100%安全的防污染執行鏈。
 - 12.x 引進了資料驅動型 Tooltip 系統，以 `C_TooltipInfo.GetUnitBuffByAuraInstanceID(unit, auraInstanceID)` 與 `GetUnitDebuffByAuraInstanceID` 取代了舊式的 `SetUnitBuff` 模擬渲染，將資料與 UI 徹底分離，並取代了舊式的 `SetUnitBuff` 模擬渲染，將資料與 UI 徹底分離，並完美接了一個橋接橋。
 - `Secret_Values`、`ScriptObject_DurationObject`、`C_Spell.GetSpellCooldown`、`C_TooltipInfo.GetUnitBuffByAuraInstanceID` 這些單頁檔案已論證支撐 EAM 的架構決策：資料來源層必須處理秘密邊界，渲染器應盡量遷移暴雪小工具顯示持續時間。
-- 12.0.7 的公開 API 變更摘要目前未顯示直接影響 EAM aura/cooldown/item Cooldown 核心邏輯的大型 API 變更，但新增 __EAM__CODE_4__6、EA DurationObject / 定時器顯示追蹤項目。
+- 12.0.7 的公開 API 變更摘要目前未顯示直接影響 EAM aura/cooldown/item Cooldown 核心邏輯的大型 API 變更，但新增 __EAM__CODE_4__6、EA DurationObject / 定時器顯示追蹤事項。
 
 注意：以上是文件與索引索引交叉整理，尚未在 WoW Retail 12.x 用戶端內實機驗證。
 
@@ -65,7 +65,7 @@
 - 單位識別：局部限制單位代幣的 API，例如 `UnitGUID`、`UnitAura`、health/power 類別 API，遇到不支援代幣時改為回傳 `nil` 或預設值，不再直接遇到不支援代幣時改為回傳 `nil` 或預設值，不再直接遺失。 EAM 仍不得依賴錯誤作為控制流程。
 - 檔案資源：新增`C_UIFileAsset`，可用`GetFileID`、`IsKnownFile`、`IsLooseFile`在使用字體與材質前驗證資源是否存在。 EAM可在Options/Renderer初始化時低頻使用，不得放熱路徑。
 - Profiling：`GetEventCPUUsage`、`GetFunctionCPUUsage`、`GetScriptCPUUsage`重新開放給AddOn。 EAM只可用於按需debug/profiling，進入不可常態運行時。
-- 調試秘鑰：`debugstack` 與 `debuglocals` 若目前函式或呼叫某個曾接觸過的秘鑰值，可能回傳秘鑰值。 EAM 偵錯導出不得把 stack/local 設為安全文字直接輸出。
+- 除錯秘鑰：`debugstack` 與 `debuglocals` 若目前函式或呼叫某個曾接觸過的秘鑰值，可能回傳秘鑰值。 EAM 偵錯導出不得把 stack/local 設為安全文字直接輸出。
 - ScrollBox secret：官方修改secret出現在滾動框區域時造成的問題。 EAM若未來做設定列表，仍需避免把secret/protected原始值放入可捲動UI。
 - 聊天增益事件：貨幣、榮譽、戰利品、金錢、聲望、XP增益聊天事件不再秘密。 EAM目前尚未以聊天事件作核心資料來源，僅包含後續debug/通知參考。
 - TOC 每個指令條件：TOC 支援每個指令條件，例如`## Dep: Addon_X [AllowLoadGameType classic]`。 EAM 仍維持正式服，不因這有能力重新引入經典分支。
@@ -226,7 +226,7 @@ EAM 規則：
 
 - 不要靠斷斷絕秘密衍生的文字。
 - `C_TooltipInfo`解析前仍要先檢查文字是否秘密。
-- 調試導出不要把秘密字串透過 `format` 硬轉出來。
+- 除錯導出不要把秘密字串透過 `format` 硬轉出來。
 -timer/name text的長度控制應在安全字串上做。
 
 ### 玩家統計與 Aura Secret 關聯
@@ -268,7 +268,7 @@ EAM 渲染器規則：
 - 新增`C_DurationUtil.CreateManualClock`。
 - 刪除 `C_DurationUtil.GetCurrentTime`。
 - 新增分析/CPU使用類別API：`GetEventCPUUsage`、`GetFunctionCPUUsage`、`GetScriptCPUUsage`。
-- 大多數其他新增項目偏向Delves、Housing、Merchant、PartyInfo、UIFileAsset等系統，暫時不作為EAM核心依賴。
+- 大多數其他新增物品偏向Delves、Housing、Merchant、PartyInfo、UIFileAsset等系統，暫時不作為EAM核心依賴。
 
 EAM 文件規則：
 
@@ -653,7 +653,7 @@ EAM 規則：
 
 ## 偵錯匯出規則
 
-調試導出必須分層：
+除錯導出必須分層：
 ```js
 {
   facts: {},
@@ -672,7 +672,7 @@ EAM 規則：
 - 不自動導出。
 - 不要把秘密值轉字符串。
 
-## 直播正式服 12.x 必測項目
+## 直播正式服 12.x 必測事項
 
 以下都不能只靠文件假設：
 

@@ -43,13 +43,13 @@
 - `EventAlert_Animation.lua`：視覺動畫/背景助手。
 - `EventAlert_Util.lua`：印刷助理、工具提示助手、光環查找、
   增益清單缺陷、發光助手、法術/天賦檢查。
-- `EventAlert_EAFun.lua`：滾動/調試、遷移的兼容性外觀，
+- `EventAlert_EAFun.lua`：滾動/除錯、遷移的兼容性外觀，
   工具提示、條件、計時器文字、分組結果、版面配置和提示綁定。
 - `EventAlert_SlashCommand.lua`：`/eam` 指令處理。
 - `EventAlert_GroupEvent.lua`：使用者定義的條件/群組警報檢查。
 - `EventAlert_Core.lua`：插件加載，事件註冊/調度，大多數
   頂級事件處理程序、查找、版本檢查、更新循環。
-- `EventAlert_ItemSpellCache.lua`：專案到道具緩存瀏覽器和大型項目
+- `EventAlert_ItemSpellCache.lua`：物品到法術快取瀏覽器與大型物品
   掃描。
 - `EventAlert_Aura_Core.lua`：完整/增量光環緩存助手。
 - `EventAlert_Aura_Self.lua`：玩家/寵物光環警報和自我圖示佈局。
@@ -158,7 +158,7 @@
 3.服務讀取安全的正式服API並更新擁有的執行時間狀態。
 4. 服務發布或標記「AlertState」記錄。
 5. `Renderer`接收接收警報狀態並更新池圖示。
-6.「調度程序」僅處理刷新、回退採樣和調試突發。
+6.「調度程序」僅處理刷新、回退採樣和除錯突發。
 7. __​​EAMCODE_0__ 在載入時讀取/遷移，並且僅更改配置讀取。
 
 ## 事件流程
@@ -197,13 +197,13 @@
 
 ## 限正式服改計劃
 1.在`Core/`、`Services/`下匯入新的模組元件並載入順序，
-   “UI/”和“調試/”。
+   “UI/”和“除錯/”。
 2. 建立新表時僅保留舊的“Main/”表作為遷移/參考
    架構。
 3. 將 SavedVariables 遷移到版本化設定檔和警報清單模型。
 4. 將本地化字符串移植到獨立的本地化模組中。
 5. 在移植服務前實施`EventRouter`和`Scheduler`。
-6.移植玩家光環、目標光環、角色冷卻、冷卻服務項目。
+6.移植玩家光環、目標光環、角色冷卻、冷卻服務功能。
 7.實施池化渲染器放置影格建立移出服務模組。
 8.針對新服務重建斜線指令並除錯導出器。
 9. 從活動負載中刪除舊版 TOC 和 Classic/MOP 相容性分支。

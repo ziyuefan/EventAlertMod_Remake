@@ -460,7 +460,7 @@
 <ul>
 <li>狀態：已解決</li>
 <li>脅：
-  執行自動化資源共享時，安全警報指控<code>Constants.lua</code>中的<code>BOUNDARY_SECRET_VALUE = "secretValue"</code>與<code>ClassPowerService.lua</code>中調試日誌內字符串拼接的<code>"Secret"</code>為敏感資訊洩露，強行中斷資源。</li>
+  執行自動化資源共享時，安全警報指控<code>Constants.lua</code>中的<code>BOUNDARY_SECRET_VALUE = "secretValue"</code>與<code>ClassPowerService.lua</code>中除錯日誌內字符串拼接的<code>"Secret"</code>為敏感資訊洩露，強行中斷資源。</li>
 <li>原因判斷：
   到底什麼正規表示式對 <code>secret</code> 單字進行了無腦匹配，這會誤配到 EAM 核心 Secrecy（結構/安全）防衛機製本身的常規變數與字符串。</li>
 <li>已嘗試方法：無。</li>
@@ -566,7 +566,7 @@
   僅在 <code>cooldownInfo</code> <strong>不為 nil</strong> 時（代表該液化確實具有冷卻資料或在冷卻中），且在 <code>infoSafe</code> 為 <code>false</code> 的基礎狀態下，才進行防禦性 `shouldShow = 7_7__ 的判斷；若 EAM 6_6__9 則直接顯示關係。</li>
 <li>後續注意事項：實機驗證時，請少年欸重新加載，確認這15個沒有在冷卻中的法師技能圖標是否已正確消失；只有在技能真正進入冷卻時才彈出圖標並正常顯示倒數。</li>
 </ul>
-<h3 id="2026-06-07-eamai">2026-06-07 擴展EAM調試診斷日誌統計資訊以加強AI調試分析（已解決）</h3>
+<h3 id="2026-06-07-eamai">2026-06-07 擴展EAM除錯診斷日誌統計資訊以加強AI除錯分析（已解決）</h3>
 <ul>
 <li>狀態：已解決</li>
 <li>脅：
@@ -598,7 +598,7 @@
 <li><strong>多框架累狀態加</strong>：修改<code>Debug/PromptExport.lua</code>與<code>Debug/DebugState.lua</code>，將<code>visibleIcons</code>改為加7大Alert Frame的<code>orderCount</code>；把<code>layoutDirty</code>改為檢查若有任何一個<code>fState.layoutDirty</code>6。</li>
 <li><strong>多框架存在偵測</strong>：在 <code>PromptExport.lua</code> 內對 7 大警報框架（如 <code>selfAura</code>、<code>targetAura</code> 等）進行格式化偵測與格式化輸出，只要至少有一個框架存在，即判定 <code>alertFrame.exists</code> 為 <code>true</code>，並精確呈現每個隱座狀態。
   3.靜態 <code>luac -p</code> 全案語法安全性驗證，修改之文件 100% 通過語法安全性檢查。</li>
-<li>後續注意事項：實機驗證時，請少年欸重新加載，再次匯出調試日誌JSON，驗證<code>visibleIcons</code>數值是否已與實體圖示渲染完全一致（顯示大於0的正確數量），並且聊天視窗不再噴出錯誤。</li>
+<li>後續注意事項：實機驗證時，請少年欸重新加載，再次匯出除錯日誌JSON，驗證<code>visibleIcons</code>數值是否已與實體圖示渲染完全一致（顯示大於0的正確數量），並且聊天視窗不再噴出錯誤。</li>
 </ul>
 <h3 id="2026-06-07-native-frameregisterevent">2026-06-07 註冊內部自訂事件至native Frame:RegisterEvent導致嘗試註冊未知事件當機（已解決）</h3>
 <ul>
@@ -758,7 +758,7 @@
 <li><strong>全代碼本地化清掃</strong>：將全案中所有硬編碼字符串統一起來至本地化對照表<code>EAM.L</code>（支持五大語系共144個詞條）。在取代工具中明確宣告UTF-8讀寫，並以<code>errors='ignore'</code>保護，避免編碼崩潰。</li>
 <li><strong>動態專精本地化API重構</strong>：在<code>UI/Options.lua</code>的專精過濾下拉選單中引入<code>CLASS_TOKEN_TO_ID</code>映射，優先調用API <code>GetSpecializationInfoForClassID</code>獲取最準確的本地化專精備份名稱，並提供雙軌退防線。</li>
 <li><strong>能量防護防禦</strong>：為 <code>detectClassPower</code> 與 <code>updatePower</code> 配置 <code>pcall</code> 隔離與 <code>issecretvalue</code> 防禦，防禦戰鬥中能量數值為秘密表時的大小比較造成的 Lua 崩潰。</li>
-<li><strong>EventRouter/Scheduler 故障隔離</strong>：在 EventRouter 的 OnEvent 核心循環循環與 Scheduler 的作業執行回調中，配置參數化 <code>pcall</code> 容錯，防止單一模組中斷的模組與模組中斷其他模組中斷的執行。</li>
+<li><strong>EventRouter/Scheduler 故障隔離</strong>：在 EventRouter 的 OnEvent 核心循環循環與 Scheduler 的作業執行回呼中，配置參數化 <code>pcall</code> 容錯，防止單一模組中斷的模組與模組中斷其他模組中斷的執行。</li>
 <li>後續注意事項：實機驗證時需注意在木人戰鬥與首領戰鬥中，觀察多語系 UI 是否加載正確，以及當策劃觸發單一模組錯誤時，EventRouter 和 Scheduler 是否仍然能夠高可用性地與排程其他警報。</li>
 </ul>
 <h3 id="2026-05-30-12xsecret-keytooltip">2026-05-30 12.x戰鬥加密邊界：Secret-Key查詢表崩潰、Tooltip字串污染＆不安全警報戰鬥流暢化修復（已解決）</h3>
@@ -868,7 +868,7 @@
 <li>狀態：已解決、待實機驗證</li>
 <li>依托：實機測試中Alert框架完全沒有彈出，且監控項目需要更獨立與細部的Options UI分類配置。</li>
 <li>症狀：
-1.玩家施放技能、獲得Buff或進行背包冷卻物品測試時，畫面上完全無警報框架或圖表，但在Slash指令中調試診斷即可成功呼叫。</li>
+1.玩家施放技能、獲得Buff或進行背包冷卻物品測試時，畫面上完全無警報框架或圖表，但在Slash指令中除錯診斷即可成功呼叫。</li>
 <li>物品冷卻在選項 UI 裡缺乏獨立的分類（第 5 個紅色按鈕受到特殊關注，物品沒有明顯的眼睛入口）。</li>
 <li>原因判斷：</li>
 <li><strong>第一個致命Bug</strong>：<code>Services/ItemCooldownService.lua</code>和<code>Debug/PromptExport.lua</code>開頭的Lua註解解寫成<code>-- [[</code>（多了一個空格），導致Lua編譯器報出語法錯誤而令這兩個關鍵模組在WoW啟動時完全載入失敗，破壞了載入鏈。</li>
@@ -956,7 +956,7 @@
 <li>狀態：待實機驗證</li>
 <li>構想：接續P2細節，將AuraService的完整更新後備從逐警報掃描改成單位體系單次掃描，並補上可實際新增/刪除設定的選項面板。</li>
 <li>症狀：舊回退很容易在 <code>UNIT_AURA</code> 完全更新或目標變更時對同一單位重複掃描；選項仍為偏存根，無法提供一般使用者可見的設定入口。</li>
-<li>原因判斷：Aura 完整更新是熱路徑候選，若警報數量重複掃描，使用者設定越多成本增益；選項若不跨越 <code>SavedVariables</code> 突變 API，容易繞過架構修訂與服務刷新。</li>
+<li>原因判斷：Aura 完整更新是熱路徑候選，若警報數量重複掃描，使用者設定越多成本增益；選項若不跨越 <code>SavedVariables</code> 變更 API，容易繞過架構修訂與服務刷新。</li>
 <li>已嘗試方法：新增<code>fullScanUnit</code>，先清單位元光環緩存，再依玩家/target過濾掃描一次並與警報索引分派；未命中的設定警報統一標記為不活動。選項新增spellID/itemID輸入框與四類add/remove按鈕，成功後呼叫服務刷新。</li>
 <li>有效解法：以 <code>auraInstanceID</code> 快取搭配 <code>alertIndex[unit][spellID]</code> 分派狀態；Options 只穿透<code>SavedVariables.add/remove</code> API 寫入狀態，直接修改服務運作時。</li>
 <li>後續注意事項：需在 WoW Retail/PTR 驗證 <code>C_UnitAuras.GetAuraDataByIndex(unit, index, filter)</code> 在 12.0.7 的實際欄位安全性、過濾行為、戰鬥中初次建立選項框架的污染風險，以及 __EAMCO _EA Retail 12.x是否仍可直接使用。</li>
@@ -971,12 +971,12 @@
 <li>有效解法：專案內複雜搜尋優先使用 <code>rg -n 'pattern' path</code>；若必須在 <code>powershell -Command</code> 中使用腳本變量，需寫成 <code>`$variable</code>，或改用 <code>.ps1</code> 工具。</li>
 <li>後續注意事項：重複出現後可整理成「EAM Windows 靜態檢查」專案技能，避免每次珠寶令牌排查引用。</li>
 </ul>
-<h3 id="2026-05-26-p1p2unit_aura">2026-05-26 P1/P2：斜線突變與UNIT_AURA增量緩存</h3>
+<h3 id="2026-05-26-p1p2unit_aura">2026-05-26 P1/P2：斜線變更與UNIT_AURA增量緩存</h3>
 <ul>
 <li>狀態：待實機驗證</li>
 <li>依托：依P1/P2目標繼續整理EAM正式服重寫的核心功能與低GC熱路徑。</li>
-<li>症狀：轉換器<code>/eam</code>僅調試/選項存根，SavedVariables沒有正式添加/remove API；AuraService在<code>UNIT_AURA</code>時仍回退全量掃描，未使用AuraService在<code>UNIT_AURA</code>時仍回退全量掃描，未使用<code>updateInfo</code>有效負載。</li>
-<li>原因判斷：若沒有穩定配置突變API，後續選項UI無法安全寫入設定；若每次<code>UNIT_AURA</code>都掃alert/full光環，會增加熱路徑成本。</li>
+<li>症狀：轉換器<code>/eam</code>僅除錯/選項存根，SavedVariables沒有正式添加/remove API；AuraService在<code>UNIT_AURA</code>時仍回退全量掃描，未使用AuraService在<code>UNIT_AURA</code>時仍回退全量掃描，未使用<code>updateInfo</code>有效負載。</li>
+<li>原因判斷：若沒有穩定配置變更API，後續選項UI無法安全寫入設定；若每次<code>UNIT_AURA</code>都掃alert/full光環，會增加熱路徑成本。</li>
 <li>已嘗試方法：新增 <code>SavedVariables.add/remove</code> 系列 API、<code>/eam add/remove/export/help</code>、AuraService 配置修訂索引、EAM__MCOD. <code>updatedAuraInstanceIDs</code> / <code>removedAuraInstanceIDs</code>處理增量，以及偵錯快照的DB revision/cache/renderer計數器。</li>
 <li>有效解法：Slash只寫SavedVariables，服務負責刷新/render；AuraService有<code>updateInfo</code>時走delta，無payload或完整更新才回退完整掃描。</li>
 <li>後續注意事項：尚需 WoW Retail/PTR 實機驗證 <code>UNIT_AURA</code> 有效負載 實際欄位、秘密光環 spellID 行為、移除實例快取 命中率與目標快速變化行為。</li>
@@ -1018,7 +1018,7 @@
 <li>症狀：包括 <code>Docs/10_WARCRAFT_WIKI_12X_API_NOTES.md</code> 仍記錄 12.0.7 尚未找到 API 摘要。</li>
 <li>原因判斷：魔獸爭霸Wiki近期已新增12.0.7 API更改頁，先前記錄已過時。</li>
 <li>已嘗試方法：重新查詢魔獸爭霸維基API變更摘要、12.0.5、12.0.7與AddOn社群討論。</li>
-<li>有效解法：更新 <code>Docs/10_WARCRAFT_WIKI_12X_API_NOTES.md</code>，將 12.0.7 標記為已存在，並記錄與 EAM 相關的 <code>C_DurationUtil</code>、CPU 用法 API 與 __EAMCODE_61 追蹤項目。</li>
+<li>有效解法：更新 <code>Docs/10_WARCRAFT_WIKI_12X_API_NOTES.md</code>，將 12.0.7 標記為已存在，並記錄與 EAM 相關的 <code>C_DurationUtil</code>、CPU 用法 API 與 __EAMCODE_61 追蹤事項。</li>
 <li>後續注意事項：精確做 WoW Retail/PTR 實機驗證；若目標正式版本從 12.0.5 升到 12.0.7，需同步調整 TOC、備份版本與 CurseForge 遊戲版本 ID。</li>
 </ul>
 <h3 id="2026-05-26">2026-05-26 加入污染控制規則</h3>
@@ -1133,9 +1133,9 @@
 <ul>
 <li>Status: Resolved
 -Threat:
-  When performing automated resource sharing, the security alert accuses <code>BOUNDARY_SECRET_VALUE = "secretValue"</code> in <code>Constants.lua</code> and <code>"Secret"</code> in the debugging log in <code>ClassPowerService.lua</code> of string concatenation as sensitive information leaks, forcibly interrupting resources.</li>
+  When performing automated resource sharing, the security alert accuses <code>BOUNDARY_SECRET_VALUE = "secretValue"</code> in <code>Constants.lua</code> and <code>"Secret"</code> in the debug log of <code>ClassPowerService.lua</code> of concatenating strings as sensitive information leaks and forcibly interrupts resources.</li>
 <li>Reason determination:
-  What regex does a brainless match on the <code>secret</code> word, which mismatches to the regular variables and strings of the EAM core Secrecy (structural/security) defense mechanism itself.</li>
+  What regex does a brainless match on the <code>secret</code> word, which mismatches to regular variables and strings in the EAM core Secrecy (structural/security) defense mechanism itself.</li>
 <li>Methods Tried: None.</li>
 <li>Effective solution:
   Modify the <code>$patterns</code> regular pattern in <code>Tools/Build-CurseForgePackage.ps1</code> and replace the broad <code>secret</code> with the precise search for specific keys or reasoning words such as <code>client_secret</code> and <code>app_secret</code>.</li>
@@ -1239,7 +1239,7 @@ Back up <code>Services/CooldownService.lua</code> to the <code>backup/</code> di
 Only when <code>cooldownInfo</code> <strong>is not nil</strong> (meaning that the liquefaction does have cooling data or is cooling) and in the basic state of <code>infoSafe</code> is <code>false</code>, the defensive judgment of `shouldShow = 7_7__ is made; if EAM 6_6__9, the relationship is directly displayed.</li>
 <li>Follow-up notes: During actual machine verification, please reload the game to confirm whether the icons of the 15 mage skills that are not in cooling have disappeared correctly; only when the skills actually enter cooling will the icons pop up and the countdown be displayed normally.</li>
 </ul>
-<h3 id="2026-06-07-expand-eam-debugging-diagnostic-log-statistics-to-strengthen-ai-debugging-analysis-resolved">2026-06-07 Expand EAM debugging diagnostic log statistics to strengthen AI debugging analysis (resolved)</h3>
+<h3 id="2026-06-07-expand-eam-debugging-and-diagnostic-log-statistics-to-strengthen-ai-debugging-analysis-resolved">2026-06-07 Expand EAM debugging and diagnostic log statistics to strengthen AI debugging analysis (resolved)</h3>
 <ul>
 <li>Status: Resolved
 -Threat:
@@ -1428,7 +1428,7 @@ Magic World 12.x implements secret value restrictions on cooldown and Aura time 
 1. <strong>Full code localization cleaning</strong>: Unify all hard-coded strings in the entire case into the localization comparison table <code>EAM.L</code> (supports a total of 144 entries in five major language families). Explicitly declare UTF-8 reading and writing in the replacement tool, and protect it with <code>errors='ignore'</code> to avoid encoding crashes.
 2. <strong>Dynamic specialization localization API reconstruction</strong>: Introduce <code>CLASS_TOKEN_TO_ID</code> mapping in the specialization filter drop-down menu of <code>UI/Options.lua</code>, give priority to calling API <code>GetSpecializationInfoForClassID</code> to obtain the most accurate localized specialization backup name, and provide a dual-track retreat line.
   3. <strong>Energy Protection Defense</strong>: Configure <code>pcall</code> isolation and <code>issecretvalue</code> defense for <code>detectClassPower</code> and <code>updatePower</code> to prevent Lua crashes caused by the size comparison when the energy value is a secret table in the battle.
-4. <strong>EventRouter/Scheduler Fault Isolation</strong>: In the OnEvent core loop of EventRouter and the Scheduler's job execution callback, configure parameterized <code>pcall</code> fault tolerance to prevent modules and modules interrupted by a single module from interrupting the execution of other module interruptions.
+4. <strong>EventRouter/Scheduler Fault Isolation</strong>: In the EventRouter's OnEvent core loop loop and Scheduler's job execution callback, configure parameterized <code>pcall</code> fault tolerance to prevent modules that are interrupted by a single module from interrupting the execution of other module interruptions.
 - Follow-up notes: During real-machine verification, you need to pay attention to whether the multi-language UI is loaded correctly during the wooden battle and the boss battle, and whether EventRouter and Scheduler can still schedule other alarms with high availability when planning triggers a single module error.</p>
 <h3 id="2026-05-30-12x-combat-encryption-boundary-secret-key-query-table-crash-tooltip-string-pollution-unsafe-alert-combat-smoothing-repair-resolved">2026-05-30 12.x combat encryption boundary: Secret-Key query table crash, Tooltip string pollution &amp; unsafe alert combat smoothing repair (resolved)</h3>
 <p>-Status: Resolved, waiting for actual machine verification
@@ -1602,7 +1602,7 @@ Magic World 12.x implements secret value restrictions on cooldown and Aura time 
 <p>-Status: awaiting actual machine verification
 - Concept: Continuing with the details of P2, change AuraService's complete update backup from alarm-by-alarm scan to unit system single scan, and add an option panel that can actually add/delete settings.
 - Symptoms: The old fallback makes it easy to scan the same unit repeatedly when <code>UNIT_AURA</code> is fully updated or the target changes; the options are still stubs and cannot provide a setting entry visible to general users.
-- Cause judgment: Aura complete update is a hot path candidate. If the number of alarms is scanned repeatedly, the more cost gain the user sets; if the option does not span the <code>SavedVariables</code> mutation API, it is easy to bypass the architecture revision and service refresh.
+- Cause judgment: Aura complete update is a hot path candidate. If the number of alarms is scanned repeatedly, the more cost gain the user sets; if the option does not change <code>SavedVariables</code> to API, it is easy to bypass the architecture revision and service refresh.
 - Tried method: Add <code>fullScanUnit</code>, first clear the bit Aura cache, then scan once based on player/target filtering and assign it to the alert index; missed set alerts are marked as inactive. The option adds a spellID/itemID input box and four types of add/remove buttons, and the service is refreshed after success.
 - Effective solution: Use <code>auraInstanceID</code> cache with <code>alertIndex[unit][spellID]</code> to dispatch status; Options only penetrates <code>SavedVariables.add/remove</code> API to write status and directly modify the service operation time.
 - Follow-up note: WoW Retail/PTR needs to be verified in <code>C_UnitAuras.GetAuraDataByIndex(unit, index, filter)</code> for actual field security in 12.0.7, filtering behavior, contamination risks of first-time creation of option frames in combat, and whether __EAMCO _EA Retail 12.x can still be used out of the box.</p>
@@ -1613,15 +1613,15 @@ Magic World 12.x implements secret value restrictions on cooldown and Aura time 
 <li>Symptoms: <code>|</code> in regex is incorrectly read into a table; <code>$missing</code> and <code>$line</code> in TOC check are expanded in advance by the outer layer, causing parser errors.</li>
 <li>Reason: The double quotes of Windows PowerShell are not shell-neutral Containers; in nested <code>powershell -Command</code>, regular expression alternation and <code>$</code> variables need to be handled explicitly.</li>
 <li>Tried methods: Use single quotes to wrap regular expressions; use backticks to escape <code>$</code> in TOC check.</li>
-<li>Effective solution: For complex searches within the project, use <code>rg -n 'pattern' path</code> first; if you must use script variables in <code>powershell -Command</code>, you need to write <code>`$variable</code>, or use the <code>.ps1</code> tool instead.</li>
-<li>Follow-up notes: After repeated occurrences, they can be organized into "EAM Windows Static Check" project skills to avoid being referenced every time the jewelry token is checked.</li>
+<li>Effective solution: For complex searches within the project, use <code>rg -n 'pattern' path</code> first; if you must use script variables in <code>powershell -Command</code>, you need to write the <code>`$variable</code>，或改用 <code>.ps1</code> tool.</li>
+<li>Follow-up notes: After repeated occurrences, they can be organized into "EAM Windows Static Check" project skills to avoid being referenced every time for jewelry token troubleshooting.</li>
 </ul>
-<h3 id="2026-05-26-p1p2-slash-mutation-and-unit_aura-incremental-cache">2026-05-26 P1/P2: Slash mutation and UNIT_AURA incremental cache</h3>
+<h3 id="2026-05-26-p1p2-slash-changes-and-unit_aura-delta-cache">2026-05-26 P1/P2: Slash changes and UNIT_AURA delta cache</h3>
 <p>-Status: awaiting actual machine verification
 - Relying on: Continue to sort out the core functions and low GC hot paths of EAM Retail server rewrite based on P1/P2 goals.
-- Symptoms: Converter <code>/eam</code> only debug/option stub, SavedVariables does not officially add /remove API; AuraService still falls back to full scan at <code>UNIT_AURA</code>, not used AuraService still falls back to full scan at <code>UNIT_AURA</code>, unused <code>updateInfo</code> payload.
-- Reason: If there is no stable configuration mutation API, the subsequent option UI cannot safely write settings; if the alert/full halo is scanned every time <code>UNIT_AURA</code>, the hot path cost will be increased.
-- Tried methods: Add <code>SavedVariables.add/remove</code> series API, <code>/eam add/remove/export/help</code>, AuraService configure revision index, EAM__MCOD. <code>updatedAuraInstanceIDs</code> / <code>removedAuraInstanceIDs</code> handle increments, and debug snapshot DB revision/cache/renderer counter.
+- Symptoms: Converter <code>/eam</code> is only bug/option stub, SavedVariables is not officially added /remove API; AuraService still falls back to full scan at <code>UNIT_AURA</code>, not used AuraService still falls back to full scan at <code>UNIT_AURA</code>, unused <code>updateInfo</code> payload.
+- Reason: If there is no stable configuration change API, the subsequent option UI cannot safely write settings; if the alert/full halo is scanned every time <code>UNIT_AURA</code>, the hot path cost will be increased.
+- Tried methods: Added <code>SavedVariables.add/remove</code> series API, <code>/eam add/remove/export/help</code>, AuraService configuration revision index, EAM__MCOD. <code>updatedAuraInstanceIDs</code> / <code>removedAuraInstanceIDs</code> processing increments, and debug snapshot DB revision/cache/renderer counter.
 - Effective solution: Slash only writes SavedVariables, and the service is responsible for refreshing /render; AuraService goes to delta when it has <code>updateInfo</code>, and falls back to the full scan when there is no payload or complete update.
 - Follow-up Notes: Still need WoW Retail/PTR Real machine verification <code>UNIT_AURA</code> Payload Actual slots, secret halo spellID behavior, remove instance cache Hit rate and target rapid change behavior.</p>
 <h3 id="2026-05-26-skill-creator-quick_validate-shortage-python-yaml-module">2026-05-26 Skill Creator quick_validate Shortage Python yaml module</h3>
@@ -1659,7 +1659,7 @@ Magic World 12.x implements secret value restrictions on cooldown and Aura time 
 <li>Symptoms: Included <code>Docs/10_WARCRAFT_WIKI_12X_API_NOTES.md</code> still logged 12.0.7 API summary not found yet.</li>
 <li>Reason: Warcraft Wiki has recently added a 12.0.7 API change page, and the previous records are outdated.</li>
 <li>Tried methods: Re-query the Warcraft Wiki API change summary, 12.0.5, 12.0.7 and AddOn community discussions.</li>
-<li>Valid workaround: update <code>Docs/10_WARCRAFT_WIKI_12X_API_NOTES.md</code>, mark 12.0.7 as existing, and log the <code>C_DurationUtil</code>, CPU usage API and __EAMCODE_61 trace items related to EAM.</li>
+<li>Valid solution: update <code>Docs/10_WARCRAFT_WIKI_12X_API_NOTES.md</code>, mark 12.0.7 as existing, and log the <code>C_DurationUtil</code>, CPU usage API and __EAMCODE_61 trace matters related to EAM.</li>
 <li>Follow-up notes: Accurately conduct WoW Retail/PTR actual machine verification; if the target official version is upgraded from 12.0.5 to 12.0.7, TOC, backup version and CurseForge game version ID need to be adjusted simultaneously.</li>
 </ul>
 <h3 id="2026-05-26-add-pollution-control-rules">2026-05-26 Add pollution control rules</h3>

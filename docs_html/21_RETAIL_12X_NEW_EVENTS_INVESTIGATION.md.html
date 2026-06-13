@@ -441,7 +441,7 @@ EventAlertMod 正式服重寫
 </li>
 <li><strong>EAM 整合策略</strong>：</li>
 <li><strong>限制</strong>：此事件不包含 <code>spellID</code>、<code>sourceGUID</code>、<code>destGUID</code> 等格式化數據，只有純文字與顏色，由此做正則表達式推理的 CPU 負載能力且不具備版本健壯性。<ul>
-<li><strong>應用</strong>：EAM將其註冊至<code>EventRouter</code>作為debug/trace日誌，在用戶開啟調試模式時直接輸出為非凡性卓越的戰鬥事件流，不涉及核心光環/冷卻計時事實。</li>
+<li><strong>應用</strong>：EAM將其註冊至<code>EventRouter</code>作為debug/trace日誌，在用戶開啟除錯模式時直接輸出為非凡性卓越的戰鬥事件流，不涉及核心光環/冷卻計時事實。</li>
 </ul>
 </li>
 </ul>
@@ -454,7 +454,7 @@ EventAlertMod 正式服重寫
 </ul>
 </li>
 <li><strong>EAM 整合策略</strong>：
-*主要用於<code>EventRouter</code>調試追蹤監控，在<code>AuraService</code>因安全限制突然失效時，可作為取得<code>"SPELL_AURA_START"</code>狀態的防禦性輔助日誌。</li>
+*主要用於<code>EventRouter</code>除錯追蹤監控，在<code>AuraService</code>因安全限制突然失效時，可作為取得<code>"SPELL_AURA_START"</code>狀態的防禦性輔助日誌。</li>
 </ul>
 <hr />
 <h3 id="3unit_spellcast_sent">📌活動 3：<code>UNIT_SPELLCAST_SENT</code></h3>
@@ -552,7 +552,7 @@ EventAlertMod 正式服重寫
 <li><strong>初步作用</strong>：當法術的可用性（Usable）狀態改變時觸發（如能量值足夠/施放、或技能施放條件被滿足/取消）。</li>
 <li><strong>引數有效負載</strong>：無引數。</li>
 <li><strong>EAM 整合策略</strong>：</li>
-<li>可做為 <code>CooldownService</code> 輔助探測可用的時機。在調試模式下，記錄此發送事件，幫助排查部分冷卻技能因資源不足而在 CD 轉完後沒有顯示為可用的 bug。</li>
+<li>可做為 <code>CooldownService</code> 輔助探測可用的時機。在除錯模式下，記錄此發送事件，幫助排查部分冷卻技能因資源不足而在 CD 轉完後沒有顯示為可用的 bug。</li>
 </ul>
 <hr />
 <h3 id="11spell_update_uses">📌活動 11：<code>SPELL_UPDATE_USES</code></h3>
@@ -632,8 +632,8 @@ EventAlertMod 正式服重寫
 <tr>
 <td style="text-align: left;"><code>COMBAT_LOG_MESSAGE</code></td>
 <td style="text-align: left;">極高 (戰鬥中)</td>
-<td style="text-align: left;"><code>EventRouter</code>（調試）</td>
-<td style="text-align: left;">調試日誌流輸出，不參與參與事實</td>
+<td style="text-align: left;"><code>EventRouter</code>（除錯）</td>
+<td style="text-align: left;">除錯日誌流輸出，不參與參與事實</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>COMBAT_TEXT_UPDATE</code></td>
@@ -711,7 +711,7 @@ EventAlertMod 正式服重寫
 <td style="text-align: left;"><code>BAG_UPDATE_COOLDOWN</code></td>
 <td style="text-align: left;">中文</td>
 <td style="text-align: left;"><code>ItemCooldownService</code></td>
-<td style="text-align: left;">項目冷卻事實重新掃描</td>
+<td style="text-align: left;">物品冷卻事實重新掃描</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>COOLDOWN_VIEWER_SPELL_OVERRIDE_UPDATED</code></td>
@@ -722,7 +722,7 @@ EventAlertMod 正式服重寫
 <tr>
 <td style="text-align: left;"><code>ASSISTED_COMBAT_ACTION_SPELL_CAST</code></td>
 <td style="text-align: left;">中文</td>
-<td style="text-align: left;"><code>EventRouter</code>（調試）</td>
+<td style="text-align: left;"><code>EventRouter</code>（除錯）</td>
 <td style="text-align: left;">輔助施法之雙重判定防漏機制</td>
 </tr>
 <tr>
@@ -873,7 +873,7 @@ File: Docs\21_RETAIL_12X_NEW_EVENTS_INVESTIGATION.md</p>
 <li><strong>Initial effect</strong>: Triggered when the spell's availability (Usable) status changes (such as the energy value is sufficient/casting, or the skill casting conditions are met/cancelled).</li>
 <li><strong>Argument payload</strong>: No arguments.</li>
 <li><strong>EAM Integration Strategy</strong>:</li>
-<li>Can be used as an opportunity for <code>CooldownService</code> auxiliary detection. In debug mode, record this sending event to help troubleshoot the bug that some cooldown skills are not displayed as available after the CD is completed due to insufficient resources.</li>
+<li>Can be used as an opportunity for <code>CooldownService</code> auxiliary detection. In debugging mode, record this sending event to help troubleshoot the bug that some cooldown skills are not displayed as available after CD transfer due to insufficient resources.</li>
 </ul>
 <hr />
 <h3 id="activity-11-spell_update_uses">📌Activity 11: <code>SPELL_UPDATE_USES</code></h3>
@@ -954,7 +954,7 @@ File: Docs\21_RETAIL_12X_NEW_EVENTS_INVESTIGATION.md</p>
 <td style="text-align: left;"><code>COMBAT_LOG_MESSAGE</code></td>
 <td style="text-align: left;">Extremely high (in combat)</td>
 <td style="text-align: left;"><code>EventRouter</code> (debug)</td>
-<td style="text-align: left;">Debug log stream output, no participating facts</td>
+<td style="text-align: left;">Debug log stream output, do not participate in participation facts</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>COMBAT_TEXT_UPDATE</code></td>
@@ -1032,7 +1032,7 @@ File: Docs\21_RETAIL_12X_NEW_EVENTS_INVESTIGATION.md</p>
 <td style="text-align: left;"><code>BAG_UPDATE_COOLDOWN</code></td>
 <td style="text-align: left;">Chinese</td>
 <td style="text-align: left;"><code>ItemCooldownService</code></td>
-<td style="text-align: left;">Project Cooldown Facts Rescan</td>
+<td style="text-align: left;">Item Cooldown Facts Rescan</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>COOLDOWN_VIEWER_SPELL_OVERRIDE_UPDATED</code></td>
@@ -1043,8 +1043,8 @@ File: Docs\21_RETAIL_12X_NEW_EVENTS_INVESTIGATION.md</p>
 <tr>
 <td style="text-align: left;"><code>ASSISTED_COMBAT_ACTION_SPELL_CAST</code></td>
 <td style="text-align: left;">Chinese</td>
-<td style="text-align: left;"><code>EventRouter</code> (Debugging)</td>
-<td style="text-align: left;">Double judgment leakage prevention mechanism for auxiliary spell casting</td>
+<td style="text-align: left;"><code>EventRouter</code> (bug fix)</td>
+<td style="text-align: left;">Double judgment leakage prevention mechanism for auxiliary spellcasting</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>ACTIONBAR_UPDATE_STATE</code></td>

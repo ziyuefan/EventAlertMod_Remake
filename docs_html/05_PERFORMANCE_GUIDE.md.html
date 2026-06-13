@@ -491,7 +491,7 @@
 <li>骯髒的隊列</li>
 <li>圖示池記錄</li>
 <li>排程程式作業記錄</li>
-<li>調試環形緩衝區</li>
+<li>除錯環形緩衝區</li>
 <li>
 <p>預設設定檔模板
 避免在熱路徑中：</p>
@@ -522,7 +522,7 @@
 <li>UI框架記錄</li>
 <li>調度程序佇列</li>
 <li>池對象</li>
-<li>調試快照</li>
+<li>除錯快照</li>
 </ul>
 <h2 id="ui">UI 寫入策略</h2>
 <p>渲染器必須快取最後渲染的值並跳過無操作寫入：</p>
@@ -565,8 +565,8 @@
 <li>工具提示呼叫後掛鉤和工具提示解析路徑；</li>
 <li>aura 更新中的 <code>C_Timer.After(function() ...)</code> 閉包分配；</li>
 <li>冷卻更新後備中的動態影格建立；</li>
-<li>具有計時器回調的項目範圍掃描；</li>
-<li>調試標籤和查找輸出中的字串格式；</li>
+<li>具有計時器回呼的物品範圍掃描；</li>
+<li>除錯標籤和查找輸出中的字串格式；</li>
 <li>全域意外變數導致生命週期和 GC 行為不明確。</li>
 </ul>
     </div>
@@ -722,8 +722,8 @@ Avoid being in the hot path:</p>
 <li>Tooltip call post hook and tooltip parsing path;</li>
 <li><code>C_Timer.After(function() ...)</code> closure allocation in Aura update;</li>
 <li>Dynamic frame creation in cooldown update backup;</li>
-<li>Project-wide scan with timer callback;</li>
-<li>String formatting in debug tags and search output;</li>
+<li>Item range scanning with timer callback;</li>
+<li>Bugfix string formatting in label and search output;</li>
 <li>Unexpected global variables lead to unclear lifetime and GC behavior.</li>
 </ul>
     </div>

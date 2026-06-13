@@ -45,7 +45,7 @@
 - 遺留的 TOC 仍然存在於根部；
 - 目前 TOC 和許多運行時模組所需的 `Lib_ZYF` ；
 - 大型法術/item資料表；
-- `EventAlert_ItemSpellCache.lua` 中的項目範圍掃描；
+- `EventAlert_ItemSpellCache.lua` 中的物品範圍掃描；
 - 遞迴計時器調度和每個資源 OnUpdate 腳本；
 - 廣泛的全域變數使用和意外全域變數；
 - 可能與受保護資料衝突的工具提示和光環 API 假設；

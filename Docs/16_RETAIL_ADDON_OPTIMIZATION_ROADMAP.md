@@ -1,7 +1,7 @@
 <!-- EAM_DOCUMENTATION_SOURCE: zh-TW -->
 # 正式服 AddOn 研究與 EventAlertMod 最佳化路線
 
-本文件整理 2026-05-26 對魔獸爭霸 Wiki、暴雪論壇、WoWInterface、CurseForge 與 Reddit AddOn 討論的研究結果，規劃 EventAlertMod 正式服重寫的優化項目與目標。
+本文件整理 2026-05-26 對魔獸爭霸 Wiki、暴雪論壇、WoWInterface、CurseForge 與 Reddit AddOn 討論的研究結果，規劃 EventAlertMod 正式服重寫的優化事項與目標。
 
 本文件不是實機驗證報告。所有 Retail 12.x 行為仍需在 WoW Retail / PTR client 中載入測試。
 
@@ -47,7 +47,7 @@
 - 禁止aura `spellID` 直接比較前未檢查秘密；若不安全，狀態轉為`boundaryLimited`。
 - 禁止工具提示列未檢查就`string.match`。
 - 渲染器不讀回冷卻幀獲取器作為事實。
-- 戰鬥鎖定下延後任何可能影響框架結構的佈局突變。
+- 戰鬥鎖定下延後任何可能影響框架結構的佈局變更。
 ## 優先權 P1：核心功能穩定化
 
 - 玩家光環：首先支援安全絕對的自身buff/debuff；不安全時顯示圖示/name或受保護的計時器。
@@ -95,7 +95,7 @@
 ## 下一步建議
 
 1. 已完成P0安全讀取、渲染戰鬥延遲、調度任務池。
-2. 已完成 P1/P2 初版：SavedVariables add/remove API、Slash add/remove、AuraService `UNIT_AURA`快照增補感知快取、調試調試。
+2. 已完成 P1/P2 初版：SavedVariables add/remove API、Slash add/remove、AuraService `UNIT_AURA`快照增補感知快取、除錯除錯。
 3.已完成P2後半：AuraService全面更新單位系統單次掃描、選項最小可新增/remove面板。
 4. P3已有實測結果：用戶於12.0.7 PTR客戶端確認`C_DurationUtil.CreateDurationTextBinding`最小樣本可正常顯示。
 5.下一步應繼續實機驗證`UNIT_AURA` delta/full有效負載、DurationObject / DurationTextBinding整合、戰鬥佈局延遲、選項模板污染日誌。

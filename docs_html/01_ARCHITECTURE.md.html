@@ -458,13 +458,13 @@
 <li><code>EventAlert_Animation.lua</code>：視覺動畫/背景助手。</li>
 <li><code>EventAlert_Util.lua</code>：印刷助理、工具提示助手、光環查找、
   增益清單缺陷、發光助手、法術/天賦檢查。</li>
-<li><code>EventAlert_EAFun.lua</code>：滾動/調試、遷移的兼容性外觀，
+<li><code>EventAlert_EAFun.lua</code>：滾動/除錯、遷移的兼容性外觀，
   工具提示、條件、計時器文字、分組結果、版面配置和提示綁定。</li>
 <li><code>EventAlert_SlashCommand.lua</code>：<code>/eam</code> 指令處理。</li>
 <li><code>EventAlert_GroupEvent.lua</code>：使用者定義的條件/群組警報檢查。</li>
 <li><code>EventAlert_Core.lua</code>：插件加載，事件註冊/調度，大多數
   頂級事件處理程序、查找、版本檢查、更新循環。</li>
-<li><code>EventAlert_ItemSpellCache.lua</code>：專案到道具緩存瀏覽器和大型項目
+<li><code>EventAlert_ItemSpellCache.lua</code>：物品到法術快取瀏覽器與大型物品
   掃描。</li>
 <li><code>EventAlert_Aura_Core.lua</code>：完整/增量光環緩存助手。</li>
 <li><code>EventAlert_Aura_Self.lua</code>：玩家/寵物光環警報和自我圖示佈局。</li>
@@ -567,7 +567,7 @@
 3.服務讀取安全的正式服API並更新擁有的執行時間狀態。
 4. 服務發布或標記「AlertState」記錄。
 5. <code>Renderer</code>接收接收警報狀態並更新池圖示。
-6.「調度程序」僅處理刷新、回退採樣和調試突發。
+6.「調度程序」僅處理刷新、回退採樣和除錯突發。
 7. <strong>​​EAMCODE_0</strong> 在載入時讀取/遷移，並且僅更改配置讀取。</p>
 <h2 id="_4">事件流程</h2>
 <p>主要事件應僅包括必要的正式服事件，例如：</p>
@@ -600,13 +600,13 @@
 在戰鬥/低FPS或失效節流，除非它可以保護正確性。</p>
 <h2 id="_6">限正式服改計劃</h2>
 <p>1.在<code>Core/</code>、<code>Services/</code>下匯入新的模組元件並載入順序，
-   “UI/”和“調試/”。
+   “UI/”和“除錯/”。
 2. 建立新表時僅保留舊的“Main/”表作為遷移/參考
    架構。
 3. 將 SavedVariables 遷移到版本化設定檔和警報清單模型。
 4. 將本地化字符串移植到獨立的本地化模組中。
 5. 在移植服務前實施<code>EventRouter</code>和<code>Scheduler</code>。
-6.移植玩家光環、目標光環、角色冷卻、冷卻服務項目。
+6.移植玩家光環、目標光環、角色冷卻、冷卻服務功能。
 7.實施池化渲染器放置影格建立移出服務模組。
 8.針對新服務重建斜線指令並除錯導出器。
 9. 從活動負載中刪除舊版 TOC 和 Classic/MOP 相容性分支。
@@ -657,13 +657,13 @@ Current mainline Lua modules:</p>
 <li><code>EventAlert_Animation.lua</code>: Visual animation/background helper.</li>
 <li><code>EventAlert_Util.lua</code>: printing assistant, tooltip assistant, halo search,
   Buff list flaws, glowing assistant, spell/talent checks.</li>
-<li><code>EventAlert_EAFun.lua</code>: compatibility skin for scrolling/debugging, migration,
+<li><code>EventAlert_EAFun.lua</code>: rolling/debugging, migration compatibility appearance,
   Tooltips, conditions, timer text, grouped results, layouts and prompt bindings.</li>
 <li><code>EventAlert_SlashCommand.lua</code>: <code>/eam</code> instruction processing.</li>
 <li><code>EventAlert_GroupEvent.lua</code>: User-defined conditional/group alert checking.</li>
 <li><code>EventAlert_Core.lua</code>: plugin loading, event registration/scheduling, most
   Top-level event handlers, lookups, version checks, update loops.</li>
-<li><code>EventAlert_ItemSpellCache.lua</code>: Project-to-prop cache for browsers and large projects
+<li><code>EventAlert_ItemSpellCache.lua</code>: item to spell cache browser with large items
   Scan.</li>
 <li><code>EventAlert_Aura_Core.lua</code>: Full/incremental Aura cache helper.</li>
 <li><code>EventAlert_Aura_Self.lua</code>: Player/pet Aura alerts and self-icon layout.</li>
@@ -763,7 +763,7 @@ Human notes, border vigilance, and the environment.
 <li>The service reads the secure official service API and updates its execution time status.</li>
 <li>Service release or mark "AlertState" record.</li>
 <li><code>Renderer</code> receives the alarm status and updates the pool icon.</li>
-<li>The "Scheduler" only handles refresh, rollback sampling and debugging bursts.</li>
+<li>The "Scheduler" only handles refresh, backsampling, and debug bursts.</li>
 <li><strong>​​​​EAMCODE_0</strong> is read/migrated on load and only configuration changes are read.</li>
 </ol>
 <h2 id="event-flow">Event flow</h2>
@@ -804,7 +804,7 @@ In combat/low FPS or fail throttling unless it protects correctness.</p>
 <li>Migrate SavedVariables to the versioned profile and alert list model.</li>
 <li>Port localized strings into independent localization modules.</li>
 <li>Implement <code>EventRouter</code> and <code>Scheduler</code> before porting services.</li>
-<li>Transplant player Aura, target Aura, character cooldown, and cooldown service items.</li>
+<li>Transplant player Aura, target Aura, character cooling, and cooling service functions.</li>
 <li>Implement the pooled renderer to place the frame and create the removal service module.</li>
 <li>Rebuild slash directives and debug exporter for new services.</li>
 <li>Remove legacy TOC and Classic/MOP compatibility branches from active loads.</li>

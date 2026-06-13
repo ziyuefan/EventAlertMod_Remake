@@ -8,7 +8,7 @@
 - 每個正式載入的 `.lua` 檔案都要在檔案底部放置模組註解。
 - 註解需說明「這個文件為什麼存在」，不只描述「這個文件做什麼」。
 - 註解要記錄資料、可變狀態、不可跨越的模組邊界。
-- 熱路徑、Secret Values、Protected Data、SavedVariables、UI框架突變相關文件，必須明確寫出限制。
+- 熱路徑、Secret Values、Protected Data、SavedVariables、UI框架變更相關文件，必須明確寫出限制。
 - 註解應保持簡潔、可維護；不要寫成與計畫脫節的長篇宣言。
 - 當模組責任變更時，必須同步更新檔案註解與`Docs/04_MODULE_CONTRACTS.md`。
 

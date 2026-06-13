@@ -423,7 +423,7 @@
 <li>每個正式載入的 <code>.lua</code> 檔案都要在檔案底部放置模組註解。</li>
 <li>註解需說明「這個文件為什麼存在」，不只描述「這個文件做什麼」。</li>
 <li>註解要記錄資料、可變狀態、不可跨越的模組邊界。</li>
-<li>熱路徑、Secret Values、Protected Data、SavedVariables、UI框架突變相關文件，必須明確寫出限制。</li>
+<li>熱路徑、Secret Values、Protected Data、SavedVariables、UI框架變更相關文件，必須明確寫出限制。</li>
 <li>註解應保持簡潔、可維護；不要寫成與計畫脫節的長篇宣言。</li>
 <li>當模組責任變更時，必須同步更新檔案註解與<code>Docs/04_MODULE_CONTRACTS.md</code>。</li>
 </ul>
@@ -494,7 +494,7 @@ Module: Core/EventRouter
 <li>Every officially loaded <code>.lua</code> file must have a module comment at the bottom of the file.</li>
 <li>The annotation needs to explain "why this file exists", not just "what this file does".</li>
 <li>Annotate the data to be recorded, the variable state, and the module boundaries that cannot be crossed.</li>
-<li>Restrictions on hot paths, Secret Values, Protected Data, SavedVariables, and UI framework mutation-related files must be clearly written.</li>
+<li>Restrictions on hot paths, Secret Values, Protected Data, SavedVariables, and UI framework change-related files must be clearly written.</li>
 <li>Comments should be kept concise and maintainable; do not write long declarations that are out of touch with the plan.</li>
 <li>When the module responsibility changes, the file annotation and <code>Docs/04_MODULE_CONTRACTS.md</code> must be updated simultaneously.</li>
 </ul>

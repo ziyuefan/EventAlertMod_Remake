@@ -26,7 +26,7 @@ EventAlertMod 正式服重寫
     * `Arg 5 (displayType)`: string/number - 訊息的類型或樣式。
 * **EAM 整合策略**：
 * **限制**：此事件不包含 `spellID`、`sourceGUID`、`destGUID` 等格式化數據，只有純文字與顏色，由此做正則表達式推理的 CPU 負載能力且不具備版本健壯性。
-    * **應用**：EAM將其註冊至`EventRouter`作為debug/trace日誌，在用戶開啟調試模式時直接輸出為非凡性卓越的戰鬥事件流，不涉及核心光環/冷卻計時事實。
+    * **應用**：EAM將其註冊至`EventRouter`作為debug/trace日誌，在用戶開啟除錯模式時直接輸出為非凡性卓越的戰鬥事件流，不涉及核心光環/冷卻計時事實。
 
 ---
 ### 📌活動 2：`COMBAT_TEXT_UPDATE`
@@ -34,7 +34,7 @@ EventAlertMod 正式服重寫
 * **引數有效負載**：
     * `Arg 1 (combatTextType)`: string - 戰鬥文字類型（例如：`"SPELL_AURA_START"`, `"DAMAGE"`, `"HEAL"`, `"ENERGY"`, `__EAMCODE___10`110EAMCODE_9__110EAMCO
 * **EAM 整合策略**：
-*主要用於`EventRouter`調試追蹤監控，在`AuraService`因安全限制突然失效時，可作為取得`"SPELL_AURA_START"`狀態的防禦性輔助日誌。
+*主要用於`EventRouter`除錯追蹤監控，在`AuraService`因安全限制突然失效時，可作為取得`"SPELL_AURA_START"`狀態的防禦性輔助日誌。
 
 ---
 
@@ -114,7 +114,7 @@ EventAlertMod 正式服重寫
 * **初步作用**：當法術的可用性（Usable）狀態改變時觸發（如能量值足夠/施放、或技能施放條件被滿足/取消）。
 * **引數有效負載**：無引數。
 * **EAM 整合策略**：
-* 可做為 `CooldownService` 輔助探測可用的時機。在調試模式下，記錄此發送事件，幫助排查部分冷卻技能因資源不足而在 CD 轉完後沒有顯示為可用的 bug。
+* 可做為 `CooldownService` 輔助探測可用的時機。在除錯模式下，記錄此發送事件，幫助排查部分冷卻技能因資源不足而在 CD 轉完後沒有顯示為可用的 bug。
 
 ---
 ### 📌活動 11：`SPELL_UPDATE_USES`
@@ -174,7 +174,7 @@ EventAlertMod 正式服重寫
 
 | 事件名稱 | 觸發頻率| EAM 接收模組 | 主要作用 |
 | :--- | :--- | :--- | :--- |
-| `COMBAT_LOG_MESSAGE` | 極高 (戰鬥中) | `EventRouter`（調試）| 調試日誌流輸出，不參與參與事實|
+| `COMBAT_LOG_MESSAGE` | 極高 (戰鬥中) | `EventRouter`（除錯）| 除錯日誌流輸出，不參與參與事實|
 | `COMBAT_TEXT_UPDATE` | 中高 | `EventRouter`（錯誤偵）| 除錯日誌與輔助光環更新 |
 | `UNIT_SPELLCAST_SENT` | 中高 | `CooldownService` / 使用者介面 | 施法啟動初步回應機制|
 | `UNIT_SPELLCAST_SUCCEEDED` | 中高 | `GroundEffectService` | **VictoriaCLEU，100%安全監控技術** |
@@ -187,7 +187,7 @@ EventAlertMod 正式服重寫
 | `SPELL_UPDATE_COOLDOWN` | 中文 | `CooldownService` | 冷卻技術事實重新掃描|
 | `SPELL_UPDATE_USABLE` | 中文 | `CooldownService` | 技能可用性狀態更新 |
 | `SPELL_UPDATE_USES` | 中文 | `CooldownService` | 技能剩餘可用次數即時變更 |
-| `BAG_UPDATE_COOLDOWN` | 中文 | `ItemCooldownService` | 項目冷卻事實重新掃描|
+| `BAG_UPDATE_COOLDOWN` | 中文 | `ItemCooldownService` | 物品冷卻事實重新掃描|
 | `COOLDOWN_VIEWER_SPELL_OVERRIDE_UPDATED` | 低| `CooldownService` | **修改動態技能覆蓋/覆蓋更新** |
-| `ASSISTED_COMBAT_ACTION_SPELL_CAST` | 中文 | `EventRouter`（調試）| 輔助施法之雙重判定防漏機制|
+| `ASSISTED_COMBAT_ACTION_SPELL_CAST` | 中文 | `EventRouter`（除錯）| 輔助施法之雙重判定防漏機制|
 | `ACTIONBAR_UPDATE_STATE` | 中高 | `CooldownService`（錯誤偵）| 動作列切換或狀態同步刷新時機 |

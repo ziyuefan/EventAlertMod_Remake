@@ -417,7 +417,7 @@
         <a href="AGENTS.md.html" class="back-btn">← 返回 AI 入口指導檔 (AGENTS)</a>
 <!-- EAM_DOCUMENTATION_SOURCE: zh-TW -->
 <h1 id="addon-eventalertmod">正式服 AddOn 研究與 EventAlertMod 最佳化路線</h1>
-<p>本文件整理 2026-05-26 對魔獸爭霸 Wiki、暴雪論壇、WoWInterface、CurseForge 與 Reddit AddOn 討論的研究結果，規劃 EventAlertMod 正式服重寫的優化項目與目標。</p>
+<p>本文件整理 2026-05-26 對魔獸爭霸 Wiki、暴雪論壇、WoWInterface、CurseForge 與 Reddit AddOn 討論的研究結果，規劃 EventAlertMod 正式服重寫的優化事項與目標。</p>
 <p>本文件不是實機驗證報告。所有 Retail 12.x 行為仍需在 WoW Retail / PTR client 中載入測試。</p>
 <h2 id="_1">調查來源</h2>
 <ul>
@@ -462,7 +462,7 @@
 <li>禁止aura <code>spellID</code> 直接比較前未檢查秘密；若不安全，狀態轉為<code>boundaryLimited</code>。</li>
 <li>禁止工具提示列未檢查就<code>string.match</code>。</li>
 <li>渲染器不讀回冷卻幀獲取器作為事實。</li>
-<li>戰鬥鎖定下延後任何可能影響框架結構的佈局突變。</li>
+<li>戰鬥鎖定下延後任何可能影響框架結構的佈局變更。</li>
 </ul>
 <h2 id="p1">優先權 P1：核心功能穩定化</h2>
 <ul>
@@ -511,7 +511,7 @@
 <h2 id="_4">下一步建議</h2>
 <ol>
 <li>已完成P0安全讀取、渲染戰鬥延遲、調度任務池。</li>
-<li>已完成 P1/P2 初版：SavedVariables add/remove API、Slash add/remove、AuraService <code>UNIT_AURA</code>快照增補感知快取、調試調試。
+<li>已完成 P1/P2 初版：SavedVariables add/remove API、Slash add/remove、AuraService <code>UNIT_AURA</code>快照增補感知快取、除錯除錯。
 3.已完成P2後半：AuraService全面更新單位系統單次掃描、選項最小可新增/remove面板。</li>
 <li>P3已有實測結果：用戶於12.0.7 PTR客戶端確認<code>C_DurationUtil.CreateDurationTextBinding</code>最小樣本可正常顯示。
 5.下一步應繼續實機驗證<code>UNIT_AURA</code> delta/full有效負載、DurationObject / DurationTextBinding整合、戰鬥佈局延遲、選項模板污染日誌。</li>
@@ -522,7 +522,7 @@
         <a href="AGENTS.md.html" class="back-btn">← Back to AI Entrance (AGENTS)</a>
 <!-- EAM_DOCUMENTATION_SOURCE: zh-TW -->
 <h1 id="retail-server-addon-research-and-eventalertmod-optimization-route">Retail server AddOn research and EventAlertMod optimization route</h1>
-<p>This document compiles the research results discussed on 2026-05-26 on the Warcraft Wiki, Blizzard Forum, WoWInterface, CurseForge and Reddit AddOn, and plans the optimization projects and goals for the Retail server rewrite of EventAlertMod.</p>
+<p>This document compiles the research results discussed on 2026-05-26 on the Warcraft Wiki, Blizzard Forum, WoWInterface, CurseForge and Reddit AddOn, and plans the optimization matters and goals for the rewrite of the EventAlertMod Retail server.</p>
 <p>This document is not an actual machine verification report. All Retail 12.x behavior still requires loading tests in the WoW Retail / PTR client.</p>
 <h2 id="investigate-sources">Investigate sources</h2>
 <ul>
@@ -567,7 +567,7 @@
 <li>Disable Aura <code>spellID</code> from not checking the secret before direct comparison; if it is unsafe, the state changes to <code>boundaryLimited</code>.</li>
 <li>Disable tooltip columns without checking <code>string.match</code>.</li>
 <li>The renderer does not read back the cool frame getter as a fact.</li>
-<li>Defer any layout mutations that may affect the frame structure while under combat lock.</li>
+<li>Defer any layout changes that may affect the frame structure while under combat lock.</li>
 </ul>
 <h2 id="priority-p1-stabilization-of-core-functions">Priority P1: Stabilization of core functions</h2>
 <ul>
@@ -616,7 +616,7 @@
 <h2 id="next-step-suggestions">Next step suggestions</h2>
 <ol>
 <li>P0 safe reading, rendering combat delay, and scheduling task pool have been completed.</li>
-<li>Completed the first version of P1/P2: SavedVariables add/remove API, Slash add/remove, AuraService <code>UNIT_AURA</code> snapshot addition awareness cache, debugging.</li>
+<li>Completed the first version of P1/P2: SavedVariables add/remove API, Slash add/remove, AuraService <code>UNIT_AURA</code> snapshot addition aware cache, debugging and debugging.</li>
 <li>The second half of P2 has been completed: AuraService fully updates the unit system in a single scan, with the minimum option to add/remove panel.</li>
 <li>P3 has actual measurement results: The user confirmed on the 12.0.7 PTR client that the <code>C_DurationUtil.CreateDurationTextBinding</code> minimum sample can be displayed normally.</li>
 <li>The next step should be to continue the actual machine verification of <code>UNIT_AURA</code> delta/full payload, DurationObject / DurationTextBinding integration, combat layout delay, and option template pollution log.</li>

@@ -44,7 +44,7 @@
 ### 2026-06-09 CurseForge 佔用腳本敏感字串正規過寬導致魔獸 12.x 原有保密代碼錯誤報告爆發（已解決）
 - 狀態：已解決
 - 脅：
-  執行自動化資源共享時，安全警報指控`Constants.lua`中的`BOUNDARY_SECRET_VALUE = "secretValue"`與`ClassPowerService.lua`中調試日誌內字符串拼接的`"Secret"`為敏感資訊洩露，強行中斷資源。
+  執行自動化資源共享時，安全警報指控`Constants.lua`中的`BOUNDARY_SECRET_VALUE = "secretValue"`與`ClassPowerService.lua`中除錯日誌內字符串拼接的`"Secret"`為敏感資訊洩露，強行中斷資源。
 - 原因判斷：
   到底什麼正規表示式對 `secret` 單字進行了無腦匹配，這會誤配到 EAM 核心 Secrecy（結構/安全）防衛機製本身的常規變數與字符串。
 - 已嘗試方法：無。
@@ -148,7 +148,7 @@
   僅在 `cooldownInfo` **不為 nil** 時（代表該液化確實具有冷卻資料或在冷卻中），且在 `infoSafe` 為 `false` 的基礎狀態下，才進行防禦性 `shouldShow = 7_7__ 的判斷；若 EAM 6_6__9 則直接顯示關係。
 - 後續注意事項：實機驗證時，請少年欸重新加載，確認這15個沒有在冷卻中的法師技能圖標是否已正確消失；只有在技能真正進入冷卻時才彈出圖標並正常顯示倒數。
 
-### 2026-06-07 擴展EAM調試診斷日誌統計資訊以加強AI調試分析（已解決）
+### 2026-06-07 擴展EAM除錯診斷日誌統計資訊以加強AI除錯分析（已解決）
 
 - 狀態：已解決
 - 脅：
@@ -179,7 +179,7 @@
   1. **多框架累狀態加**：修改`Debug/PromptExport.lua`與`Debug/DebugState.lua`，將`visibleIcons`改為加7大Alert Frame的`orderCount`；把`layoutDirty`改為檢查若有任何一個`fState.layoutDirty`6。
 2. **多框架存在偵測**：在 `PromptExport.lua` 內對 7 大警報框架（如 `selfAura`、`targetAura` 等）進行格式化偵測與格式化輸出，只要至少有一個框架存在，即判定 `alertFrame.exists` 為 `true`，並精確呈現每個隱座狀態。
   3.靜態 `luac -p` 全案語法安全性驗證，修改之文件 100% 通過語法安全性檢查。
-- 後續注意事項：實機驗證時，請少年欸重新加載，再次匯出調試日誌JSON，驗證`visibleIcons`數值是否已與實體圖示渲染完全一致（顯示大於0的正確數量），並且聊天視窗不再噴出錯誤。
+- 後續注意事項：實機驗證時，請少年欸重新加載，再次匯出除錯日誌JSON，驗證`visibleIcons`數值是否已與實體圖示渲染完全一致（顯示大於0的正確數量），並且聊天視窗不再噴出錯誤。
 
 ### 2026-06-07 註冊內部自訂事件至native Frame:RegisterEvent導致嘗試註冊未知事件當機（已解決）
 
@@ -335,7 +335,7 @@
 1. **全代碼本地化清掃**：將全案中所有硬編碼字符串統一起來至本地化對照表`EAM.L`（支持五大語系共144個詞條）。在取代工具中明確宣告UTF-8讀寫，並以`errors='ignore'`保護，避免編碼崩潰。
 2. **動態專精本地化API重構**：在`UI/Options.lua`的專精過濾下拉選單中引入`CLASS_TOKEN_TO_ID`映射，優先調用API `GetSpecializationInfoForClassID`獲取最準確的本地化專精備份名稱，並提供雙軌退防線。
   3. **能量防護防禦**：為 `detectClassPower` 與 `updatePower` 配置 `pcall` 隔離與 `issecretvalue` 防禦，防禦戰鬥中能量數值為秘密表時的大小比較造成的 Lua 崩潰。
-4. **EventRouter/Scheduler 故障隔離**：在 EventRouter 的 OnEvent 核心循環循環與 Scheduler 的作業執行回調中，配置參數化 `pcall` 容錯，防止單一模組中斷的模組與模組中斷其他模組中斷的執行。
+4. **EventRouter/Scheduler 故障隔離**：在 EventRouter 的 OnEvent 核心循環循環與 Scheduler 的作業執行回呼中，配置參數化 `pcall` 容錯，防止單一模組中斷的模組與模組中斷其他模組中斷的執行。
 - 後續注意事項：實機驗證時需注意在木人戰鬥與首領戰鬥中，觀察多語系 UI 是否加載正確，以及當策劃觸發單一模組錯誤時，EventRouter 和 Scheduler 是否仍然能夠高可用性地與排程其他警報。
 
 ### 2026-05-30 12.x戰鬥加密邊界：Secret-Key查詢表崩潰、Tooltip字串污染＆不安全警報戰鬥流暢化修復（已解決）
@@ -439,7 +439,7 @@
 - 狀態：已解決、待實機驗證
 - 依托：實機測試中Alert框架完全沒有彈出，且監控項目需要更獨立與細部的Options UI分類配置。
 - 症狀：
-1.玩家施放技能、獲得Buff或進行背包冷卻物品測試時，畫面上完全無警報框架或圖表，但在Slash指令中調試診斷即可成功呼叫。
+1.玩家施放技能、獲得Buff或進行背包冷卻物品測試時，畫面上完全無警報框架或圖表，但在Slash指令中除錯診斷即可成功呼叫。
   2. 物品冷卻在選項 UI 裡缺乏獨立的分類（第 5 個紅色按鈕受到特殊關注，物品沒有明顯的眼睛入口）。
 - 原因判斷：
 1. **第一個致命Bug**：`Services/ItemCooldownService.lua`和`Debug/PromptExport.lua`開頭的Lua註解解寫成`-- [[`（多了一個空格），導致Lua編譯器報出語法錯誤而令這兩個關鍵模組在WoW啟動時完全載入失敗，破壞了載入鏈。
@@ -524,7 +524,7 @@
 - 狀態：待實機驗證
 - 構想：接續P2細節，將AuraService的完整更新後備從逐警報掃描改成單位體系單次掃描，並補上可實際新增/刪除設定的選項面板。
 - 症狀：舊回退很容易在 `UNIT_AURA` 完全更新或目標變更時對同一單位重複掃描；選項仍為偏存根，無法提供一般使用者可見的設定入口。
-- 原因判斷：Aura 完整更新是熱路徑候選，若警報數量重複掃描，使用者設定越多成本增益；選項若不跨越 `SavedVariables` 突變 API，容易繞過架構修訂與服務刷新。
+- 原因判斷：Aura 完整更新是熱路徑候選，若警報數量重複掃描，使用者設定越多成本增益；選項若不跨越 `SavedVariables` 變更 API，容易繞過架構修訂與服務刷新。
 - 已嘗試方法：新增`fullScanUnit`，先清單位元光環緩存，再依玩家/target過濾掃描一次並與警報索引分派；未命中的設定警報統一標記為不活動。選項新增spellID/itemID輸入框與四類add/remove按鈕，成功後呼叫服務刷新。
 - 有效解法：以 `auraInstanceID` 快取搭配 `alertIndex[unit][spellID]` 分派狀態；Options 只穿透`SavedVariables.add/remove` API 寫入狀態，直接修改服務運作時。
 - 後續注意事項：需在 WoW Retail/PTR 驗證 `C_UnitAuras.GetAuraDataByIndex(unit, index, filter)` 在 12.0.7 的實際欄位安全性、過濾行為、戰鬥中初次建立選項框架的污染風險，以及 __EAMCO _EA Retail 12.x是否仍可直接使用。
@@ -537,12 +537,12 @@
 - 已嘗試方法：將正規表示式改用單引號包住；TOC檢查中的`$`改用反引號轉義。
 - 有效解法：專案內複雜搜尋優先使用 `rg -n 'pattern' path`；若必須在 `powershell -Command` 中使用腳本變量，需寫成 `` `$variable``，或改用 `.ps1` 工具。
 - 後續注意事項：重複出現後可整理成「EAM Windows 靜態檢查」專案技能，避免每次珠寶令牌排查引用。
-### 2026-05-26 P1/P2：斜線突變與UNIT_AURA增量緩存
+### 2026-05-26 P1/P2：斜線變更與UNIT_AURA增量緩存
 
 - 狀態：待實機驗證
 - 依托：依P1/P2目標繼續整理EAM正式服重寫的核心功能與低GC熱路徑。
-- 症狀：轉換器`/eam`僅調試/選項存根，SavedVariables沒有正式添加/remove API；AuraService在`UNIT_AURA`時仍回退全量掃描，未使用AuraService在`UNIT_AURA`時仍回退全量掃描，未使用`updateInfo`有效負載。
-- 原因判斷：若沒有穩定配置突變API，後續選項UI無法安全寫入設定；若每次`UNIT_AURA`都掃alert/full光環，會增加熱路徑成本。
+- 症狀：轉換器`/eam`僅除錯/選項存根，SavedVariables沒有正式添加/remove API；AuraService在`UNIT_AURA`時仍回退全量掃描，未使用AuraService在`UNIT_AURA`時仍回退全量掃描，未使用`updateInfo`有效負載。
+- 原因判斷：若沒有穩定配置變更API，後續選項UI無法安全寫入設定；若每次`UNIT_AURA`都掃alert/full光環，會增加熱路徑成本。
 - 已嘗試方法：新增 `SavedVariables.add/remove` 系列 API、`/eam add/remove/export/help`、AuraService 配置修訂索引、EAM__MCOD. `updatedAuraInstanceIDs` / `removedAuraInstanceIDs`處理增量，以及偵錯快照的DB revision/cache/renderer計數器。
 - 有效解法：Slash只寫SavedVariables，服務負責刷新/render；AuraService有`updateInfo`時走delta，無payload或完整更新才回退完整掃描。
 - 後續注意事項：尚需 WoW Retail/PTR 實機驗證 `UNIT_AURA` 有效負載 實際欄位、秘密光環 spellID 行為、移除實例快取 命中率與目標快速變化行為。
@@ -584,7 +584,7 @@
 - 症狀：包括 `Docs/10_WARCRAFT_WIKI_12X_API_NOTES.md` 仍記錄 12.0.7 尚未找到 API 摘要。
 - 原因判斷：魔獸爭霸Wiki近期已新增12.0.7 API更改頁，先前記錄已過時。
 - 已嘗試方法：重新查詢魔獸爭霸維基API變更摘要、12.0.5、12.0.7與AddOn社群討論。
-- 有效解法：更新 `Docs/10_WARCRAFT_WIKI_12X_API_NOTES.md`，將 12.0.7 標記為已存在，並記錄與 EAM 相關的 `C_DurationUtil`、CPU 用法 API 與 __EAMCODE_61 追蹤項目。
+- 有效解法：更新 `Docs/10_WARCRAFT_WIKI_12X_API_NOTES.md`，將 12.0.7 標記為已存在，並記錄與 EAM 相關的 `C_DurationUtil`、CPU 用法 API 與 __EAMCODE_61 追蹤事項。
 - 後續注意事項：精確做 WoW Retail/PTR 實機驗證；若目標正式版本從 12.0.5 升到 12.0.7，需同步調整 TOC、備份版本與 CurseForge 遊戲版本 ID。
 
 ### 2026-05-26 加入污染控制規則

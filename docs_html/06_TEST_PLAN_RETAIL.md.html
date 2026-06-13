@@ -426,13 +426,13 @@
 <li>搜尋意外的全域變數。</li>
 <li>搜尋 <code>C_Timer.After(function</code>.</li>
 <li>搜尋每幀/per-icon <code>SetScript("OnUpdate")</code>。</li>
-<li>搜尋大型項目 ID 掃描循環。</li>
+<li>搜尋大型物品 ID 掃描循環。</li>
 <li>搜尋應用於 SavedVariables 或運行時狀態的 <code>table.freeze</code>。</li>
 <li>搜尋舊版 <code>UnitAura</code> 解包路徑。</li>
 <li>搜尋舊的全域 <code>GetSpellCooldown</code> 解包假設。</li>
 <li>在秘密檢查之前搜尋不安全光環<code>spellID</code>比較。</li>
 <li>搜尋用作事實的 Cooldown 小部件 getter 讀回。</li>
-<li>搜尋戰鬥中框架創建或佈局突變。</li>
+<li>搜尋戰鬥中框架創建或佈局變更。</li>
 </ul>
 <h2 id="reloadui">登入 / ReloadUI</h2>
 <ul>
@@ -450,7 +450,7 @@
 <li><code>/eam add &lt;spellID&gt;</code> 新增玩家光環警報。</li>
 <li><code>/eam add target &lt;spellID&gt;</code> 新增目標光環警報。</li>
 <li><code>/eam add cd &lt;spellID&gt;</code> 新增法術冷卻時間警報。</li>
-<li><code>/eam add item &lt;itemID&gt;</code> 新增項目冷卻警報。</li>
+<li><code>/eam add item &lt;itemID&gt;</code> 新增物品冷卻警報。</li>
 <li><code>/eam remove &lt;spellID&gt;</code> 刪除玩家光環警報。</li>
 <li><code>/eam 刪除目標 &lt;spellID&gt;</code> 刪除目標光環警報。</li>
 <li><code>/eam remove cd &lt;spellID&gt;</code> 刪除法術冷卻時間警報。</li>
@@ -468,7 +468,7 @@
 <li><code>/eam IconAppenSpellTip</code></li>
 <li><code>/eam ShowRunesBar</code></li>
 <li>name/timer/stack 文字的字體大小指令。</li>
-<li>新的調試導出命令僅根據需要產生緊湊的輸出。</li>
+<li>新的除錯導出命令僅根據需要產生緊湊的輸出。</li>
 </ul>
 <h2 id="ui">選項 UI 測試</h2>
 <ul>
@@ -577,14 +577,14 @@
 <li>Verify that the Classic/MOP/Cata/Wrath/TBC source root is not loaded.</li>
 <li>Search for unexpected global variables.</li>
 <li>Search for <code>C_Timer.After(function</code>.</li>
-<li>Search for /per-icon <code>SetScript("OnUpdate")</code> per frame.</li>
-<li>Search for large project ID scan loops.</li>
+<li>Search each frame for /per-icon <code>SetScript("OnUpdate")</code>.</li>
+<li>Search for large item ID scan loops.</li>
 <li>Search for <code>table.freeze</code> applied to SavedVariables or runtime state.</li>
 <li>Search for old <code>UnitAura</code> unpack paths.</li>
 <li>Search the old global <code>GetSpellCooldown</code> unpacking hypothesis.</li>
 <li>Search for unsafe Aura before secret inspection <code>spellID</code> comparison.</li>
 <li>Search for the Cooldown widget getter used as a fact readback.</li>
-<li>Search for frame creation or layout mutations in combat.</li>
+<li>Search for frame creation or layout changes during combat.</li>
 </ul>
 <h2 id="login-reloadui">Login / ReloadUI</h2>
 <ul>
@@ -601,18 +601,18 @@
 <li><code>/eam help</code> Print command summary.</li>
 <li><code>/eam add &lt;spellID&gt;</code> Added player Aura alert.</li>
 <li><code>/eam add target &lt;spellID&gt;</code> Added target Aura alert.</li>
-<li><code>/eam add cd &lt;spellID&gt;</code> Added spell cooldown time alert.</li>
-<li><code>/eam add item &lt;itemID&gt;</code> Added item cooling alert.</li>
-<li><code>/eam remove &lt;spellID&gt;</code> Removes player Aura alerts.</li>
-<li><code>/eam Remove target &lt;spellID&gt;</code> Remove target Aura alert.</li>
-<li><code>/eam remove cd &lt;spellID&gt;</code> Removes the spell cooldown alert.</li>
-<li><code>/eam Remove Item &lt;itemID&gt;</code> Remove item cooldown alert.</li>
-<li><code>/eam export</code> prints the compact prompt /debug export.</li>
-<li><code>/eam show</code> toggles self-Aura spellID detection.</li>
-<li><code>/eam showt</code> toggle target Aura spellID detection.</li>
-<li><code>/eam showc</code> toggles detection of cast spellID.</li>
+<li><code>/eam add cd &lt;spellID&gt;</code> Added spell cooldown alarm.</li>
+<li><code>/eam add item &lt;itemID&gt;</code> Added item cooldown alert.</li>
+<li><code>/eam remove &lt;spellID&gt;</code> Remove player Aura alerts.</li>
+<li><code>/eam 刪除目標 &lt;spellID&gt;</code> Remove target Aura alert.</li>
+<li><code>/eam remove cd &lt;spellID&gt;</code> Removed spell cooldown alert.</li>
+<li><code>/eam 刪除物品 &lt;itemID&gt;</code> Remove item cooldown alert.</li>
+<li><code>/eam export</code> Print compact prompt /debug export.</li>
+<li><code>/eam show</code> toggle self-Aura spellID detection.</li>
+<li><code>/eam showt</code> toggle target Aura detection for spellID.</li>
+<li><code>/eam showc</code> toggle cast spellID detection.</li>
 <li><code>/eam showa</code> is optional and apparently stoppable.</li>
-<li><code>/eam MiniMap</code> toggle minimap option buttons.</li>
+<li><code>/eam MiniMap</code> Toggle minimap options button.</li>
 <li><code>/eam MiniMap Reset</code> Reset the minimap position.</li>
 <li><code>/eam SCDRemoveWhenCooldown</code></li>
 <li><code>/eam SCDNocombatStillKeep</code></li>

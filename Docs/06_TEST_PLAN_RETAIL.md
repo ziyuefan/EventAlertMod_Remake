@@ -11,13 +11,13 @@
 - 搜尋意外的全域變數。
 - 搜尋 `C_Timer.After(function`.
 - 搜尋每幀/per-icon `SetScript("OnUpdate")`。
-- 搜尋大型項目 ID 掃描循環。
+- 搜尋大型物品 ID 掃描循環。
 - 搜尋應用於 SavedVariables 或運行時狀態的 `table.freeze`。
 - 搜尋舊版 `UnitAura` 解包路徑。
 - 搜尋舊的全域 `GetSpellCooldown` 解包假設。
 - 在秘密檢查之前搜尋不安全光環`spellID`比較。
 - 搜尋用作事實的 Cooldown 小部件 getter 讀回。
-- 搜尋戰鬥中框架創建或佈局突變。
+- 搜尋戰鬥中框架創建或佈局變更。
 ## 登入 / ReloadUI
 
 - 在 Retail 12.x 中載入插件。
@@ -34,7 +34,7 @@
 - `/eam add <spellID>` 新增玩家光環警報。
 - `/eam add target <spellID>` 新增目標光環警報。
 - `/eam add cd <spellID>` 新增法術冷卻時間警報。
-- `/eam add item <itemID>` 新增項目冷卻警報。
+- `/eam add item <itemID>` 新增物品冷卻警報。
 - `/eam remove <spellID>` 刪除玩家光環警報。
 - `/eam 刪除目標 <spellID>` 刪除目標光環警報。
 - `/eam remove cd <spellID>` 刪除法術冷卻時間警報。
@@ -52,7 +52,7 @@
 - `/eam IconAppenSpellTip`
 - `/eam ShowRunesBar`
 - name/timer/stack 文字的字體大小指令。
-- 新的調試導出命令僅根據需要產生緊湊的輸出。
+- 新的除錯導出命令僅根據需要產生緊湊的輸出。
 
 ## 選項 UI 測試
 
